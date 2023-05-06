@@ -26,7 +26,7 @@
     <!--<%= form.label :feminino %>-->
     <!--<%= form.text_field :feminino %>-->
     <select id="feminino">
-    <option value='0'>Masculino</option>
+    <option value=''>Masculino</option>
     <option value='1'>Feminino</option>
     </select>
   </div>
@@ -38,12 +38,16 @@
 
   <div class="field">
     <%= form.label :data_nascimento %>
-    <%= form.date_select :data_nascimento %>
+    <%= form.date_field :data_nascimento %>
   </div>
 
   <div class="field">
     <%= form.label :email %>
     <%= form.text_field :email %>
+  </div>
+  <div class="field">
+    <%= form.label :password %>
+    <%= form.password_field :password %>
   </div>
 
   <div class="field">
@@ -78,7 +82,7 @@
 
   <div class="field">
     <%= form.label :data_colacao %>
-    <%= form.date_select :data_colacao %>
+    <%= form.date_field :data_colacao %>
   </div>
 
   <div class="field">
@@ -109,6 +113,11 @@
   <div class="field">
     <%= form.label :chave_pix_02 %>
     <%= form.text_field :chave_pix_02 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :papel %>
+    <%= form.select :papel, :papel%>
   </div>
 
   <div class="actions">

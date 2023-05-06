@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_04_27_210438) do
+ActiveRecord::Schema.define(version: 2023_05_06_224428) do
 
   create_table "civil_estados", force: :cascade do |t|
     t.string "estado"
@@ -31,24 +31,6 @@ ActiveRecord::Schema.define(version: 2023_04_27_210438) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "membros", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string "current_sign_in_ip"
-    t.string "last_sign_in_ip"
-    t.integer "papel", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_membros_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_membros_on_reset_password_token", unique: true
-  end
-
   create_table "municipios", force: :cascade do |t|
     t.string "nome"
     t.integer "uf_id"
@@ -63,7 +45,13 @@ ActiveRecord::Schema.define(version: 2023_04_27_210438) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "profissionais", force: :cascade do |t|
+  create_table "profissional_funcoes", force: :cascade do |t|
+    t.string "funcao"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "profissionals", force: :cascade do |t|
     t.string "nome"
     t.string "sobrenome"
     t.boolean "feminino"
@@ -80,21 +68,26 @@ ActiveRecord::Schema.define(version: 2023_04_27_210438) do
     t.string "fone_cod_pais"
     t.string "fone_cod_area"
     t.string "fone_num"
-    t.string "email"
+    t.string "email", default: "", null: false
     t.text "bio"
     t.integer "salario"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["civil_estado_id"], name: "index_profissionais_on_civil_estado_id"
-    t.index ["funcao_id"], name: "index_profissionais_on_funcao_id"
-    t.index ["instrucao_grau_id"], name: "index_profissionais_on_instrucao_grau_id"
-    t.index ["municipio_id"], name: "index_profissionais_on_municipio_id"
-  end
-
-  create_table "profissional_funcoes", force: :cascade do |t|
-    t.string "funcao"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
+    t.index ["civil_estado_id"], name: "index_profissionals_on_civil_estado_id"
+    t.index ["email"], name: "index_profissionals_on_email", unique: true
+    t.index ["funcao_id"], name: "index_profissionals_on_funcao_id"
+    t.index ["instrucao_grau_id"], name: "index_profissionals_on_instrucao_grau_id"
+    t.index ["municipio_id"], name: "index_profissionals_on_municipio_id"
+    t.index ["reset_password_token"], name: "index_profissionals_on_reset_password_token", unique: true
   end
 
   create_table "psicologos", force: :cascade do |t|
@@ -103,7 +96,7 @@ ActiveRecord::Schema.define(version: 2023_04_27_210438) do
     t.string "feminino"
     t.string "cpf"
     t.date "data_nascimento"
-    t.string "email"
+    t.string "email", default: "", null: false
     t.string "fone_cod_pais"
     t.string "fone_cod_area"
     t.string "fone_num"
@@ -117,6 +110,7 @@ ActiveRecord::Schema.define(version: 2023_04_27_210438) do
     t.string "especializacao_02"
     t.string "chave_pix_01"
     t.string "chave_pix_02"
+    t.integer "papel"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "encrypted_password", default: "", null: false
@@ -129,6 +123,7 @@ ActiveRecord::Schema.define(version: 2023_04_27_210438) do
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.index ["civil_estado_id"], name: "index_psicologos_on_civil_estado_id"
+    t.index ["cpf", "email"], name: "index_psicologos_on_cpf_and_email", unique: true
     t.index ["crp_regiao_id"], name: "index_psicologos_on_crp_regiao_id"
     t.index ["email"], name: "index_psicologos_on_email", unique: true
     t.index ["municipio_id"], name: "index_psicologos_on_municipio_id"
@@ -159,7 +154,7 @@ ActiveRecord::Schema.define(version: 2023_04_27_210438) do
     t.string "fone_cod_area"
     t.string "fone_num"
     t.boolean "feminino"
-    t.integer "estado_civil_id"
+    t.integer "civil_estado_id"
     t.integer "instrucao_grau_id"
     t.date "data_nascimento"
     t.string "email"
@@ -172,7 +167,7 @@ ActiveRecord::Schema.define(version: 2023_04_27_210438) do
     t.string "preferencia_contato"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["estado_civil_id"], name: "index_usuarios_on_estado_civil_id"
+    t.index ["civil_estado_id"], name: "index_usuarios_on_civil_estado_id"
     t.index ["instrucao_grau_id"], name: "index_usuarios_on_instrucao_grau_id"
     t.index ["municipio_id"], name: "index_usuarios_on_municipio_id"
   end

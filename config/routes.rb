@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
+  root to: "application#index"
   resources :profissional_funcoes
-  resources :profissionais
+  resources :profissionals
   scope :admin do
     devise_for :psicologos
+    devise_for :profissionals
   end
-  root to: "application#index"
 
   resources :responsavel_usuarios
   resources :parentescos

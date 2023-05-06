@@ -47,8 +47,8 @@
   </div>
 
   <div class="field">
-    <%= form.label :estado_civil_id %>
-    <%= form.text_field :estado_civil_id %>
+    <%= form.label :civil_estado_id %>
+    <%= form.select :civil_estado_id, CivilEstado.all.collect {|c| [c.estado, c.id]} %>
   </div>
 
   <div class="field">

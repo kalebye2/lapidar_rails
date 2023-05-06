@@ -8,7 +8,7 @@ class CreateUsuarios < ActiveRecord::Migration[5.2]
       t.string :fone_cod_area
       t.string :fone_num
       t.boolean :feminino
-      t.references :estado_civil, foreign_key: true
+      t.references :civil_estado, foreign_key: true
       t.references :instrucao_grau, foreign_key: true
       t.date :data_nascimento
       t.string :email

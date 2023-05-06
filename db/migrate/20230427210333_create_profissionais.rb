@@ -1,6 +1,6 @@
 class CreateProfissionais < ActiveRecord::Migration[5.2]
   def change
-    create_table :profissionais do |t|
+    create_table :profissionals do |t|
       t.string :nome
       t.string :sobrenome
       t.boolean :feminino
@@ -17,7 +17,7 @@ class CreateProfissionais < ActiveRecord::Migration[5.2]
       t.string :fone_cod_pais
       t.string :fone_cod_area
       t.string :fone_num
-      t.string :email
+      t.string :email, null: false, default: ""
       t.text :bio
       t.integer :salario
 

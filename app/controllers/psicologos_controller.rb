@@ -8,6 +8,11 @@ class PsicologosController < AuthorizationController
 
   # GET /psicologos/1 or /psicologos/1.json
   def show
+    respond_to do |format|
+      format.html {render :show}
+      format.json {render json: @psicologo}
+      format.pdf {pdf}
+    end
   end
 
   # GET /psicologos/new
@@ -62,21 +67,25 @@ class PsicologosController < AuthorizationController
     pdf = Prawn::Document.new
     pdf.font Rails.root.join("public/assets/fonts/LinBiolinum_R.otf")
     #titulo
-    pdf.text "FICHA DO PSICÓLOGO", size: 48, color: "c51422"
+    pdf.text "FICHA DO PSICÓLOGO", size: 10, color: "c51422", align: :right
 
     #nome
-    pdf.text "#{@psicologo.nome} #{@psicologo.sobrenome}", size: 24, color: "101010"
+    pdf.text "#{@psicologo.nome} #{@psicologo.sobrenome}", size: 48, color: "c51422", align: :center
+    pdf.text "CRP #{@psicologo.crp_regiao.id.to_s.rjust(2, "0")}/#{@psicologo.crp_valor}", size: 24, align: :center
+
+    pdf.move_down 10
     pdf.stroke_horizontal_rule
     pdf.move_down 10
 
-    pdf.text "CRP #{@psicologo.crp_regiao.id.to_s.rjust(2, "0")}/#{@psicologo.crp_valor}"
-    s = @psicologo.feminino == 0 ? "feminino" : "masculino"
+    pdf.text "#{@psicologo.email}"
+    pdf.text "+#{@psicologo.fone_cod_pais} (#{@psicologo.fone_cod_area}) #{@psicologo.fone_num[0,@psicologo.fone_num.size-4]}-#{@psicologo.fone_num[5..-1]}"
+
+    s = @psicologo.feminino ? "FEMININO" : "MASCULINO"
     pdf.text "#{s}"
     pdf.text "#{@psicologo.data_nascimento.strftime("%d/%m/%Y")}"
-    pdf.text "#{@psicologo.civil_estado.estado}"
-    pdf.text "#{@psicologo.email}"
-    pdf.text "(#{@psicologo.fone_cod_area}) #{@psicologo.fone_num}"
+    pdf.text "#{@psicologo.civil_estado.estado.upcase}"
     pdf.text "#{@psicologo.municipio.nome} - #{Uf.find(@psicologo.municipio.uf_id).sigla}"
+    pdf.text "#{@psicologo.bio}"
 
     send_data(pdf.render,
               filename: "#{@psicologo.nome} #{@psicologo.sobrenome}.pdf",
@@ -94,7 +103,7 @@ class PsicologosController < AuthorizationController
 
     # Only allow a list of trusted parameters through.
     def psicologo_params
-      params.require(:psicologo).permit(:nome, :sobrenome, :feminino, :cpf, :data_nascimento, :email, :fone_cod_pais, :fone_cod_area, :fone_num, :civil_estado_id, :crp_regiao_id, :crp_valor, :data_colacao, :municipio_id, :bio, :especializacao_01, :especializacao_02, :chave_pix_01, :chave_pix_02)
+      params.require(:psicologo).permit(:nome, :sobrenome, :feminino, :cpf, :data_nascimento, :email, :password, :fone_cod_pais, :fone_cod_area, :fone_num, :civil_estado_id, :crp_regiao_id, :crp_valor, :data_colacao, :municipio_id, :bio, :especializacao_01, :especializacao_02, :chave_pix_01, :chave_pix_02, :papel)
     end
 
 

@@ -2,61 +2,21 @@
 
 <h1>Psicologos</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Nome</th>
-      <th>Sobrenome</th>
-      <th>Feminino</th>
-      <th>Cpf</th>
-      <th>Data nascimento</th>
-      <th>Email</th>
-      <th>Fone cod pais</th>
-      <th>Fone cod area</th>
-      <th>Fone num</th>
-      <th>Civil estado</th>
-      <th>Crp regiao</th>
-      <th>Crp valor</th>
-      <th>Data colacao</th>
-      <th>Municipio</th>
-      <th>Bio</th>
-      <th>Especializacao 01</th>
-      <th>Especializacao 02</th>
-      <th>Chave pix 01</th>
-      <th>Chave pix 02</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @psicologos.each do |psicologo| %>
-      <tr>
-        <td><%= psicologo.nome %></td>
-        <td><%= psicologo.sobrenome %></td>
-        <td><%= psicologo.feminino %></td>
-        <td><%= psicologo.cpf %></td>
-        <td><%= psicologo.data_nascimento %></td>
-        <td><%= psicologo.email %></td>
-        <td><%= psicologo.fone_cod_pais %></td>
-        <td><%= psicologo.fone_cod_area %></td>
-        <td><%= psicologo.fone_num %></td>
-        <td><%= psicologo.civil_estado %></td>
-        <td><%= psicologo.crp_regiao %></td>
-        <td><%= psicologo.crp_valor %></td>
-        <td><%= psicologo.data_colacao %></td>
-        <td><%= psicologo.municipio %></td>
-        <td><%= psicologo.bio %></td>
-        <td><%= psicologo.especializacao_01 %></td>
-        <td><%= psicologo.especializacao_02 %></td>
-        <td><%= psicologo.chave_pix_01 %></td>
-        <td><%= psicologo.chave_pix_02 %></td>
-        <td><%= link_to 'Show', psicologo %></td>
-        <td><%= link_to 'Edit', edit_psicologo_path(psicologo) %></td>
-        <td><%= link_to 'Destroy', psicologo, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+<div class="psicologos">
+<% @psicologos.each do |p| %>
+  <div class="psicologo-show">
+    <h2><%= p.nome %> <%= p.sobrenome %></h2>
+    <h3>CRP <%= p.crp_regiao.id.to_s.rjust(2, '0') %>/<%= p.crp_valor %></h3>
+    <%= link_to "Show", p %>
+    <%= link_to "Edit", edit_psicologo_path(p) %>
+    <%= link_to "PDF", psicologo_path(p, format: :pdf) %>
+    <p><%= p.bio %></p>
+    <% if !p.especializacao_01.blank? or !p.especializacao_02.blank? %>
+      <%= [p.especializacao_01, p.especializacao_02].join(", ") %>
     <% end %>
-  </tbody>
-</table>
+  </div>
+<% end %>
+</div>
 
 <br>
 

@@ -1,7 +1,9 @@
 class ApplicationController < ActionController::Base
 
   def index
-
+    @c_psicologos = Psicologo.count
+    @c_usuarios = Usuario.count
+    @c_profissionals = Profissional.count
   end
 
 

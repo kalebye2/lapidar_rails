@@ -1,99 +1,32 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Nome:</strong>
-  <%= @psicologo.nome %>
-</p>
+<% fone = "+" + @psicologo.fone_cod_pais.to_s + @psicologo.fone_cod_area.to_s + @psicologo.fone_num.to_s %>
 
-<p>
-  <strong>Sobrenome:</strong>
-  <%= @psicologo.sobrenome %>
-</p>
 
-<p>
-  <strong>Feminino:</strong>
-  <%= @psicologo.feminino %>
-</p>
+<% sexo = @psicologo.feminino ? "F" : "M" %>
 
-<p>
-  <strong>Cpf:</strong>
-  <%= @psicologo.cpf %>
-</p>
+<div class="psicologo-dados">
+  <h1><%= @psicologo.nome %> <%= @psicologo.sobrenome %> (<%= sexo %>)</h1>
+  <h2>CRP 
+    <%= @psicologo.crp_regiao.id.to_s.rjust(2, "0") %>/<%= @psicologo.crp_valor %> (<%= @psicologo.crp_regiao.uf.sigla %>)</h2>
+  <h3>Contato</h3>
+  <p class="email"><a href="mailto:<%= @psicologo.email %>"><%= @psicologo.email %></a></p>
+  <p class="telefone">
+  <a href="tel:+<%= fone %>"><%= fone %></a>
+  <a href="https://wa.me/<%= fone %>" target="_blank">ZapZap</a>
+  </p>
 
-<p>
-  <strong>Data nascimento:</strong>
-  <%= @psicologo.data_nascimento %>
-</p>
+  <% if !@psicologo.especializacao_01.blank? %>
+      <p>Especialização em <%= @psicologo.especializacao_01 %>
+      <% if @psicologo.especializacao_02 %>
+          e  <%= @psicologo.especializacao_02 %>
+      <% end %>
+      </p>
+  <% end %>
 
-<p>
-  <strong>Email:</strong>
-  <%= @psicologo.email %>
-</p>
-
-<p>
-  <strong>Fone cod pais:</strong>
-  <%= @psicologo.fone_cod_pais %>
-</p>
-
-<p>
-  <strong>Fone cod area:</strong>
-  <%= @psicologo.fone_cod_area %>
-</p>
-
-<p>
-  <strong>Fone num:</strong>
-  <%= @psicologo.fone_num %>
-</p>
-
-<p>
-  <strong>Civil estado:</strong>
-  <%= @psicologo.civil_estado %>
-</p>
-
-<p>
-  <strong>Crp regiao:</strong>
-  <%= @psicologo.crp_regiao %>
-</p>
-
-<p>
-  <strong>Crp valor:</strong>
-  <%= @psicologo.crp_valor %>
-</p>
-
-<p>
-  <strong>Data colacao:</strong>
-  <%= @psicologo.data_colacao %>
-</p>
-
-<p>
-  <strong>Municipio:</strong>
-  <%= @psicologo.municipio %>
-</p>
-
-<p>
-  <strong>Bio:</strong>
-  <%= @psicologo.bio %>
-</p>
-
-<p>
-  <strong>Especializacao 01:</strong>
-  <%= @psicologo.especializacao_01 %>
-</p>
-
-<p>
-  <strong>Especializacao 02:</strong>
-  <%= @psicologo.especializacao_02 %>
-</p>
-
-<p>
-  <strong>Chave pix 01:</strong>
-  <%= @psicologo.chave_pix_01 %>
-</p>
-
-<p>
-  <strong>Chave pix 02:</strong>
-  <%= @psicologo.chave_pix_02 %>
-</p>
+  <h3>Biografia</h3>
+  <p><%= @psicologo.bio %></p>
+</div>
 
 <%= link_to 'Edit', edit_psicologo_path(@psicologo) %> |
 <%= link_to 'Back', psicologos_path %>

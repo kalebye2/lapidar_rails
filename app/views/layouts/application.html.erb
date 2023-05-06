@@ -10,16 +10,9 @@
   </head>
 
   <body>
-    <p><%= ActiveRecord::Base.connection %></p>
+    <%= render "nav/navbar" %>
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
-    <% if psicologo_signed_in? %>
-      <%= "#{current_psicologo.nome} #{current_psicologo.sobrenome}" %>
-      <%= link_to "Morrer", destroy_psicologo_session_path, method: :delete %>
-    <% else %>
-      <%= link_to "acordar", new_psicologo_session_path %>
-      <%= link_to "nascer", new_psicologo_registration_path %>
-    <% end %>
 
     <%= yield %>
   </body>
