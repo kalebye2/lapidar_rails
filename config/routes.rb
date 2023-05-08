@@ -1,21 +1,9 @@
 Rails.application.routes.draw do
   root to: "application#index"
-  resources :profissional_funcoes
-  resources :profissionals
   scope :admin do
-    devise_for :psicologos
-    devise_for :profissionals
-  end
+      end
 
-  resources :responsavel_usuarios
-  resources :parentescos
-  resources :psicologos
-  resources :usuarios
   resources :crp_regiaos
-  resources :municipios
-  resources :civil_estados
-  resources :instrucao_graus
-  resources :ufs
   
   # get pdf
   get "/pdf_download", to: "application#pdf_download"

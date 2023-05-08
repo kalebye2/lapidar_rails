@@ -1,2 +1,0 @@
-class Parentesco < ApplicationRecord
-end

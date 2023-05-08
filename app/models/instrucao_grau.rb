@@ -1,2 +1,0 @@
-class InstrucaoGrau < ApplicationRecord
-end

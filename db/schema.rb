@@ -45,13 +45,7 @@ ActiveRecord::Schema.define(version: 2023_05_06_224428) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "profissional_funcoes", force: :cascade do |t|
-    t.string "funcao"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "profissionals", force: :cascade do |t|
+  create_table "profissionais", force: :cascade do |t|
     t.string "nome"
     t.string "sobrenome"
     t.boolean "feminino"
@@ -59,7 +53,7 @@ ActiveRecord::Schema.define(version: 2023_05_06_224428) do
     t.integer "civil_estado_id"
     t.integer "instrucao_grau_id"
     t.date "data_nascimento"
-    t.integer "funcao_id"
+    t.integer "profissional_funcao_id"
     t.integer "municipio_id"
     t.string "endereco_cep"
     t.string "endereco_logradouro"
@@ -82,12 +76,18 @@ ActiveRecord::Schema.define(version: 2023_05_06_224428) do
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.index ["civil_estado_id"], name: "index_profissionals_on_civil_estado_id"
-    t.index ["email"], name: "index_profissionals_on_email", unique: true
-    t.index ["funcao_id"], name: "index_profissionals_on_funcao_id"
-    t.index ["instrucao_grau_id"], name: "index_profissionals_on_instrucao_grau_id"
-    t.index ["municipio_id"], name: "index_profissionals_on_municipio_id"
-    t.index ["reset_password_token"], name: "index_profissionals_on_reset_password_token", unique: true
+    t.index ["civil_estado_id"], name: "index_profissionais_on_civil_estado_id"
+    t.index ["email"], name: "index_profissionais_on_email", unique: true
+    t.index ["instrucao_grau_id"], name: "index_profissionais_on_instrucao_grau_id"
+    t.index ["municipio_id"], name: "index_profissionais_on_municipio_id"
+    t.index ["profissional_funcao_id"], name: "index_profissionais_on_profissional_funcao_id"
+    t.index ["reset_password_token"], name: "index_profissionais_on_reset_password_token", unique: true
+  end
+
+  create_table "profissional_funcoes", force: :cascade do |t|
+    t.string "funcao"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "psicologos", force: :cascade do |t|
@@ -110,7 +110,7 @@ ActiveRecord::Schema.define(version: 2023_05_06_224428) do
     t.string "especializacao_02"
     t.string "chave_pix_01"
     t.string "chave_pix_02"
-    t.integer "papel"
+    t.integer "papel", default: 2, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "encrypted_password", default: "", null: false

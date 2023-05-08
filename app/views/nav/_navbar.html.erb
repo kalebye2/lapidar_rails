@@ -1,6 +1,6 @@
 <nav>
   <% if psicologo_signed_in? %>
-    <%= "#{current_psicologo.nome} #{current_psicologo.sobrenome}" %>
+    <%= "#{current_psicologo.nome} #{current_psicologo.sobrenome} (#{current_psicologo.papel.upcase})" %>
       <%= link_to "Morrer", destroy_psicologo_session_path, method: :delete %>
     <% else %>
       <%= link_to "acordar", new_psicologo_session_path %>
@@ -13,6 +13,6 @@
     <li><%= link_to "Home", root_path %></li>
     <li><%= link_to "Psicólogos", psicologos_path %></li>
     <li><%= link_to "Usuários", usuarios_path %></li>
-    <li><%= link_to "Profissionais", profissionals_path %></li>
+    <li><%= link_to "Profissionais", profissionais_path %></li>
   </ul>
 </nav>

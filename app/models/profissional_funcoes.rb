@@ -1,2 +1,0 @@
-class ProfissionalFuncoes < ApplicationRecord
-end
