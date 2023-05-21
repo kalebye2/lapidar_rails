@@ -1,0 +1,2 @@
+class ProfissionalFuncao < ApplicationRecord
+end

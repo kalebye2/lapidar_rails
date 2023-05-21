@@ -13,3 +13,42 @@
  *= require_tree .
  *= require_self
  */
+
+.simple-calendar {
+	display: grid;
+	content-align: center;
+  .day {
+	text-align: center;
+	content-align: center;
+  }
+
+  .wday-0 {
+	  background-color: pink;
+  }
+  .wday-1 {}
+  .wday-2 {}
+  .wday-3 {}
+  .wday-4 {}
+  .wday-5 {}
+  .wday-6 {}
+
+  .today {
+	background-color: green;
+  }
+  .past {
+	background-color: lightgray;
+  }
+  .future {}
+
+  .start-date {}
+
+  .prev-month {
+	background-color: gray;
+  }
+  .next-month {
+	background-color: gray;
+  }
+  .current-month {}
+
+  .has-events {}
+}

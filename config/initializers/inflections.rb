@@ -18,6 +18,10 @@
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.irregular 'profissional', 'profissionais'
   inflect.irregular 'funcao', 'funcoes'
+  inflect.irregular 'juncao', 'juncoes'
+  inflect.irregular 'especializacao', 'especializacoes'
   inflect.irregular 'regiao', 'regioes'
   inflect.irregular 'papel', 'papeis'
+  inflect.irregular 'pais', 'paises'
+  inflect.irregular 'nota', 'notas'
 end

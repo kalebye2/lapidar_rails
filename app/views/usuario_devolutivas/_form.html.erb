@@ -1,0 +1,47 @@
+<%= form_with(model: usuario_devolutiva, local: true) do |form| %>
+  <% if usuario_devolutiva.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(usuario_devolutiva.errors.count, "error") %> prohibited this usuario_devolutiva from being saved:</h2>
+
+      <ul>
+      <% usuario_devolutiva.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :usuario_id %>
+    <%= form.text_field :usuario_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :usuario_responsavel_id %>
+    <%= form.number_field :usuario_responsavel_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :profissional_id %>
+    <%= form.text_field :profissional_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :data %>
+    <%= form.date_select :data %>
+  </div>
+
+  <div class="field">
+    <%= form.label :feedback_responsavel %>
+    <%= form.text_area :feedback_responsavel %>
+  </div>
+
+  <div class="field">
+    <%= form.label :orientacoes_profissional %>
+    <%= form.text_area :orientacoes_profissional %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

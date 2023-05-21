@@ -1,0 +1,47 @@
+<%= form_with(model: profissional_nota, local: true) do |form| %>
+  <% if profissional_nota.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(profissional_nota.errors.count, "error") %> prohibited this profissional_nota from being saved:</h2>
+
+      <ul>
+      <% profissional_nota.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :profissional_id %>
+    <%= form.text_field :profissional_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :nota %>
+    <%= form.text_area :nota %>
+  </div>
+
+  <div class="field">
+    <%= form.label :data %>
+    <%= form.date_select :data %>
+  </div>
+
+  <div class="field">
+    <%= form.label :hora %>
+    <%= form.time_select :hora %>
+  </div>
+
+  <div class="field">
+    <%= form.label :data_lembrar %>
+    <%= form.date_select :data_lembrar %>
+  </div>
+
+  <div class="field">
+    <%= form.label :hora_lembrar %>
+    <%= form.time_select :hora_lembrar %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

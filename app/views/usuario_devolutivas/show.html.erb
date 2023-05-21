@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Usuario:</strong>
+  <%= @usuario_devolutiva.usuario %>
+</p>
+
+<p>
+  <strong>Usuario responsavel:</strong>
+  <%= @usuario_devolutiva.usuario_responsavel_id %>
+</p>
+
+<p>
+  <strong>Profissional:</strong>
+  <%= @usuario_devolutiva.profissional %>
+</p>
+
+<p>
+  <strong>Data:</strong>
+  <%= @usuario_devolutiva.data %>
+</p>
+
+<p>
+  <strong>Feedback responsavel:</strong>
+  <%= @usuario_devolutiva.feedback_responsavel %>
+</p>
+
+<p>
+  <strong>Orientacoes profissional:</strong>
+  <%= @usuario_devolutiva.orientacoes_profissional %>
+</p>
+
+<%= link_to 'Edit', edit_usuario_devolutiva_path(@usuario_devolutiva) %> |
+<%= link_to 'Back', usuario_devolutivas_path %>

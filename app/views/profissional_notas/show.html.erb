@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Profissional:</strong>
+  <%= @profissional_nota.profissional %>
+</p>
+
+<p>
+  <strong>Nota:</strong>
+  <%= @profissional_nota.nota %>
+</p>
+
+<p>
+  <strong>Data:</strong>
+  <%= @profissional_nota.data %>
+</p>
+
+<p>
+  <strong>Hora:</strong>
+  <%= @profissional_nota.hora %>
+</p>
+
+<p>
+  <strong>Data lembrar:</strong>
+  <%= @profissional_nota.data_lembrar %>
+</p>
+
+<p>
+  <strong>Hora lembrar:</strong>
+  <%= @profissional_nota.hora_lembrar %>
+</p>
+
+<%= link_to 'Edit', edit_profissional_nota_path(@profissional_nota) %> |
+<%= link_to 'Back', profissional_notas_path %>

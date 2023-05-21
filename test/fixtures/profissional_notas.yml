@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  profissional: one
+  nota: MyText
+  data: 2023-05-15
+  hora: 2023-05-15 11:10:13
+  data_lembrar: 2023-05-15
+  hora_lembrar: 2023-05-15 11:10:13
+
+two:
+  profissional: two
+  nota: MyText
+  data: 2023-05-15
+  hora: 2023-05-15 11:10:13
+  data_lembrar: 2023-05-15
+  hora_lembrar: 2023-05-15 11:10:13

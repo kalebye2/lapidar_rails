@@ -1,0 +1,64 @@
+<%= titulo "Pessoas cadastradas" %>
+<p id="notice"><%= notice %></p>
+
+<h1>Pessoas</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Sobrenome</th>
+      <th>Cpf</th>
+      <th>Fone cod pais</th>
+      <th>Fone cod area</th>
+      <th>Fone num</th>
+      <th>Feminino</th>
+      <th>Civil estado</th>
+      <th>Instrucao grau</th>
+      <th>Data nascimento</th>
+      <th>Email</th>
+      <th>Pais</th>
+      <th>Estado</th>
+      <th>Cidade</th>
+      <th>Endereco cep</th>
+      <th>Endereco logradouro</th>
+      <th>Endereco numero</th>
+      <th>Endereco complemento</th>
+      <th>Preferencia contato</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @pessoas.each do |pessoa| %>
+      <tr>
+        <td><%= pessoa.nome %></td>
+        <td><%= pessoa.sobrenome %></td>
+        <td><%= pessoa.cpf %></td>
+        <td><%= pessoa.fone_cod_pais %></td>
+        <td><%= pessoa.fone_cod_area %></td>
+        <td><%= pessoa.fone_num %></td>
+        <td><%= pessoa.feminino %></td>
+        <td><%= pessoa.civil_estado %></td>
+        <td><%= pessoa.instrucao_grau %></td>
+        <td><%= pessoa.data_nascimento %></td>
+        <td><%= pessoa.email %></td>
+        <td><%= pessoa.pais %></td>
+        <td><%= pessoa.estado %></td>
+        <td><%= pessoa.cidade %></td>
+        <td><%= pessoa.endereco_cep %></td>
+        <td><%= pessoa.endereco_logradouro %></td>
+        <td><%= pessoa.endereco_numero %></td>
+        <td><%= pessoa.endereco_complemento %></td>
+        <td><%= pessoa.preferencia_contato %></td>
+        <td><%= link_to 'Show', pessoa %></td>
+        <td><%= link_to 'Edit', edit_pessoa_path(pessoa) %></td>
+        <td><%= link_to 'Destroy', pessoa, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Pessoa', new_pessoa_path %>

@@ -1,0 +1,18 @@
+INSERT INTO continentes (id, nome, created_at, updated_at)
+VALUES (
+  1, 
+  'África', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), (
+  2, 
+  'América do Norte', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), (
+  3, 
+  'América Central', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), (
+  4, 
+  'América do Sul', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), (
+  5, 
+  'Antártica', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), (
+  6, 
+  'Ásia', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), (
+  7, 
+  'Europa', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), (
+  8, 
+  'Oceania', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)

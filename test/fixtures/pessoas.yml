@@ -1,0 +1,43 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nome: MyString
+  sobrenome: MyString
+  cpf: MyString
+  fone_cod_pais: MyString
+  fone_cod_area: MyString
+  fone_num: MyString
+  feminino: false
+  civil_estado: one
+  instrucao_grau: one
+  data_nascimento: 2023-05-13
+  email: MyString
+  pais: one
+  estado: MyString
+  cidade: MyString
+  endereco_cep: 1
+  endereco_logradouro: MyString
+  endereco_numero: 1
+  endereco_complemento: MyString
+  preferencia_contato: MyString
+
+two:
+  nome: MyString
+  sobrenome: MyString
+  cpf: MyString
+  fone_cod_pais: MyString
+  fone_cod_area: MyString
+  fone_num: MyString
+  feminino: false
+  civil_estado: two
+  instrucao_grau: two
+  data_nascimento: 2023-05-13
+  email: MyString
+  pais: two
+  estado: MyString
+  cidade: MyString
+  endereco_cep: 1
+  endereco_logradouro: MyString
+  endereco_numero: 1
+  endereco_complemento: MyString
+  preferencia_contato: MyString

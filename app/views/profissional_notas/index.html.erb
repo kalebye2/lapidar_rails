@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Profissional Notas</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Profissional</th>
+      <th>Nota</th>
+      <th>Data</th>
+      <th>Hora</th>
+      <th>Data lembrar</th>
+      <th>Hora lembrar</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @profissional_notas.each do |profissional_nota| %>
+      <tr>
+        <td><%= profissional_nota.profissional %></td>
+        <td><%= profissional_nota.nota %></td>
+        <td><%= profissional_nota.data %></td>
+        <td><%= profissional_nota.hora %></td>
+        <td><%= profissional_nota.data_lembrar %></td>
+        <td><%= profissional_nota.hora_lembrar %></td>
+        <td><%= link_to 'Show', profissional_nota %></td>
+        <td><%= link_to 'Edit', edit_profissional_nota_path(profissional_nota) %></td>
+        <td><%= link_to 'Destroy', profissional_nota, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Profissional Nota', new_profissional_nota_path %>

@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nome: MyString
+  nome_ingles: MyString
+  nome_oficial: MyString
+  sigla_2: MyString
+  sigla_3: MyString
+  iso_3166_numerico: 1
+  continente: one
+
+two:
+  nome: MyString
+  nome_ingles: MyString
+  nome_oficial: MyString
+  sigla_2: MyString
+  sigla_3: MyString
+  iso_3166_numerico: 1
+  continente: two
