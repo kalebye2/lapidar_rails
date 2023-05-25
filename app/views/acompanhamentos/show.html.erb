@@ -9,12 +9,11 @@
 <p><%= @acompanhamento.data_final ? (render_data_brasil @acompanhamento.data_final) : "Em andamento" %><%= @acompanhamento.acompanhamento_finalizacao_motivo ? " (finalização por #{@acompanhamento.acompanhamento_finalizacao_motivo.motivo})" : "" %></p>
 
 <p>Valor da sessão: <%= render_dinheiro_centavos @acompanhamento.valor_atual %></p>
-<p>Valor do contrato: <%= render_dinheiro_centavos @acompanhamento.valor_contrato %></p>
 
 <div class="atendimentos-lista">
   <ul>
     <% @acompanhamento.atendimento.order(data: :desc).each do |a| %>
-      <%= link_to '#', class: "atendimento" do %><li><%= render_data_brasil a.data %> às <%= render_hora_brasil a.horario %> <%= a.presenca == '1' ? '(PRESENTE)' : a.data < Time.now.to_date ? '(AUSENTE)' : a.data == Time.now.to_date && a.horario < Time.now.to_time ? '(AUSENTE)' : '' %></li><% end %>
+      <%= link_to a, class: "atendimento" do %><li><%= render_data_brasil a.data %> às <%= render_hora_brasil a.horario %> <%= a.presenca == '1' ? '(PRESENTE)' : a.data < Time.now.to_date ? '(AUSENTE)' : a.data == Time.now.to_date && a.horario < Time.now.to_time ? '(AUSENTE)' : '' %></li><% end %>
       <% if a.atendimento_valor != nil %>
         <%= render_dinheiro_centavos a.atendimento_valor.valor %><%= a.atendimento_valor.taxa_porcentagem > 0 ? " (taxa de #{render_porcentagem_int a.atendimento_valor.taxa_porcentagem})" : "" %>
         Líquido: <%= render_dinheiro_centavos (a.atendimento_valor.valor - (a.atendimento_valor.valor * a.atendimento_valor.taxa_porcentagem / 10000 )) %>

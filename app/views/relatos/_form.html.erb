@@ -1,0 +1,22 @@
+<%= form_with(model: relato, local: true) do |form| %>
+  <% if relato.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(pessoa.errors.count, "erro") %> evitou que este relato fosse salvo:
+        <ul>
+          <% pessoa.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :atendimento %>
+    <%= form.search_field :atendimento %>
+  </div>
+  <div class="field">
+    <%= form.label :relato %>
+    <%= form.text_area :relato %>
+  </div>
+
+<% end %>

@@ -2,27 +2,11 @@
 
 <h1>Usuarios</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Pessoa</th>
-      <th>Profissao</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @usuarios.each do |usuario| %>
-      <tr>
-        <td><%= usuario.pessoa %></td>
-        <td><%= usuario.profissao %></td>
-        <td><%= link_to 'Show', usuario %></td>
-        <td><%= link_to 'Edit', edit_usuario_path(usuario) %></td>
-        <td><%= link_to 'Destroy', usuario, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="pessoas-container">
+  <% @usuarios.each do |usuario| %>
+    <%= render partial: "pessoas/card", locals: {p: usuario.pessoa } %>
+  <% end %>
+</div>
 
 <br>
 

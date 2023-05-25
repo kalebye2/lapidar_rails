@@ -1,4 +1,6 @@
 class AtendimentosController < ApplicationController
+  before_action :set_atendimento, only: %i[ show edit update destroy ]
+
   def index
   end
 
@@ -18,5 +20,12 @@ class AtendimentosController < ApplicationController
   end
 
   def destroy
+  end
+
+
+  private
+
+  def set_atendimento
+    @atendimento = Atendimento.find(params[:id])
   end
 end

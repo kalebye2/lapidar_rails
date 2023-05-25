@@ -33,7 +33,7 @@
   .wday-6 {}
 
   .today {
-	background-color: green;
+	background-color: lightgreen;
   }
   .past {
 	background-color: lightgray;

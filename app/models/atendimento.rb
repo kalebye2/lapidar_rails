@@ -5,4 +5,6 @@ class Atendimento < ApplicationRecord
   belongs_to :atendimento_modalidade, foreign_key: :modalidade_id
   belongs_to :atendimento_valor, foreign_key: :id, primary_key: :atendimento_id
 
+  belongs_to :relato, foreign_key: :id, primary_key: :id
+
 end

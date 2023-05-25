@@ -2,8 +2,18 @@
 
 <!-- calendário -->
 <h2>Atendimentos do mês</h2>
-<%= month_calendar do |date| %>
+<%= month_calendar(events: @atendimentos, attribute: :data) do |date, atendimentos| %>
   <div>
     <%= date.strftime("%d") %>
+    <% atendimentos.each do |atendimento| %>
+      <div class="atendimento-card">
+        <%= link_to atendimento, class: "atendimento-link" do %>
+          <p><%= render_hora_brasil atendimento.horario %>:
+            <%= atendimento.acompanhamento.usuario.nome_completo %>
+
+          </p>
+        <% end %>
+      </div>
+    <% end %>
   </div>
 <% end %>

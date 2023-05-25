@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
     #@c_psicologos = Psicologo.count
     #@c_usuarios = Usuario.count
     #@c_profissionals = Profissional.count
+    @atendimentos = Atendimento.where(data: Time.now.beginning_of_month.beginning_of_week..Time.now.end_of_month.end_of_week)
   end
 
 

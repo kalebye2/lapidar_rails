@@ -1,0 +1,11 @@
+<h1>Relatos#index</h1>
+<p>Find me in app/views/relatos/index.html.erb</p>
+
+<%= link_to "Novo relato", new_relato_path %>
+<% @relatos.each do |relato| %>
+  <div class="relato">
+    <%= link_to relato, class: "relato-link" do %>
+      <h2><%= relato.atendimento.acompanhamento.usuario.pessoa.nome %> <%= relato.atendimento.acompanhamento.usuario.pessoa.sobrenome %> <%= render_data_brasil relato.atendimento.data %> - <%= render_hora_brasil relato.atendimento.horario %></h2>
+    <% end %>
+  </div>
+<% end %>

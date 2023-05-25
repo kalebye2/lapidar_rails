@@ -8,6 +8,10 @@ class Pessoa < ApplicationRecord
   has_one :profissional
 
 
+  def nome_completo
+    nome + ' ' + sobrenome
+  end
+
   def render_cpf
     cr = cpf.to_s
     # padding zeros

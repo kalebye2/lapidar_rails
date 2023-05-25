@@ -11,4 +11,7 @@ class Profissional < ApplicationRecord
     "#{profissional_funcao.documento_tipo} #{('00' + documento_regiao_id.to_s)[-2..] }/#{documento_valor}"
   end
 
+  def nome_completo
+    pessoa.nome + ' ' + pessoa.sobrenome
+  end
 end

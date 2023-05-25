@@ -1,0 +1,23 @@
+<% if p != nil %>
+  <% u = p.usuario %>
+  <% pro = p.profissional %>
+  <%= link_to p, class: "pessoa-card" + " " + (p.feminino ? "feminino" : "masculino") + " " + "#{pro ? "profissional" : u ? "usuario" : '' }" do%>
+    <div>
+      <h2><%= p.nome %> <%= p.sobrenome %> <%#= p.feminino ? "(F)" : "(M)" %></h2>
+
+      <h6>
+        <%= if pro != nil then pro.profissional_funcao.funcao.upcase elsif u != nil then u.profissao != nil ? u.profissao.upcase : "NA" else "NA" end %>
+      </h6>
+      <!-- informações -->
+      <p><%= p.data_nascimento ? p.render_data_nascimento : "Data de nascimento não informada" %> (<%= p.render_idade %>)</p>
+      <% if p.cpf then %>
+        <p><%= p.render_cpf %></p>
+      <% end %>
+        <p><%= p.email ? p.email : "Não definido" %></p>
+        <p><%= (p.fone_cod_pais || p.fone_cod_area || p.fone_num) ? p.render_fone : "Não definido" %></p>
+    </div>
+  <% end %>
+
+<% else %>
+  AAAAAAA
+<% end %>
