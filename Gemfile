@@ -68,3 +68,5 @@ gem 'prawn'
 gem "simple_calendar", "~> 2.4"
 
 gem 'kramdown'
+
+gem 'mysql2'

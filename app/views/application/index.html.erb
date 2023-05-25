@@ -1,4 +1,4 @@
-<h1>A</h1>
+<h1><%= Rails.application.class.parent.to_s %></h1>
 
 <!-- calendário -->
 <h2>Atendimentos do mês</h2>
@@ -7,6 +7,3 @@
     <%= date.strftime("%d") %>
   </div>
 <% end %>
-<p>Número de psicólogos registrados: <%= @c_psicologos %></p>
-<p>Número de usuários registrados: <%= @c_usuarios %></p>
-<p>Número de profissionais da clínica registrados: <%= @c_profissionals %></p>

@@ -1,99 +1,96 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Nome:</strong>
-  <%= @pessoa.nome %>
-</p>
+<% pro = @pessoa.profissional %>
+<% u = @pessoa.usuario %>
 
-<p>
-  <strong>Sobrenome:</strong>
-  <%= @pessoa.sobrenome %>
-</p>
+<div class="info-container">
+    <div class="pessoa-container">
+      <h2><%= @pessoa.nome %> <%= @pessoa.sobrenome %> <%= @pessoa.render_sexo_sigla %></h2>
+    
+    
+      <!-- se for profissional -->
+      <% if pro != nil %>
+        <div class="profissional">
+          <% profunc = pro.profissional_funcao %>
+          <p><%= profunc.funcao %> <%= pro.render_documento %></p>
+        </div>
+      <% end %>
 
-<p>
-  <strong>Cpf:</strong>
-  <%= @pessoa.cpf %>
-</p>
+      <!-- se for usuário do serviço -->
+      <% if u != nil %>
+        <div class="usuario">
+          <p><%= u.profissao.to_s.upcase %></p>
+          <p><%= u.preferencia_contato %></p>
+        </div>
+      <% end %>
 
-<p>
-  <strong>Fone cod pais:</strong>
-  <%= @pessoa.fone_cod_pais %>
-</p>
+      <p>
+      <%= @pessoa.render_cpf %>
+      </p>
 
-<p>
-  <strong>Fone cod area:</strong>
-  <%= @pessoa.fone_cod_area %>
-</p>
+      <!-- informações de contato -->
+      <div class="contato">
+        <%= link_to @pessoa.email, "mailto:#{@pessoa.email}" %>
+        <%= link_to @pessoa.render_fone, "tel:#{@pessoa.render_fone_link}" %>
+        <%= link_to "ZAPZAP", "https://wa.me/#{@pessoa.render_fone_link}", target: :_blank %>
+      </div>
 
-<p>
-  <strong>Fone num:</strong>
-  <%= @pessoa.fone_num %>
-</p>
+      <!-- dados pessoais -->
+      <div class="dados-pessoais">
+        <% if @pessoa.data_nascimento != nil %>
+          <p><%= render_data_brasil @pessoa.data_nascimento %> (<%= @pessoa.render_idade %>)</p>
+        <% end %>
+        <%= @pessoa.instrucao_grau.grau.upcase %>
+        <%= @pessoa.civil_estado.estado.upcase %>
+      </div>
 
-<p>
-  <strong>Feminino:</strong>
-  <%= @pessoa.feminino %>
-</p>
+      <!-- dados de endereço -->
+      <div class="endereco">
+        <%= @pessoa.render_endereco %>
+        <p><%= @pessoa.render_cidade_estado %></p>
+        <p><%= @pessoa.pais.nome %></p>
+      </div>
+    </div>
 
-<p>
-  <strong>Civil estado:</strong>
-  <%= @pessoa.civil_estado %>
-</p>
 
-<p>
-  <strong>Instrucao grau:</strong>
-  <%= @pessoa.instrucao_grau %>
-</p>
+    <div class="acompanhamentos">
+      <!-- se é profissional -->
+      <% if pro != nil %>
+        <div class="profissional-acompanhamentos">
+          <ul>
+          <% pro.acompanhamento.order(data_inicio: :desc).each do |a| %>
+            <%= link_to a, class: "#{a.data_final ? 'acompanhamento-finalizado' : 'acompanhamento-em-andamento'}" do %><li><%= a.render_info_para_profissional %></li><% end %>
+          <% end %>
+          </ul>
+        </div>
+      <% end %>
 
-<p>
-  <strong>Data nascimento:</strong>
-  <%= @pessoa.data_nascimento %>
-</p>
+      <!-- se é usuário -->
+      <% if u != nil %>
 
-<p>
-  <strong>Email:</strong>
-  <%= @pessoa.email %>
-</p>
+        <!-- últimos atendimentos ou próximos -->
+        <div class="usuario-proximos-atendimentos">
+          <h3>Próximos atendimentos</h3>
+          <ul>
+            <% u.acompanhamento.each do |ac| %>
+              <% ac.atendimento.where("DATEDIFF(data, CURRENT_DATE) >= 0").each do |at| %>
+                <li><%= render_data_brasil at.data %> às <%= render_hora_brasil at.horario %></li>
+              <% end %>
+            <% end %>
+          </ul>
+        </div>
 
-<p>
-  <strong>Pais:</strong>
-  <%= @pessoa.pais %>
-</p>
+        <div class="usuario-acompanhamentos">
+          <ul>
+          <% u.acompanhamento.order(data_inicio: :desc).each do |a| %>
+            <%= link_to a do %><li><%= a.render_info_para_usuario %></li><% end %>
+          <% end %>
+          </ul>
+        </div>
+      <% end %>
+    </div>
 
-<p>
-  <strong>Estado:</strong>
-  <%= @pessoa.estado %>
-</p>
-
-<p>
-  <strong>Cidade:</strong>
-  <%= @pessoa.cidade %>
-</p>
-
-<p>
-  <strong>Endereco cep:</strong>
-  <%= @pessoa.endereco_cep %>
-</p>
-
-<p>
-  <strong>Endereco logradouro:</strong>
-  <%= @pessoa.endereco_logradouro %>
-</p>
-
-<p>
-  <strong>Endereco numero:</strong>
-  <%= @pessoa.endereco_numero %>
-</p>
-
-<p>
-  <strong>Endereco complemento:</strong>
-  <%= @pessoa.endereco_complemento %>
-</p>
-
-<p>
-  <strong>Preferencia contato:</strong>
-  <%= @pessoa.preferencia_contato %>
-</p>
+</div>
 
 <%= link_to 'Edit', edit_pessoa_path(@pessoa) %> |
 <%= link_to 'Back', pessoas_path %>

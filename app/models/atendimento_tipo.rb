@@ -1,0 +1,3 @@
+class AtendimentoTipo < ApplicationRecord
+
+end

@@ -16,7 +16,10 @@ module Lapsidar
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
 
-    config.time_zone = 'America/Sao_Paulo'
+    # talvez no futuro configurar isto direito
+    #config.time_zone = 'Brasilia'
     config.beginning_of_week = :sunday
+
+    config.i18n.default_locale = :pt
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_05_17_212910) do
+ActiveRecord::Schema.define(version: 2023_05_17_213050) do
 
   create_table "civil_estados", force: :cascade do |t|
     t.string "estado"
@@ -158,6 +158,19 @@ ActiveRecord::Schema.define(version: 2023_05_17_212910) do
     t.string "sigla"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "usuario_devolutivas", force: :cascade do |t|
+    t.integer "usuario_id"
+    t.integer "usuario_responsavel_id"
+    t.integer "profissional_id"
+    t.date "data"
+    t.text "feedback_responsavel"
+    t.text "orientacoes_profissional"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["profissional_id"], name: "index_usuario_devolutivas_on_profissional_id"
+    t.index ["usuario_id"], name: "index_usuario_devolutivas_on_usuario_id"
   end
 
   create_table "usuarios", force: :cascade do |t|

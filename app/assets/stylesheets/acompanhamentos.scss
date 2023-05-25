@@ -1,0 +1,46 @@
+// Place all the styles related to the acompanhamentos controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+a {
+	text-decoration: none;
+}
+
+.acompanhamentos-container {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+}
+
+.acompanhamento-card {
+	background-color: black;
+	color: white;
+	margin: 1em;
+	padding: 1em;
+	border-radius: 1em;
+
+	transition: transform 178ms ease-out;
+
+	&:hover {
+		transform: scale(103%);
+	}
+}
+
+.acompanhamento-em-andamento {
+	background-color: green;
+}
+
+.acompanhamento-finalizado {
+	opacity: .5;
+}
+.acompanhamento-finalizado-motivos-financeiros {
+	background-color: lightgreen;
+}
+.acompanhamento-finalizado-desistencia {
+	background-color: darkred;
+}
+.acompanhamento-finalizado-alta {
+	background-color: blue;
+}
+.acompanhamento-finalizado-encaminhamento {
+	background-color: orange;
+}

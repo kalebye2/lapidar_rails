@@ -3,7 +3,7 @@ class PessoasController < ApplicationController
 
   # GET /pessoas or /pessoas.json
   def index
-    @pessoas = Pessoa.all
+    @pessoas = Pessoa.all.order(nome: :asc, sobrenome: :asc)
   end
 
   # GET /pessoas/1 or /pessoas/1.json
@@ -56,6 +56,7 @@ class PessoasController < ApplicationController
       format.json { head :no_content }
     end
   end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

@@ -1,0 +1,24 @@
+<h1>Acompanhamentos</h1>
+
+<nav>
+  <% AcompanhamentoTipo.all.each do |t| %>
+    <%= t.tipo.titlecase %>
+  <% end %>
+</nav>
+
+<div class="acompanhamentos-container">
+  <% @acompanhamentos.each do |a| %>
+    <%= link_to a, class: "acompanhamento-card" + " " + "#{a.data_final ? 'acompanhamento-finalizado' : 'acompanhamento-em-andamento'}" + " " + "#{a.acompanhamento_finalizacao_motivo ? 'acompanhamento-finalizado-' + a.acompanhamento_finalizacao_motivo.motivo.downcase.parameterize : ''}" do %>
+    <div>
+      <% p = a.usuario.pessoa %>
+      <% pro = a.profissional %>
+      <% prop = pro.pessoa %>
+      <h4><%= a.acompanhamento_tipo.tipo.to_s.upcase %></h4>
+      <h2><%= "#{p.nome} #{p.sobrenome} #{p.render_sexo_sigla}" %></h2>
+      <h3><%= prop.nome %> <%= prop.sobrenome %> <span style="font-size:.8em;font-weight:normal;"><%= pro.render_documento %></span></h3>
+      <p><%= render_data_brasil a.data_inicio %> - <%= (render_data_brasil a.data_final) || "Em andamento" %> <%= a.data_final ? "(#{a.acompanhamento_finalizacao_motivo.motivo.upcase})" : "" %></p>
+      <p><%= a.atendimento.count %> <%= a.atendimento.count == 1 ? 'sessão' : 'sessões' %></p>
+    </div>
+  <% end %>
+  <% end %>
+</div>

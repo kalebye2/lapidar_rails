@@ -1,3 +1,65 @@
 // Place all the styles related to the pessoas controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.usuario-acompanhamentos {
+	li {
+		--padding-v: .3em;
+		background-color: yellow;
+		padding: var(--padding-v);
+		margin: var(--padding-v);
+		border-radius: 1em;
+	}
+}
+
+.profissional-acompanhamentos {
+	li {
+		--padding-v: .5em;
+		background-color: darkcyan;
+		color: white;
+		padding: var(--padding-v);
+		margin: var(--padding-v);
+		border-radius: 1em;
+
+		&:hover {
+			background-color: darkred;
+		}
+	}
+}
+
+.pessoas-container {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+}
+
+.pessoa-card {
+	background-color: black;
+	color: white;
+	margin: 1em;
+	padding: .5em;
+	border-radius: 1em;
+	text-decoration: none;
+
+	transition: transform 250ms ease-out;
+
+	h2, p {
+		text-align: center;
+	}
+
+}
+
+.pessoa-card:hover {
+	transform: scale(105%);
+}
+
+.masculino {
+	background-color: darkblue;
+}
+.feminino {
+	background-color: darkred;
+}
+
+.profissional {
+	background-color: darkorange;
+}
+
