@@ -17,6 +17,12 @@
 .simple-calendar {
 	display: grid;
 	content-align: center;
+
+  .table {
+	  display: table;
+	  width: 100%;
+	table-layout: fixed;	
+  }
   .day {
 	text-align: center;
 	content-align: center;
@@ -51,4 +57,30 @@
   .current-month {}
 
   .has-events {}
+}
+
+.calendario-dia {
+	margin: 0;
+	position: relative;
+	top: 0;
+	left: 0;
+}
+
+
+.modal {
+	position: fixed;
+	z-index: 1;
+	padding: 2em;
+	width: 62%;
+	
+	/* center */
+	left: 50%;
+	right: 50%;
+	transform: translate(-50%, -50%);
+	overflow: auto;
+	background-color: #fdfdfd;
+	border-radius: 10px;
+
+	/* add drop shadow */
+	box-shadow: 0 0 2rem black;
 }

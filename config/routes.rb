@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
+  resources :recebimentos, path: '/financeiro'
   resources :profissionais
   resources :usuario_devolutivas
   resources :crp_regioes
   resources :profissional_notas
   resources :usuarios
-  resources :pessoas
+  #resources :pessoas
   resources :pessoas, path: '/cadastros'
   resources :paises
   resources :continentes

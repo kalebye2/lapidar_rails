@@ -1,0 +1,30 @@
+<h1>Recebimentos#index</h1>
+<p>
+  Recebimentos do mês:
+  <% @total_mes = 0 %>
+  <% Recebimento.where("MONTH(data) = MONTH(CURRENT_DATE)").each do |recebimento| %>
+    <% @total_mes += recebimento.valor %>
+  <% end %>
+  <%= render_dinheiro_centavos @total_mes %>
+</p>
+
+<p>
+  Recebimentos totais:
+  <% @total = 0 %>
+  <% @recebimentos.each do |recebimento| %>
+    <% @total += recebimento.valor %>
+  <% end %>
+  <%= render_dinheiro_centavos @total %>
+</p>
+
+<div class="recebimentos-container">
+  <% @recebimentos.each do |recebimento| %>
+    <div class="recebimento-card">
+      <h2><%= recebimento.usuario_beneficiario.nome_completo %></h2>
+      <h3><%= if !recebimento.usuario_pagante.nil? then " (pago por #{recebimento.usuario_pagante.nome_completo})" end %></h3>
+      <p><strong><%= render_dinheiro_centavos recebimento.valor %></strong></p>
+      <p><%= render_data_brasil recebimento.data %></p>
+      <p><%= recebimento.profissional.nome_completo %> <span style="font-size:.7em;"><%= recebimento.profissional.render_documento %></span></p>
+    </div>
+  <% end %>
+</div>

@@ -28,4 +28,8 @@ class AtendimentosController < ApplicationController
   def set_atendimento
     @atendimento = Atendimento.find(params[:id])
   end
+
+  def atendimento_params
+    params.require(:atendimento).permit(:data, :horario, :modalidade_id, :acompanhamento_id, :presenca, :atendimento_tipo_id, :consideracoes)
+  end
 end

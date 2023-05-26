@@ -1,0 +1,2 @@
+class RecebimentoModalidade < ApplicationRecord
+end

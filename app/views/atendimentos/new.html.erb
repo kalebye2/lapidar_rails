@@ -1,2 +1,12 @@
-<h1>Atendimentos#new</h1>
-<p>Find me in app/views/atendimentos/new.html.erb</p>
+<%= turbo_frame_tag "modal" do %>
+  <!--<div class="modal">-->
+  <div>
+    <h1>Novo atendimento</h1>
+
+    <%= render "form", atendimento: @atendimento %>
+    <%= link_to "Cancelar", "javascript:void(0);", data: {
+      controller: "modals",
+      action: "modals#close"
+    }, class: "btn-cancel" %>
+  </div>
+<% end %>

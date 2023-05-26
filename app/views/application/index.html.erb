@@ -1,16 +1,51 @@
-<h1><%= Rails.application.class.parent.to_s %></h1>
+<h1><%= Rails.application.class %></h1>
+
+<!-- atendimentos de hoje -->
+<table style="width:100%;">
+  <thead>
+    <tr><th colspan="4">Atendimentos de hoje</th></tr>
+    <tr>
+      <th>Profissional</th>
+      <th>Paciente</th>
+      <th>Tipo</th>
+      <th>Horário</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @atendimentos_hoje.each do |ah| %>
+      <tr>
+        <td>
+        <%= ah.acompanhamento.profissional.nome_completo %>
+        <span style="font-size:.7em;"><%= ah.acompanhamento.profissional.render_documento %></span>
+        </td>
+        <td>
+          <%= ah.acompanhamento.usuario.nome_completo %>
+        </td>
+        <td>
+          <%= ah.atendimento_tipo.tipo %>
+        </td>
+        <td>
+          <%= render_hora_brasil ah.horario %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
 <!-- calendário -->
 <h2>Atendimentos do mês</h2>
 <%= month_calendar(events: @atendimentos, attribute: :data) do |date, atendimentos| %>
   <div>
-    <%= date.strftime("%d") %>
+    <div class="calendario-dia"><%= date.strftime("%d") %></div>
+
     <% atendimentos.each do |atendimento| %>
       <div class="atendimento-card">
         <%= link_to atendimento, class: "atendimento-link" do %>
           <p><%= render_hora_brasil atendimento.horario %>:
-            <%= atendimento.acompanhamento.usuario.nome_completo %>
-
+          <%= atendimento.acompanhamento.usuario.nome_completo %>
+          <br />
+          <span style="font-size:.7em;">(<%= atendimento.atendimento_tipo.tipo.upcase %>)</span>
           </p>
         <% end %>
       </div>
