@@ -18,10 +18,12 @@ a {
 	padding: 1em;
 	border-radius: 1em;
 
-	transition: transform 178ms ease-out;
+	transition: transform 178ms ease-out,
+		box-shadow 178ms ease-out;
 
 	&:hover {
-		transform: scale(103%);
+		transform: translate(0, -.5em);
+		box-shadow: 0 .5em gray;
 	}
 }
 

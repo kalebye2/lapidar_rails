@@ -1,3 +1,4 @@
+<% content_for titulo "" %>
 <h1><%= Rails.application.class %></h1>
 
 <!-- atendimentos de hoje -->
@@ -64,6 +65,15 @@
 <% end %>
 
 <!-- calendário semanal? -->
+<h3><%= @atendimentos.count %> atendimentos nesta semana</h3>
+<p>
+<% atendidos = @atendimentos.where(presenca: true).count %>
+<% nao_atendidos = @atendimentos.where("data < CURRENT_DATE AND presenca = FALSE").count %>
+<% futuros = @atendimentos.where("data > CURRENT_DATE").count %>
+<%= atendidos %> <%= 'realizados'.pluralize(atendidos) %>,
+<%= nao_atendidos %> <%= 'não realizado'.pluralize(nao_atendidos) %>,
+<%= futuros %> <%= 'futuro'.pluralize(futuros) %>.
+</p>
 <%= week_calendar(events: @atendimentos, attribute: :data) do |date, atendimentos|%>
   <div class="day">
     <%= date.day %>

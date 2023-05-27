@@ -1,5 +1,18 @@
 Rails.application.routes.draw do
-  resources :recebimentos, path: '/financeiro'
+  get 'atendimento_valores/index'
+  get 'atendimento_valores/index_pdf'
+  get 'atendimento_valores/show'
+  get 'atendimento_valores/show_pdf'
+  get 'atendimento_valores/new'
+  get 'atendimento_valores/create'
+  get 'atendimento_valores/edit'
+  get 'atendimento_valores/update'
+  get 'atendimento_valores/delete'
+  get 'financeiro/index'
+  get 'financeiro/atendimento_valor'
+  get 'financeiro/recebimento_usuario'
+  get 'financeiro/repasse_profissionais'
+  resources :recebimentos
   resources :profissionais
   resources :usuario_devolutivas
   resources :crp_regioes
@@ -13,8 +26,10 @@ Rails.application.routes.draw do
   resources :atendimentos
   resources :relatos
   resources :usuario_extra_informacoes
+  resources :atendimento_valores
 
   root to: "application#index"
+  get '/financeiro', to: "financeiro#index"
 
   scope :admin do
   end

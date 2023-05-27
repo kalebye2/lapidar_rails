@@ -14,4 +14,8 @@ class Profissional < ApplicationRecord
   def nome_completo
     pessoa.nome + ' ' + pessoa.sobrenome
   end
+
+  def funcao
+    profissional_funcao.funcao
+  end
 end

@@ -1,11 +1,17 @@
 <% if atendimento %>
-  <div class="atendimento-card">
-    <%= link_to atendimento, class: "atendimento-link" do %>
-      <p><%= render_hora_brasil atendimento.horario %>:
-      <%= atendimento.acompanhamento.usuario.nome_completo %>
+  <%= link_to atendimento, class: "atendimento-link" do %>
+    <div class="atendimento-card <%= atendimento.data < Date.today ? (atendimento.usuario_presente ? "atendimento-presente" : "atendimento-ausente") : "atendimento-futuro" %>">
+      <p>
+      <strong><%= atendimento.acompanhamento.usuario.nome_completo %></strong>
+      <br />
+      <span style="font-size: .9em;"><%= render_hora_brasil atendimento.horario %></span>
+      <br />
+      <span style="font-size: .8em;">
+        <%= atendimento.acompanhamento.profissional.nome_completo %>
+      </span>
       <br />
       <span style="font-size:.7em;">(<%= atendimento.atendimento_tipo.tipo.upcase %>)</span>
       </p>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 <% end %>

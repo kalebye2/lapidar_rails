@@ -8,4 +8,16 @@ class Atendimento < ApplicationRecord
 
   has_one :relato, foreign_key: :id, primary_key: :id
 
+  def usuario_presente
+    return presenca.to_s == "1"
+  end
+
+  def modalidade
+    atendimento_modalidade.modalidade
+  end
+
+  def tipo
+    atendimento_tipo.tipo
+  end
+
 end

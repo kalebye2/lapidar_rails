@@ -8,3 +8,70 @@
 	margin-bottom: .5em;
 	border-radius: 1em;
 }
+
+.atendimento-card {
+	--bg-color: white;
+	--text-color: black;
+	--padding: .3em 1em .2em 1em;
+	--border-bottom-size: .5em;
+	--border-sides-size: 0em;
+	--border-color: black;
+	display: block;
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	padding: var(--padding);
+	border-radius: 1em;
+	margin-bottom: var(--border-bottom-size);
+	border-bottom: var(--border-bottom-size) solid var(--border-color);
+	border-right: var(--border-sides-size) solid transparent;
+	border-left: var(--border-sides-size) solid transparent;
+
+	transition: background-color 300ms ease-out,
+		box-shadow 300ms ease-out,
+		transform 300ms ease-out;
+
+	&:hover {
+		box-shadow: 0 .1em gray;
+		z-index: 1;
+		transform: translate(0, -.2em);
+	}
+}
+
+.atendimento-presente {
+	--bg-color: green;
+	--border-color: #004400;
+	--text-color: white;
+	a {
+		color: white;
+	}
+
+	&:hover {
+		--bg-color: darkgreen;
+	}
+}
+
+.atendimento-ausente {
+	--bg-color: red;
+	--border-color: #440000;
+	--text-color: white;
+	a {
+
+	}
+
+	&:hover {
+		--bg-color: darkred;
+	}
+}
+
+.atendimento-futuro {
+	--border-color: darkcyan;
+	--bg-color: white;
+	--text-color: black;
+	a {
+
+	}
+
+	&:hover {
+		--bg-color: lightcyan;
+	}
+}

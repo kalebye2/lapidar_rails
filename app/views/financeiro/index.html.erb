@@ -1,0 +1,30 @@
+<h1>Financeiro#index</h1>
+<p>Find me in app/views/financeiro/index.html.erb</p>
+
+<h2>Últimos Recebimentos</h2>
+<div class="recebimentos-container">
+  <% @recebimentos.each do |recebimento| %>
+    <p>
+      <%= render_data_brasil recebimento.data %> -
+      <%= recebimento.pagante.nome_completo %>
+      <%= render_dinheiro_centavos recebimento.valor %>
+      <%= recebimento.modalidade || "Meio desconhecido" %>
+    </p>
+  <% end %>
+  <%= link_to "ver mais", recebimentos_path %>
+</div>
+
+<h2>Últimos atendimentos</h2>
+<div class="atendimento-valores-container">
+  <% @atendimento_valores.each do |atendimento_valor| %>
+    <p>
+      <strong><%= render_dinheiro_centavos atendimento_valor.valor %></strong>
+      <%= render_data_brasil atendimento_valor.data %>
+      <%= render_hora_brasil atendimento_valor.horario %>
+      <%= atendimento_valor.usuario.nome_completo %>
+      <%= atendimento_valor.atendimento.tipo.upcase %>
+      <%= atendimento_valor.atendimento.modalidade %>
+    </p>
+  <% end %>
+  <%= link_to "mais...", atendimento_valores_path %>
+</div>

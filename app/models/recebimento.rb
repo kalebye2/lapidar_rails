@@ -5,4 +5,15 @@ class Recebimento < ApplicationRecord
 
   belongs_to :recebimento_modalidade, foreign_key: :modalidade_id
   belongs_to :acompanhamento_tipo
+  
+
+  def pagante
+    usuario_pagante || usuario_beneficiario
+  end
+
+  def modalidade
+    recebimento_modalidade.modalidade
+  end
+
+
 end

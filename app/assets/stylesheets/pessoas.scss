@@ -33,6 +33,7 @@
 }
 
 .pessoa-card {
+	--displace-v: -.5em;
 	background-color: black;
 	color: white;
 	margin: 1em;
@@ -49,8 +50,8 @@
 	}
 
 	&:hover {
-		transform: scale(105%);
-		box-shadow: 0px 0px 2rem black;
+		transform: translate(0, var(--displace-v));
+		box-shadow: 0px calc(-1 * var(--displace-v)) black;
 		z-index: 1;
 	}
 }

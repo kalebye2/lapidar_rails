@@ -44,15 +44,17 @@
   .past {
 	background-color: lightgray;
   }
-  .future {}
+  .future {
+	background-color: lightgray;
+  }
 
   .start-date {}
 
   .prev-month {
-	background-color: gray;
+
   }
   .next-month {
-	background-color: gray;
+	  
   }
   .current-month {}
 
