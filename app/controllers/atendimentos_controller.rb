@@ -8,6 +8,7 @@ class AtendimentosController < ApplicationController
   end
 
   def new
+    @atendimento = Atendimento.new
   end
 
   def edit
@@ -17,6 +18,15 @@ class AtendimentosController < ApplicationController
   end
 
   def update
+    respond_to do |format|
+      if @atendimento.update(atendimento_params)
+        format.html { redirect_to atendimento_url(@atendimento), notice: "Pessoa was successfully updated." }
+        format.json { render :show, status: :ok, location: @atendimento }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @atendimento.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def destroy

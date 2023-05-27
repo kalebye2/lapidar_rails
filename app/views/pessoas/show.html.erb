@@ -111,6 +111,24 @@
       <% end %>
     </div>
 
+    <!-- se for usuário mostrar informações extras -->
+    <% if u %>
+      <div class="informacoes-extras">
+        <h3>Informações extras</h3>
+        <ul>
+          <% u.usuario_extra_informacao.order(data: :desc).each do |ei| %>
+            <%= link_to ei do %>
+              <li>
+                <%= render_data_brasil ei.data %> -
+                <%= ei.meio %>
+              </li>
+              <%= link_to "PDF", {controller: :usuario_extra_informacoes, action: :show_pdf, id: ei.id } %>
+            <% end %>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
 </div>
 
 <%= link_to 'Edit', edit_pessoa_path(@pessoa) %> |

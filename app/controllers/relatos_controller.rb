@@ -1,11 +1,36 @@
 class RelatosController < ApplicationController
-  before_action :set_relato, only: %i[ show edit update destroy ]
+  before_action :set_relato, only: %i[ show show_pdf edit update destroy ]
 
   def index
     @relatos = Relato.all.order(id: :desc)
   end
 
   def show
+  end
+
+  def show_pdf
+        hoje = Time.now.strftime("%Y-%m-%d")
+        hoje_formatado = Time.now.strftime("%d/%m/%Y")
+        data_relato = @relato.atendimento.data.strftime("%d/%m/%Y")
+        hora_relato = @relato.atendimento.horario.strftime("%H%M")
+        hora_relato_formatado = @relato.atendimento.horario.strftime("%Hh%M")
+        nome_documento = "#{@relato.atendimento.acompanhamento.usuario.nome_completo}_relato_#{data_relato}-#{hora_relato}"
+
+        pdf = Prawn::Document.new
+        pdf.text "#{@relato.atendimento.acompanhamento.usuario.nome_completo} - Relato"
+        pdf.text "Atendimento do dia #{data_relato} às #{hora_relato_formatado}"
+        pdf.text "Documento gerado em " + (hoje_formatado)
+
+        pdf.stroke_horizontal_rule
+        pdf.move_down 20
+        # atendimentos
+        pdf.text @relato.relato
+
+        send_data(pdf.render,
+                  filename: "#{nome_documento}.pdf",
+                  type: "application/pdf",
+                  disposition: "inline"
+                 )
   end
 
   def new

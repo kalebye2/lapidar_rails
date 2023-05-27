@@ -1,1 +1,32 @@
-<h1>Hello</h1>
+<div class="atendimento-form">
+  <%= form_with(model: atendimento, local: true) do |form| %>
+    <% if atendimento.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(atendimento.errors.count, "erro") %> não permitiu salvamento:</h2>
+        <ul>
+          <% atendimento.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- formulário -->
+
+    <%= form.label :acompanhamento %>
+    <%= form.select :acompanhamento_id, Acompanhamento.order(data_inicio: :desc).map { 
+      |acompanhamento| ["#{acompanhamento.usuario.nome_completo} acompanhado por #{acompanhamento.profissional.nome_completo} desde #{render_data_brasil acompanhamento.data_inicio}", acompanhamento.id] } %>
+
+    <%= form.label "Tipo de atendimento" %>
+    <%= form.select :atendimento_tipo_id, AtendimentoTipo.order(:tipo).map {
+    |atendimento_tipo| [atendimento_tipo.tipo.upcase, atendimento_tipo.id]
+    } %>
+
+    <%= form.label :data %>
+    <%= form.date_field :data %>
+
+    <%= form.label "Horário" %>
+    <%= form.time_field :horario %>
+
+  <% end %>
+</div>

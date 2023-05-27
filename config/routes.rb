@@ -12,9 +12,17 @@ Rails.application.routes.draw do
   resources :acompanhamentos
   resources :atendimentos
   resources :relatos
+  resources :usuario_extra_informacoes
+
   root to: "application#index"
+
   scope :admin do
-      end
+  end
+
+  # rotas pdf
+  get "/acompanhamentos/:id/detalhes", to: "acompanhamentos#caso_detalhes"
+  get "/relatos/:id/pdf", to: "relatos#show_pdf"
+  get "/usuario_extra_informacoes/:id/pdf", to: "usuario_extra_informacoes#show_pdf"
 
   # get pdf
   get "/pdf_download", to: "application#pdf_download"

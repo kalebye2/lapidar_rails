@@ -1,0 +1,31 @@
+<%= form_with(model: usuario_extra_informacao, local: true) do |form| %>
+  <% if usuario_extra_informacao.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(usuario_extra_informacao.errors.count, "error") %> prohibited this usuario_extra_informacao from being saved:</h2>
+
+      <ul>
+      <% usuario_extra_informacao.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form.label :usuario, "Usuário" %>
+  <%= form.select :usuario_id, Usuario.joins("JOIN pessoas ON usuarios.pessoa_id = pessoas.id").order(nome: :asc, sobrenome: :asc).map {
+    |usuario| [usuario.nome_completo, usuario.id]
+  } %>
+
+  <%= form.label :conteudo, "Conteúdo" %>
+  <%= form.text_area :conteudo_material %>
+
+  <%= form.label :meio %>
+  <%= form.text_field :meio %>
+
+  <%= form.label :data %>
+  <%= form.date_field :data, value: Date.today %>
+
+  <div class="actions">
+    <%= form.submit "Adicionar informação extra" %>
+  </div>
+<% end %>

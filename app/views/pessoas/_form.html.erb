@@ -1,5 +1,3 @@
-<% paises = Pais.all %>
-
 <%= form_with(model: pessoa, local: true) do |form| %>
   <% if pessoa.errors.any? %>
     <div id="error_explanation">
@@ -44,18 +42,20 @@
   </div>
 
   <div class="field">
-    <%= form.label :feminino %>
-    <%= form.check_box :feminino %>
+    <%= form.label :feminino, "Sexo" %>
+    <%= form.select :feminino, [["Masculino", 0], ["Feminino", 1]] %>
   </div>
 
   <div class="field">
-    <%= form.label :civil_estado_id %>
-    <%= form.text_field :civil_estado_id %>
+    <%= form.label :civil_estado_id, "Estado Civil" %>
+    <%= form.select :civil_estado_id, CivilEstado.all.map { |civil_estado| [civil_estado.estado.upcase, civil_estado.id] } %>
   </div>
 
   <div class="field">
-    <%= form.label :instrucao_grau_id %>
-    <%= form.text_field :instrucao_grau_id %>
+    <%= form.label :instrucao_grau_id, "Grau de instrução" %>
+    <%= form.select :instrucao_grau_id, InstrucaoGrau.all.map {
+      |instrucao_grau| [instrucao_grau.grau, instrucao_grau.id]
+    } %>
   </div>
 
   <div class="field">
@@ -69,8 +69,10 @@
   </div>
 
   <div class="field">
-    <%= form.label :pais_id %>
-    <%= form.text_field :pais_id %>
+    <%= form.label :pais_id, "País" %>
+    <%= form.select :pais_id, Pais.order(nome: :asc).map {
+      |pais| [pais.nome, pais.id]
+    } %>
   </div>
 
   <div class="field">
@@ -103,10 +105,13 @@
     <%= form.text_field :endereco_complemento %>
   </div>
 
-  <div class="field">
-    <%= form.label :preferencia_contato %>
-    <%= form.text_field :preferencia_contato %>
-  </div>
+  <!-- usuario -->
+  <% if pessoa.usuario %>
+    <%= form.fields_for pessoa.usuario do |usuario| %>
+      <%= pessoa.usuario.nome_completo %>
+    <% end %>
+
+  <% end %>
 
   <div class="actions">
     <%= form.submit %>

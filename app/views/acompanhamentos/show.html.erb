@@ -12,6 +12,8 @@
 
 <p>Valor da sessão: <%= render_dinheiro_centavos @acompanhamento.valor_atual %></p>
 
+<%= render "caso-resumo", acompanhamento: @acompanhamento %>
+
 <div class="atendimentos-lista">
   <ul>
     <% @acompanhamento.atendimento.order(data: :desc).each do |a| %>
@@ -24,6 +26,10 @@
       <% end %>
       <p><%= a.atendimento_tipo.tipo.upcase %></p>
       <p><%= a.consideracoes %></p>
+
+      <% if a.relato %>
+        <%= link_to "Relato", { controller: :relatos, id: a.id, action: :show }, class: "btn-relato" %>
+      <% end %>
     <% end %>
   </ul>
 </div>

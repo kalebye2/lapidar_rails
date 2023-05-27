@@ -1,0 +1,13 @@
+<div class="acompanhamento-form">
+  <%= form_with(model: acompanhamento, local: true) do |form| %>
+    <%= form.label :usuario %>
+    <%= form.select :usuario_id, Usuario.joins("JOIN pessoas ON usuarios.pessoa_id = pessoas.id").order(nome: :asc, sobrenome: :asc).map {
+      |usuario| [usuario.nome_completo, usuario.id]
+    } %>
+
+    <%= form.label :responsavel %>
+    <%= form.select :usuario_responsavel_id, Usuario.joins("JOIN pessoas ON usuarios.pessoa_id = pessoas.id").order(nome: :asc, sobrenome: :asc).map {
+      |usuario| [usuario.nome_completo, usuario.id]
+    }, include_blank: true %>
+<% end %>
+</div>

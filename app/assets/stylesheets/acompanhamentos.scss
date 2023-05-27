@@ -44,3 +44,13 @@ a {
 .acompanhamento-finalizado-encaminhamento {
 	background-color: orange;
 }
+
+.caso-resumo {
+	background-color: #efefef;
+	padding: 2em;
+	border-radius: 1rem;
+	box-shadow: 0 0 2rem gray;
+
+	height: 30em;
+	overflow-y: scroll;
+}

@@ -3,7 +3,7 @@ class UsuariosController < ApplicationController
 
   # GET /usuarios or /usuarios.json
   def index
-    @usuarios = Usuario.all
+    @usuarios = Usuario.all.joins("LEFT JOIN pessoas ON usuarios.pessoa_id = pessoas.id").order(nome: :asc, sobrenome: :asc)
   end
 
   # GET /usuarios/1 or /usuarios/1.json

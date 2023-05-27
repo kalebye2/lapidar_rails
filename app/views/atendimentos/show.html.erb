@@ -7,10 +7,18 @@
 <%= link_to u.pessoa, class:"pessoa" do %><h2><%= u.nome_completo %></h2><% end %>
 <%= link_to pro.pessoa, class:"pessoa" do %><h3><%= pro.nome_completo %> <%= pro.render_documento %></h3><% end %>
 
+<h4><%= @atendimento.acompanhamento.motivo %></h4>
+
 <div>
 <%= @atendimento.consideracoes %>
 </div>
 <br /><br />
 <div>
-<%= @atendimento.relato.nil? ? "Sem relato" : "Opa, tem relato sim!"  %>
+<% if @atendimento.relato %>
+  <%= link_to "PDF", { controller: :relatos, id: @atendimento.id, action: :show_pdf }, class: "btn-pdf" %>
+  <%= link_to "Relato", { controller: :relatos, id: @atendimento.id, action: :show }, class: "btn-show" %>
+<% end %>
+
+<%= render "form_individual", { atendimento: @atendimento }%>
+
 </div>
