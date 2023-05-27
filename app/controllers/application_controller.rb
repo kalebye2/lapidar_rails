@@ -1,11 +1,25 @@
 class ApplicationController < ActionController::Base
 
+  def init
+  end
+
   def index
+=begin
+    ActiveRecord::Base.establish_connection(:production)
+    if ActiveRecord::Base.connection.data_sources.empty?
+      redirect_to({ action: :init })
+      return
+    end
+=end
     #@c_psicologos = Psicologo.count
     #@c_usuarios = Usuario.count
     #@c_profissionals = Profissional.count
-    @atendimentos = Atendimento.where(data: Time.now.beginning_of_month.beginning_of_week..Time.now.end_of_month.end_of_week).order(data: :asc, horario: :asc)
-    @atendimentos_hoje = Atendimento.where(data: Time.now.to_date).order(data: :asc, horario: :asc)
+    #@atendimentos = Atendimento.where(data: Time.now.beginning_of_month.beginning_of_week..Time.now.end_of_month.end_of_week).order(data: :asc, horario: :asc)
+    #@atendimentos_hoje = @atendimentos.where(data: Date.today)
+
+    @start_date = params[:start_date] || Date.today.beginning_of_week
+    @atendimentos = Atendimento.where(data: @start_date.to_date.beginning_of_week..@start_date.to_date.end_of_week).order(data: :asc, horario: :asc)
+    @atendimentos_hoje = @atendimentos.where(data: Date.today)
   end
 
 

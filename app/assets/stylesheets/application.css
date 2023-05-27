@@ -57,6 +57,21 @@
   .current-month {}
 
   .has-events {}
+
+  .calendar-heading {
+	font-size: 1.2em;
+	text-align: center;
+	padding-bottom: 1em;
+  }
+  .calendar-title {
+	font-weight: bold;
+	font-size: 1.5em;
+	padding: 0 2em 0 2em;
+  }
+
+  .table {
+	border-collapse: collapse;
+  }
 }
 
 .calendario-dia {

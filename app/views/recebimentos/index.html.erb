@@ -2,7 +2,7 @@
 <p>
   Recebimentos do mês:
   <% @total_mes = 0 %>
-  <% Recebimento.where("MONTH(data) = MONTH(CURRENT_DATE)").each do |recebimento| %>
+  <% @recebimentos.where("MONTH(data) = MONTH(CURRENT_DATE)").each do |recebimento| %>
     <% @total_mes += recebimento.valor %>
   <% end %>
   <%= render_dinheiro_centavos @total_mes %>

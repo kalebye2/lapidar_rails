@@ -1,0 +1,11 @@
+<% if atendimento %>
+  <div class="atendimento-card">
+    <%= link_to atendimento, class: "atendimento-link" do %>
+      <p><%= render_hora_brasil atendimento.horario %>:
+      <%= atendimento.acompanhamento.usuario.nome_completo %>
+      <br />
+      <span style="font-size:.7em;">(<%= atendimento.atendimento_tipo.tipo.upcase %>)</span>
+      </p>
+    <% end %>
+  </div>
+<% end %>

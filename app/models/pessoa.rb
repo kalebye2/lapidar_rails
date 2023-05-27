@@ -4,8 +4,8 @@ class Pessoa < ApplicationRecord
   belongs_to :pais
   
   # has associations
-  has_one :usuario
-  has_one :profissional
+  belongs_to :usuario
+  belongs_to :profissional
 
 
   def nome_completo
