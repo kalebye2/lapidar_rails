@@ -42,7 +42,6 @@ class RelatosController < ApplicationController
 
   def create
     @relato = Relato.new(relato_params)
-
     respond_to do |format|
       if @relato.save
         format.html { redirect_to relato_url(@relato), notice: "Relato registrado." }
@@ -55,6 +54,15 @@ class RelatosController < ApplicationController
   end
 
   def update
+    respond_to do |format|
+      if @relato.update(relato_params)
+        format.html { redirect_to relato_url(@relato), notice: "relato was successfully updated. #{@relato.atendimento.consideracoes} #{relato_params}" }
+        format.json { render :show, status: :ok, location: @relato }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @relato.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def destroy

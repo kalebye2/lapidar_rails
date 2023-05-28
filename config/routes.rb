@@ -1,17 +1,9 @@
 Rails.application.routes.draw do
-  get 'atendimento_valores/index'
-  get 'atendimento_valores/index_pdf'
-  get 'atendimento_valores/show'
-  get 'atendimento_valores/show_pdf'
-  get 'atendimento_valores/new'
-  get 'atendimento_valores/create'
-  get 'atendimento_valores/edit'
-  get 'atendimento_valores/update'
-  get 'atendimento_valores/delete'
   get 'financeiro/index'
   get 'financeiro/atendimento_valor'
   get 'financeiro/recebimento_usuario'
   get 'financeiro/repasse_profissionais'
+  resources :atendimento_valores
   resources :recebimentos
   resources :profissionais
   resources :usuario_devolutivas

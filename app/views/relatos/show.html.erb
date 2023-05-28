@@ -1,5 +1,10 @@
 <h1>Relato</h1>
+<p id="notice"><%= notice %></p>
+<h2><%= @relato.atendimento.informacoes_relato %></h2>
 <%= link_to "PDF", { controller: :relatos, action: :show_pdf, id: @relato.id } %>
 <%== Kramdown::Document.new(@relato.relato || "").to_html %>
 <h2>Considerações</h2>
 <%== Kramdown::Document.new(@relato.atendimento.consideracoes || "Sem considerações").to_html %>
+
+<%= link_to "editar", edit_relato_path(@relato), @novo_relato = false %>
+<%= link_to "voltar", relatos_path %>

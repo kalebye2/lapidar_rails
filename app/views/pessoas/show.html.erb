@@ -58,6 +58,10 @@
       <% if pro != nil %>
         <div class="profissional-acompanhamentos">
           <h3>Casos</h3>
+          <p>
+            <%= pro.acompanhamento.count %> casos,
+            <%= pro.acompanhamento.where(data_final: nil, finalizacao_motivo_id: nil).count %> em andamento.
+          </p>
           <ul>
           <% pro.acompanhamento.order(data_inicio: :desc).each do |a| %>
             <%= link_to a, class: "#{a.data_final ? 'acompanhamento-finalizado' : 'acompanhamento-em-andamento'}" do %><li><%= a.render_info_para_profissional %></li><% end %>

@@ -10,7 +10,11 @@
 <h4><%= @atendimento.acompanhamento.motivo %></h4>
 
 <div>
-<%= @atendimento.consideracoes %>
+  <% if @atendimento.consideracoes %>
+    <%== Kramdown::Document.new(@atendimento.consideracoes).to_html %>
+  <% else %>
+    <%= "Nada a observar" %>
+  <% end %>
 </div>
 <br /><br />
 <div>

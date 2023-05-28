@@ -1,22 +1,42 @@
+<% atendimentos_para_pegar = @relato.relato == nil ?
+  Atendimento.joins("LEFT JOIN relatos ON atendimentos.id = relatos.id").where("relatos.relato IS NULL AND atendimentos.presenca = TRUE").order(data: :asc, horario: :asc)
+  :
+  Atendimento.all.order(data: :asc, horario: :asc) 
+%>
 <%= form_with(model: relato, local: true) do |form| %>
   <% if relato.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(pessoa.errors.count, "erro") %> evitou que este relato fosse salvo:
+      <h2><%= pluralize(relato.errors.count, "erro") %> evitou que este relato fosse salvo:
         <ul>
-          <% pessoa.errors.full_messages.each do |message| %>
+          <% relato.errors.full_messages.each do |message| %>
             <li><%= message %></li>
           <% end %>
         </ul>
     </div>
+
+    relato.atendimento
+    relato.id
   <% end %>
 
   <div class="field">
     <%= form.label :atendimento %>
-    <%= form.search_field :atendimento %>
+    <%= form.select :id, atendimentos_para_pegar.map { |atendimento| [ atendimento.informacoes_relato, atendimento.id ] } %>
   </div>
-  <div class="field">
     <%= form.label :relato %>
-    <%= form.text_area :relato %>
-  </div>
+    <%= form.text_area :relato, rows: 30, cols: 50 %>
 
+<%
+=begin
+%>
+  <%= fields_for :atendimento, relato.atendimento do |atendimento_form| %>
+    <%= atendimento_form.label "Considerações" %>
+    <%= atendimento_form.text_area :consideracoes, rows: 10, cols: 50 %>
+  <% end %>
+<%
+=end
+%>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
 <% end %>

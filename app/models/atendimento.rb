@@ -20,4 +20,18 @@ class Atendimento < ApplicationRecord
     atendimento_tipo.tipo
   end
 
+  def informacoes_com_usuario
+    "#{acompanhamento.usuario.nome_completo} - #{data.strftime('%d/%m/%Y')} às #{horario.strftime('%Hh%M')}"
+  end
+
+  def informacoes_sem_usuario
+   "#{data.strftime('%d/%m/%Y')} às #{horario.strftime('%Hh%M')}" 
+  end
+
+  def informacoes_relato
+    p = acompanhamento.usuario.pessoa
+    "#{p.nome[-2..].upcase}#{p.sobrenome[..2].upcase}#{p.nome[..1].upcase}
+    - #{data.strftime('%d/%m/%Y')} às #{horario.strftime('%Hh%M')}"
+  end
+
 end
