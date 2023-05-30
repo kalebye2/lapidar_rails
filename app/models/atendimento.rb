@@ -8,8 +8,28 @@ class Atendimento < ApplicationRecord
 
   has_one :relato, foreign_key: :id, primary_key: :id
 
+  accepts_nested_attributes_for :atendimento_valor
+
+  # pessoas envolvidas
+  def usuario
+    acompanhamento.usuario
+  end
+
+  def profissional
+    acompanhamento.profissional
+  end
+
+  def responsavel
+    acompanhamento.usuario_responsavel
+  end
+
+
   def usuario_presente
     return presenca.to_s == "1"
+  end
+
+  def usuario_presente_desc
+    usuario_presente ? "Presente" : "Ausente"
   end
 
   def modalidade
@@ -17,7 +37,7 @@ class Atendimento < ApplicationRecord
   end
 
   def tipo
-    atendimento_tipo.tipo
+    atendimento_tipo.tipo.upcase
   end
 
   def informacoes_com_usuario
@@ -30,8 +50,12 @@ class Atendimento < ApplicationRecord
 
   def informacoes_relato
     p = acompanhamento.usuario.pessoa
-    "#{p.nome[-2..].upcase}#{p.sobrenome[..2].upcase}#{p.nome[..1].upcase}
+    "#{p.nome_relato}
     - #{data.strftime('%d/%m/%Y')} às #{horario.strftime('%Hh%M')}"
+  end
+
+  def horario_passado
+    data < Date.today || (data == Date.today && horario.hour < Time.now.hour )
   end
 
 end

@@ -14,6 +14,23 @@
  *= require_self
  */
 
+:root {
+	--doc-bg-color: white;
+	--doc-text-color: black;
+	--doc-heading-font: 'tex gyre adventor', 'ubuntu', sans-serif;
+	--doc-text-font: 'linux biolinum o', 'linux libertine', serif;
+}
+
+body {
+	background-color: var(--doc-bg-color);
+	color: var(--doc-text-color);
+	font-family: var(--doc-text-font);
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: var(--doc-heading-font);
+}
+
 .simple-calendar {
 	display: grid;
 	content-align: center;

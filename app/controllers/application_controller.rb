@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
 
     @start_date = params[:start_date] || Date.today.beginning_of_week
     @atendimentos = Atendimento.where(data: @start_date.to_date.beginning_of_week..@start_date.to_date.end_of_week).order(data: :asc, horario: :asc)
-    @atendimentos_hoje = @atendimentos.where(data: Date.today)
+    @atendimentos_hoje = Atendimento.where(data: Date.today)
   end
 
 

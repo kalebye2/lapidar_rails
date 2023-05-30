@@ -9,7 +9,9 @@ Rails.application.routes.draw do
   resources :usuario_devolutivas
   resources :crp_regioes
   resources :profissional_notas
-  resources :usuarios
+  resources :usuarios do
+    resources :usuario_extra_informacoes, path: '/extras'
+  end
   #resources :pessoas
   resources :pessoas, path: '/cadastros'
   resources :paises

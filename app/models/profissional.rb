@@ -5,7 +5,7 @@ class Profissional < ApplicationRecord
 
   has_many :acompanhamento
 
-  def render_documento
+  def documento
     if profissional_funcao.documento_tipo == nil then return "" end
 
     "#{profissional_funcao.documento_tipo} #{('00' + documento_regiao_id.to_s)[-2..] }/#{documento_valor}"

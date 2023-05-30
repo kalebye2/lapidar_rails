@@ -113,4 +113,8 @@ class Pessoa < ApplicationRecord
     "#{c} - #{e}"
   end
 
+  def nome_relato
+    "#{nome[-2..].upcase}#{sobrenome[..2].upcase}#{nome[..1].upcase}"
+  end
+
 end

@@ -13,7 +13,7 @@
 	--bg-color: white;
 	--text-color: black;
 	--padding: .3em 1em .2em 1em;
-	--border-bottom-size: .5em;
+	--border-bottom-size: .3em;
 	--border-sides-size: 0em;
 	--border-color: black;
 	display: block;
@@ -73,5 +73,50 @@
 
 	&:hover {
 		--bg-color: lightcyan;
+	}
+}
+
+table {
+	caption {
+		font-size: 1.5em;
+		text-transform: uppercase;
+		font-weight: bold;
+		margin-bottom: 1em;
+	}
+
+	&.table-atendimento {
+		border-collapse: collapse;
+		width: 100%;
+
+		th {
+			background-color: lightcyan;
+			padding: .7em;
+			text-transform: uppercase;
+
+		}
+	}
+}
+
+td {
+	--bg-color: white;
+	--text-color: black;
+	padding: 1em .5em 1em .5em;
+
+	&.td-atendimento {
+		text-align: center;
+	}
+
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	&.td-atendimento-presente {
+		--bg-color: lightgreen;
+	}
+
+	&.td-atendimento.ausente {
+
+	}
+
+	&.td-atendimento-futuro {
+
 	}
 }

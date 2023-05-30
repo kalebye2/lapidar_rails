@@ -15,12 +15,23 @@ class AtendimentosController < ApplicationController
   end
 
   def create
+    @atendimento = Atendimento.new(atendimento_params)
+
+    respond_to do |format|
+      if @atendimento.save
+        format.html { redirect_to atendimento_url(@atendimento), notice: "Atendimento registrado com sucesso!" }
+        format.json { render :show, status: :created, location: @atendimento }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @atendimento.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def update
     respond_to do |format|
       if @atendimento.update(atendimento_params)
-        format.html { redirect_to atendimento_url(@atendimento), notice: "Pessoa was successfully updated." }
+        format.html { redirect_to atendimento_url(@atendimento), notice: "Pessoa was successfully updated. #{atendimento_params}" }
         format.json { render :show, status: :ok, location: @atendimento }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -40,6 +51,6 @@ class AtendimentosController < ApplicationController
   end
 
   def atendimento_params
-    params.require(:atendimento).permit(:data, :horario, :modalidade_id, :acompanhamento_id, :presenca, :atendimento_tipo_id, :consideracoes)
+    params.require(:atendimento).permit(:data, :horario, :modalidade_id, :acompanhamento_id, :presenca, :atendimento_tipo_id, :consideracoes, atendimento_valor_attributes: [:atendimento_id, :valor, :desconto, :taxa_porcentagem])
   end
 end

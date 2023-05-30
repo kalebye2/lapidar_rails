@@ -10,4 +10,8 @@ class Usuario < ApplicationRecord
   def nome_completo
     pessoa.nome + ' ' + pessoa.sobrenome
   end
+
+  def nome_relato
+    pessoa.nome_relato
+  end
 end

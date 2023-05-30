@@ -11,15 +11,16 @@ class RelatosController < ApplicationController
   def show_pdf
         hoje = Time.now.strftime("%Y-%m-%d")
         hoje_formatado = Time.now.strftime("%d/%m/%Y")
+        data_relato_doc = @relato.atendimento.data.strftime("%Y-%m-%d")
         data_relato = @relato.atendimento.data.strftime("%d/%m/%Y")
         hora_relato = @relato.atendimento.horario.strftime("%H%M")
         hora_relato_formatado = @relato.atendimento.horario.strftime("%Hh%M")
-        nome_documento = "#{@relato.atendimento.acompanhamento.usuario.nome_completo}_relato_#{data_relato}-#{hora_relato}"
+        nome_documento = "#{@relato.atendimento.acompanhamento.usuario.nome_relato}_relato_#{data_relato_doc}-#{hora_relato}"
 
         pdf = Prawn::Document.new
-        pdf.text "#{@relato.atendimento.acompanhamento.usuario.nome_completo} - Relato"
+        pdf.text "#{@relato.atendimento.acompanhamento.usuario.nome_relato} - Relato"
         pdf.text "Atendimento do dia #{data_relato} às #{hora_relato_formatado}"
-        pdf.text "Documento gerado em " + (hoje_formatado)
+        pdf.text "Documento gerado em " + (hoje_formatado) + " às " + (Time.now.strftime("%Hh%M"))
 
         pdf.stroke_horizontal_rule
         pdf.move_down 20

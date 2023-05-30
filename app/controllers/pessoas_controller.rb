@@ -58,6 +58,18 @@ class PessoasController < ApplicationController
   end
 
 
+
+  # pdfs
+  
+  def pdf_ficha
+
+  end
+
+
+  def pdf_info_extra
+    
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_pessoa

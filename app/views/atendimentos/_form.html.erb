@@ -21,12 +21,16 @@
     <%= form.select :atendimento_tipo_id, AtendimentoTipo.order(:tipo).map {
     |atendimento_tipo| [atendimento_tipo.tipo.upcase, atendimento_tipo.id]
     } %>
+  <%= form.label "Modalidade de atendimento" %>
+  <%= form.select :atendimento_modalidade, AtendimentoModalidade.order(:modalidade).map { |atendimento_modalidade| [atendimento_modalidade.modalidade, atendimento_modalidade.id] } %>
 
     <%= form.label :data %>
     <%= form.date_field :data %>
 
     <%= form.label "Horário" %>
     <%= form.time_field :horario %>
+
+    <%= form.submit %>
 
   <% end %>
 </div>

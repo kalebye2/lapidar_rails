@@ -1,34 +1,41 @@
 <% content_for titulo "" %>
-<h1><%= Rails.application.class %></h1>
+<h1><%= Rails.application.class.module_parent_name %></h1>
+
 
 <!-- atendimentos de hoje -->
 <% if !@atendimentos_hoje.empty? %>
-  <table style="width:100%;">
+  <table class="table-atendimento">
+    <caption>Atendimentos de hoje</caption>
     <thead>
-      <tr><th colspan="4">Atendimentos de hoje</th></tr>
       <tr>
         <th>Profissional</th>
         <th>Paciente</th>
         <th>Tipo</th>
         <th>Horário</th>
+        <th>Presença</th>
       </tr>
     </thead>
 
     <tbody>
       <% @atendimentos_hoje.each do |ah| %>
+        <% presenca_class = ah.horario_passado ? ah.presenca ? "td-atendimento-presente" : "td-atendimento-ausente" : "td-atendimento-futuro" %>
         <tr>
-          <td>
-          <%= ah.acompanhamento.profissional.nome_completo %>
-          <span style="font-size:.7em;"><%= ah.acompanhamento.profissional.render_documento %></span>
+          <td class="<%= presenca_class %> td-atendimento">
+            <%= link_to ah.profissional do %><%= ah.profissional.nome_completo %>
+              <span style="font-size:.7em;"><%= ah.profissional.documento %></span>
+          <% end %>
           </td>
-          <td>
-            <%= ah.acompanhamento.usuario.nome_completo %>
+          <td class="<%= presenca_class %> td-atendimento">
+            <%= link_to ah.usuario.nome_completo, ah.usuario %>
           </td>
-          <td>
-            <%= ah.atendimento_tipo.tipo %>
+          <td class="<%= presenca_class %> td-atendimento">
+            <%= ah.tipo %>
           </td>
-          <td>
-            <%= render_hora_brasil ah.horario %>
+          <td class="<%= presenca_class %> td-atendimento">
+            <%= link_to (render_hora_brasil ah.horario), ah %>
+          </td>
+          <td class="<%= presenca_class %> td-atendimento">
+            <%= ah.horario_passado ? ah.usuario_presente_desc : "A ocorrer" %>
           </td>
         </tr>
       <% end %>
@@ -67,12 +74,12 @@
 <!-- calendário semanal? -->
 <h3><%= @atendimentos.count %> atendimentos nesta semana</h3>
 <p>
-<% atendidos = @atendimentos.where(presenca: true).count %>
-<% nao_atendidos = @atendimentos.where("data < CURRENT_DATE AND presenca = FALSE").count %>
-<% futuros = @atendimentos.where("data > CURRENT_DATE").count %>
-<%= atendidos %> <%= 'realizados'.pluralize(atendidos) %>,
-<%= nao_atendidos %> <%= 'não realizado'.pluralize(nao_atendidos) %>,
-<%= futuros %> <%= 'futuro'.pluralize(futuros) %>.
+  <% atendidos = @atendimentos.where(presenca: true).count %>
+  <% nao_atendidos = @atendimentos.where("data < CURRENT_DATE || (data = CURRENT_DATE AND HOUR(horario) < HOUR(CURRENT_TIME)) AND presenca = FALSE").count %>
+  <% futuros = @atendimentos.where("data >= CURRENT_DATE && HOUR(horario) > HOUR(CURRENT_TIME)").count %>
+  <%= atendidos %> <%= 'realizados'.pluralize(atendidos) %>,
+  <%= nao_atendidos %> <%= 'não realizado'.pluralize(nao_atendidos) %>,
+  <%= futuros %> <%= 'futuro'.pluralize(futuros) %>.
 </p>
 <%= week_calendar(events: @atendimentos, attribute: :data) do |date, atendimentos|%>
   <div class="day">

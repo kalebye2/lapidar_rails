@@ -1,3 +1,4 @@
+<%= content_for titulo @pessoa.nome_completo %>
 <p id="notice"><%= notice %></p>
 
 <% pro = @pessoa.profissional %>
@@ -12,7 +13,7 @@
       <% if pro != nil %>
         <div class="profissional">
           <% profunc = pro.profissional_funcao %>
-          <p><%= profunc.funcao %> <%= pro.render_documento %></p>
+          <p><%= profunc.funcao %> <%= pro.documento %></p>
         </div>
       <% end %>
 
@@ -82,7 +83,7 @@
                   <%= ac.acompanhamento_tipo.tipo.to_s.upcase %> - <%= render_data_brasil at.data %> às <%= render_hora_brasil at.horario %>
                   <%= link_to ac.profissional.pessoa do %>
                     (<%= ac.profissional.nome_completo %>
-                  <span style="font-size:.7em;"><%= ac.profissional.render_documento %></span>)
+                  <span style="font-size:.7em;"><%= ac.profissional.documento %></span>)
                   <% end %>
                 </li>
               <% end %>

@@ -1,10 +1,12 @@
 module ApplicationHelper
 
   def titulo(titulo)
+    # nome do site
+    site_name = Rails.application.class.module_parent_name.to_s
     if !titulo.empty?
-      content_for :titulo, titulo + " - " + Rails.application.class.to_s # nome do app
+      content_for :titulo, titulo + " - " + site_name # nome do app
     else
-      content_for :titulo, Rails.application.class.to_s
+      content_for :titulo, site_name
     end
   end
 
