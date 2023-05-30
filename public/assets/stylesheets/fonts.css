@@ -1,0 +1,31 @@
+/* Linux Biolinum O */
+@font-face {
+	font-family: 'linux biolinum o';
+	src: url('/assets/fonts/LinBiolinum_R.otf');
+}
+
+@font-face {
+	font-family: 'linux biolinum o';
+	font-weight: bold;
+	src: url('/assets/fonts/LinBiolinum_RB.otf');
+}
+
+@font-face {
+	font-family: 'linux biolinum o';
+	font-style: italic;
+	src: url('/assets/fonts/LinBiolinum_RI.otf');
+}
+
+
+/* Tex Gyre Adventor */
+@font-face {
+	font-family: 'tex gyre adventor';
+	src: url('/assets/fonts/texgyreadventor-regular.otf');
+}
+
+@font-face {
+	font-family: 'tex gyre adventor';
+	font-weight: bold;
+	src: url('/assets/fonts/texgyreadventor-bold.otf');
+
+}
