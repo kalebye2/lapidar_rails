@@ -1,8 +1,0 @@
-<h1>UsuarioExtraInformacoes#show</h1>
-<p>Find me in app/views/usuario_extra_informacoes/show.html.erb</p>
-
-<%= @usuario_extra_informacao.usuario.nome_completo %>
-
-<div class="informacao-extra">
-<%== Kramdown::Document.new(@usuario_extra_informacao.conteudo_material || "").to_html %>
-</div>

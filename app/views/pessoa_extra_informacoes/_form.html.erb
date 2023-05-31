@@ -1,0 +1,39 @@
+<%= form_with(model: pessoa_extra_informacao, local: true) do |form| %>
+  <% if pessoa_extra_informacao.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(pessoa_extra_informacao.errors.count, "error") %> prohibited this pessoa_extra_informacao from being saved:</h2>
+
+      <ul>
+      <% pessoa_extra_informacao.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :pessoa, "Usuário" %>
+    <%= form.select :pessoa_id, Pessoa.order(nome: :asc, sobrenome: :asc).map {
+      |pessoa| [pessoa.nome_completo, pessoa.id]
+    } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :conteudo, "Conteúdo" %>
+    <%= form.text_area :conteudo_material %>
+  </div>
+
+  <div class="field">
+    <%= form.label :meio %>
+    <%= form.text_field :meio %>
+  </div>
+
+  <div class="field">
+    <%= form.label :data %>
+    <%= form.date_field :data, value: Date.today %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Adicionar informação extra" %>
+  </div>
+<% end %>

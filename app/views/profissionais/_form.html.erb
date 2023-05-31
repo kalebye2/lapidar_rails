@@ -1,0 +1,43 @@
+<div class="profissional-form">
+  <%= form_with(model: profissional, local: true) do |form| %>
+    <div class="field">
+    <%= form.label "Cadastro" %>
+    <%= form.select :pessoa_id, Pessoa.all.order(nome: :asc, sobrenome: :asc).map { |pessoa| ["#{pessoa.nome_completo} - CPF #{pessoa.render_cpf}", pessoa.id] } %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Função" %>
+      <%= form.select :profissional_funcao_id, ProfissionalFuncao.all.order(funcao: :asc).map { |f| [f.funcao.upcase, f.id] } %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Região do documento" %>
+      <%= form.number_field :documento_regiao_id %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Nº do registro" %>
+      <%= form.text_field :documento_valor %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Chave PIX 01" %>
+      <%= form.text_field :chave_pix_01 %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Chave PIX 02" %>
+      <%= form.text_field :chave_pix_02 %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Biografia" %>
+      <%= form.text_area :bio %>
+    </div>
+
+    <div class="action">
+      <%= form.submit %>
+    </div>
+
+  <% end %>
+</div>

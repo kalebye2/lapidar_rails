@@ -11,8 +11,8 @@ class Atendimento < ApplicationRecord
   accepts_nested_attributes_for :atendimento_valor
 
   # pessoas envolvidas
-  def usuario
-    acompanhamento.usuario
+  def pessoa
+    acompanhamento.pessoa
   end
 
   def profissional
@@ -20,16 +20,21 @@ class Atendimento < ApplicationRecord
   end
 
   def responsavel
-    acompanhamento.usuario_responsavel
+    acompanhamento.pessoa_responsavel
+  end
+
+  def acompanhamento_tipo
+    acompanhamento.acompanhamento_tipo.tipo
   end
 
 
-  def usuario_presente
+  # the resto
+  def pessoa_presente
     return presenca.to_s == "1"
   end
 
-  def usuario_presente_desc
-    usuario_presente ? "Presente" : "Ausente"
+  def pessoa_presente_desc
+    pessoa_presente ? "Presente" : "Ausente"
   end
 
   def modalidade
@@ -40,16 +45,16 @@ class Atendimento < ApplicationRecord
     atendimento_tipo.tipo.upcase
   end
 
-  def informacoes_com_usuario
-    "#{acompanhamento.usuario.nome_completo} - #{data.strftime('%d/%m/%Y')} às #{horario.strftime('%Hh%M')}"
+  def informacoes_com_pessoa
+    "#{acompanhamento.pessoa.nome_completo} - #{data.strftime('%d/%m/%Y')} às #{horario.strftime('%Hh%M')}"
   end
 
-  def informacoes_sem_usuario
+  def informacoes_sem_pessoa
    "#{data.strftime('%d/%m/%Y')} às #{horario.strftime('%Hh%M')}" 
   end
 
   def informacoes_relato
-    p = acompanhamento.usuario.pessoa
+    p = acompanhamento.pessoa
     "#{p.nome_relato}
     - #{data.strftime('%d/%m/%Y')} às #{horario.strftime('%Hh%M')}"
   end

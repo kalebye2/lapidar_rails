@@ -1,4 +1,6 @@
-<h1>Recebimentos#index</h1>
+<%= titulo "Recebimentos" %>
+<h1>Recebimentos</h1>
+<%= link_to "+ recebimento", new_recebimento_path %>
 <p>
   Recebimentos do mês:
   <% @total_mes = 0 %>
@@ -20,11 +22,11 @@
 <div class="recebimentos-container">
   <% @recebimentos.each do |recebimento| %>
     <div class="recebimento-card">
-      <h2><%= recebimento.usuario_beneficiario.nome_completo %></h2>
-      <h3><%= if !recebimento.usuario_pagante.nil? then " (pago por #{recebimento.usuario_pagante.nome_completo})" end %></h3>
+      <h2><%= recebimento.pessoa_beneficiario.nome_completo %></h2>
+      <h3><%= if !recebimento.pessoa_pagante.nil? then " (pago por #{recebimento.pessoa_pagante.nome_completo})" end %></h3>
       <p><strong><%= render_dinheiro_centavos recebimento.valor %></strong></p>
       <p><%= render_data_brasil recebimento.data %></p>
-      <p><%= recebimento.profissional.nome_completo %> <span style="font-size:.7em;"><%= recebimento.profissional.render_documento %></span></p>
+      <p><%= recebimento.profissional.nome_completo %> <span style="font-size:.7em;"><%= recebimento.profissional.documento %></span></p>
     </div>
   <% end %>
 </div>

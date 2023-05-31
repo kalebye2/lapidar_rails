@@ -17,8 +17,11 @@ development:
         <<: *default
         encoding: utf8
         adapter: mysql2
-        database: psi_atendimentos
-        username: psi_atendimentos
+        #database: psi_atendimentos
+        #username: psi_atendimentos
+        #password: relacionamento
+        database: lapidar_data
+        username: lapidar
         password: relacionamento
 
 # Warning: The database defined as "test" will be erased and

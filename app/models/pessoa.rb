@@ -1,11 +1,16 @@
 class Pessoa < ApplicationRecord
-  belongs_to :civil_estado
-  belongs_to :instrucao_grau
-  belongs_to :pais
+  belongs_to :civil_estado, optional: true
+  belongs_to :instrucao_grau, optional: true
+  belongs_to :pais, optional: true
   
   # has associations
   has_one :usuario
   has_one :profissional
+  has_many :acompanhamento
+  has_many :acompanhamento_responsavel, class_name: "Acompanhamento", foreign_key: :pessoa_responsavel_id
+  has_many :atendimento, through: :acompanhamento
+
+  has_many :pessoa_extra_informacao
 
 
   def nome_completo
@@ -115,6 +120,10 @@ class Pessoa < ApplicationRecord
 
   def nome_relato
     "#{nome[-2..].upcase}#{sobrenome[..2].upcase}#{nome[..1].upcase}"
+  end
+
+  def informacoes_extras
+    pessoa_extra_informacao
   end
 
 end

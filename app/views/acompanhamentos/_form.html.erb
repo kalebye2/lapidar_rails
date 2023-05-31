@@ -1,13 +1,92 @@
 <div class="acompanhamento-form">
-  <%= form_with(model: acompanhamento, local: true) do |form| %>
-    <%= form.label :usuario %>
-    <%= form.select :usuario_id, Usuario.joins("JOIN pessoas ON usuarios.pessoa_id = pessoas.id").order(nome: :asc, sobrenome: :asc).map {
-      |usuario| [usuario.nome_completo, usuario.id]
-    } %>
+  <% if acompanhamento.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(acompanhamento.errors.count, "error") %> prohibited this acompanhamento from being saved:</h2>
 
-    <%= form.label :responsavel %>
-    <%= form.select :usuario_responsavel_id, Usuario.joins("JOIN pessoas ON usuarios.pessoa_id = pessoas.id").order(nome: :asc, sobrenome: :asc).map {
-      |usuario| [usuario.nome_completo, usuario.id]
-    }, include_blank: true %>
-<% end %>
+      <ul>
+      <% acompanhamento.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <%= form_with(model: acompanhamento, local: true) do |form| %>
+    <div class="field">
+      <%= form.label "Tipo de acompanhamento" %>
+      <%= form.select :acompanhamento_tipo_id, AcompanhamentoTipo.all.map { |acompanhamento_tipo| [acompanhamento_tipo.tipo.upcase, acompanhamento_tipo.id] } %>
+    </div>
+
+    <div class="field">
+      <%= form.label :paciente %>
+      <%= form.select :pessoa_id, Pessoa.all.order(nome: :asc, sobrenome: :asc).map {
+        |pessoa| [pessoa.nome_completo, pessoa.id]
+      } %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Profissional" %>
+      <%= form.select :profissional_id, Profissional.all.map { |profissional| ["#{profissional.nome_completo} - #{profissional.funcao} #{profissional.documento}", profissional.id ]} %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Menor de idade" %>
+      <%= form.check_box :menor_de_idade %>
+    </div>
+
+    <div class="field">
+      <%= form.label :motivo %>
+      <%= form.text_field :motivo %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Responsável legal" %>
+      <%= form.select :pessoa_responsavel_id, Pessoa.all.order(nome: :asc, sobrenome: :asc).map {
+        |pessoa| [pessoa.nome_completo, pessoa.id]
+      }, include_blank: true %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Data inicial" %>
+      <%= form.date_field :data_inicio %>
+    </div>
+
+
+    <% if !acompanhamento.id.nil? %>
+      <div class="field">
+        <%= form.label "Data final" %>
+        <%= form.date_field :data_final %>
+      </div>
+
+      <div class="field">
+        <%= form.label "Motivo da finalização" %>
+        <%= form.select :finalizacao_motivo_id, AcompanhamentoFinalizacaoMotivo.all.order(motivo: :asc).map { |motivo| [motivo.motivo, motivo.id] }, include_blank: true %>
+      </div>
+
+      <div class="field">
+        <%= form.label "Valor da sessão" %>
+        <%= form.text_field :valor_atual %>
+      </div>
+
+      <div class="field">
+        <%= form.label "Quantidade de sessões" %>
+        <%= form.number_field :sessoes_atuais, min: 1, max: 31, value: acompanhamento.sessoes_atuais || 4 %>
+      </div>
+    <% end %>
+
+    <div class="field">
+      <%= form.label acompanhamento.nil? ? "Valor da sessão" : "Valor da sessão no contrato" %>
+      <%= form.text_field :valor_contrato %>
+    </div>
+
+    <div class="field">
+      <%= form.label acompanhamento.nil? ? "Quantidade de sessões mensais" : "Quantidade de sessões mensais no contrato" %>
+      <%= form.number_field :sessoes_contrato, min: 1, max: 31, value: acompanhamento.sessoes_contrato || 4 %>
+    </div>
+
+    <div class="actions">
+      <%= form.submit %>
+    </div>
+  <% end %>
 </div>

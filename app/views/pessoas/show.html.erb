@@ -2,31 +2,22 @@
 <p id="notice"><%= notice %></p>
 
 <% pro = @pessoa.profissional %>
-<% u = @pessoa.usuario %>
 
 <div class="info-container">
     <div class="pessoa-container">
-      <h2><%= @pessoa.nome %> <%= @pessoa.sobrenome %> <%= @pessoa.render_sexo_sigla %></h2>
-    
+      <h2><%= @pessoa.nome_completo %> <%= @pessoa.render_sexo_sigla %></h2>
     
       <!-- se for profissional -->
       <% if pro != nil %>
         <div class="profissional">
           <% profunc = pro.profissional_funcao %>
           <p><%= profunc.funcao %> <%= pro.documento %></p>
-        </div>
-      <% end %>
-
-      <!-- se for usuário do serviço -->
-      <% if u != nil %>
-        <div class="usuario">
-          <p><%= u.profissao.to_s.upcase %></p>
-          <p><%= u.preferencia_contato %></p>
+          <%= link_to "Editar", edit_profissional_path, profissional: pro %>
         </div>
       <% end %>
 
       <p>
-      <%= @pessoa.render_cpf %>
+        CPF <%= @pessoa.render_cpf %>
       </p>
 
       <!-- informações de contato -->
@@ -41,8 +32,8 @@
         <% if @pessoa.data_nascimento != nil %>
           <p><%= render_data_brasil @pessoa.data_nascimento %> (<%= @pessoa.render_idade %>)</p>
         <% end %>
-        <%= @pessoa.instrucao_grau.grau.upcase %>
-        <%= @pessoa.civil_estado.estado.upcase %>
+        <%= @pessoa.instrucao_grau ? @pessoa.instrucao_grau.grau.upcase : "Não informado" %>
+        <%= @pessoa.civil_estado ? @pessoa.civil_estado.estado : "Não informado" %>
       </div>
 
       <!-- dados de endereço -->
@@ -72,44 +63,42 @@
       <% end %>
 
       <!-- se é usuário -->
-      <% if u != nil %>
-        <!-- últimos atendimentos ou próximos -->
-        <div class="usuario-proximos-atendimentos">
-          <h3>Próximos atendimentos</h3>
-          <ul>
-            <% u.acompanhamento.each do |ac| %>
-              <% ac.atendimento.where("DATEDIFF(data, CURRENT_DATE) >= 0").each do |at| %>
-                <li>
-                  <%= ac.acompanhamento_tipo.tipo.to_s.upcase %> - <%= render_data_brasil at.data %> às <%= render_hora_brasil at.horario %>
-                  <%= link_to ac.profissional.pessoa do %>
-                    (<%= ac.profissional.nome_completo %>
-                  <span style="font-size:.7em;"><%= ac.profissional.documento %></span>)
-                  <% end %>
-                </li>
+      <!-- últimos atendimentos ou próximos -->
+      <% if !@pessoa.acompanhamento.empty? %>
+        <% if !@pessoa.atendimento.where("DATEDIFF(data, CURRENT_DATE) > 0 OR (DATEDIFF(data, CURRENT_DATE) = 0 AND HOUR(horario) > HOUR(CURRENT_TIME))").empty? %>
+          <div class="pessoa-proximos-atendimentos">
+            <h3>Próximos atendimentos</h3>
+              <ul>
+                <% @pessoa.atendimento.where("DATEDIFF(data, CURRENT_DATE) >= 0").each do |at| %>
+                  <li>
+                    <%= at.acompanhamento_tipo.to_s.upcase %> - <%= render_data_brasil at.data %> às <%= render_hora_brasil at.horario %>
+                    <%= link_to at.profissional.pessoa do %>
+                      (<%= at.profissional.nome_completo %>
+                      <span style="font-size:.7em;"><%= at.profissional.documento %></span>)
+                    <% end %>
+                  </li>
               <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="pessoa-acompanhamentos">
+          <h3>Acompanhamentos</h3>
+          <ul>
+            <% @pessoa.acompanhamento.order(data_inicio: :desc).each do |a| %>
+              <%= link_to a do %><li><%= a.render_info_para_pessoa %></li><% end %>
             <% end %>
           </ul>
         </div>
-
-        <% if u.acompanhamento.first != nil %>
-        <div class="usuario-acompanhamentos">
-          <h3>Acompanhamentos</h3>
-          <ul>
-            <% u.acompanhamento.order(data_inicio: :desc).each do |a| %>
-              <%= link_to a do %><li><%= a.render_info_para_usuario %></li><% end %>
-            <% end %>
-          </ul>
-          </div>
-        <% end %>
       <% end %>
 
       <!-- se é responsável -->
-      <% if u != nil && u.acompanhamento_responsavel != nil %>
-        <div class="usuario-acompanhamentos-responsavel">
+      <% if !@pessoa.acompanhamento_responsavel.empty? %>
+        <div class="pessoa-acompanhamentos-responsavel">
           <h3>Acompanhamentos pelos quais responde</h3>
-          <% if u != nil %>
-            <% u.acompanhamento_responsavel.order(data_inicio: :desc).each do |a| %>
-              <%= link_to a do %><li><%= a.render_info_para_usuario %></li><% end %>
+          <% if @pessoa.acompanhamento_responsavel != nil %>
+            <% @pessoa.acompanhamento_responsavel.order(data_inicio: :desc).each do |a| %>
+              <%= link_to a do %><li><%= a.render_info_para_pessoa %></li><% end %>
             <% end %>
           <% end %>
         </div>
@@ -117,17 +106,17 @@
     </div>
 
     <!-- se for usuário mostrar informações extras -->
-    <% if u %>
+    <% if !@pessoa.informacoes_extras.empty? %>
       <div class="informacoes-extras">
         <h3>Informações extras</h3>
         <ul>
-          <% u.usuario_extra_informacao.order(data: :desc).each do |ei| %>
+          <% @pessoa.informacoes_extras.order(data: :desc).each do |ei| %>
             <%= link_to ei do %>
               <li>
                 <%= render_data_brasil ei.data %> -
                 <%= ei.meio %>
               </li>
-              <%= link_to "PDF", {controller: :usuario_extra_informacoes, action: :show_pdf, id: ei.id } %>
+              <%= link_to "PDF", {controller: :pessoa_extra_informacoes, action: :show_pdf, id: ei.id } %>
             <% end %>
           <% end %>
         </ul>

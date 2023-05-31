@@ -18,4 +18,9 @@ class Profissional < ApplicationRecord
   def funcao
     profissional_funcao.funcao
   end
+
+  def descricao_completa
+    nome_completo + ' - ' + funcao + ' ' + documento
+  end
+
 end

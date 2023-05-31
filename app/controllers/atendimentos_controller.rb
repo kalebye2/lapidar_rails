@@ -31,7 +31,7 @@ class AtendimentosController < ApplicationController
   def update
     respond_to do |format|
       if @atendimento.update(atendimento_params)
-        format.html { redirect_to atendimento_url(@atendimento), notice: "Pessoa was successfully updated. #{atendimento_params}" }
+        format.html { redirect_to atendimento_url(@atendimento), notice: "Atendimento atualizado com sucesso." }
         format.json { render :show, status: :ok, location: @atendimento }
       else
         format.html { render :edit, status: :unprocessable_entity }

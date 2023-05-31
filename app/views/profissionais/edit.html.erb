@@ -1,2 +1,3 @@
-<h1>Profissionais#edit</h1>
-<p>Find me in app/views/profissionais/edit.html.erb</p>
+<%= titulo @profissional.nome_completo %>
+<h1><%= @profissional.nome_completo %> <%= @profissional.documento %> - Editar</h1>
+<%= render 'form', profissional: @profissional %>

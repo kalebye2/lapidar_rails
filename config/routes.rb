@@ -1,17 +1,14 @@
 Rails.application.routes.draw do
   get 'financeiro/index'
   get 'financeiro/atendimento_valor'
-  get 'financeiro/recebimento_usuario'
+  get 'financeiro/recebimento_pessoa'
   get 'financeiro/repasse_profissionais'
   resources :atendimento_valores
   resources :recebimentos
   resources :profissionais
-  resources :usuario_devolutivas
+  resources :pessoa_devolutivas
   resources :crp_regioes
   resources :profissional_notas
-  resources :usuarios do
-    resources :usuario_extra_informacoes, path: '/extras'
-  end
   #resources :pessoas
   resources :pessoas, path: '/cadastros'
   resources :paises
@@ -19,7 +16,7 @@ Rails.application.routes.draw do
   resources :acompanhamentos
   resources :atendimentos
   resources :relatos
-  resources :usuario_extra_informacoes
+  resources :pessoa_extra_informacoes
   resources :atendimento_valores
 
   root to: "application#index"
@@ -31,7 +28,7 @@ Rails.application.routes.draw do
   # rotas pdf
   get "/acompanhamentos/:id/detalhes", to: "acompanhamentos#caso_detalhes"
   get "/relatos/:id/pdf", to: "relatos#show_pdf"
-  get "/usuario_extra_informacoes/:id/pdf", to: "usuario_extra_informacoes#show_pdf"
+  get "/pessoa_extra_informacoes/:id/pdf", to: "pessoa_extra_informacoes#show_pdf"
 
   # get pdf
   get "/pdf_download", to: "application#pdf_download"

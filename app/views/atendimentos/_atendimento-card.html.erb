@@ -1,8 +1,8 @@
 <% if atendimento %>
   <%= link_to atendimento, class: "atendimento-link" do %>
-    <div class="atendimento-card <%= atendimento.horario_passado ? (atendimento.usuario_presente ? "atendimento-presente" : "atendimento-ausente") : "atendimento-futuro" %>">
+    <div class="atendimento-card <%= atendimento.horario_passado ? (atendimento.pessoa_presente ? "atendimento-presente" : "atendimento-ausente") : "atendimento-futuro" %>">
       <p>
-      <strong><%= atendimento.acompanhamento.usuario.nome_completo %></strong>
+      <strong><%= atendimento.acompanhamento.pessoa.nome_completo %></strong>
       <br />
       <span style="font-size: .9em;"><%= render_hora_brasil atendimento.horario %></span>
       <br />

@@ -19,6 +19,7 @@
     <tbody>
       <% @atendimentos_hoje.each do |ah| %>
         <% presenca_class = ah.horario_passado ? ah.presenca ? "td-atendimento-presente" : "td-atendimento-ausente" : "td-atendimento-futuro" %>
+        <% presenca_class = ah.presenca ? "td-atendimento-presente" : ah.horario_passado ? "td-atendimento-ausente" : "td-atendimento-futuro" %>
         <tr>
           <td class="<%= presenca_class %> td-atendimento">
             <%= link_to ah.profissional do %><%= ah.profissional.nome_completo %>
@@ -26,7 +27,7 @@
           <% end %>
           </td>
           <td class="<%= presenca_class %> td-atendimento">
-            <%= link_to ah.usuario.nome_completo, ah.usuario %>
+            <%= link_to ah.pessoa.nome_completo, ah.pessoa %>
           </td>
           <td class="<%= presenca_class %> td-atendimento">
             <%= ah.tipo %>
@@ -35,7 +36,7 @@
             <%= link_to (render_hora_brasil ah.horario), ah %>
           </td>
           <td class="<%= presenca_class %> td-atendimento">
-            <%= ah.horario_passado ? ah.usuario_presente_desc : "A ocorrer" %>
+            <%= ah.horario_passado ? ah.pessoa_presente_desc : ah.presenca ? "Em andamento" : "A ocorrer" %>
           </td>
         </tr>
       <% end %>
@@ -68,7 +69,7 @@
 
 <%= form_with url: "/", method: :get do |form| %>
   <%= form.label :semana_select, "Semana do dia" %>
-  <%= form.date_field [start_date: @start_date], onchange: "window.location.search = '?start_date=' + this.value", value: @start_date %>
+  <%= form.week_field [start_date: @start_date], onchange: "window.location.search = '?start_date=' + this.value", value: @start_date %>
 <% end %>
 
 <!-- calendário semanal? -->

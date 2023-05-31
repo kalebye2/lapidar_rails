@@ -13,7 +13,7 @@
   <% @acompanhamentos.each do |a| %>
     <%= link_to a, class: "acompanhamento-card" + " " + "#{a.data_final ? 'acompanhamento-finalizado' : 'acompanhamento-em-andamento'}" + " " + "#{a.acompanhamento_finalizacao_motivo ? 'acompanhamento-finalizado-' + a.acompanhamento_finalizacao_motivo.motivo.downcase.parameterize : ''}" do %>
     <div>
-      <% p = a.usuario.pessoa %>
+      <% p = a.pessoa %>
       <% pro = a.profissional %>
       <% prop = pro.pessoa %>
       <h4><%= a.acompanhamento_tipo.tipo.to_s.upcase %></h4>

@@ -1,0 +1,57 @@
+<div class="recebimento-form">
+
+  <% if recebimento.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(recebimento.errors.count, "error") %> prohibited this recebimento from being saved:</h2>
+
+      <ul>
+      <% recebimento.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with(model: recebimento, local: true) do |form| %>
+
+    <div class="field">
+      <%= form.label "Paciente" %>
+      <%= form.select :pessoa_beneficiario_id, Pessoa.all.order(nome: :asc, sobrenome: :asc).map { |pessoa| [pessoa.nome_completo, pessoa.id] } %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Pagante (deixar em branco se for o paciente)" %>
+      <%= form.select :pessoa_pagante_id, Pessoa.all.order(nome: :asc, sobrenome: :asc).map { |pessoa| [pessoa.nome_completo, pessoa.id] }, include_blank: true %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Profissional" %>
+      <%= form.select :profissional_id, Profissional.all.map { |pro| [pro.descricao_completa, pro.id] } %>
+    </div>
+    
+    <div class="field">
+      <%= form.label "Valor" %>
+      <%= form.number_field :valor %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Data do pagamento" %>
+      <%= form.date_field :data %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Modalidade de pagamento" %>
+      <%= form.select :modalidade_id, RecebimentoModalidade.all.map { |mod| [mod.modalidade, mod.id] } %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Tipo de acompanhamento" %>
+      <%= form.select :acompanhamento_tipo_id, AcompanhamentoTipo.all.map { |tipo| [tipo.tipo, tipo.id] } %>
+    </div>
+
+    <div class="action">
+      <%= form.submit %>
+    </div>
+
+  <% end %>
+</div>

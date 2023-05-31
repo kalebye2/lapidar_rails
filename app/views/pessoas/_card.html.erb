@@ -1,12 +1,11 @@
 <% if p != nil %>
-  <% u = p.usuario %>
   <% pro = p.profissional %>
-  <%= link_to p, class: "pessoa-card" + " " + (p.feminino ? "feminino" : "masculino") + " " + "#{pro ? "profissional" : u ? "usuario" : '' }" do%>
+  <%= link_to p, class: "pessoa-card" + " " + (p.feminino ? "feminino" : "masculino") + " " + "#{pro ? "profissional" : "usuario" }" do%>
     <div>
       <h2><%= p.nome %> <%= p.sobrenome %> <%#= p.feminino ? "(F)" : "(M)" %></h2>
 
       <h6>
-        <%= if pro != nil then pro.profissional_funcao.funcao.upcase elsif u != nil then u.profissao != nil ? u.profissao.upcase : "NA" else "NA" end %>
+        <%= if pro != nil then pro.profissional_funcao.funcao.upcase else p.profissao != nil ? p.profissao.upcase : "NA" end %>
       </h6>
       <!-- informações -->
       <p><%= p.data_nascimento ? p.render_data_nascimento : "Data de nascimento não informada" %> (<%= p.render_idade %>)</p>

@@ -11,8 +11,8 @@ class AtendimentoValor < ApplicationRecord
     atendimento.horario
   end
 
-  def usuario
-    atendimento.acompanhamento.usuario
+  def pessoa
+    atendimento.acompanhamento.pessoa
   end
 
 end

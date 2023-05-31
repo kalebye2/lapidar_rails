@@ -48,14 +48,14 @@
 
   <div class="field">
     <%= form.label :civil_estado_id, "Estado Civil" %>
-    <%= form.select :civil_estado_id, CivilEstado.all.map { |civil_estado| [civil_estado.estado.upcase, civil_estado.id] } %>
+    <%= form.select :civil_estado_id, CivilEstado.all.map { |civil_estado| [civil_estado.estado.upcase, civil_estado.id] }, include_blank: true %>
   </div>
 
   <div class="field">
     <%= form.label :instrucao_grau_id, "Grau de instrução" %>
     <%= form.select :instrucao_grau_id, InstrucaoGrau.all.map {
       |instrucao_grau| [instrucao_grau.grau, instrucao_grau.id]
-    } %>
+    } , include_blank: true %>
   </div>
 
   <div class="field">
@@ -72,7 +72,7 @@
     <%= form.label :pais_id, "País" %>
     <%= form.select :pais_id, Pais.order(nome: :asc).map {
       |pais| [pais.nome, pais.id]
-    } %>
+    } , selected: @pessoa.pais_id || Pais.find_by(nome: "Brasil").id %>
   </div>
 
   <div class="field">
@@ -105,13 +105,15 @@
     <%= form.text_field :endereco_complemento %>
   </div>
 
-  <!-- usuario -->
-  <% if pessoa.usuario %>
-    <%= form.fields_for pessoa.usuario do |usuario| %>
-      <%= pessoa.usuario.nome_completo %>
-    <% end %>
+  <div class="field">
+    <%= form.label "Profissão" %>
+    <%= form.text_field :profissao %>
+  </div>
 
-  <% end %>
+  <div class="field">
+    <%= form.label "Preferência de contato" %>
+    <%= form.text_field :preferencia_contato %>
+  </div>
 
   <div class="actions">
     <%= form.submit %>
