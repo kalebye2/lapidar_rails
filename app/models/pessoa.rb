@@ -6,9 +6,12 @@ class Pessoa < ApplicationRecord
   # has associations
   has_one :usuario
   has_one :profissional
+  has_many :recebimento_beneficiario, class_name: "Recebimento", foreign_key: :pessoa_beneficiario_id
+  has_many :recebimento_pagador, class_name: "Recebimento", foreign_key: :pessoa_pagante_id
   has_many :acompanhamento
   has_many :acompanhamento_responsavel, class_name: "Acompanhamento", foreign_key: :pessoa_responsavel_id
   has_many :atendimento, through: :acompanhamento
+  has_many :atendimento_valor, through: :atendimento
 
   has_many :pessoa_extra_informacao
 
@@ -124,6 +127,10 @@ class Pessoa < ApplicationRecord
 
   def informacoes_extras
     pessoa_extra_informacao
+  end
+
+  def atendimentos_futuros
+    atendimento.where("DATEDIFF(data, CURRENT_DATE) > 0 OR (DATEDIFF(data, CURRENT_DATE) = 0 AND HOUR(horario) > HOUR(CURRENT_TIME))")
   end
 
 end

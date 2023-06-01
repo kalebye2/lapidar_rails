@@ -1,3 +1,4 @@
+<%= titulo "Atendimento de #{render_data_brasil @atendimento.data} às #{render_hora_brasil @atendimento.horario}" %>
 <% u = @atendimento.acompanhamento.pessoa %>
 <% pro = @atendimento.acompanhamento.profissional %>
 <h1>
@@ -5,10 +6,13 @@
 </h1>
 <%= link_to "dados do acompanhamento", @atendimento.acompanhamento %>
 <%= link_to u, class:"pessoa" do %><h2><%= u.nome_completo %></h2><% end %>
-<%= link_to pro.pessoa, class:"pessoa" do %><h3><%= pro.nome_completo %> <%= pro.documento %></h3><% end %>
+<%= link_to pro, class:"profissional" do %><h3><%= pro.nome_completo %> <%= pro.documento %></h3><% end %>
 
 <h4><%= @atendimento.acompanhamento.motivo %></h4>
 
+<%
+=begin
+%>
 <div>
   <% if @atendimento.consideracoes %>
     <%== Kramdown::Document.new(@atendimento.consideracoes).to_html %>
@@ -17,6 +21,10 @@
   <% end %>
 </div>
 <br /><br />
+<%
+=end
+%>
+
 <div>
 <% if @atendimento.relato %>
   <%= link_to "PDF", { controller: :relatos, id: @atendimento.id, action: :show_pdf }, class: "btn-pdf" %>
@@ -30,7 +38,31 @@
 <%
 =end
 %>
-<%= form_with model: @atendimento do |form| %>
+
+<%= form_with model: @atendimento, local: true do |form| %>
+  <div class="atendimento-form">
+    <div class="field">
+      <%= form.label "Considerações sobre o atendimento" %>
+      <br />
+      <%= form.text_area :consideracoes, cols: 50, rows: 10 %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Presença" %>
+      <br />
+      <%= form.check_box :presenca %>
+    </div>
+
+    <div class="action">
+      <%= form.submit %>
+    </div>
+  </div>
+<% end %>
+
+<%
+=begin
+%>
+<%= form_with model: @atendimento, local: true do |form| %>
   <%= @atendimento.id %>
   <%= fields_for :atendimento_valor, @atendimento.atendimento_valor do |valor_form | %>
       <%= valor_form.label :valor %>
@@ -42,5 +74,8 @@
   <% end %>
   <%= form.submit %>
 <% end %>
+<%
+=end
+%>
 
 </div>

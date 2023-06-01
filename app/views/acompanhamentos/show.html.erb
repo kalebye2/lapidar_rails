@@ -1,9 +1,10 @@
+<%= titulo "#{@acompanhamento.tipo(titulo: true)}: #{@acompanhamento.pessoa.nome_completo}"%>
 <%= link_to "Voltar", acompanhamentos_path %>
 <% p = @acompanhamento.pessoa %>
 <% pro = @acompanhamento.profissional.pessoa %>
-<%= link_to p, class: "pessoa" do %><h1><%= p.nome %> <%= p.sobrenome %> <%= p.render_sexo_sigla %> <span style="font-size:.6em;font-weight:normal;"><%= @acompanhamento.acompanhamento_tipo.tipo.upcase %></span></h1><% end %>
+<%= link_to p, class: "pessoa" do %><h1><%= p.nome %> <%= p.sobrenome %> <%= p.render_sexo_sigla %> <span style="font-size:.6em;font-weight:normal;"><%= @acompanhamento.tipo(upper: true) %></span></h1><% end %>
 
-<%= link_to pro, class: "profissional" do %><h2><%= pro.nome %> <%= pro.sobrenome %> <span style="font-size:.5em;font-weight:normal;"><%= @acompanhamento.profissional.documento %></span></h2><% end %>
+<%= link_to @acompanhamento.profissional, class: "profissional" do %><h2><%= pro.nome %> <%= pro.sobrenome %> <span style="font-size:.5em;font-weight:normal;"><%= @acompanhamento.profissional.documento %></span></h2><% end %>
 
 <h3>Motivo do acompanhamento: <%= @acompanhamento.motivo %></h3>
 
@@ -19,7 +20,7 @@
 <div class="atendimentos-lista">
   <ul>
     <% @acompanhamento.atendimento.order(data: :desc).each do |a| %>
-      <%= link_to a, class: "atendimento", data: { turbo_frame: :modal } do %><li><%= render_data_brasil a.data %> às <%= render_hora_brasil a.horario %> <%= a.presenca == '1' ? '(PRESENTE)' : a.data < Time.now.to_date ? '(AUSENTE)' : a.data == Time.now.to_date && a.horario < Time.now.to_time ? '(AUSENTE)' : '' %></li><% end %>
+      <%= link_to a, class: "atendimento", data: { turbo_frame: :modal } do %><li><%= render_data_brasil a.data %> às <%= render_hora_brasil a.horario %> <%= a.status.upcase %></li><% end %>
       <% if a.atendimento_valor != nil %>
         <%= render_dinheiro_centavos a.atendimento_valor.valor %><%= a.atendimento_valor.taxa_porcentagem > 0 ? " (taxa de #{render_porcentagem_int a.atendimento_valor.taxa_porcentagem})" : "" %>
         Líquido: <%= render_dinheiro_centavos (a.atendimento_valor.valor - (a.atendimento_valor.valor * a.atendimento_valor.taxa_porcentagem / 10000 )) %>
@@ -30,7 +31,7 @@
       <p><%= a.consideracoes %></p>
 
       <% if a.relato %>
-        <%= link_to "Relato", { controller: :relatos, id: a.id, action: :show }, class: "btn-relato" %>
+        <%= link_to "Relato", { controller: :relatos, id: a.id, action: :show_pdf },{ class: "btn-relato", target: "_blank" }%>
       <% end %>
     <% end %>
   </ul>

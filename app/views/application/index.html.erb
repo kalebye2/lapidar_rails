@@ -12,22 +12,23 @@
         <th>Paciente</th>
         <th>Tipo</th>
         <th>Horário</th>
-        <th>Presença</th>
+        <th>Status</th>
       </tr>
     </thead>
 
     <tbody>
       <% @atendimentos_hoje.each do |ah| %>
         <% presenca_class = ah.horario_passado ? ah.presenca ? "td-atendimento-presente" : "td-atendimento-ausente" : "td-atendimento-futuro" %>
-        <% presenca_class = ah.presenca ? "td-atendimento-presente" : ah.horario_passado ? "td-atendimento-ausente" : "td-atendimento-futuro" %>
+        <% presenca_class = ah.presenca == true ? "td-atendimento-presente" : ah.horario_passado ? "td-atendimento-ausente" : "td-atendimento-futuro" %>
+        <% presenca_class = "td-atendimento-#{ah.status.parameterize}" %>
         <tr>
           <td class="<%= presenca_class %> td-atendimento">
-            <%= link_to ah.profissional do %><%= ah.profissional.nome_completo %>
+            <%= link_to ah.profissional, {class: "atendimento-profissional"} do %><%= ah.profissional.nome_completo %>
               <span style="font-size:.7em;"><%= ah.profissional.documento %></span>
           <% end %>
           </td>
           <td class="<%= presenca_class %> td-atendimento">
-            <%= link_to ah.pessoa.nome_completo, ah.pessoa %>
+            <%= link_to ah.pessoa.nome_completo, ah.pessoa, {class: "atendimento-pessoa atendimento-pessoa-#{ah.pessoa.render_sexo.parameterize}"} %>
           </td>
           <td class="<%= presenca_class %> td-atendimento">
             <%= ah.tipo %>
@@ -36,7 +37,14 @@
             <%= link_to (render_hora_brasil ah.horario), ah %>
           </td>
           <td class="<%= presenca_class %> td-atendimento">
-            <%= ah.horario_passado ? ah.pessoa_presente_desc : ah.presenca ? "Em andamento" : "A ocorrer" %>
+            <%= ah.status %>
+            <% if !ah.pessoa_presente || ah.em_breve_ou_em_andamento %>
+              <%= form_with model: ah, local: true do |form| %>
+                <%= form.label "Presente?" %>
+                <%= form.check_box :presenca %>
+                <%= form.submit "🗸" %>
+              <% end %>
+            <% end %>
           </td>
         </tr>
       <% end %>
@@ -67,21 +75,23 @@
 =end
 %>
 
-<%= form_with url: "/", method: :get do |form| %>
-  <%= form.label :semana_select, "Semana do dia" %>
-  <%= form.week_field [start_date: @start_date], onchange: "window.location.search = '?start_date=' + this.value", value: @start_date %>
-<% end %>
 
 <!-- calendário semanal? -->
-<h3><%= @atendimentos.count %> atendimentos nesta semana</h3>
+<h3><%= @atendimentos.count %> atendimento(s) nesta semana</h3>
 <p>
   <% atendidos = @atendimentos.where(presenca: true).count %>
-  <% nao_atendidos = @atendimentos.where("data < CURRENT_DATE || (data = CURRENT_DATE AND HOUR(horario) < HOUR(CURRENT_TIME)) AND presenca = FALSE").count %>
-  <% futuros = @atendimentos.where("data >= CURRENT_DATE && HOUR(horario) > HOUR(CURRENT_TIME)").count %>
+  <% nao_atendidos = @atendimentos.where("(data < CURRENT_DATE AND presenca = FALSE) OR (data = CURRENT_DATE AND HOUR(horario) < HOUR(CURRENT_TIME) AND presenca = FALSE)").count %>
+  <% futuros = @atendimentos.where("data >= CURRENT_DATE OR (data = CURRENT_DATE && HOUR(horario) > HOUR(CURRENT_TIME))").count %>
   <%= atendidos %> <%= 'realizados'.pluralize(atendidos) %>,
   <%= nao_atendidos %> <%= 'não realizado'.pluralize(nao_atendidos) %>,
   <%= futuros %> <%= 'futuro'.pluralize(futuros) %>.
 </p>
+
+<%= form_with url: root_path, method: :get do |form| %>
+  <%= form.label :semana_select, "Selecionar semana" %>
+  <%= form.week_field [start_date: @start_date], onchange: "if (this.value != '') window.location.search = '?start_date=' + this.value", value: @start_date %>
+<% end %>
+
 <%= week_calendar(events: @atendimentos, attribute: :data) do |date, atendimentos|%>
   <div class="day">
     <%= date.day %>

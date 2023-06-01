@@ -1,6 +1,6 @@
 <% if atendimento %>
   <%= link_to atendimento, class: "atendimento-link" do %>
-    <div class="atendimento-card <%= atendimento.horario_passado ? (atendimento.pessoa_presente ? "atendimento-presente" : "atendimento-ausente") : "atendimento-futuro" %>">
+    <div class="atendimento-card atendimento-<%= atendimento.status.parameterize %>">
       <p>
       <strong><%= atendimento.acompanhamento.pessoa.nome_completo %></strong>
       <br />

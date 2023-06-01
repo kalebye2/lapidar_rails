@@ -15,8 +15,8 @@
  */
 
 :root {
-	--doc-bg-color: white;
-	--doc-text-color: black;
+	--doc-bg-color: #eeeeee;
+	--doc-text-color: #333;
 	--doc-heading-font: 'tex gyre adventor', 'ubuntu', sans-serif;
 	--doc-text-font: 'linux biolinum o', 'linux libertine', serif;
 }

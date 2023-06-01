@@ -48,18 +48,7 @@
     <div class="acompanhamentos">
       <!-- se é profissional -->
       <% if pro != nil %>
-        <div class="profissional-acompanhamentos">
-          <h3>Casos</h3>
-          <p>
-            <%= pro.acompanhamento.count %> casos,
-            <%= pro.acompanhamento.where(data_final: nil, finalizacao_motivo_id: nil).count %> em andamento.
-          </p>
-          <ul>
-          <% pro.acompanhamento.order(data_inicio: :desc).each do |a| %>
-            <%= link_to a, class: "#{a.data_final ? 'acompanhamento-finalizado' : 'acompanhamento-em-andamento'}" do %><li><%= a.render_info_para_profissional %></li><% end %>
-          <% end %>
-          </ul>
-        </div>
+        <%= render 'profissionais/acompanhamentos-card', profissional: pro %>
       <% end %>
 
       <!-- se é usuário -->
@@ -69,10 +58,12 @@
           <div class="pessoa-proximos-atendimentos">
             <h3>Próximos atendimentos</h3>
               <ul>
-                <% @pessoa.atendimento.where("DATEDIFF(data, CURRENT_DATE) >= 0").each do |at| %>
+                <% @pessoa.atendimentos_futuros.each do |at| %>
                   <li>
-                    <%= at.acompanhamento_tipo.to_s.upcase %> - <%= render_data_brasil at.data %> às <%= render_hora_brasil at.horario %>
-                    <%= link_to at.profissional.pessoa do %>
+                    <%= link_to at do %>
+                      <%= at.acompanhamento_tipo.to_s.upcase %> - <%= render_data_brasil at.data %> às <%= render_hora_brasil at.horario %>
+                    <% end %>
+                    <%= link_to at.profissional do %>
                       (<%= at.profissional.nome_completo %>
                       <span style="font-size:.7em;"><%= at.profissional.documento %></span>)
                     <% end %>

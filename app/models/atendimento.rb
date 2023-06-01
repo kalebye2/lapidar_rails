@@ -60,7 +60,28 @@ class Atendimento < ApplicationRecord
   end
 
   def horario_passado
-    data < Date.today || (data == Date.today && horario.hour < Time.now.hour )
+    data < Date.today || (data == Date.today && horario.hour < Time.now.hour)
+  end
+
+  def em_andamento
+    data == Date.today && horario.hour == Time.now.hour
+  end
+
+
+  def no_futuro
+    data > Date.today || (data == Date.today && horario.hour > Time.now.hour)
+  end
+
+  def status
+    pessoa_presente ? "Presente" : horario_passado ? "Ausente" : em_andamento ? "Em andamento" : em_breve ? "Em breve" : "A ocorrer"
+  end
+
+  def em_breve
+    data == Date.today && horario.hour == Time.now.hour + 1
+  end
+
+  def em_breve_ou_em_andamento
+    em_breve || em_andamento
   end
 
 end

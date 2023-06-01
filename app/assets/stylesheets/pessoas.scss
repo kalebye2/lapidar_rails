@@ -12,21 +12,6 @@
 	}
 }
 
-.profissional-acompanhamentos {
-	li {
-		--padding-v: .5em;
-		background-color: darkcyan;
-		color: white;
-		padding: var(--padding-v);
-		margin: var(--padding-v);
-		border-radius: 1em;
-
-		&:hover {
-			background-color: darkred;
-		}
-	}
-}
-
 .pessoas-container {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;

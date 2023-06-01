@@ -63,10 +63,10 @@
 	}
 }
 
-.atendimento-futuro {
+.atendimento-futuro, .atendimento-a-ocorrer {
 	--border-color: darkcyan;
 	--bg-color: white;
-	--text-color: black;
+	--text-color: darkblue;
 	a {
 
 	}
@@ -76,8 +76,15 @@
 	}
 }
 
+.atendimento-em-breve {
+	--bg-color: lightyellow;
+	--text-color: darkorange;
+}
+
 table {
+	box-shadow: .3em .3em 0 gray;
 	caption {
+		font-family: var(--doc-heading-font);
 		font-size: 1.5em;
 		text-transform: uppercase;
 		font-weight: bold;
@@ -89,6 +96,7 @@ table {
 		width: 100%;
 
 		th {
+			font-family: var(--doc-heading-font);
 			background-color: lightcyan;
 			padding: .7em;
 			text-transform: uppercase;
@@ -110,13 +118,25 @@ td {
 	color: var(--text-color);
 	&.td-atendimento-presente {
 		--bg-color: lightgreen;
+		--text-color: darkgreen;
 	}
 
-	&.td-atendimento.ausente {
-
+	&.td-atendimento-ausente {
+		--bg-color: pink;
+		--text-color: darkred;
 	}
 
-	&.td-atendimento-futuro {
-
+	&.td-atendimento-futuro, &.td-atendimento-a-ocorrer {
+		--text-color: darkblue;
 	}
+
+	&.td-atendimento-em-breve {
+		--bg-color: lightyellow;
+		--text-color: darkorange;
+	}
+}
+
+textarea {
+	font-family: 'linux biolinum o';
+	font-size: 1em;
 }

@@ -3,7 +3,7 @@
   <h2>
     Resumo do caso
     <span style="font-size:.7em">
-      <%= link_to "Baixar", controller: :acompanhamentos, action: "caso_detalhes", id: acompanhamento.id, format: :pdf, target: "_blank", class: "btn-download" %>
+      <%= link_to "Baixar", { controller: :acompanhamentos, action: "caso_detalhes", id: acompanhamento.id, format: :pdf }, { target: "_blank", class: "btn-download" } %>
     </span>
   </h2>
 <% acompanhamento.atendimento.where("data <= CURRENT_DATE").each do |at| %>

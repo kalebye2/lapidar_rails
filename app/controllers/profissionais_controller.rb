@@ -18,6 +18,15 @@ class ProfissionaisController < ApplicationController
   end
 
   def update
+    respond_to do |format|
+      if @profissional.update(profissional_params)
+        format.html { redirect_to profissional_url(@profissional), notice: "Profissional atualizado com sucesso!" }
+        format.json { render :show, status: :ok, location: @profissional }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render :json, @profissional.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def destroy
@@ -28,5 +37,9 @@ class ProfissionaisController < ApplicationController
 
   def set_profissional
     @profissional = Profissional.find(params[:id])
+  end
+
+  def profissional_params
+    params.require(:profissional).permit(:pessoa_id, :profissional_funcao_id, :documento_regiao_id, :documento_valor, :chave_pix_01, :chave_pix_02, :bio)
   end
 end

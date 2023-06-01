@@ -20,4 +20,9 @@ class Acompanhamento < ApplicationRecord
     return "#{acompanhamento_tipo.tipo.to_s.upcase} - #{p.nome} #{p.sobrenome} #{pro.documento} iniciado em #{ data_inicio.strftime('%d/%m/%Y') }"
   end
 
+  def tipo upper: false, titulo: false, lower: false
+    t = acompanhamento_tipo.tipo
+    upper ? t.upcase : titulo ? t.titleize : lower ? t.downcase : t
+  end
+
 end

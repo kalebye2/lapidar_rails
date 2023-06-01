@@ -12,8 +12,10 @@ a {
 }
 
 .acompanhamento-card {
-	background-color: black;
-	color: white;
+	--bg-color: black;
+	--text-color: white;
+	background-color: var(--bg-color);
+	color: var(--text-color);
 	margin: 1em;
 	padding: 1em;
 	border-radius: 1em;
@@ -28,23 +30,28 @@ a {
 }
 
 .acompanhamento-em-andamento {
-	background-color: green;
+	--bg-color: white;
+	--text-color: black;
 }
 
 .acompanhamento-finalizado {
-	opacity: .5;
+	opacity: .7;
 }
 .acompanhamento-finalizado-motivos-financeiros {
-	background-color: lightgreen;
+	--bg-color: blue;
+	--text-color: white;
 }
 .acompanhamento-finalizado-desistencia {
-	background-color: darkred;
+	--bg-color: darkred;
+	--text-color: white;
 }
 .acompanhamento-finalizado-alta {
-	background-color: blue;
+	--bg-color: green;
+	--text-color: white;
 }
 .acompanhamento-finalizado-encaminhamento {
-	background-color: orange;
+	--bg-color: orange;
+	--text-color: white;
 }
 
 .caso-resumo {
@@ -55,4 +62,24 @@ a {
 
 	height: 30em;
 	overflow-y: scroll;
+}
+
+.profissional-acompanhamentos {
+	--bg-color: white;
+	--text-color: black;
+
+	li {
+		--padding-v: .5em;
+		background-color: var(--bg-color);
+		color: var(--text-color);
+		padding: var(--padding-v);
+		margin: var(--padding-v);
+		border-radius: 1em;
+		
+		transition: transform 200ms ease-out;
+
+		&:hover {
+			transform: translate(0, -.1em);
+		}
+	}
 }

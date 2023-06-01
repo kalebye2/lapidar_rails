@@ -1,2 +1,33 @@
-<h1>Profissionais#show</h1>
-<p>Find me in app/views/profissionais/show.html.erb</p>
+<%= titulo "#{@profissional.funcao} #{@profissional.nome_completo}" %>
+<h1>
+  <%= @profissional.nome_completo %> - <%= @profissional.funcao %>
+  <%= link_to edit_pessoa_path(@profissional.pessoa) do %>
+    <span style="font-size:.7em">
+      Editar cadastro
+    </span>
+  <% end %>
+</h1>
+<h2><%= @profissional.documento %></h2>
+<%= link_to "editar profissional", edit_profissional_path(@profissional) %>
+
+<div class="profissional-bio">
+  <% if !@profissional.bio.nil? %>
+    <%== Kramdown::Document.new(@profissional.bio).to_html %>
+  <% else %>
+    <p>Biografia não disponível.</p>
+  <% end %>
+</div>
+
+<% if !@profissional.atendimentos_futuros.empty? %>
+  <div class="atendimentos-futuros">
+    <h3>Atendimentos futuros</h3>
+    <ul>
+      <% @profissional.atendimentos_futuros.each do |af| %>
+        <li>
+          <%= link_to af.informacoes_com_pessoa, af %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+<%= render 'acompanhamentos-card', profissional: @profissional %>

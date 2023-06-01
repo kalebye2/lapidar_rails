@@ -3,6 +3,6 @@
 
 <div class="pessoas-container">
   <% @profissionais.each do |pro| %>
-    <%= render partial: "pessoas/card", locals: { p: pro.pessoa } %>
+    <%= render 'card', profissional: pro %>
   <% end %>
 </div>

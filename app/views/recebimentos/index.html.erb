@@ -19,6 +19,21 @@
   <%= render_dinheiro_centavos @total %>
 </p>
 
+<% @a_receber = 0 %>
+<% Pessoa.all.each do |pessoa| %>
+  <% if !pessoa.recebimento_beneficiario.empty? && !pessoa.atendimento_valor.empty? %>
+    <div class="pessoa-devendo">
+      <%= pessoa.nome_completo %>
+      <% a_receber_ate_mes_passado = pessoa.atendimento_valor.where("atendimentos.data" => [..(Date.today - 1.month).end_of_month]).sum("valor - desconto") %>
+      <% ja_recebidos = pessoa.recebimento_beneficiario.sum(:valor) %>
+      <% resultado = a_receber_ate_mes_passado - ja_recebidos %>
+      <%= render_dinheiro_centavos resultado %>
+      <% @a_receber += resultado %> 
+    </div>
+  <% end %>
+<% end %>
+Total a receber: <%= render_dinheiro_centavos @a_receber %>
+
 <div class="recebimentos-container">
   <% @recebimentos.each do |recebimento| %>
     <div class="recebimento-card">
