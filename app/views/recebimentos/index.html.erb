@@ -19,29 +19,28 @@
   <%= render_dinheiro_centavos @total %>
 </p>
 
-<% @a_receber = 0 %>
-<% Pessoa.all.each do |pessoa| %>
-  <% if !pessoa.recebimento_beneficiario.empty? && !pessoa.atendimento_valor.empty? %>
-    <div class="pessoa-devendo">
-      <%= pessoa.nome_completo %>
-      <% a_receber_ate_mes_passado = pessoa.atendimento_valor.where("atendimentos.data" => [..(Date.today - 1.month).end_of_month]).sum("valor - desconto") %>
-      <% ja_recebidos = pessoa.recebimento_beneficiario.sum(:valor) %>
-      <% resultado = a_receber_ate_mes_passado - ja_recebidos %>
-      <%= render_dinheiro_centavos resultado %>
-      <% @a_receber += resultado %> 
-    </div>
+<div class="valores-cobrar">
+  <h3>Valores a cobrar do mês passado</h3>
+  <% @a_receber = 0 %>
+  <% Pessoa.order(nome: :asc, sobrenome: :asc).each do |pessoa| %>
+    <% a_receber_ate_mes_passado = pessoa.atendimento_valor.where("atendimentos.data" => [..(Date.today - 1.month).end_of_month]).sum("valor - desconto") %>
+    <% ja_recebidos = pessoa.recebimento.sum(:valor) %>
+    <% resultado = a_receber_ate_mes_passado - ja_recebidos %>
+
+    <% if resultado > 0 %>
+      <div class="pessoa-devendo">
+        <%= pessoa.nome_completo %>
+        <%= render_dinheiro_centavos resultado %>
+        <% @a_receber += resultado %> 
+      </div>
+    <% end %>
   <% end %>
-<% end %>
-Total a receber: <%= render_dinheiro_centavos @a_receber %>
+  <p><strong>Total a receber: <%= render_dinheiro_centavos @a_receber %></strong></p>
+</div>
+
 
 <div class="recebimentos-container">
   <% @recebimentos.each do |recebimento| %>
-    <div class="recebimento-card">
-      <h2><%= recebimento.pessoa_beneficiario.nome_completo %></h2>
-      <h3><%= if !recebimento.pessoa_pagante.nil? then " (pago por #{recebimento.pessoa_pagante.nome_completo})" end %></h3>
-      <p><strong><%= render_dinheiro_centavos recebimento.valor %></strong></p>
-      <p><%= render_data_brasil recebimento.data %></p>
-      <p><%= recebimento.profissional.nome_completo %> <span style="font-size:.7em;"><%= recebimento.profissional.documento %></span></p>
-    </div>
+    <%= render 'card', recebimento: recebimento %>
   <% end %>
 </div>

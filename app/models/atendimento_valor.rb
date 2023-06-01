@@ -3,6 +3,8 @@ class AtendimentoValor < ApplicationRecord
 
   belongs_to :atendimento, foreign_key: :atendimento_id, primary_key: :id
 
+  has_one :acompanhamento, through: :atendimento
+
   def data
     atendimento.data
   end

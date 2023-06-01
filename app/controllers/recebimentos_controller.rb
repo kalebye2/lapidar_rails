@@ -1,5 +1,5 @@
 class RecebimentosController < ApplicationController
-  before_action :set_recebimento, only: %i[ show update delete ]
+  before_action :set_recebimento, only: %i[ show update edit delete ]
 
   def index
     @recebimentos = Recebimento.all.order(data: :desc)
@@ -10,6 +10,9 @@ class RecebimentosController < ApplicationController
 
   def new
     @recebimento = Recebimento.new
+  end
+
+  def edit
   end
 
   def create
@@ -48,7 +51,7 @@ class RecebimentosController < ApplicationController
   end
 
   def recebimento_params
-    
+    params.require(:recebimento).permit(:pessoa_pagante_id, :acompanhamento_id, :valor, :data, :modalidade_id)
   end
 
 end

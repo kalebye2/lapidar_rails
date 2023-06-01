@@ -15,20 +15,15 @@
   <%= form_with(model: recebimento, local: true) do |form| %>
 
     <div class="field">
-      <%= form.label "Paciente" %>
-      <%= form.select :pessoa_beneficiario_id, Pessoa.all.order(nome: :asc, sobrenome: :asc).map { |pessoa| [pessoa.nome_completo, pessoa.id] } %>
+      <%= form.label "Acompanhamento" %>
+      <%= form.select :acompanhamento_id, Acompanhamento.all.order(data_inicio: :asc).map { |a| [a.render_info_para_profissional, a.id] } %>
     </div>
 
     <div class="field">
-      <%= form.label "Pagante (deixar em branco se for o paciente)" %>
+      <%= form.label "Pagante" %>
       <%= form.select :pessoa_pagante_id, Pessoa.all.order(nome: :asc, sobrenome: :asc).map { |pessoa| [pessoa.nome_completo, pessoa.id] }, include_blank: true %>
     </div>
 
-    <div class="field">
-      <%= form.label "Profissional" %>
-      <%= form.select :profissional_id, Profissional.all.map { |pro| [pro.descricao_completa, pro.id] } %>
-    </div>
-    
     <div class="field">
       <%= form.label "Valor" %>
       <%= form.number_field :valor %>
