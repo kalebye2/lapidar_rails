@@ -36,6 +36,7 @@ class PessoasController < ApplicationController
 
   # PATCH/PUT /pessoas/1 or /pessoas/1.json
   def update
+    params["pessoa"]["cpf"] = params["pessoa"]["cpf"].gsub(/\D/, '')[-11..]
     respond_to do |format|
       if @pessoa.update(pessoa_params)
         format.html { redirect_to pessoa_url(@pessoa), notice: "Pessoa was successfully updated." }

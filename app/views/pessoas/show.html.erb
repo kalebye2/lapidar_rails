@@ -23,8 +23,10 @@
       <!-- informações de contato -->
       <div class="contato">
         <%= link_to @pessoa.email, "mailto:#{@pessoa.email}" %>
-        <%= link_to @pessoa.render_fone, "tel:#{@pessoa.render_fone_link}" %>
-        <%= link_to "ZAPZAP", "https://wa.me/#{@pessoa.render_fone_link}", target: :_blank %>
+        <% if @pessoa.tem_telefone %>
+          <%= phone_to @pessoa.render_fone, "#{@pessoa.render_fone_link}" %>
+          <%= link_to "ZAPZAP", "https://wa.me/#{@pessoa.render_fone_link}", target: :_blank %>
+        <% end %>
       </div>
 
       <!-- dados pessoais -->
