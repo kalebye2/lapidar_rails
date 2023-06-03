@@ -2,9 +2,16 @@
 <%= link_to "Voltar", acompanhamentos_path %>
 <% p = @acompanhamento.pessoa %>
 <% pro = @acompanhamento.profissional.pessoa %>
-<%= link_to p, class: "pessoa" do %><h1><%= p.nome %> <%= p.sobrenome %> <%= p.render_sexo_sigla %> <span style="font-size:.6em;font-weight:normal;"><%= @acompanhamento.tipo(upper: true) %></span></h1><% end %>
+<%= link_to p, class: "pessoa" do %><h1><%= p.nome_abreviado %> <%= p.render_sexo_sigla %> <span style="font-size:.6em;font-weight:normal;"><%= @acompanhamento.tipo(upper: true) %></span></h1><% end %>
 
-<%= link_to @acompanhamento.profissional, class: "profissional" do %><h2><%= pro.nome %> <%= pro.sobrenome %> <span style="font-size:.5em;font-weight:normal;"><%= @acompanhamento.profissional.documento %></span></h2><% end %>
+<%= link_to @acompanhamento.profissional, class: "profissional" do %>
+  <h2>
+    <%= pro.nome_abreviado %>
+    <span style="font-size:.5em;font-weight:normal;">
+      <%= @acompanhamento.profissional.documento %>
+    </span>
+  </h2>
+<% end %>
 
 <h3>Motivo do acompanhamento: <%= @acompanhamento.motivo %></h3>
 
@@ -28,7 +35,7 @@
         Atendimento sem registro de cobrança
       <% end %>
       <p><%= a.atendimento_tipo.tipo.upcase %></p>
-      <p><%= a.consideracoes %></p>
+      <p><%== Kramdown::Document.new(a.consideracoes.to_s).to_html %></p>
 
       <% if a.relato %>
         <%= link_to "Relato", { controller: :relatos, id: a.id, action: :show_pdf },{ class: "btn-relato", target: "_blank" }%>

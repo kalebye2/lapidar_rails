@@ -2,7 +2,7 @@
   <% pessoa = profissional.pessoa %>
   <%= link_to profissional, class: "pessoa-card" + " " + (profissional.feminino ? "feminino" : "masculino") do %>
     <div>
-      <h2><%= profissional.nome_completo %></h2>
+      <h2><%= profissional.nome_abreviado %></h2>
 
       <h6>
         <%= profissional.funcao %>

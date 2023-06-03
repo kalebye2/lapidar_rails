@@ -20,4 +20,8 @@ class Recebimento < ApplicationRecord
     recebimento_modalidade.modalidade
   end
 
+  def para_linha_csv
+    "#{pagante.nome_completo},#{pagante.cpf},#{beneficiario.nome_completo},#{beneficiario.cpf},#{data},#{modalidade},#{valor},#{acompanhamento.acompanhamento_tipo.tipo}" + "\n"
+  end
+
 end

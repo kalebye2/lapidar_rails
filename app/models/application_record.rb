@@ -1,5 +1,6 @@
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
+  after_initialize :test
 
   before_save :normalize_blank_values
   
@@ -9,4 +10,7 @@ class ApplicationRecord < ActiveRecord::Base
     end
   end
 
+  def test
+    puts "Lorem ipsum dolor sit amet"
+  end
 end

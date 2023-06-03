@@ -10,7 +10,7 @@
       <tr>
         <th>Profissional</th>
         <th>Paciente</th>
-        <th>Tipo</th>
+        <th>Descrição</th>
         <th>Horário</th>
         <th>Status</th>
       </tr>
@@ -31,7 +31,7 @@
             <%= link_to ah.pessoa.nome_completo, ah.pessoa, {class: "atendimento-pessoa atendimento-pessoa-#{ah.pessoa.render_sexo.parameterize}"} %>
           </td>
           <td class="<%= presenca_class %> td-atendimento">
-            <%= ah.tipo %>
+            <%= ah.tipo %> <%= ah.modalidade %>
           </td>
           <td class="<%= presenca_class %> td-atendimento">
             <%= link_to (render_hora_brasil ah.horario), ah %>
@@ -77,6 +77,7 @@
 
 
 <!-- calendário semanal? -->
+<h2><%= @start_date.to_date.year %> - Semana <%= @start_date.to_date.strftime("%U") %></h2>
 <h3><%= @atendimentos.count %> atendimento(s) nesta semana</h3>
 <p>
   <% atendidos = @atendimentos.where(presenca: true).count %>

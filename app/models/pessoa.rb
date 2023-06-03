@@ -5,10 +5,13 @@ class Pessoa < ApplicationRecord
   
   # has associations
   has_one :usuario
+  # quando o cadastro for de um profissional
   has_one :profissional
 
   has_many :acompanhamento
   has_many :acompanhamento_responsavel, class_name: "Acompanhamento", foreign_key: :pessoa_responsavel_id
+  has_many :profissionais_acompanhando, class_name: "Profissional", through: :acompanhamento, source: :profissional
+  has_many :profissionais_a_quem_responde, class_name: "Profissional", through: :acompanhamento_responsavel, source: :profissional
 
   has_many :recebimento, through: :acompanhamento
   has_many :recebimento_pagante, class_name: "Recebimento", foreign_key: :pessoa_pagante_id
@@ -22,6 +25,36 @@ class Pessoa < ApplicationRecord
 
 
   def nome_completo
+      [nome, nome_do_meio, sobrenome].join(' ')
+  end
+
+  def nome_abreviado_meio
+    #nome_abrev = (nome + ' ' + nome_do_meio).split.map { |n| n[0] == n[0].upcase ? n[0] : '' }
+    #nome_abrev = abreviar(nome + ' ' + nome_do_meio, '. ')
+    #[nome_abrev.reject(&:empty?) || nome_abrev, sobrenome].join('. ')
+    if nome_do_meio
+      abreviar(nome + ' ' + nome_do_meio.to_s, '. ') + '. ' + sobrenome
+    else
+      abreviar(nome, '. ') + '. ' + sobrenome
+    end
+  end
+
+  def nome_abreviado
+    if nome_do_meio
+      meio_abrev = nome_do_meio.to_s.split.map { |n| n[0] == n[0].upcase ? n[0] : '' }
+      meio_sobrenome = [meio_abrev.reject(&:empty?) || meio_abrev, sobrenome].join(". ")
+      [nome, meio_sobrenome].join(' ')
+      nome + ' ' + [abreviar(nome_do_meio, '. '), sobrenome].join('. ')
+    else
+      nome + ' ' + sobrenome
+    end
+  end
+
+  def nome_sigla
+    abreviar([nome, nome_do_meio, sobrenome].join(' '))
+  end
+
+  def nome_e_sobrenome
     nome + ' ' + sobrenome
   end
 
@@ -32,8 +65,15 @@ class Pessoa < ApplicationRecord
     cr.at(0..2) + "." + cr.at(3..5) + "." + cr.at(6..8) + "-" + cr.at(-2..) 
   end
 
+  def tem_telefone
+    fone_cod_area && fone_num && fone_cod_pais
+  end
+  
   def render_fone
-    fr = "+" + fone_cod_pais + " (" + fone_cod_area + ") " + fone_num[..-5] + "-" + fone_num[-4..]
+    tem_telefone ?
+      fr = "+" + fone_cod_pais + " (" + fone_cod_area + ") " + fone_num[..-5] + "-" + fone_num[-4..]
+    :
+      nil
   end
 
   def render_fone_link
@@ -94,7 +134,6 @@ class Pessoa < ApplicationRecord
     return "#{anos_idade} #{plural_anos}#{tem_meses}"
 
     return "Não foi possível calcular idade"
-
   end
 
 
@@ -140,6 +179,15 @@ class Pessoa < ApplicationRecord
 
   def recebimento_beneficiario
     recebimento
+  end
+
+  private
+
+  def abreviar string, separator = ''
+    string = string.to_s
+    str_abreviar = string.split.map { |n| n[0] == n[0].upcase ? n[0] : ''}
+    str_abreviar = str_abreviar.reject!(&:empty?) || str_abreviar
+    str_abreviar.join(separator)
   end
 
 end

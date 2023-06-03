@@ -2,13 +2,13 @@
   <% pro = p.profissional %>
   <%= link_to p, class: "pessoa-card" + " " + (p.feminino ? "feminino" : "masculino") + " " + "#{pro ? "profissional" : "usuario" }" do%>
     <div>
-      <h2><%= p.nome %> <%= p.sobrenome %> <%#= p.feminino ? "(F)" : "(M)" %></h2>
+      <h2><%= p.nome_abreviado %><%#= p.feminino ? "(F)" : "(M)" %></h2>
 
       <h6>
         <%= if pro != nil then pro.profissional_funcao.funcao.upcase else p.profissao != nil ? p.profissao.upcase : "NA" end %>
       </h6>
       <!-- informações -->
-      <p><%= p.data_nascimento ? p.render_data_nascimento : "Data de nascimento não informada" %> (<%= p.render_idade %>)</p>
+      <p><%= p.data_nascimento ? p.render_data_nascimento : "Data Nasc. não informada" %> (<%= p.render_idade %>)</p>
       <% if p.cpf then %>
         <p><%= p.render_cpf %></p>
       <% end %>

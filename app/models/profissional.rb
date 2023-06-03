@@ -13,7 +13,23 @@ class Profissional < ApplicationRecord
   end
 
   def nome_completo
-    pessoa.nome + ' ' + pessoa.sobrenome
+    pessoa.nome_completo
+  end
+
+  def nome_abreviado
+    pessoa.nome_abreviado
+  end
+
+  def nome_abreviado_meio
+    pessoa.nome_abreviado_meio
+  end
+
+  def nome_sigla
+    pessoa.nome_sigla
+  end
+
+  def nome_e_sobrenome
+    pessoa.nome_e_sobrenome
   end
 
   def funcao

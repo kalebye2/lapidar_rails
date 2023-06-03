@@ -4,9 +4,9 @@
       <%= recebimento.acompanhamento.render_info_para_profissional %>
       (<%= recebimento.modalidade %>)
     </h2>
-    <h3><%= if !recebimento.pagante.nil? then " (pago por #{recebimento.pagante.nome_completo})" end %></h3>
+    <h3><%= if !recebimento.pagante.nil? then " (pago por #{recebimento.pagante.nome_abreviado})" end %></h3>
     <p><strong><%= render_dinheiro_centavos recebimento.valor %></strong></p>
     <p><%= render_data_brasil recebimento.data %></p>
-    <p><%= recebimento.profissional.nome_completo %> <span style="font-size:.7em;"><%= recebimento.profissional.documento %></span></p>
+    <p><%= recebimento.profissional.nome_abreviado %> <span style="font-size:.7em;"><%= recebimento.profissional.documento %></span></p>
   </div>
 <% end %>

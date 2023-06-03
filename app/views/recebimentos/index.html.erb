@@ -29,7 +29,7 @@
 
     <% if resultado > 0 %>
       <div class="pessoa-devendo">
-        <%= pessoa.nome_completo %>
+        <%= pessoa.nome_abreviado %>
         <%= render_dinheiro_centavos resultado %>
         <% @a_receber += resultado %> 
       </div>

@@ -61,4 +61,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
+
+  def abreviar
+    string.split.map { |n| n[0] == n[0].downcase ? '' : n[0] }.join(". ") + '.'
+  end
+
 end

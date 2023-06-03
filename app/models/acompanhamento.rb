@@ -13,7 +13,7 @@ class Acompanhamento < ApplicationRecord
   def render_info_para_profissional
     p = pessoa
     r = pessoa_responsavel
-    return "#{acompanhamento_tipo.tipo.to_s.upcase} - #{p.nome_completo} #{p.render_sexo_sigla} #{if r then '(respondido por ' + r.nome_completo + ')' end} com início em #{data_inicio.strftime("%d/%m/%Y")} (#{atendimento.count} #{atendimento.count == 1 ? 'sessão' : 'sessões'})"
+    return "#{acompanhamento_tipo.tipo.to_s.upcase} - #{p.nome_abreviado} #{p.render_sexo_sigla} #{if r then '(respondido por ' + r.nome_abreviado + ')' end} com início em #{data_inicio.strftime("%d/%m/%Y")} (#{atendimento.count} #{atendimento.count == 1 ? 'sessão' : 'sessões'})"
   end
 
   def render_info_para_pessoa

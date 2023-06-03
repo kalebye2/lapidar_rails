@@ -3,8 +3,12 @@ Rails.application.routes.draw do
   get 'financeiro/atendimento_valor'
   get 'financeiro/recebimento_pessoa'
   get 'financeiro/repasse_profissionais'
-  resources :atendimento_valores
-  resources :recebimentos
+  
+  scope :financeiro do
+    resources :atendimento_valores
+    resources :recebimentos
+  end
+
   resources :profissionais
   resources :pessoa_devolutivas
   resources :crp_regioes
@@ -17,7 +21,6 @@ Rails.application.routes.draw do
   resources :atendimentos
   resources :relatos
   resources :pessoa_extra_informacoes
-  resources :atendimento_valores
 
   root to: "application#index"
   get '/financeiro', to: "financeiro#index"
