@@ -11,6 +11,6 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def test
-    puts "Lorem ipsum dolor sit amet"
+    
   end
 end
