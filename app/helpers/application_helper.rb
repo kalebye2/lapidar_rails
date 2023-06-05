@@ -23,7 +23,7 @@ module ApplicationHelper
   def render_dinheiro_centavos valor_em_centavos = 0
     if valor_em_centavos == nil then return nil end
     
-    number_to_currency valor_em_centavos / 100, unit: "R$ ", separator: ",", delimiter: ".", precision: 2
+    number_to_currency valor_em_centavos.to_f / 100, unit: "R$ ", separator: ",", delimiter: ".", precision: 2
   end
 
   def render_porcentagem_int porcentagem_int = 0
