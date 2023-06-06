@@ -23,12 +23,12 @@
         <% presenca_class = "td-atendimento-#{ah.status.parameterize}" %>
         <tr>
           <td class="<%= presenca_class %> td-atendimento">
-            <%= link_to ah.profissional, {class: "atendimento-profissional"} do %><%= ah.profissional.nome_completo %>
+            <%= link_to ah.profissional, {class: "atendimento-profissional"} do %><%= ah.profissional.nome_abreviado %>
               <span style="font-size:.7em;"><%= ah.profissional.documento %></span>
           <% end %>
           </td>
           <td class="<%= presenca_class %> td-atendimento">
-            <%= link_to ah.pessoa.nome_completo, ah.pessoa, {class: "atendimento-pessoa atendimento-pessoa-#{ah.pessoa.render_sexo.parameterize}"} %>
+            <%= link_to ah.pessoa.nome_abreviado, ah.pessoa, {class: "atendimento-pessoa atendimento-pessoa-#{ah.pessoa.render_sexo.parameterize}"} %>
           </td>
           <td class="<%= presenca_class %> td-atendimento">
             <%= ah.tipo %> <%= ah.modalidade %>

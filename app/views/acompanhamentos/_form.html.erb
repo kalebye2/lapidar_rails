@@ -26,6 +26,11 @@
     </div>
 
     <div class="field">
+      <%= form.label :plataforma %>
+      <%= form.select :plataforma_id, AtendimentoPlataforma.all.order(nome: :asc).map { |plataforma| [plataforma.nome, plataforma.id] } %>
+    </div>
+
+    <div class="field">
       <%= form.label "Profissional" %>
       <%= form.select :profissional_id, Profissional.all.map { |profissional| ["#{profissional.nome_completo} - #{profissional.funcao} #{profissional.documento}", profissional.id ]} %>
     </div>

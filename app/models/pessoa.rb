@@ -190,4 +190,13 @@ class Pessoa < ApplicationRecord
     str_abreviar.join(separator)
   end
 
+  # recebimentos
+  def valor_a_cobrar
+    atendimento_valor.sum("valor - desconto") - recebimento.sum(:valor)
+  end
+
+  def valor_a_cobrar_ate_mes_passado
+    atendimento_valor.where(atendimento: {data: [..(Date.today - 1.month).end_of_month]}).sum("valor - desconto") - recebimento.sum(:valor)
+  end
+
 end

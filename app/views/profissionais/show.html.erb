@@ -18,11 +18,11 @@
   <% end %>
 </div>
 
-<% if !@profissional.atendimentos_futuros.empty? %>
+<% if !@profissional.atendimento_futuro.empty? %>
   <div class="atendimentos-futuros">
     <h3>Atendimentos futuros</h3>
     <ul>
-      <% @profissional.atendimentos_futuros.each do |af| %>
+      <% @profissional.atendimento_futuro.each do |af| %>
         <li>
           <%= link_to af.informacoes_com_pessoa, af %>
         </li>

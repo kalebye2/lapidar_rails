@@ -5,6 +5,8 @@ class Profissional < ApplicationRecord
 
   has_many :acompanhamento
   has_many :atendimento, through: :acompanhamento
+  has_many :recebimento, through: :acompanhamento
+  has_many :atendimento_valor, through: :atendimento
 
   def documento
     if profissional_funcao.documento_tipo == nil then return "" end
@@ -33,7 +35,7 @@ class Profissional < ApplicationRecord
   end
 
   def funcao
-    profissional_funcao.funcao
+    pessoa.feminino? ? (profissional_funcao.flexao_feminino || profissional_funcao.funcao[..-2] +  'a') : profissional_funcao.funcao
   end
 
   def descricao_completa
@@ -44,7 +46,15 @@ class Profissional < ApplicationRecord
     pessoa.feminino
   end
 
-  def atendimentos_futuros
+  def acompanhamento_em_andamento
+    acompanhamento.where(data_final: nil, acompanhamento_finalizacao_motivo: nil)
+  end
+
+  def acompanhamento_finalizado
+    acompanhamento.where.not(data_final: nil, acompanhamento_finalizacao_motivo: nil)
+  end
+
+  def atendimento_futuro
     atendimento.where("DATEDIFF(data, CURRENT_DATE) > 0 OR (DATEDIFF(data, CURRENT_DATE) = 0 AND HOUR(horario) > HOUR(CURRENT_TIME))").order(data: :asc, horario: :asc)
   end
 

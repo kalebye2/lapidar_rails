@@ -16,5 +16,4 @@ class AtendimentoValor < ApplicationRecord
   def pessoa
     atendimento.acompanhamento.pessoa
   end
-
 end

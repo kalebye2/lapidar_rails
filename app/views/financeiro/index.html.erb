@@ -1,30 +1,82 @@
-<h1>Financeiro#index</h1>
-<p>Find me in app/views/financeiro/index.html.erb</p>
+<% titulo "Financeiro" %>
+<h1>Financeiro</h1>
 
-<h2>Últimos Recebimentos</h2>
-<div class="recebimentos-container">
-  <% @recebimentos.each do |recebimento| %>
-    <p>
-      <%= render_data_brasil recebimento.data %> -
-      <%= recebimento.pagante.nome_completo %>
-      <%= render_dinheiro_centavos recebimento.valor %>
-      <%= recebimento.modalidade || "Meio desconhecido" %>
-    </p>
-  <% end %>
-  <%= link_to "ver mais", recebimentos_path %>
-</div>
+<!-- tabela de profissionais e o quanto ganham no mês -->
+<table style="width:100%;">
+  <caption>Resumo de valores</caption>
+  <thead>
+    <tr>
+      <th>Função</th>
+      <th>Profissional</th>
+      <th>Acompanhamentos</th>
+      <th>Valor mensal aprox.</th>
+      <th>Atendimentos do último mês</th>
+      <th>Atendimentos deste mês</th>
+      <th>Recebimentos do último mês</th>
+      <th>Recebimentos do mês atual</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% mes_passado = [(Date.today - 1.month).beginning_of_month..(Date.today - 1.month).end_of_month] %>
+    <% mes_atual = [Date.today.beginning_of_month..Date.today.end_of_month] %>
+    <% Profissional.where(desligado: false).each do |profissional| %>
+      <tr>
+        <td><%= profissional.funcao %></td>
+        <td><%= profissional.nome_abreviado %> - <%= profissional.documento %></td>
+        <td><%= profissional.acompanhamento_em_andamento.count %></td>
+        <td><%= render_dinheiro_centavos profissional.acompanhamento_em_andamento.sum("valor_atual * sessoes_atuais") %></td>
+        <td><%= render_dinheiro_centavos profissional.atendimento_valor.where("atendimentos.data" => mes_passado).sum(:valor) %></td>
+        <td><%= render_dinheiro_centavos profissional.atendimento_valor.where("atendimentos.data" => mes_atual).sum(:valor) %></td>
+        <td><%= render_dinheiro_centavos profissional.recebimento.where(data: mes_passado).sum(:valor) %></td>
+        <td><%= render_dinheiro_centavos profissional.recebimento.where(data: mes_atual).sum(:valor) %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <% total_mes_passado = AtendimentoValor.joins("JOIN atendimentos ON atendimento_valores.atendimento_id = atendimentos.id").where(atendimentos: {data: mes_passado}).sum(:valor) %>
+      <% total_mes_atual = AtendimentoValor.joins("JOIN atendimentos ON atendimento_valores.atendimento_id = atendimentos.id").where(atendimentos: {data: mes_atual}).sum(:valor) %>
+      <% total_recebimentos_mes_passado = Recebimento.where(data: mes_passado).sum(:valor) %>
+      <% total_recebimentos_mes_atual = Recebimento.where(data: mes_atual).sum(:valor) %>
+      <td colspan="2"><strong>Total</strong></td>
+      <td><strong><%= @acompanhamentos.count %></strong></td>
+      <td><strong><%= render_dinheiro_centavos @acompanhamentos.sum("valor_atual * sessoes_atuais") %></strong></td>
+      <td><strong><%= render_dinheiro_centavos total_mes_passado %></strong></td>
+      <td><strong><%= render_dinheiro_centavos total_mes_atual %></strong></td>
+      <td><strong><%= render_dinheiro_centavos total_recebimentos_mes_passado %></strong></td>
+      <td><strong><%= render_dinheiro_centavos total_recebimentos_mes_atual %></strong></td>
+    </tr>
+  </tbody>
+</table>
 
-<h2>Últimos atendimentos</h2>
-<div class="atendimento-valores-container">
-  <% @atendimento_valores.each do |atendimento_valor| %>
-    <p>
-      <strong><%= render_dinheiro_centavos atendimento_valor.valor %></strong>
-      <%= render_data_brasil atendimento_valor.data %>
-      <%= render_hora_brasil atendimento_valor.horario %>
-      <%= atendimento_valor.pessoa.nome_completo %>
-      <%= atendimento_valor.atendimento.tipo.upcase %>
-      <%= atendimento_valor.atendimento.modalidade %>
-    </p>
-  <% end %>
-  <%= link_to "mais...", atendimento_valores_path %>
+<div class="grid-2">
+  <div>
+    <h2>Últimos Recebimentos</h2>
+    <div class="recebimentos-container">
+      <% @recebimentos.each do |recebimento| %>
+        <p>
+          <%= render_data_brasil recebimento.data %> -
+          <%= recebimento.pagante.nome_completo %>
+          <%= render_dinheiro_centavos recebimento.valor %>
+          <%= recebimento.modalidade || "Meio desconhecido" %>
+        </p>
+      <% end %>
+      <%= link_to "ver mais", recebimentos_path %>
+    </div>
+  </div>
+
+  <div>
+    <h2>Últimos atendimentos</h2>
+    <div class="atendimento-valores-container">
+      <% @atendimento_valores.each do |atendimento_valor| %>
+        <p>
+          <strong><%= render_dinheiro_centavos atendimento_valor.valor %></strong>
+          <%= render_data_brasil atendimento_valor.data %>
+          <%= render_hora_brasil atendimento_valor.horario %>
+          <%= atendimento_valor.pessoa.nome_completo %>
+          <%= atendimento_valor.atendimento.tipo.upcase %>
+          <%= atendimento_valor.atendimento.modalidade %>
+        </p>
+      <% end %>
+      <%= link_to "mais...", atendimento_valores_path %>
+    </div>
+  </div>
 </div>

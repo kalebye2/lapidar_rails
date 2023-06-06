@@ -59,5 +59,4 @@ class AtendimentoValoresController < ApplicationController
   def atendimento_valor_params
     params.require(:atendimento_valor).permit(:atendimento_id, :valor, :desconto, :taxa_porcentagem)
   end
-
 end

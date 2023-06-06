@@ -2,11 +2,11 @@
   <h3>Casos</h3>
   <p>
   <%= pluralize(profissional.acompanhamento.count, 'caso', plural: 'casos') %>,
-  <%= profissional.acompanhamento.where(data_final: nil, finalizacao_motivo_id: nil).count %> em andamento.
+  <%= profissional.acompanhamento_em_andamento.count %> em andamento.
   <%= link_to "Ver mais", profissional %>
   </p>
   <ul>
-  <% profissional.acompanhamento.where(data_final: nil, finalizacao_motivo_id: nil).order(data_inicio: :desc).each do |a| %>
+  <% profissional.acompanhamento_em_andamento.order(data_inicio: :desc).each do |a| %>
     <%= link_to a, class: "#{a.data_final && !a.acompanhamento_finalizacao_motivo.nil? ? 'acompanhamento-finalizado ' + 'acompanhamento-finalizado-' + a.acompanhamento_finalizacao_motivo.motivo.parameterize : 'acompanhamento-em-andamento'}" do %>
       <li>
         <%= a.render_info_para_profissional %>
@@ -19,4 +19,18 @@
     <% end %>
   <% end %>
   </ul>
+  <% if !profissional.acompanhamento_finalizado.empty? %>
+    <ul>
+      <% profissional.acompanhamento_finalizado.order(data_final: :desc).each do |a| %>
+        <%= link_to a, class: "#{a.data_final && !a.acompanhamento_finalizacao_motivo.nil? ? 'acompanhamento-finalizado ' + 'acompanhamento-finalizado-' + a.acompanhamento_finalizacao_motivo.motivo.parameterize : 'acompanhamento-em-andamento'}" do %>
+          <li>
+            <%= a.render_info_para_profissional %>
+            <span style="font-size:.7em;">
+                Finalizado em <%= render_data_brasil a.data_final %> por <%= a.acompanhamento_finalizacao_motivo.motivo %>
+            </span>
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+  <% end %>
 </div>

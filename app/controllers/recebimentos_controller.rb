@@ -53,5 +53,4 @@ class RecebimentosController < ApplicationController
   def recebimento_params
     params.require(:recebimento).permit(:pessoa_pagante_id, :acompanhamento_id, :valor, :data, :modalidade_id)
   end
-
 end
