@@ -1,5 +1,5 @@
 class RecebimentosController < ApplicationController
-  before_action :set_recebimento, only: %i[ show update edit delete ]
+  before_action :set_recebimento, only: %i[ show update edit delete recibo ]
 
   def index
     @recebimentos = Recebimento.all.order(data: :desc)
@@ -42,6 +42,12 @@ class RecebimentosController < ApplicationController
   end
 
   def delete
+  end
+
+  def recibo
+    hoje = Time.now.strftime("%Y-%m-%d")
+    hoje_formatado = Time.now.strftime("%d/%m/%Y")
+    nome_documento = "Recibo_#{hoje}"
   end
 
   private

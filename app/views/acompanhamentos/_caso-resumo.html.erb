@@ -6,7 +6,7 @@
       <%= link_to "Baixar", { controller: :acompanhamentos, action: "caso_detalhes", id: acompanhamento.id, format: :pdf }, { target: "_blank", class: "btn-download" } %>
     </span>
   </h2>
-<% acompanhamento.atendimento.where("data <= CURRENT_DATE").each do |at| %>
+<% acompanhamento.atendimento.where.not(consideracoes: nil).each do |at| %>
   <div class="consideracoes">
     <h5><%= render_data_brasil at.data %></h5>
   <%== Kramdown::Document.new(at.consideracoes || "Sem considerações").to_html %>

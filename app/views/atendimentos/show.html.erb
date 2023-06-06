@@ -78,4 +78,8 @@
 =end
 %>
 
+<% if !@atendimento.relato.nil? %>
+<%= link_to "relato", @atendimento.relato %>
+<%= @atendimento.relato.relato %>
+<% end %>
 </div>
