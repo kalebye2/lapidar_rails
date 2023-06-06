@@ -15,16 +15,69 @@
  */
 
 :root {
-	--doc-bg-color: #eeeeee;
+	/* cores a substituir nos temas */
+	--doc-bg-color: #eee;
 	--doc-text-color: #333;
+	--doc-shade-color: green;
+	--doc-a-color: darkblue;
+
+	/* para cadastros no geral */
+	--male-bg-color: lightblue;
+	--male-shade-color: darkcyan;
+	--male-text-color: darkblue;
+	--female-bg-color: pink;
+	--female-shade-color: firebrick;
+	--female-text-color: darkred;
+	
+	--profissional-bg-color: lightyellow;
+	--profissional-shade-color: orange;
+	--profissional-text-color: darkgoldenrod;
+
+	/* cores de acompanhamentos */
+	--acompanhamento-em-andamento-bg-color: lightcyan;
+	--acompanhamento-em-andamento-text-color: darkslateblue;
+	--acompanhamento-finalizado-opacity: .7;
+	--acompanhamento-finalizado-alta-bg-color: lightgreen;
+	--acompanhamento-finalizado-alta-text-color: darkgreen;
+	--acompanhamento-finalizado-encaminhamento-bg-color: lightblue;
+	--acompanhamento-finalizado-encaminhamento-text-color: darkcyan;
+	--acompanhamento-finalizado-motivos-financeiros-bg-color: lightyellow;
+	--acompanhamento-finalizado-motivos-financeiros-text-color: darkgoldenrod;
+	--acompanhamento-finalizado-desistencia-bg-color: pink;
+	--acompanhamento-finalizado-desistencia-text-color: darkred;
+
+	/* fontes (talvez alterar com temas?) */
 	--doc-heading-font: 'tex gyre adventor', 'ubuntu', sans-serif;
 	--doc-text-font: 'linux biolinum o', 'linux libertine', serif;
+}
+
+/* temas */
+.light {
+	--doc-bg-color: #eee;
+	--doc-text-color: #333;
+	--doc-a-color: #332211;
+}
+
+.dark {
+	--doc-bg-color: #333;
+	--doc-text-color: #eee;
+	--doc-a-color: #ccddee;
 }
 
 body {
 	background-color: var(--doc-bg-color);
 	color: var(--doc-text-color);
 	font-family: var(--doc-text-font);
+}
+
+a {
+	color: var(--doc-a-color);
+
+	/*
+	&:hover {
+		text-decoration: underline;
+	}
+	*/
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -36,8 +89,9 @@ h1, h2, h3, h4, h5, h6 {
 	content-align: center;
 
   .table {
-	  display: table;
-	  width: 100%;
+	border-collapse: collapse;
+	display: table;
+	width: 100%;
 	table-layout: fixed;	
   }
   .day {
@@ -83,13 +137,10 @@ h1, h2, h3, h4, h5, h6 {
 	padding-bottom: 1em;
   }
   .calendar-title {
+	font-family: var(--doc-heading-font);
 	font-weight: bold;
 	font-size: 1.5em;
 	padding: 0 2em 0 2em;
-  }
-
-  .table {
-	border-collapse: collapse;
   }
 }
 
@@ -122,4 +173,25 @@ h1, h2, h3, h4, h5, h6 {
 .grid-2 {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
+}
+
+/* default table style */
+table {
+	--default-padding: .5em;
+	.resultado {
+		font-weight: bold;
+		text-align: right;
+	}
+
+	.dinheiro {
+		font-style: italic;
+		text-align: right;
+	}
+}
+th {
+	padding: var(--default-padding);
+	font-family: var(--doc-heading-font);
+}
+td {
+	padding: var(--default-padding);
 }

@@ -4,16 +4,14 @@
     <div>
       <h2><%= profissional.nome_abreviado %></h2>
 
-      <h6>
+      <h3>
         <%= profissional.funcao %>
-      </h6>
+      </h3>
+      <h6><%= profissional.documento %></h6>
       <!-- informações -->
-      <p><%= pessoa.data_nascimento ? pessoa.render_data_nascimento : "Sem informação" %> (<%= pessoa.render_idade %>)</p>
-      <% if pessoa.cpf then %>
-        <p><%= pessoa.render_cpf %></p>
-      <% end %>
-        <p><%= pessoa.email ? pessoa.email : "Não definido" %></p>
-        <p><%= (pessoa.fone_cod_pais || pessoa.fone_cod_area || pessoa.fone_num) ? pessoa.render_fone : "Não definido" %></p>
+      <p><%= profissional.acompanhamento.where(data_final: nil, acompanhamento_finalizacao_motivo: nil).count %> acompanhamentos em andamento</p>
+      <p><%= pessoa.email ? pessoa.email : "Não definido" %></p>
+      <p><%= (pessoa.fone_cod_pais || pessoa.fone_cod_area || pessoa.fone_num) ? pessoa.render_fone : "Não definido" %></p>
     </div>
   <% end %>
 <% end %>

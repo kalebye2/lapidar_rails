@@ -1,7 +1,7 @@
 <h1>Quadro de profissionais</h1>
 <%= link_to "+ profissional", new_profissional_path %>
 
-<div class="pessoas-container">
+<div class="profissionais-container">
   <% @profissionais.each do |pro| %>
     <%= render 'card', profissional: pro %>
   <% end %>

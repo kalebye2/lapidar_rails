@@ -30,28 +30,28 @@ a {
 }
 
 .acompanhamento-em-andamento {
-	--bg-color: white;
-	--text-color: black;
+	--bg-color: var(--acompanhamento-em-andamento-bg-color);
+	--text-color: var(--acompanhamento-em-andamento-text-color);
 }
 
 .acompanhamento-finalizado {
-	opacity: .7;
+	opacity: var(--acompanhamento-finalizado-opacity);
 }
 .acompanhamento-finalizado-motivos-financeiros {
-	--bg-color: blue;
-	--text-color: white;
+	--bg-color: var(--acompanhamento-finalizado-motivos-financeiros-bg-color);
+	--text-color: var(--acompanhamento-finalizado-motivos-financeiros-text-color);
 }
 .acompanhamento-finalizado-desistencia {
-	--bg-color: darkred;
-	--text-color: white;
+	--bg-color: var(--acompanhamento-finalizado-desistencia-bg-color);
+	--text-color: var(--acompanhamento-finalizado-desistencia-text-color);
 }
 .acompanhamento-finalizado-alta {
-	--bg-color: green;
-	--text-color: white;
+	--bg-color: var(--acompanhamento-finalizado-alta-bg-color);
+	--text-color: var(--acompanhamento-finalizado-alta-text-color);
 }
 .acompanhamento-finalizado-encaminhamento {
-	--bg-color: orange;
-	--text-color: white;
+	--bg-color: var(--acompanhamento-finalizado-encaminhamento-bg-color);
+	--text-color: var(--acompanhamento-finalizado-encaminhamento-text-color);
 }
 
 .caso-resumo {

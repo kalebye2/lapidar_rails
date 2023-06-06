@@ -106,32 +106,36 @@ table {
 	}
 }
 
-td {
+tr {
 	--bg-color: white;
 	--text-color: black;
 	padding: 1em .5em 1em .5em;
 
-	&.td-atendimento {
+	td {
+		padding: 1em .5em 1em .5em;
+	}
+	&.tr-atendimento {
 		text-align: center;
 	}
 
 	background-color: var(--bg-color);
 	color: var(--text-color);
-	&.td-atendimento-presente {
+
+	&.tr-atendimento-presente {
 		--bg-color: lightgreen;
 		--text-color: darkgreen;
 	}
 
-	&.td-atendimento-ausente {
+	&.tr-atendimento-ausente {
 		--bg-color: pink;
 		--text-color: darkred;
 	}
 
-	&.td-atendimento-futuro, &.td-atendimento-a-ocorrer {
+	&.tr-atendimento-futuro, &.tr-atendimento-a-ocorrer {
 		--text-color: darkblue;
 	}
 
-	&.td-atendimento-em-breve {
+	&.tr-atendimento-em-breve {
 		--bg-color: lightyellow;
 		--text-color: darkorange;
 	}

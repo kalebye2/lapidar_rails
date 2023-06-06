@@ -18,25 +18,23 @@
 
     <tbody>
       <% @atendimentos_hoje.each do |ah| %>
-        <% presenca_class = ah.horario_passado ? ah.presenca ? "td-atendimento-presente" : "td-atendimento-ausente" : "td-atendimento-futuro" %>
-        <% presenca_class = ah.presenca == true ? "td-atendimento-presente" : ah.horario_passado ? "td-atendimento-ausente" : "td-atendimento-futuro" %>
-        <% presenca_class = "td-atendimento-#{ah.status.parameterize}" %>
-        <tr>
-          <td class="<%= presenca_class %> td-atendimento">
+        <% presenca_class = "tr-atendimento-#{ah.status.parameterize}" %>
+        <tr class="<%= presenca_class %> tr-atendimento">
+          <td>
             <%= link_to ah.profissional, {class: "atendimento-profissional"} do %><%= ah.profissional.nome_abreviado %>
               <span style="font-size:.7em;"><%= ah.profissional.documento %></span>
           <% end %>
           </td>
-          <td class="<%= presenca_class %> td-atendimento">
+          <td>
             <%= link_to ah.pessoa.nome_abreviado, ah.pessoa, {class: "atendimento-pessoa atendimento-pessoa-#{ah.pessoa.render_sexo.parameterize}"} %>
           </td>
-          <td class="<%= presenca_class %> td-atendimento">
+          <td>
             <%= ah.tipo %> <%= ah.modalidade %>
           </td>
-          <td class="<%= presenca_class %> td-atendimento">
+          <td>
             <%= link_to (render_hora_brasil ah.horario), ah %>
           </td>
-          <td class="<%= presenca_class %> td-atendimento">
+          <td>
             <%= ah.status %>
             <% if !ah.pessoa_presente || ah.em_breve_ou_em_andamento %>
               <%= form_with model: ah, local: true do |form| %>

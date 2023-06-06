@@ -19,6 +19,7 @@
 
 .pessoa-card {
 	--displace-v: -.5em;
+	--shade-color: var(--doc-shade-color);
 	background-color: black;
 	color: white;
 	margin: 1em;
@@ -37,20 +38,26 @@
 
 	&:hover {
 		transform: translate(0, var(--displace-v));
-		box-shadow: 0px calc(-1 * var(--displace-v)) black;
+		box-shadow: 0px calc(-1 * var(--displace-v)) var(--shade-color);
 		z-index: 1;
 	}
 }
 
 
 .masculino {
-	background-color: darkblue;
+	background-color: var(--male-bg-color);
+	color: var(--male-text-color);
+	--shade-color: var(--male-shade-color);
 }
 .feminino {
-	background-color: darkred;
+	background-color: var(--female-bg-color);
+	color: var(--female-text-color);
+	--shade-color: var(--female-shade-color);
 }
 
 .profissional {
-	background-color: darkorange;
+	background-color: var(--profissional-bg-color);
+	color: var(--profissional-text-color);
+	--shade-color: var(--profissional-shade-color);
 }
 
