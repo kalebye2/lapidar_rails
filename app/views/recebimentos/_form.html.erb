@@ -1,5 +1,4 @@
 <div class="recebimento-form">
-
   <% if recebimento.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(recebimento.errors.count, "error") %> prohibited this recebimento from being saved:</h2>
@@ -16,7 +15,7 @@
 
     <div class="field">
       <%= form.label "Acompanhamento" %>
-      <%= form.select :acompanhamento_id, Acompanhamento.all.order(data_inicio: :asc).map { |a| [a.render_info_para_profissional, a.id] } %>
+      <%= form.select :acompanhamento_id, Acompanhamento.all.order(data_inicio: :asc).map { |a| [a.render_info_padrao, a.id] } %>
     </div>
 
     <div class="field">
@@ -37,11 +36,6 @@
     <div class="field">
       <%= form.label "Modalidade de pagamento" %>
       <%= form.select :modalidade_id, RecebimentoModalidade.all.map { |mod| [mod.modalidade, mod.id] } %>
-    </div>
-
-    <div class="field">
-      <%= form.label "Tipo de acompanhamento" %>
-      <%= form.select :acompanhamento_tipo_id, AcompanhamentoTipo.all.map { |tipo| [tipo.tipo, tipo.id] } %>
     </div>
 
     <div class="action">

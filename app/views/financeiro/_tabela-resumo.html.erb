@@ -1,0 +1,49 @@
+<table style="width:100%;">
+  <caption>Resumo de valores</caption>
+  <thead>
+    <tr>
+      <th rowspan=2>Função</th>
+      <th rowspan=2>Profissional</th>
+      <th rowspan=2>Acompanhamentos</th>
+      <th rowspan=2>Valor mensal aprox.</th>
+      <th colspan=2>Valores de atendimentos</th>
+      <th colspan=2>Recebimentos</th>
+    </tr>
+    <tr>
+      <th>Mês passado</th>
+      <th>Mês atual</th>
+      <th>Mês passado</th>
+      <th>Mês atual</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% mes_passado = [(Date.today - 1.month).beginning_of_month..(Date.today - 1.month).end_of_month] %>
+    <% mes_atual = [Date.today.beginning_of_month..Date.today.end_of_month] %>
+    <% Profissional.where(desligado: false).each do |profissional| %>
+      <tr>
+        <td><%= profissional.funcao %></td>
+        <td><%= profissional.nome_abreviado %> - <%= profissional.documento %></td>
+        <td><%= profissional.acompanhamento_em_andamento.count %></td>
+        <td class="dinheiro"><%= render_dinheiro_centavos profissional.acompanhamento_em_andamento.sum("valor_atual * sessoes_atuais") %></td>
+        <td class="dinheiro"><%= render_dinheiro_centavos profissional.atendimento_valor.where("atendimentos.data" => mes_passado).sum(:valor) %></td>
+        <td class="dinheiro"><%= render_dinheiro_centavos profissional.atendimento_valor.where("atendimentos.data" => mes_atual).sum(:valor) %></td>
+        <td class="dinheiro"><%= render_dinheiro_centavos profissional.recebimento.where(data: mes_passado).sum(:valor) %></td>
+        <td class="dinheiro"><%= render_dinheiro_centavos profissional.recebimento.where(data: mes_atual).sum(:valor) %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <% total_mes_passado = AtendimentoValor.joins("JOIN atendimentos ON atendimento_valores.atendimento_id = atendimentos.id").where(atendimentos: {data: mes_passado}).sum(:valor) %>
+      <% total_mes_atual = AtendimentoValor.joins("JOIN atendimentos ON atendimento_valores.atendimento_id = atendimentos.id").where(atendimentos: {data: mes_atual}).sum(:valor) %>
+      <% total_recebimentos_mes_passado = Recebimento.where(data: mes_passado).sum(:valor) %>
+      <% total_recebimentos_mes_atual = Recebimento.where(data: mes_atual).sum(:valor) %>
+      <td colspan="2" class="resultado">Total</td>
+      <td class="resultado"><%= @acompanhamentos.count %></td>
+      <td class="resultado"><%= render_dinheiro_centavos @acompanhamentos.sum("valor_atual * sessoes_atuais") %></td>
+      <td class="resultado"><%= render_dinheiro_centavos total_mes_passado %></td>
+      <td class="resultado"><%= render_dinheiro_centavos total_mes_atual %></td>
+      <td class="resultado"><%= render_dinheiro_centavos total_recebimentos_mes_passado %></td>
+      <td class="resultado"><%= render_dinheiro_centavos total_recebimentos_mes_atual %></td>
+    </tr>
+  </tbody>
+</table>
+
