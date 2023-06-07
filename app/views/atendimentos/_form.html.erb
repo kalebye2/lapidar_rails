@@ -21,8 +21,8 @@
     <%= form.select :atendimento_tipo_id, AtendimentoTipo.order(:tipo).map {
     |atendimento_tipo| [atendimento_tipo.tipo.upcase, atendimento_tipo.id]
     } %>
-  <%= form.label "Modalidade de atendimento" %>
-  <%= form.select :modalidade_id, AtendimentoModalidade.order(:modalidade).map { |atendimento_modalidade| [atendimento_modalidade.modalidade, atendimento_modalidade.id] } %>
+    <%= form.label "Modalidade de atendimento" %>
+    <%= form.select :modalidade_id, AtendimentoModalidade.order(:modalidade).map { |atendimento_modalidade| [atendimento_modalidade.modalidade, atendimento_modalidade.id] } %>
 
     <%= form.label :data %>
     <%= form.date_field :data %>
@@ -32,6 +32,9 @@
 
     <%= form.label "Considerações" %>
     <%= form.text_area :consideracoes %>
+
+    <%= form.label "Remarcado" %>
+    <%= form.check_box :remarcado %>
 
     <%= form.submit %>
 
