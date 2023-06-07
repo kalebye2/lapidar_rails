@@ -30,4 +30,12 @@
     </ul>
   </div>
 <% end %>
-<%= render 'acompanhamentos-card', profissional: @profissional %>
+<div class="profissional-acompanhamentos">
+  <h3>Casos</h3>
+  <p>
+  <%= pluralize(@profissional.acompanhamento.count, 'caso', plural: 'casos') %>,
+  <%= @profissional.acompanhamento_em_andamento.count %> em andamento.
+  <%= link_to "Ver mais", acompanhamentos_profissional_path %>
+  </p>
+  <%= render 'acompanhamentos-resumo', profissional: @profissional %>
+</div>

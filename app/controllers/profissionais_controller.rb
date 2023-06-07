@@ -1,5 +1,5 @@
 class ProfissionaisController < ApplicationController
-  before_action :set_profissional, only: %i[ show edit update delete ]
+  before_action :set_profissional, only: %i[ show edit update delete acompanhamentos ]
 
   def index
     @profissionais = Profissional.all.joins("JOIN pessoas ON profissionais.pessoa_id = pessoas.id").order(nome: :asc, sobrenome: :asc)
@@ -32,6 +32,9 @@ class ProfissionaisController < ApplicationController
   def destroy
   end
 
+  def acompanhamentos
+    @acompanhamentos = @profissional.acompanhamento
+  end
 
   private
 
