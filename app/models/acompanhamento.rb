@@ -17,14 +17,17 @@ class Acompanhamento < ApplicationRecord
   end
 
   def render_info_para_pessoa
-    p = profissional.pessoa
-    pro = profissional
-    return "#{acompanhamento_tipo.tipo.to_s.upcase} - #{p.nome} #{p.sobrenome} #{pro.documento} iniciado em #{ data_inicio.strftime('%d/%m/%Y') }"
+    return "#{acompanhamento_tipo.tipo.to_s.upcase} - #{profissional.nome_abreviado} #{pro.documento} iniciado em #{ data_inicio.strftime('%d/%m/%Y') }"
+  end
+
+  def render_info_padrao
+    p = pessoa
+    r = pessoa_responsavel
+    return "#{p.nome_abreviado} #{p.render_sexo_sigla} #{if r then 'respondido por ' + r.nome_abreviado + ')' end} - #{profissional.nome_abreviado} (#{tipo.to_s.upcase} com início em #{data_inicio.strftime("%d/%m/%Y")})"
   end
 
   def tipo upper: false, titulo: false, lower: false
     t = acompanhamento_tipo.tipo
     upper ? t.upcase : titulo ? t.titleize : lower ? t.downcase : t
   end
-
 end

@@ -9,7 +9,11 @@ Rails.application.routes.draw do
     resources :recebimentos
   end
 
-  resources :profissionais
+  resources :profissionais do
+    member do
+      get :acompanhamentos
+    end
+  end
   resources :pessoa_devolutivas
   resources :crp_regioes
   resources :profissional_notas
