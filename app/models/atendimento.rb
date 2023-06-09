@@ -30,7 +30,7 @@ class Atendimento < ApplicationRecord
 
   # the resto
   def pessoa_presente
-    return presenca.to_s == "1"
+    return presenca
   end
 
   def pessoa_presente_desc
@@ -83,5 +83,4 @@ class Atendimento < ApplicationRecord
   def em_breve_ou_em_andamento
     em_breve || em_andamento
   end
-
 end

@@ -8,7 +8,7 @@
       <h2><%= @pessoa.nome_completo %> <%= @pessoa.render_sexo_sigla %></h2>
     
       <!-- se for profissional -->
-      <% if pro != nil %>
+      <% if !pro.nil? %>
         <div class="profissional">
           <% profunc = pro.profissional_funcao %>
           <p><%= profunc.funcao %> <%= pro.documento %></p>
@@ -50,7 +50,7 @@
     <div class="acompanhamentos">
       <!-- se é profissional -->
       <% if pro != nil %>
-        <%= render 'profissionais/acompanhamentos-card', profissional: pro %>
+        <%= render 'profissionais/acompanhamentos-lista', profissional: pro %>
       <% end %>
 
       <!-- se é usuário -->
@@ -115,7 +115,6 @@
         </ul>
       </div>
     <% end %>
-
 </div>
 
 <%= link_to 'Edit', edit_pessoa_path(@pessoa) %> |

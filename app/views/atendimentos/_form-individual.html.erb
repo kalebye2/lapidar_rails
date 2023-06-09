@@ -1,0 +1,56 @@
+<% if atendimento %>
+  <%= atendimento.id %>
+  <%= form_with model: atendimento, url: atendimento_path(atendimento), method: :post do |form| %>
+    <div class="field">
+      <%= form.label "Data e hora" %>
+      <%= form.date_field :data %>
+      <%= form.time_field :horario %>
+    </div>
+
+    <div class="field">
+      <%= form.label :presenca, "Presença" %>
+      <%= form.check_box :presenca %>
+    </div>
+
+    <div class="field">
+      <%= form.label :modalidade %>
+      <%= form.select :modalidade_id, AtendimentoModalidade.all.map { |modalidade| [modalidade.modalidade, modalidade.id] } %>
+    </div>
+
+    <div class="field">
+      <%= form.label :tipo %>
+      <%= form.select :atendimento_tipo_id, AtendimentoTipo.order(:tipo).map { |atendimento_tipo| [atendimento_tipo.tipo.upcase, atendimento_tipo.id] } %>
+    </div>
+
+    <div class="field">
+      <%= form.label :presenca, "Presença" %>
+      <%= form.check_box :presenca %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Reagendado?" %>
+      <%= form.check_box :reagendado %>
+    </div>
+
+    <div class="subform">
+      <%= fields_for :atendimento_valor, atendimento.atendimento_valor do |valor_form| %>
+        <div class="field">
+          <%= valor_form.label :valor %>
+          <%= valor_form.number_field :valor %>
+        </div>
+        <div class="field">
+          <%= valor_form.label :desconto %>
+          <%= valor_form.number_field :desconto %>
+        </div>
+        <div class="field">
+          <%= valor_form.label :taxa_porcentagem %>
+          <%= valor_form.number_field :taxa_porcentagem %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="action">
+      <%= form.submit %>
+    </div>
+  <% end %>
+<% end %>

@@ -1,8 +1,16 @@
 class RecebimentosController < ApplicationController
+  require 'csv'
+
   before_action :set_recebimento, only: %i[ show update edit delete recibo ]
 
   def index
     @recebimentos = Recebimento.all.order(data: :desc)
+    respond_to do |format|
+      format.html
+      format.csv do
+        send_data Recebimento.para_csv(@recebimentos), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-recebimentos_#{Date.today}.csv", type: 'text/csv'
+      end
+    end
   end
 
   def show
@@ -17,6 +25,10 @@ class RecebimentosController < ApplicationController
 
   def create
     @recebimento = Recebimento.new(recebimento_params)
+    if params[:recebimento][:direto_profissional]
+      p = params[:recebimento]
+      ProfissionalFinanceiroRepasse.where(id: p[:id]).first_or_create.update(profissional_id: Acompanhamento.find(p[:acompanhamento_id]).profissional.id, valor: p[:valor], data: p[:data], modalidade_id: p[:modalidade_id])
+    end
 
     respond_to do |format|
       if @recebimento.save

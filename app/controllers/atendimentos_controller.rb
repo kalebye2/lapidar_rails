@@ -51,6 +51,6 @@ class AtendimentosController < ApplicationController
   end
 
   def atendimento_params
-    params.require(:atendimento).permit(:data, :horario, :modalidade_id, :acompanhamento_id, :presenca, :atendimento_tipo_id, :consideracoes, :remarcado, :atendimento_local_id, atendimento_valor_attributes: [:atendimento_id, :valor, :desconto, :taxa_porcentagem])
+    params.require(:atendimento).permit(:data, :horario, :modalidade_id, :acompanhamento_id, :presenca, :atendimento_tipo_id, :consideracoes, :remarcado, :atendimento_local_id, :reagendado, atendimento_valor_attributes: [:atendimento_id, :valor, :desconto, :taxa_porcentagem])
   end
 end

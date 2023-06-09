@@ -3,52 +3,7 @@
 
 
 <!-- atendimentos de hoje -->
-<% if !@atendimentos_hoje.empty? %>
-  <table class="table-atendimento">
-    <caption>Atendimentos de hoje</caption>
-    <thead>
-      <tr>
-        <th>Profissional</th>
-        <th>Paciente</th>
-        <th>Descrição</th>
-        <th>Horário</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @atendimentos_hoje.each do |ah| %>
-        <% presenca_class = "tr-atendimento-#{ah.status.parameterize}" %>
-        <tr class="<%= presenca_class %> tr-atendimento">
-          <td>
-            <%= link_to ah.profissional, {class: "atendimento-profissional"} do %><%= ah.profissional.nome_abreviado %>
-              <span style="font-size:.7em;"><%= ah.profissional.documento %></span>
-          <% end %>
-          </td>
-          <td>
-            <%= link_to ah.pessoa.nome_abreviado, ah.pessoa, {class: "atendimento-pessoa atendimento-pessoa-#{ah.pessoa.render_sexo.parameterize}"} %>
-          </td>
-          <td>
-            <%= ah.tipo %> <%= ah.modalidade %>
-          </td>
-          <td>
-            <%= link_to (render_hora_brasil ah.horario), ah %>
-          </td>
-          <td>
-            <%= ah.status %>
-            <% if !ah.pessoa_presente || ah.em_breve_ou_em_andamento %>
-              <%= form_with model: ah, local: true do |form| %>
-                <%= form.label "Presente?" %>
-                <%= form.check_box :presenca %>
-                <%= form.submit "🗸" %>
-              <% end %>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
+<%= render "atendimentos-hoje-tabela", atendimentos: @atendimentos_hoje %>
 
 <!-- calendário mensal -->
 <%

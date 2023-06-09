@@ -18,7 +18,12 @@ Rails.application.routes.draw do
   resources :crp_regioes
   resources :profissional_notas
   #resources :pessoas
-  resources :pessoas, path: '/cadastros'
+  resources :pessoas, path: '/cadastros' do
+    member do
+      get :devolutivas, path: 'devolutivas'
+      get :responsavel_devolutivas
+    end
+  end
   resources :paises
   resources :continentes
   resources :acompanhamentos

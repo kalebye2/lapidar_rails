@@ -15,10 +15,10 @@ class RelatosController < ApplicationController
         data_relato = @relato.atendimento.data.strftime("%d/%m/%Y")
         hora_relato = @relato.atendimento.horario.strftime("%H%M")
         hora_relato_formatado = @relato.atendimento.horario.strftime("%Hh%M")
-        nome_documento = "#{@relato.atendimento.pessoa.nome_relato}_relato_#{data_relato_doc}-#{hora_relato}"
+        nome_documento = "#{@relato.atendimento.pessoa.nome_completo}_relato_#{data_relato_doc}-#{hora_relato}"
 
         pdf = Prawn::Document.new
-        pdf.text "#{@relato.atendimento.acompanhamento.pessoa.nome_relato} - Relato"
+        pdf.text "#{@relato.atendimento.acompanhamento.pessoa.nome_completo} - Relato"
         pdf.text "Atendimento do dia #{data_relato} às #{hora_relato_formatado}"
         pdf.text "Documento gerado em " + (hoje_formatado) + " às " + (Time.now.strftime("%Hh%M"))
 

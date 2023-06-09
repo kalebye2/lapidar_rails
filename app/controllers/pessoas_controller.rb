@@ -1,5 +1,5 @@
 class PessoasController < ApplicationController
-  before_action :set_pessoa, only: %i[ show edit update destroy ]
+  before_action :set_pessoa, only: %i[ show edit update destroy devolutivas ]
 
   # GET /pessoas or /pessoas.json
   def index
@@ -59,6 +59,26 @@ class PessoasController < ApplicationController
   end
 
 
+  ### recursos extras
+  # devolutivas
+  def devolutivas
+    @devolutivas = @pessoa.devolutiva.order(data: :desc)
+    respond_to do |format|
+      format.html
+      format.json
+      format.js
+      format.pdf
+    end
+  end
+  def responsavel_devolutivas
+    @devolutivas = @pessoa.responsavel_devolutiva.order(data: :desc)
+    respond_to do |format|
+      format.html
+      format.json
+      format.js
+      format.pdf
+    end
+  end
 
   # pdfs
   

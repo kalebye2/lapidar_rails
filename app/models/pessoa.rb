@@ -23,9 +23,16 @@ class Pessoa < ApplicationRecord
 
   has_many :pessoa_extra_informacao
 
+  has_many :devolutiva, class_name: "PessoaDevolutiva", foreign_key: :pessoa_id
+  has_many :responsavel_devolutiva, class_name: "PessoaDevolutiva", foreign_key: :pessoa_responsavel_id
+
 
   def nome_completo
+    if !nome_do_meio.nil?
       [nome, nome_do_meio, sobrenome].join(' ')
+    else
+      [nome, sobrenome].join(' ')
+    end
   end
 
   def nome_abreviado_meio

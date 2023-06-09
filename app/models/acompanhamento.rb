@@ -17,7 +17,7 @@ class Acompanhamento < ApplicationRecord
   end
 
   def render_info_para_pessoa
-    return "#{acompanhamento_tipo.tipo.to_s.upcase} - #{profissional.nome_abreviado} #{pro.documento} iniciado em #{ data_inicio.strftime('%d/%m/%Y') }"
+    return "#{acompanhamento_tipo.tipo.to_s.upcase} - #{profissional.nome_abreviado} #{profissional.documento} iniciado em #{ data_inicio.strftime('%d/%m/%Y') }"
   end
 
   def render_info_padrao

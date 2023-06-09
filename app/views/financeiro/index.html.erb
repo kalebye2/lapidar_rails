@@ -3,7 +3,9 @@
 
 <!-- tabela de profissionais e o quanto ganham no mês -->
 <%= render "tabela-resumo" %>
-<div class="grid-2">
+<br />
+<%= render "tabela-repasses" %>
+<div class="grid-3">
   <div>
     <h2>Últimos Recebimentos</h2>
     <div class="recebimentos-container">
@@ -34,5 +36,17 @@
       <% end %>
       <%= link_to "mais...", atendimento_valores_path %>
     </div>
+  </div>
+
+  <div>
+    <h2>Últimos repasses</h2>
+    <% @profissional_financeiro_repasses.each do |repasse| %>
+      <p>
+        <%= render_data_brasil repasse.data %>
+        <%= repasse.profissional.nome_abreviado %>
+        <%= repasse.profissional.documento %>
+        <%= render_dinheiro_centavos repasse.valor %>
+      </p>
+    <% end %>
   </div>
 </div>

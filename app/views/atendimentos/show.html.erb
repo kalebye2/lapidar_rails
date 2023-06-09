@@ -10,73 +10,7 @@
 
 <h4><%= @atendimento.acompanhamento.motivo %></h4>
 
-<%
-=begin
-%>
-<div>
-  <% if @atendimento.consideracoes %>
-    <%== Kramdown::Document.new(@atendimento.consideracoes).to_html %>
-  <% else %>
-    <%= "Nada a observar" %>
-  <% end %>
-</div>
-<br /><br />
-<%
-=end
-%>
-
-<div>
-<% if @atendimento.relato %>
-  <%= link_to "PDF", { controller: :relatos, id: @atendimento.id, action: :show_pdf }, class: "btn-pdf" %>
-  <%= link_to "Relato", { controller: :relatos, id: @atendimento.id, action: :show }, class: "btn-show" %>
-<% end %>
-
-<%
-=begin
-%>
-<%= render "form_individual", { atendimento: @atendimento }%>
-<%
-=end
-%>
-
-<%= form_with model: @atendimento, local: true do |form| %>
-  <div class="atendimento-form">
-    <div class="field">
-      <%= form.label "Considerações sobre o atendimento" %>
-      <br />
-      <%= form.text_area :consideracoes, cols: 50, rows: 10 %>
-    </div>
-
-    <div class="field">
-      <%= form.label "Presença" %>
-      <br />
-      <%= form.check_box :presenca %>
-    </div>
-
-    <div class="action">
-      <%= form.submit %>
-    </div>
-  </div>
-<% end %>
-
-<%
-=begin
-%>
-<%= form_with model: @atendimento, local: true do |form| %>
-  <%= @atendimento.id %>
-  <%= fields_for :atendimento_valor, @atendimento.atendimento_valor do |valor_form | %>
-      <%= valor_form.label :valor %>
-      <%= valor_form.number_field :valor %>
-      <%= valor_form.label :desconto %>
-      <%= valor_form.number_field :desconto %>
-      <%= valor_form.label :taxa_porcentagem %>
-      <%= valor_form.number_field :taxa_porcentagem %>
-  <% end %>
-  <%= form.submit %>
-<% end %>
-<%
-=end
-%>
+<%= render "form-individual", atendimento: @atendimento %>
 
 <% if !@atendimento.relato.nil? %>
 <%= link_to "relato", @atendimento.relato %>

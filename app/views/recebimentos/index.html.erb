@@ -1,5 +1,6 @@
 <%= titulo "Recebimentos" %>
 <h1>Recebimentos</h1>
+<%= link_to "Baixar tabela CSV", recebimentos_path(format: :csv) %>
 <%= link_to "+ recebimento", new_recebimento_path %>
 <p>
   Recebimentos do mês:

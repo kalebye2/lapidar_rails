@@ -1,0 +1,10 @@
+<h1>Devolutivas</h1>
+<% @devolutivas.each do |devolutiva| %>
+  <div class="devolutiva">
+    <h2><%= render_data_brasil devolutiva.data %>
+    <h3>Feedback Responsável</h3>
+    <%== Kramdown::Document.new(devolutiva.feedback_responsavel).to_html %>
+    <h3>Orientações do profissional</h3>
+    <%== Kramdown::Document.new(devolutiva.orientacoes_profissional).to_html %>
+  </div>
+<% end %>

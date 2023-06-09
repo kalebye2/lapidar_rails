@@ -35,7 +35,12 @@
 
     <div class="field">
       <%= form.label "Modalidade de pagamento" %>
-      <%= form.select :modalidade_id, RecebimentoModalidade.all.map { |mod| [mod.modalidade, mod.id] } %>
+      <%= form.select :modalidade_id, PagamentoModalidade.all.map { |mod| [mod.modalidade, mod.id] } %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Direto para o profissional" %>
+      <%= form.check_box :direto_profissional %>
     </div>
 
     <div class="action">

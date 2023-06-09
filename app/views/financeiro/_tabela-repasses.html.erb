@@ -1,0 +1,24 @@
+<table style="width:100%;">
+  <caption>Repasses aos profissionais</caption>
+  <thead>
+    <tr>
+      <th>Profissional</th>
+      <th>Repasses mês passado</th>
+      <th>Repasses deste mês</th>
+      <th>Valor faltante</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% mes_passado = [(Date.today - 1.month).beginning_of_month..(Date.today - 1.month).end_of_month] %>
+    <% mes_atual = [Date.today.beginning_of_month..Date.today.end_of_month] %>
+
+    <% Profissional.all.each do |profissional| %>
+      <tr>
+        <td><%= profissional.nome_abreviado %> - <%= profissional.documento %></td>
+        <td class="dinheiro"><%= render_dinheiro_centavos profissional.repasse.where(data: mes_passado).sum(:valor) %> (<%= profissional.repasse.where(data: mes_passado).count %> repasses)</td>
+        <td class="dinheiro"><%= render_dinheiro_centavos profissional.repasse.where(data: mes_atual).sum(:valor) %> (<%= profissional.repasse.where(data: mes_atual).count %> repasses)</td>
+        <td class="dinheiro"><%= render_dinheiro_centavos profissional.recebimento.sum(:valor) - profissional.repasse.sum(:valor) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -16,4 +16,8 @@ class AtendimentoValor < ApplicationRecord
   def pessoa
     atendimento.acompanhamento.pessoa
   end
+
+  def taxa_valor
+    valor * taxa_porcentagem / 10000
+  end
 end
