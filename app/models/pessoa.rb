@@ -152,6 +152,10 @@ class Pessoa < ApplicationRecord
     if feminino then "(F)" else "(M)" end
   end
 
+  def estado_civil
+    sufixo = feminino ? 'a' : 'o'
+    civil_estado.estado[..-2] + sufixo
+  end
 
   def render_cep
     if endereco_cep == nil then return nil end
@@ -188,6 +192,10 @@ class Pessoa < ApplicationRecord
     recebimento
   end
 
+  def valor_a_cobrar_ate_mes_passado
+    atendimento_valor.where(atendimento: {data: [..(Date.today - 1.month).end_of_month]}).sum("valor - desconto") - recebimento.sum(:valor)
+  end
+
   private
 
   def abreviar string, separator = ''
@@ -201,9 +209,4 @@ class Pessoa < ApplicationRecord
   def valor_a_cobrar
     atendimento_valor.sum("valor - desconto") - recebimento.sum(:valor)
   end
-
-  def valor_a_cobrar_ate_mes_passado
-    atendimento_valor.where(atendimento: {data: [..(Date.today - 1.month).end_of_month]}).sum("valor - desconto") - recebimento.sum(:valor)
-  end
-
 end

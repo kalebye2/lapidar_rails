@@ -8,6 +8,17 @@ class PessoasController < ApplicationController
 
   # GET /pessoas/1 or /pessoas/1.json
   def show
+    respond_to do |format|
+      format.html
+      format.pdf do
+        nome_documento = "Ficha-de-cadastro_#{@pessoa.nome_completo.parameterize}"
+        pdf = PessoaPdf.new(@pessoa)
+        send_data pdf.render,
+          filename: "#{nome_documento}.pdf",
+          type: "application/pdf",
+          disposition: :inline
+      end
+    end
   end
 
   # GET /pessoas/new

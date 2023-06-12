@@ -6,6 +6,24 @@ class RelatosController < ApplicationController
   end
 
   def show
+    respond_to do |format|
+      format.html
+      format.pdf do
+        hoje = Time.now.strftime("%Y-%m-%d")
+        hoje_formatado = Time.now.strftime("%d/%m/%Y")
+        data_relato_doc = @relato.atendimento.data.strftime("%Y-%m-%d")
+        data_relato = @relato.atendimento.data.strftime("%d/%m/%Y")
+        hora_relato = @relato.atendimento.horario.strftime("%H%M")
+        hora_relato_formatado = @relato.atendimento.horario.strftime("%Hh%M")
+        nome_documento = "#{@relato.atendimento.pessoa.nome_completo}_relato_#{data_relato_doc}-#{hora_relato}"
+
+        pdf = RelatoPdf.new(@relato)
+        send_data pdf.render,
+          filename: "#{nome_documento}",
+          type: "application/pdf",
+          disposition: :inline
+      end
+    end
   end
 
   def show_pdf
@@ -15,7 +33,7 @@ class RelatosController < ApplicationController
         data_relato = @relato.atendimento.data.strftime("%d/%m/%Y")
         hora_relato = @relato.atendimento.horario.strftime("%H%M")
         hora_relato_formatado = @relato.atendimento.horario.strftime("%Hh%M")
-        nome_documento = "#{@relato.atendimento.pessoa.nome_completo}_relato_#{data_relato_doc}-#{hora_relato}"
+        nome_documento = "#{@relato.atendimento.pessoa.nome_completo}_relato_#{data_relato_doc}-#{hora_relato}.pdf"
 
         pdf = Prawn::Document.new
         pdf.text "#{@relato.atendimento.acompanhamento.pessoa.nome_completo} - Relato"

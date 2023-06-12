@@ -6,6 +6,17 @@ class AcompanhamentosController < ApplicationController
   end
 
   def show
+    respond_to do |format|
+      format.html
+      format.pdf do
+        nome_documento = "dados-acompanhamento_#{@acompanhamento.pessoa.nome_completo.parameterize}_#{@acompanhamento.data_inicio}_#{@acompanhamento.tipo}"
+        pdf = AcompanhamentoDadosPdf.new(@acompanhamento)
+        send_data pdf.render,
+          filename: "#{nome_documento}.pdf",
+          type: "application/pdf",
+          disposition: :inline
+      end
+    end
   end
 
   def new

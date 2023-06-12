@@ -38,7 +38,7 @@
       <p><%== Kramdown::Document.new(a.consideracoes.to_s).to_html %></p>
 
       <% if a.relato %>
-        <%= link_to "Relato", { controller: :relatos, id: a.id, action: :show_pdf },{ class: "btn-relato", target: "_blank" }%>
+        <%= link_to "Relato", { controller: :relatos, id: a.id, action: :show, format: :pdf },{ class: "btn-relato", target: "_blank" }%>
       <% end %>
     <% end %>
   </ul>

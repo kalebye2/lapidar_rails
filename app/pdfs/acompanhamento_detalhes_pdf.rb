@@ -1,0 +1,2 @@
+class AcompanhamentoDetalhesPdf < BasePdf
+end
