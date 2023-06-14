@@ -29,8 +29,8 @@
     <% @acompanhamento.atendimento.order(data: :desc).each do |a| %>
       <%= link_to a, class: "atendimento", data: { turbo_frame: :modal } do %><li><%= render_data_brasil a.data %> às <%= render_hora_brasil a.horario %> <%= a.status.upcase %></li><% end %>
       <% if a.atendimento_valor != nil %>
-        <%= render_dinheiro_centavos a.atendimento_valor.valor %><%= a.atendimento_valor.taxa_porcentagem > 0 ? " (taxa de #{render_porcentagem_int a.atendimento_valor.taxa_porcentagem})" : "" %>
-        Líquido: <%= render_dinheiro_centavos (a.atendimento_valor.valor - (a.atendimento_valor.valor * a.atendimento_valor.taxa_porcentagem / 10000 )) %>
+        <%= render_dinheiro_centavos a.atendimento_valor.valor %><%= a.atendimento_valor.taxa_porcentagem_externa > 0 ? " (taxa de #{render_porcentagem_int a.atendimento_valor.taxa_porcentagem_externa})" : "" %>
+        Líquido: <%= render_dinheiro_centavos (a.atendimento_valor.valor - (a.atendimento_valor.valor * a.atendimento_valor.taxa_porcentagem_externa / 10000 )) %>
       <% else %>
         Atendimento sem registro de cobrança
       <% end %>

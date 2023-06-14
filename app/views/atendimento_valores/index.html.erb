@@ -4,10 +4,14 @@
 <table style="width:100%;">
   <thead>
     <tr>
-      <th>Paciente</th>
-      <th>Atendimento</th>
-      <th>Valor</th>
-      <th>Taxa</th>
+      <th rowspan=2>Paciente</th>
+      <th rowspan=2>Atendimento</th>
+      <th rowspan=2>Valor</th>
+      <th colspan=2>Taxas</th>
+    </tr>
+    <tr>
+      <th>Externa</th>
+      <th>Clínica</th>
     </tr>
   </thead>
 <% @atendimento_valores.each do |atendimento_valor| %>
@@ -15,7 +19,8 @@
     <td><%= atendimento_valor.pessoa.nome_completo %></td>
     <td><%= render_data_brasil atendimento_valor.data %></td>
     <td><%= render_dinheiro_centavos atendimento_valor.valor %></td>
-    <td><%= render_dinheiro_centavos(atendimento_valor.valor * atendimento_valor.taxa_porcentagem / 10000) %></td>
+    <td><%= render_dinheiro_centavos(atendimento_valor.valor * atendimento_valor.taxa_porcentagem_externa / 10000) %></td>
+    <td><%= render_dinheiro_centavos(atendimento_valor.valor * atendimento_valor.taxa_porcentagem_interna / 10000) %></td>
   </tr>
 <% end %>
 </table>

@@ -1,12 +1,12 @@
 class Atendimento < ApplicationRecord
-  belongs_to :acompanhamento
-  has_one :atendimento_local
+  belongs_to :acompanhamento, inverse_of: :atendimento
+  has_one :atendimento_local, inverse_of: :atendimento
   belongs_to :atendimento_tipo
-  belongs_to :atendimento_modalidade, foreign_key: :modalidade_id
+  belongs_to :atendimento_modalidade, foreign_key: :modalidade_id, inverse_of: :atendimento
 
-  has_one :atendimento_valor, foreign_key: :atendimento_id, primary_key: :id
+  has_one :atendimento_valor, foreign_key: :atendimento_id, primary_key: :id, inverse_of: :atendimento
 
-  has_one :relato, foreign_key: :id, primary_key: :id
+  has_one :relato, foreign_key: :id, primary_key: :id, inverse_of: :atendimento
 
   accepts_nested_attributes_for :atendimento_valor
 

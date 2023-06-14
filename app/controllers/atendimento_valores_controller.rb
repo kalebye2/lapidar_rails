@@ -1,4 +1,4 @@
-class AtendimentoValoresController < ApplicationController
+ AtendimentoValoresController < ApplicationController
   before_action :set_atendimento_valor, only: %i[ show show_pdf edit delete ]
 
   def index
@@ -57,6 +57,6 @@ class AtendimentoValoresController < ApplicationController
   end
 
   def atendimento_valor_params
-    params.require(:atendimento_valor).permit(:atendimento_id, :valor, :desconto, :taxa_porcentagem)
+    params.require(:atendimento_valor).permit(:atendimento_id, :valor, :desconto, :taxa_porcentagem_interna, :taxa_porcentagem_externa)
   end
 end

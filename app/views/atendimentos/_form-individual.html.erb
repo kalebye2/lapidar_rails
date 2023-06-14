@@ -1,6 +1,6 @@
 <% if atendimento %>
   <%= atendimento.id %>
-  <%= form_with model: atendimento, url: atendimento_path(atendimento), method: :post do |form| %>
+  <%= form_with model: atendimento, local: true, method: :put do |form| %>
     <div class="field">
       <%= form.label "Data e hora" %>
       <%= form.date_field :data %>
@@ -43,9 +43,15 @@
           <%= valor_form.number_field :desconto %>
         </div>
         <div class="field">
-          <%= valor_form.label :taxa_porcentagem %>
-          <%= valor_form.number_field :taxa_porcentagem %>
+          <%= valor_form.label :taxa_porcentagem_externa %>
+          <%= valor_form.number_field :taxa_porcentagem_externa %>
         </div>
+
+        <div class="field">
+          <%= valor_form.label :taxa_porcentagem_interna %>
+          <%= valor_form.number_field :taxa_porcentagem_interna %>
+        </div>
+
       <% end %>
     </div>
 
