@@ -1,10 +1,21 @@
 <%= titulo "Valores de atendimentos" %>
 <h1>Valores de atendimentos</h1>
 
+<table style="width:100%;">
+  <thead>
+    <tr>
+      <th>Paciente</th>
+      <th>Atendimento</th>
+      <th>Valor</th>
+      <th>Taxa</th>
+    </tr>
+  </thead>
 <% @atendimento_valores.each do |atendimento_valor| %>
-  <p>
-  <%= atendimento_valor.pessoa.nome_completo %> -
-  <%= render_data_brasil atendimento_valor.data %> às
-  <%= render_hora_brasil atendimento_valor.horario %>
-  </p>
+  <tr>
+    <td><%= atendimento_valor.pessoa.nome_completo %></td>
+    <td><%= render_data_brasil atendimento_valor.data %></td>
+    <td><%= render_dinheiro_centavos atendimento_valor.valor %></td>
+    <td><%= render_dinheiro_centavos(atendimento_valor.valor * atendimento_valor.taxa_porcentagem / 10000) %></td>
+  </tr>
 <% end %>
+</table>

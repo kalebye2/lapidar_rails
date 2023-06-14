@@ -20,7 +20,7 @@
 
   <div class="field">
     <%= form.label :atendimento %>
-    <%= form.select :id, atendimentos_para_pegar.map { |atendimento| [ atendimento.informacoes_relato, atendimento.id ] } %>
+    <%= form.select :id, atendimentos_para_pegar.map { |atendimento| [ atendimento.informacoes_com_pessoa, atendimento.id ] } %>
   </div>
     <%= form.label :relato %>
     <%= form.text_area :relato, rows: 30, cols: 50 %>
