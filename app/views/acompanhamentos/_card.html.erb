@@ -1,0 +1,12 @@
+<%= link_to acompanhamento, class: "acompanhamento-card" + " " + "#{acompanhamento.data_final ? 'acompanhamento-finalizado' : 'acompanhamento-em-andamento'}" + " " + "#{acompanhamento.acompanhamento_finalizacao_motivo ? 'acompanhamento-finalizado-' + acompanhamento.acompanhamento_finalizacao_motivo.motivo.downcase.parameterize : ''}" do %>
+<div>
+  <% p = acompanhamento.pessoa %>
+  <% pro = acompanhamento.profissional %>
+  <% prop = pro.pessoa %>
+  <h4><%= acompanhamento.acompanhamento_tipo.tipo.to_s.upcase %></h4>
+  <h2><%= "#{p.nome_abreviado} #{p.render_sexo_sigla}" %></h2>
+  <h3><%= pro.nome_abreviado %> <span style="font-size:.8em;font-weight:normal;"><%= pro.documento %></span></h3>
+  <p><%= render_data_brasil acompanhamento.data_inicio %> - <%= (render_data_brasil acompanhamento.data_final) || "Em andamento" %> <%= acompanhamento.data_final ? "(#{acompanhamento.acompanhamento_finalizacao_motivo.motivo.upcase})" : "" %></p>
+  <p><%= acompanhamento.atendimento.count %> <%= acompanhamento.atendimento.count == 1 ? 'sessão' : 'sessões' %></p>
+</div>
+<% end %>

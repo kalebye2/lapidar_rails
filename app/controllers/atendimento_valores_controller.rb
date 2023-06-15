@@ -1,4 +1,4 @@
- AtendimentoValoresController < ApplicationController
+class AtendimentoValoresController < ApplicationController
   before_action :set_atendimento_valor, only: %i[ show show_pdf edit delete ]
 
   def index

@@ -1,1 +1,22 @@
 <h1><%= @profissional.nome_abreviado %> - Acompanhamentos</h1>
+<div>
+  <h2>Em andamento (<%= @profissional.acompanhamento.where(data_final: nil, acompanhamento_finalizacao_motivo: nil).count %>)</h2>
+  <div class="acompanhamentos-container">
+    <% @profissional.acompanhamento.where(data_final: nil, acompanhamento_finalizacao_motivo: nil).joins(:pessoa).order(nome: :asc, sobrenome: :asc).each do |acompanhamento| %>
+      <%= render "acompanhamentos/card", acompanhamento: acompanhamento %>
+    <% end %>
+
+  </div>
+</div>
+
+<div>
+  <h2>Finalizados (<%= @profissional.acompanhamento.where.not(acompanhamento_finalizacao_motivo: nil).count %>)</h2>
+  <% @profissional.acompanhamento.where.not(acompanhamento_finalizacao_motivo: nil).group(:acompanhamento_finalizacao_motivo).count.each do |a| %>
+    <div class="acompanhamento-card acompanhamento-finalizado-<%= a[0].motivo.parameterize %>" style="display:inline-block;"><%= a[0].motivo %> - <%= a[1] %></div>
+  <% end %>
+  <div class="acompanhamentos-container">
+    <% @profissional.acompanhamento.where.not(data_final: nil, acompanhamento_finalizacao_motivo: nil).joins(:pessoa).order(nome: :asc, sobrenome: :asc).each do |acompanhamento| %>
+      <%= render "acompanhamentos/card", acompanhamento: acompanhamento %>
+    <% end %>
+  </div>
+</div>

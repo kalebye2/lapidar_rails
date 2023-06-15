@@ -14,6 +14,7 @@
 
 <% if !@atendimento.relato.nil? %>
 <%= link_to "relato", @atendimento.relato %>
-<%= @atendimento.relato.relato %>
+<% else %>
+  <%= link_to "escrever relato", new_relato_path %>
 <% end %>
 </div>

@@ -14,6 +14,7 @@ a {
 .acompanhamento-card {
 	--bg-color: black;
 	--text-color: white;
+	--shade-color: gray;
 	background-color: var(--bg-color);
 	color: var(--text-color);
 	margin: 1em;
@@ -25,13 +26,14 @@ a {
 
 	&:hover {
 		transform: translate(0, -.5em);
-		box-shadow: 0 .5em gray;
+		box-shadow: 0 .5em var(--shade-color);
 	}
 }
 
 .acompanhamento-em-andamento {
 	--bg-color: var(--acompanhamento-em-andamento-bg-color);
 	--text-color: var(--acompanhamento-em-andamento-text-color);
+	--shade-color: var(--acompanhamento-em-andamento-text-color);
 }
 
 .acompanhamento-finalizado {
@@ -40,18 +42,22 @@ a {
 .acompanhamento-finalizado-questoes-financeiras {
 	--bg-color: var(--acompanhamento-finalizado-questoes-financeiras-bg-color);
 	--text-color: var(--acompanhamento-finalizado-questoes-financeiras-text-color);
+	--shade-color: var(--acompanhamento-finalizado-questoes-financeiras-text-color);
 }
 .acompanhamento-finalizado-desistencia {
 	--bg-color: var(--acompanhamento-finalizado-desistencia-bg-color);
 	--text-color: var(--acompanhamento-finalizado-desistencia-text-color);
+	--shade-color: var(--acompanhamento-finalizado-desistencia-text-color);
 }
 .acompanhamento-finalizado-alta {
 	--bg-color: var(--acompanhamento-finalizado-alta-bg-color);
 	--text-color: var(--acompanhamento-finalizado-alta-text-color);
+	--shade-color: var(--acompanhamento-finalizado-alta-text-color);
 }
 .acompanhamento-finalizado-encaminhamento {
 	--bg-color: var(--acompanhamento-finalizado-encaminhamento-bg-color);
 	--text-color: var(--acompanhamento-finalizado-encaminhamento-text-color);
+	--shade-color: var(--acompanhamento-finalizado-encaminhamento-text-color);
 }
 
 .caso-resumo {
