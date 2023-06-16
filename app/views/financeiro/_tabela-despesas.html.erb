@@ -1,0 +1,45 @@
+<table style="width:100%;">
+  <thead>
+    <caption>Despesas</caption>
+    <tr>
+      <th>Tipo</th>
+      <th>Valor da despesa</th>
+      <th>Valor pago</th>
+      <th>Valor restante</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- por enquanto é placeholder -->
+    <% valor_1 = rand(4300..15900) %>
+    <% valor_1_1 = rand(valor_1) %>
+    <% valor_2 = rand(1276..35493) %>
+    <% valor_2_1 = rand(valor_2) %>
+    <% valor_3 = rand(1270..80767) %>
+    <% valor_3_1 = rand(valor_3) %>
+    <% despesas = [
+    ["Sabão", valor_1, valor_1_1],
+    ["Hipopótamo", valor_2, valor_2_1],
+    ["Rosa", valor_3, valor_3_1]
+    ] %>
+  <% soma = ["", 0, 0] %>
+  <% pagar = 0 %>
+    <% despesas.each do |despesa| %>
+      <!-- soma placeholder -->
+      <% soma[1] += despesa[1] %>
+      <% soma[2] += despesa[2] %>
+      <% pagar += despesa[1] - despesa[2] %>
+      <tr>
+        <td><%= despesa[0] %></td>
+        <td class="dinheiro"><%= render_dinheiro_centavos despesa[1] %></td>
+        <td class="dinheiro"><%= render_dinheiro_centavos despesa[2] %></td>
+        <td class="dinheiro"><%= render_dinheiro_centavos(despesa[1] - despesa[2]) %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <td class="resultado">Total</td>
+      <td class="dinheiro resultado"><%= render_dinheiro_centavos soma[1] %></td>
+      <td class="dinheiro resultado"><%= render_dinheiro_centavos soma[2] %></td>
+      <td class="dinheiro resultado"><%= render_dinheiro_centavos pagar %></td>
+    </tr>
+  </tbody>
+</table>

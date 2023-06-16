@@ -23,7 +23,7 @@
       <tr>
         <td><%= profissional.funcao %></td>
         <td><%= profissional.nome_abreviado %> - <%= profissional.documento %></td>
-        <td><%= profissional.acompanhamento_em_andamento.count %></td>
+        <td style="text-align:right;"><%= profissional.acompanhamento_em_andamento.count %></td>
         <td class="dinheiro"><%= render_dinheiro_centavos profissional.acompanhamento_em_andamento.sum("valor_atual * sessoes_atuais") %></td>
         <td class="dinheiro"><%= render_dinheiro_centavos profissional.atendimento_valor.where("atendimentos.data" => mes_passado).sum(:valor) %></td>
         <td class="dinheiro"><%= render_dinheiro_centavos profissional.atendimento_valor.where("atendimentos.data" => mes_atual).sum(:valor) %></td>
