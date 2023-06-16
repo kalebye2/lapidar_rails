@@ -9,9 +9,11 @@ class AtendimentosController < ApplicationController
 
   def new
     @atendimento = Atendimento.new
+    @atendimento.build_atendimento_valor
   end
 
   def edit
+    @atendimento.build_atendimento_valor unless @atendimento.atendimento_valor
   end
 
   def create
@@ -19,6 +21,7 @@ class AtendimentosController < ApplicationController
 
     respond_to do |format|
       if @atendimento.save
+        @atendimento.build_atendimento_valor.save
         format.html { redirect_to atendimento_url(@atendimento), notice: "Atendimento registrado com sucesso!" }
         format.json { render :show, status: :created, location: @atendimento }
       else
@@ -51,6 +54,6 @@ class AtendimentosController < ApplicationController
   end
 
   def atendimento_params
-    params.require(:atendimento).permit(:data, :horario, :modalidade_id, :acompanhamento_id, :presenca, :atendimento_tipo_id, :consideracoes, :remarcado, :atendimento_local_id, :reagendado, atendimento_valor_attributes: [:atendimento_id, :valor, :desconto, :taxa_porcentagem_externa, :taxa_porcentagem_interna])
+    params.require(:atendimento).permit(:data, :horario, :modalidade_id, :acompanhamento_id, :presenca, :atendimento_tipo_id, :consideracoes, :remarcado, :atendimento_local_id, :reagendado, atendimento_valor_attributes: [:atendimento_id, :valor, :desconto, :taxa_porcentagem_externa, :taxa_porcentagem_interna, :id])
   end
 end

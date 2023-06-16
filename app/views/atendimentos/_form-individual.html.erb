@@ -1,15 +1,9 @@
 <% if atendimento %>
-  <%= atendimento.id %>
   <%= form_with model: atendimento, local: true, method: :put do |form| %>
     <div class="field">
       <%= form.label "Data e hora" %>
       <%= form.date_field :data %>
       <%= form.time_field :horario %>
-    </div>
-
-    <div class="field">
-      <%= form.label :presenca, "Presença" %>
-      <%= form.check_box :presenca %>
     </div>
 
     <div class="field">
@@ -33,7 +27,7 @@
     </div>
 
     <div class="subform">
-      <%= fields_for :atendimento_valor, atendimento.atendimento_valor do |valor_form| %>
+      <%= form.fields_for :atendimento_valor do |valor_form| %>
         <div class="field">
           <%= valor_form.label :valor %>
           <%= valor_form.number_field :valor %>
