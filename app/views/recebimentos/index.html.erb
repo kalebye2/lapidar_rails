@@ -1,47 +1,91 @@
 <%= titulo "Recebimentos" %>
-<h1>Recebimentos</h1>
-<%= link_to "Baixar tabela CSV", recebimentos_path(format: :csv) %>
-<%= link_to "+ recebimento", new_recebimento_path %>
+<h1>Recebimentos - <%= t('date.month_names')[@mes.to_i] %>/<%= @ano %></h1>
+<p>Baixar relatório
+<%= link_to "CSV", recebimentos_path(format: :csv, ano: @ano, mes: @mes) %>
+</p>
+<%= link_to "+ recebimento", new_recebimento_path, { class: "btn-dinheiro" } %>
 <p>
   Recebimentos do mês:
-  <% @total_mes = 0 %>
-  <% @recebimentos.where("MONTH(data) = MONTH(CURRENT_DATE)").each do |recebimento| %>
-    <% @total_mes += recebimento.valor %>
-  <% end %>
+  <% @total_mes = @recebimentos.sum(:valor) %>
   <%= render_dinheiro_centavos @total_mes %>
 </p>
 
-<p>
-  Recebimentos totais:
-  <% @total = 0 %>
-  <% @recebimentos.each do |recebimento| %>
-    <% @total += recebimento.valor %>
-  <% end %>
-  <%= render_dinheiro_centavos @total %>
-</p>
+<div class="valores-cobrar-container">
+  <div class="valores-cobrar">
+    <h3>Valores a cobrar até mês passado</h3>
+    <% @a_receber = 0 %>
+    <% @pessoas.each do |pessoa| %>
+      <% a_receber_ate_mes_passado = pessoa.atendimento_valor.where("atendimentos.data" => [..(Date.today - 1.month).end_of_month]).sum("valor - desconto") %>
+      <% ja_recebidos = pessoa.recebimento.sum(:valor) %>
+      <% resultado = a_receber_ate_mes_passado - ja_recebidos %>
 
-<div class="valores-cobrar">
-  <h3>Valores a cobrar do mês passado</h3>
-  <% @a_receber = 0 %>
-  <% Pessoa.order(nome: :asc, sobrenome: :asc).each do |pessoa| %>
-    <% a_receber_ate_mes_passado = pessoa.atendimento_valor.where("atendimentos.data" => [..(Date.today - 1.month).end_of_month]).sum("valor - desconto") %>
-    <% ja_recebidos = pessoa.recebimento.sum(:valor) %>
-    <% resultado = a_receber_ate_mes_passado - ja_recebidos %>
-
-    <% if resultado > 0 %>
-      <div class="pessoa-devendo">
-        <%= pessoa.nome_abreviado %>
-        <%= render_dinheiro_centavos resultado %>
-        <% @a_receber += resultado %> 
-      </div>
+      <% if resultado > 0 %>
+        <div class="pessoa-devendo">
+          <%= pessoa.nome_abreviado %>
+          <%= render_dinheiro_centavos resultado %>
+          <% @a_receber += resultado %> 
+        </div>
+      <% end %>
     <% end %>
-  <% end %>
-  <p><strong>Total a receber: <%= render_dinheiro_centavos @a_receber %></strong></p>
+    <p><strong>Total a receber: <%= render_dinheiro_centavos @a_receber %></strong></p>
+  </div>
+
+  <div class="valores-cobrar">
+    <h3>Valores pendentes este mês</h3>
+    <% @a_receber_mes_atual = 0 %>
+    <% @pessoas.each do |pessoa| %>
+      <% ja_recebidos = pessoa.recebimento.sum(:valor) %>
+      <% resultado = pessoa.atendimento_valor.where(atendimentos: {data: [..Date.today]}).sum("valor - desconto") - ja_recebidos %>
+      <% if resultado > 0 %>
+        <% @a_receber_mes_atual += resultado %>
+        <div class="pessoa-devendo">
+          <%= pessoa.nome_abreviado %>: <%= render_dinheiro_centavos resultado %>
+        </div>
+      <% end %>
+    <% end %>
+    <strong>Total a receber: <%= render_dinheiro_centavos @a_receber_mes_atual %></strong><br />
+    <strong>Valor de atendimentos deste mês: <%= render_dinheiro_centavos @atendimento_valores.sum("valor - desconto") %></strong>
+  </div>
 </div>
 
-
-<div class="recebimentos-container">
-  <% @recebimentos.each do |recebimento| %>
-    <%= render 'card', recebimento: recebimento %>
+<%= form_with url: recebimentos_path, method: :get do |f| %>
+  <%= f.label :ano, "Selecionar ano" %>
+  <% anos = [] %>
+  <% ano_atual = Date.today.year %>
+  <% while ano_atual != 2000 do %>
+    <% anos << ano_atual %>
+    <% ano_atual -= 1 %>
   <% end %>
-</div>
+  <%= f.select :ano, anos, selected: @ano %>
+  <%= f.label :mes, "Selecionar mês" %>
+  <%= f.select :mes, [1,2,3,4,5,6,7,8,9,10,11,12], selected: @mes %>
+  <%= f.submit %>
+<% end %>
+
+<table style="width:100%;">
+  <caption>Recebimentos</caption>
+  <thead>
+    <tr>
+      <th>Beneficiário</th>
+      <th>Pagante</th>
+      <th>Data</th>
+      <th>Valor</th>
+      <th>Profissional</th>
+      <th>Serviço</th>
+      <th>Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @recebimentos.each do |recebimento| %>
+      <tr>
+        <td><%= recebimento.beneficiario.nome_abreviado %></td>
+        <td><%= recebimento.pagante.nome_abreviado %></td>
+        <td><%= render_data_brasil recebimento.data %></td>
+        <td class="dinheiro"><%= render_dinheiro_centavos recebimento.valor %></td>
+        <td><%= recebimento.profissional.descricao_completa %></td>
+        <td><%= recebimento.acompanhamento.tipo.upcase %></td>
+        <td><%= link_to "Editar", edit_recebimento_url(recebimento) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

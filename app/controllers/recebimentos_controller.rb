@@ -4,11 +4,16 @@ class RecebimentosController < ApplicationController
   before_action :set_recebimento, only: %i[ show update edit delete recibo ]
 
   def index
-    @recebimentos = Recebimento.all.order(data: :desc)
+    @pessoas = Pessoa.joins(:atendimento_valor).distinct.order(nome: :asc, sobrenome: :asc)
+    @ano = params[:ano] || Date.today.year
+    @mes = params[:mes] || Date.today.month
+    @ano_mes = "#{@ano}-#{@mes.to_s.rjust(2, "0")}"
+    @atendimento_valores = AtendimentoValor.joins(:atendimento).where("atendimentos.data" => "#{@ano_mes}-01".."#{@ano_mes}-01".to_date.end_of_month.to_s)
+    @recebimentos = Recebimento.where("YEAR(data) = #{@ano} AND MONTH(data) = #{@mes}").order(data: :desc)
     respond_to do |format|
       format.html
       format.csv do
-        send_data Recebimento.para_csv(@recebimentos), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-recebimentos_#{Date.today}.csv", type: 'text/csv'
+        send_data Recebimento.para_csv(@recebimentos), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-recebimentos_#{@ano}-#{ @mes.to_s.rjust(2, "0")}.csv", type: 'text/csv'
       end
     end
   end
@@ -27,7 +32,7 @@ class RecebimentosController < ApplicationController
     @recebimento = Recebimento.new(recebimento_params)
     if params[:recebimento][:direto_profissional]
       p = params[:recebimento]
-      ProfissionalFinanceiroRepasse.where(id: p[:id]).first_or_create.update(profissional_id: Acompanhamento.find(p[:acompanhamento_id]).profissional.id, valor: p[:valor], data: p[:data], modalidade_id: p[:modalidade_id])
+      ProfissionalFinanceiroRepasse.create(profissional_id: Acompanhamento.find(p[:acompanhamento_id]).profissional.id, valor: p[:valor], data: p[:data], modalidade_id: p[:modalidade_id])
     end
 
     respond_to do |format|

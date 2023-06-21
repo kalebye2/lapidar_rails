@@ -46,6 +46,8 @@
   <%= form.week_field [start_date: @start_date], onchange: "if (this.value != '') window.location.search = '?start_date=' + this.value", value: @start_date %>
 <% end %>
 
+<%= link_to "+ atendimento", new_atendimento_path %>
+
 <%= week_calendar(events: @atendimentos, attribute: :data) do |date, atendimentos|%>
   <div class="day">
     <%= date.day %>
