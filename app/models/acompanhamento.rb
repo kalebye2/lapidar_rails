@@ -30,4 +30,12 @@ class Acompanhamento < ApplicationRecord
     t = acompanhamento_tipo.tipo
     upper ? t.upcase : titulo ? t.titleize : lower ? t.downcase : t
   end
+
+  def self.em_andamento
+    where(data_final: nil, acompanhamento_finalizacao_motivo: nil)
+  end
+
+  def self.finalizado
+    where.not(data_final: nil, acompanhamento_finalizacao_motivo: nil)
+  end
 end
