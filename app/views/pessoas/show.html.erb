@@ -101,7 +101,12 @@
     <!-- se for usuário mostrar informações extras -->
     <% if !@pessoa.informacoes_extras.empty? %>
       <div class="informacoes-extras">
-        <h3>Informações extras</h3>
+        <h3>
+          Informações extras
+          <%= link_to new_pessoa_extra_informacao_path do %>
+            <span>+ informação extra</span>
+          <% end %>
+        </h3>
         <ul>
           <% @pessoa.informacoes_extras.order(data: :desc).each do |ei| %>
             <%= link_to ei do %>

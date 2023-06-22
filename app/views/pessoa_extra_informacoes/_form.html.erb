@@ -20,7 +20,7 @@
 
   <div class="field">
     <%= form.label :conteudo, "Conteúdo" %>
-    <%= form.text_area :conteudo_material %>
+    <%= form.text_area :conteudo_material, size: "50x20" %>
   </div>
 
   <div class="field">
@@ -34,6 +34,6 @@
   </div>
 
   <div class="actions">
-    <%= form.submit "Adicionar informação extra" %>
+    <%= form.submit %>
   </div>
 <% end %>

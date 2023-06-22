@@ -1,6 +1,7 @@
 <h1><%= @pessoa_extra_informacao.pessoa.nome_completo %></h1>
 <h2>Informação de <%= render_data_brasil @pessoa_extra_informacao.data %> através de <%= @pessoa_extra_informacao.meio %></h2>
 
+<%= link_to "editar", edit_pessoa_extra_informacao_path(@pessoa_extra_informacao) %>
 <div class="informacao-extra">
 <%== Kramdown::Document.new(@pessoa_extra_informacao.conteudo_material || "").to_html %>
 </div>
