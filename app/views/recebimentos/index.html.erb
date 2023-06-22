@@ -48,6 +48,12 @@
   </div>
 </div>
 
+<div class="valores-pagos">
+  <% @recebimentos.each do |recebimento| %>
+
+  <% end %>
+</div>
+
 <%= form_with url: recebimentos_path, method: :get do |f| %>
   <%= f.label :ano, "Selecionar ano" %>
   <% anos = [] %>
