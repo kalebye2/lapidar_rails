@@ -22,7 +22,7 @@ class RelatoPdf < BasePdf
 
   def body
     font @body_font
-    #text Kramdown::Document.new(relato.relato).to_html
+    #text Kramdown::Document.new(@relato.relato).to_html
     #text Kramdown::Document.new(@relato.relato).to_html, inline_format: true
     text @relato.relato
   end

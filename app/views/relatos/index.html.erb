@@ -6,7 +6,7 @@
 <% @relatos.each do |relato| %>
   <div class="relato">
     <%= link_to relato, class: "relato-link" do %>
-      <h2><%= relato.atendimento.acompanhamento.usuario.nome_relato %> <%= render_data_brasil relato.atendimento.data %> - <%= render_hora_brasil relato.atendimento.horario %></h2>
+      <h2><%= relato.atendimento.acompanhamento.pessoa.nome_completo %> <%= render_data_brasil relato.atendimento.data %> - <%= render_hora_brasil relato.atendimento.horario %></h2>
     <% end %>
   </div>
 <% end %>

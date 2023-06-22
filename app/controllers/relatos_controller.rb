@@ -54,6 +54,7 @@ class RelatosController < ApplicationController
 
   def new
     @relato = Relato.new
+    @relato.build_atendimento
   end
 
   def edit
@@ -63,6 +64,7 @@ class RelatosController < ApplicationController
     @relato = Relato.new(relato_params)
     respond_to do |format|
       if @relato.save
+        Atendimento.find(params[relato][:id]).update(consideracoes: params[:relato][:atendimento_attributes][:consideracoes])
         format.html { redirect_to relato_url(@relato), notice: "Relato registrado." }
         format.json { render :show, status: :created, location: @relato }
       else
@@ -75,7 +77,8 @@ class RelatosController < ApplicationController
   def update
     respond_to do |format|
       if @relato.update(relato_params)
-        format.html { redirect_to relato_url(@relato), notice: "relato was successfully updated. #{@relato.atendimento.consideracoes} #{relato_params}" }
+        @atendimento.update(consideracoes: params[:relato][:atendimento_attributes][:consideracoes])
+        format.html { redirect_to relato_url(@relato), notice: "relato was successfully updated." }
         format.json { render :show, status: :ok, location: @relato }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -92,10 +95,10 @@ class RelatosController < ApplicationController
 
   def set_relato
     @relato = Relato.find(params[:id])
+    @atendimento = Atendimento.find(params[:id])
   end
 
   def relato_params
-    params.require(:relato).permit(:id, :relato)
+    params.require(:relato).permit(:id, :relato, atendimento: [ :consideracoes ])
   end
-
 end

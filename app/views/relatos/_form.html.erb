@@ -22,9 +22,18 @@
     <%= form.label :atendimento %>
     <%= form.select :id, atendimentos_para_pegar.map { |atendimento| [ atendimento.informacoes_com_pessoa, atendimento.id ] } %>
   </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;">
+    <div>
     <%= form.label :relato %>
-    <%= form.text_area :relato, rows: 30, cols: 50 %>
-
+    <%= form.text_area :relato, rows: 20, cols: 50 %>
+    </div>
+    <div>
+      <%= form.fields_for :atendimento do |fa| %>
+        <%= fa.label "Considerações" %>
+        <%= fa.text_area :consideracoes, rows: 20, cols: 50 %>
+      <% end %>
+    </div>
+  </div>
 <%
 =begin
 %>
