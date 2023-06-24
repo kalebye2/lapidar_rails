@@ -5,7 +5,10 @@
 
 <div class="info-container">
     <div class="pessoa-container">
-      <h2><%= @pessoa.nome_completo %> <%= @pessoa.render_sexo_sigla %></h2>
+      <h2>
+        <%= if !@pessoa.pessoa_tratamento_pronome.nil? then @pessoa.pronome_tratamento end %>
+        <%= @pessoa.nome_completo %> <%= @pessoa.render_sexo_sigla %>
+      </h2>
     
       <!-- se for profissional -->
       <% if !pro.nil? %>

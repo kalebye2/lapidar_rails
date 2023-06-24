@@ -120,6 +120,16 @@
     <%= form.text_field :preferencia_contato %>
   </div>
 
+  <div class="field">
+    <%= form.label "Pronome de tratamento" %>
+    <%= form.select :pessoa_tratamento_pronome_id, PessoaTratamentoPronome.all.map { |pn| ["#{pn.pronome_masculino}/#{pn.pronome_feminino}", pn.id] }, include_blank: true %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Inverter pronome" %>
+    <%= form.check_box :inverter_pronome_tratamento %>
+  </div>
+
   <div class="actions">
     <%= form.submit %>
   </div>

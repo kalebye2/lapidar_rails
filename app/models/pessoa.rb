@@ -2,6 +2,7 @@ class Pessoa < ApplicationRecord
   belongs_to :civil_estado, optional: true
   belongs_to :instrucao_grau, optional: true
   belongs_to :pais, optional: true
+  belongs_to :pessoa_tratamento_pronome, optional: true
   
   # has associations
   has_one :usuario
@@ -196,6 +197,14 @@ class Pessoa < ApplicationRecord
     atendimento_valor.where(atendimento: {data: [..(Date.today - 1.month).end_of_month]}).sum("valor - desconto") - recebimento.sum(:valor)
   end
 
+  def pronome_tratamento
+    pronome_no_feminino = (feminino && !inverter_pronome_tratamento) || (!feminino && inverter_nome_tratamento)
+    pronome_no_feminino ? pessoa_tratamento_pronome.pronome_feminino : pessoa_tratamento.pronome_masculino
+  end
+
+  def pronome_tratamento_abreviado
+  end
+
   private
 
   def abreviar string, separator = ''
@@ -204,6 +213,7 @@ class Pessoa < ApplicationRecord
     str_abreviar = str_abreviar.reject!(&:empty?) || str_abreviar
     str_abreviar.join(separator)
   end
+
 
   # recebimentos
   def valor_a_cobrar

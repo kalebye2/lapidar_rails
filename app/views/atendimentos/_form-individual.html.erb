@@ -21,10 +21,12 @@
       <%= form.check_box :presenca %>
     </div>
 
-    <div class="field">
-      <%= form.label "Reagendado?" %>
-      <%= form.check_box :reagendado %>
-    </div>
+    <% if !atendimento.presenca %>
+      <div class="field">
+        <%= form.label "Reagendado?" %>
+        <%= form.check_box :reagendado %>
+      </div>
+    <% end %>
 
     <div class="subform">
       <%= form.fields_for :atendimento_valor do |valor_form| %>
@@ -47,6 +49,11 @@
         </div>
 
       <% end %>
+    </div>
+
+    <div class="field">
+      <%#= form.label "Considerações do profissional" %>
+      <%= form.text_area :consideracoes, size: "50x20", placeholder: "Coloque suas considerações sobre o atendimento aqui" %>
     </div>
 
     <div class="action">
