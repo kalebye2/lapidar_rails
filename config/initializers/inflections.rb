@@ -34,4 +34,6 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.irregular 'manipulacao', 'manipulacoes'
   inflect.irregular 'informacao', 'informacoes'
   inflect.irregular 'responsavel', 'responsaveis'
+  inflect.irregular 'identificador', 'identificadores'
+  inflect.irregular 'autor', 'autores'
 end
