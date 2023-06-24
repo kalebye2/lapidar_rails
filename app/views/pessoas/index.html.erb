@@ -3,13 +3,23 @@
 
 <h1>Pessoas</h1>
 
+<%= link_to '+ pessoa', new_pessoa_path %>
+
+<%= form_with url: pessoas_path, method: :get, local: true, data: { turbo_frame: 'pessoas' } do |form| %>
+  <%= form.text_field :q, value: params[:q], placeholder: "Pesquisar por nome..." %>
+  <%#= form.label :sexo %>
+  <%#= form.select :sexo, [["Ambos", ''], ["Masculino", false], ["Feminino", true]] %>
+  <%= form.submit "Pesquisar" %>
+<% end %>
 <!-- onde as pessoas ficam -->
-<div class="pessoas-container">
-  <% @pessoas.each do |p| %>
-    <%= render partial: 'card', locals: {p: p} %>
+<%= turbo_frame_tag 'pessoas' do %>
+  <div class="pessoas-container">
+  <% if !@pessoas.empty? %>
+    <% @pessoas.each do |p| %>
+      <%= render partial: 'card', locals: {p: p} %>
+    <% end %>
   <% end %>
 </div>
+<% end %>
 
 <br>
-
-<%= link_to 'New Pessoa', new_pessoa_path %>

@@ -2,7 +2,7 @@ class ProfissionaisController < ApplicationController
   before_action :set_profissional, only: %i[ show edit update delete acompanhamentos ]
 
   def index
-    @profissionais = Profissional.all.joins("JOIN pessoas ON profissionais.pessoa_id = pessoas.id").order(nome: :asc, sobrenome: :asc)
+    @profissionais = params[:q].present? ? Profissional.joins(:pessoa).where("CONCAT(nome, ' ', COALESCE(nome_do_meio, ''), ' ', sobrenome) LIKE ?", "%#{params[:q]}%") : Profissional.all.joins("JOIN pessoas ON profissionais.pessoa_id = pessoas.id").order(nome: :asc, sobrenome: :asc)
   end
 
   def show

@@ -1,0 +1,25 @@
+<% titulo "Adicionar informação extra" %>
+<h1>Adicionar informação extra</h1>
+<h2>Paciente: <%= @pessoa.nome_completo %></h2>
+
+<%= form_for @extra_informacao do |form| %>
+  <%= form.hidden_field :pessoa_id %>
+  <div class="field">
+    <%= form.label :data %>
+    <%= form.date_field :data, value: Date.today %>
+  </div>
+
+  <div class="field">
+    <%= form.label :meio %>
+    <%= form.text_field :meio %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Conteúdo" %>
+    <%= form.text_area :conteudo_material, size: "50x10" %>
+  </div>
+
+  <div class="action">
+    <%= form.submit %>
+  </div>
+<% end %>

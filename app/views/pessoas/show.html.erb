@@ -98,6 +98,21 @@
       <% end %>
     </div>
 
+    <!-- se for usuário mostrar dados dos atendimentos -->
+    <% if !@pessoa.atendimento.empty? %>
+      <div class="caso-resumo">
+        <h2>
+          Resumo do caso
+        </h2>
+        <% @pessoa.atendimento.where.not(consideracoes: nil).each do |at| %>
+          <div class="consideracoes">
+            <h3><%= at.tipo %> - <%= render_data_brasil at.data %></h3>
+            <h4><%= at.profissional.descricao_completa %> (<%= at.acompanhamento.tipo.upcase %>)</h4>
+            <%== Kramdown::Document.new(at.consideracoes || "Sem considerações").to_html %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
     <!-- se for usuário mostrar informações extras -->
     <% if !@pessoa.informacoes_extras.empty? %>
       <div class="informacoes-extras">

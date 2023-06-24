@@ -1,8 +1,16 @@
 Rails.application.routes.draw do
+  get 'instrumentos/index'
+  get 'instrumentos/new'
+  get 'instrumentos/edit'
+  get 'instrumento_relatos/index'
+  get 'instrumento_relatos/new'
+  get 'instrumento_relatos/edit'
   get 'financeiro/index'
   get 'financeiro/atendimento_valor'
   get 'financeiro/recebimento_pessoa'
   get 'financeiro/repasse_profissionais'
+
+  resources :instrumento_relatos
   
   scope :financeiro do
     resources :atendimento_valores
@@ -22,12 +30,20 @@ Rails.application.routes.draw do
     member do
       get :devolutivas, path: 'devolutivas'
       get :responsavel_devolutivas
+      get :informacoes_extras
+      get :informacao_extra_new, path: "informacoes_extras/new"
+      get :informacao_extra_edit, path: "informacoes_extras/:extra_info_id"
     end
   end
   resources :paises
   resources :continentes
   resources :acompanhamentos
-  resources :atendimentos
+  resources :atendimentos do
+    member do
+      post :reagendar_para_proxima_semana
+      get :reagendar_para_proxima_semana
+    end
+  end
   resources :relatos
   resources :pessoa_extra_informacoes
 

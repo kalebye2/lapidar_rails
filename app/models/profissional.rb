@@ -58,5 +58,4 @@ class Profissional < ApplicationRecord
   def atendimento_futuro
     atendimento.where("DATEDIFF(data, CURRENT_DATE) > 0 OR (DATEDIFF(data, CURRENT_DATE) = 0 AND HOUR(horario) > HOUR(CURRENT_TIME))").order(data: :asc, horario: :asc)
   end
-
 end

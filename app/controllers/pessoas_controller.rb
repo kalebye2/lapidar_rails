@@ -1,9 +1,13 @@
 class PessoasController < ApplicationController
-  before_action :set_pessoa, only: %i[ show edit update destroy devolutivas ]
+  before_action :set_pessoa, only: %i[ show edit update destroy devolutivas informacoes_extras informacao_extra_edit informacao_extra_new ]
 
   # GET /pessoas or /pessoas.json
   def index
-    @pessoas = Pessoa.all.order(nome: :asc, sobrenome: :asc)
+    if params[:q].present?
+      @pessoas = Pessoa.where("LOWER(CONCAT(nome, ' ', COALESCE(nome_do_meio, ''), ' ', sobrenome)) LIKE ?", "%#{params[:q].to_s.downcase}%")
+    else
+      @pessoas = Pessoa.all.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc)
+    end
   end
 
   # GET /pessoas/1 or /pessoas/1.json
@@ -69,6 +73,24 @@ class PessoasController < ApplicationController
     end
   end
 
+  def informacoes_extras
+    @extra_informacoes = @pessoa.pessoa_extra_informacao.order(data: :asc)
+  end
+
+  def informacao_extra_edit
+    @extra_informacao = PessoaExtraInformacao.find(params[:extra_info_id])
+  end
+
+  def informacao_extra_update
+    @extra_informacao.update(pessoa_extra_informacao_params)
+  end
+
+  def informacao_extra_new
+    @extra_informacao = @pessoa.pessoa_extra_informacao.new
+  end
+
+  def informacao_extra_create
+  end
 
   ### recursos extras
   # devolutivas
