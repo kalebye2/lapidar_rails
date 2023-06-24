@@ -1,0 +1,12 @@
+<% titulo "Relatos de instrumento" %>
+<h1>Relatos de instrumentos</h1>
+
+<%= link_to "+ relato", new_instrumento_relato_path %>
+
+<ul>
+<% @instrumento_relatos.each do |instrumento_relato| %>
+  <li>
+    <%= link_to instrumento_relato.atendimento.informacoes_com_pessoa, edit_instrumento_relato_path(instrumento_relato) %>
+  </li>
+<% end %>
+</ul>

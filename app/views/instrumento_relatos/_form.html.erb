@@ -1,0 +1,42 @@
+<%= form_with(model: instrumento_relato, local: true) do |form| %>
+  <% if instrumento_relato.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(instrumento_relato.errors.count, "error") %> prohibited this instrumento_relato from being saved:</h2>
+
+      <ul>
+      <% instrumento_relato.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label "Atendimento" %>
+    <%= form.select :atendimento_id, Atendimento.realizado.order(data: :desc, horario: :desc).map { |a| [a.informacoes_com_pessoa, a.id] } %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Instrumento utilizado" %>
+    <%= form.select :instrumento_id, Instrumento.order(nome: :asc).map { |i| [i.nome, i.id ] } %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Breve relato" %>
+    <%= form.text_area :relato, size: "50x10" %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Resultados" %>
+    <%= form.text_area :resultados, size: "50x10" %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Observações" %>
+    <%= form.text_area :observacoes, size: "50x10" %>
+  </div>
+
+  <div class="action">
+    <%= form.submit %>
+  </div>
+<% end %>
