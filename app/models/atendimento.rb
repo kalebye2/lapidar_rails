@@ -5,6 +5,7 @@ class Atendimento < ApplicationRecord
   belongs_to :atendimento_modalidade, foreign_key: :modalidade_id, inverse_of: :atendimento
 
   has_one :atendimento_valor, foreign_key: :atendimento_id, primary_key: :id, inverse_of: :atendimento
+  has_one :instrumento_relato
 
   has_one :relato, foreign_key: :id, primary_key: :id, inverse_of: :atendimento
 
@@ -82,5 +83,10 @@ class Atendimento < ApplicationRecord
 
   def em_breve_ou_em_andamento
     em_breve || em_andamento
+  end
+
+
+  def self.realizado
+    where(presenca: :true)
   end
 end

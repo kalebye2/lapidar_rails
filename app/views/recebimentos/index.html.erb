@@ -1,5 +1,27 @@
-<%= titulo "Recebimentos" %>
+<%= titulo "Recebimentos #{t('date.month_names')[@mes.to_i]} #{@ano}" %>
+
 <h1>Recebimentos - <%= t('date.month_names')[@mes.to_i] %>/<%= @ano %></h1>
+
+<div class="form-g">
+  <%= form_with url: recebimentos_path, method: :get, local: true do |f| %>
+    <%#= f.label :mes, "Selecionar mês" %>
+    <%= f.select :mes, 
+        [1,2,3,4,5,6,7,8,9,10,11,12].map { |i| [t('date.month_names')[i], i] },
+        selected: @mes %>
+    /
+    <%#= f.label :ano, "Selecionar ano" %>
+    <% anos = [] %>
+    <% ano_atual = Date.today.year %>
+    <% while ano_atual != 1969 do %>
+      <% anos << ano_atual %>
+      <% ano_atual -= 1 %>
+    <% end %>
+    <%= f.select :ano, anos, selected: @ano %>
+
+    <%= f.submit "Atualizar" %>
+  <% end %>
+</div>
+
 <p>Baixar relatório
 <%= link_to "CSV", recebimentos_path(format: :csv, ano: @ano, mes: @mes) %>
 </p>
@@ -53,20 +75,6 @@
 
   <% end %>
 </div>
-
-<%= form_with url: recebimentos_path, method: :get do |f| %>
-  <%= f.label :ano, "Selecionar ano" %>
-  <% anos = [] %>
-  <% ano_atual = Date.today.year %>
-  <% while ano_atual != 2000 do %>
-    <% anos << ano_atual %>
-    <% ano_atual -= 1 %>
-  <% end %>
-  <%= f.select :ano, anos, selected: @ano %>
-  <%= f.label :mes, "Selecionar mês" %>
-  <%= f.select :mes, [1,2,3,4,5,6,7,8,9,10,11,12], selected: @mes %>
-  <%= f.submit %>
-<% end %>
 
 <table style="width:100%;">
   <caption>Recebimentos</caption>

@@ -1,5 +1,5 @@
 class AtendimentosController < ApplicationController
-  before_action :set_atendimento, only: %i[ show edit update destroy ]
+  before_action :set_atendimento, only: %i[ show edit update destroy reagendar_para_proxima_semana ]
 
   def index
   end
@@ -46,6 +46,17 @@ class AtendimentosController < ApplicationController
   def destroy
   end
 
+  def reagendar_para_proxima_semana
+    respond_to do |format|
+      if @atendimento.update(data: @atendimento.data + 7.day)
+        format.html { redirect_to atendimento_url(@atendimento), notice: "Atendimento agendado para a semana seguinte" }
+        format.json { render :show, status: :ok, location: @atendimento }
+      else
+        format.html { render :show, status: :unprocessable_entity }
+        format.json { render json: @atendimento.errors, status: :unprocessable_entity }
+      end
+    end
+  end
 
   private
 

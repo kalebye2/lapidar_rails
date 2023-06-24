@@ -7,9 +7,12 @@
 <%= link_to "dados do acompanhamento", @atendimento.acompanhamento %>
 <%= link_to u, class:"pessoa" do %><h2><%= u.nome_completo %></h2><% end %>
 <%= link_to pro, class:"profissional" do %><h3><%= pro.nome_completo %> <%= pro.documento %></h3><% end %>
+<%= button_to "reagendar para próxima semana", { action: :reagendar_para_proxima_semana } %>
 
 <h4><%= @atendimento.acompanhamento.motivo %></h4>
 
+<%= link_to "Relato de instrumento usado", (@atendimento.instrumento_relato.nil? ? new_instrumento_relato_path : edit_instrumento_relato_path(@atendimento.instrumento_relato)) %>
+<br /><br /><br />
 <%= render "form-individual", atendimento: @atendimento %>
 
 <% if !@atendimento.relato.nil? %>
