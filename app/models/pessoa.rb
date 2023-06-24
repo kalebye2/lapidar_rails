@@ -198,8 +198,8 @@ class Pessoa < ApplicationRecord
   end
 
   def pronome_tratamento
-    pronome_no_feminino = (feminino && !inverter_pronome_tratamento) || (!feminino && inverter_nome_tratamento)
-    pronome_no_feminino ? pessoa_tratamento_pronome.pronome_feminino : pessoa_tratamento.pronome_masculino
+    pronome_no_feminino = (feminino && !inverter_pronome_tratamento) || (!feminino && inverter_pronome_tratamento)
+    pronome_no_feminino ? pessoa_tratamento_pronome.pronome_feminino : pessoa_tratamento_pronome.pronome_masculino
   end
 
   def pronome_tratamento_abreviado
