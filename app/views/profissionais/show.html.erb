@@ -1,4 +1,4 @@
-<%= titulo "#{@profissional.funcao} #{@profissional.nome_completo}" %>
+<%= titulo "#{@profissional.funcao} #{@profissional.nome_abreviado}" %>
 <h1>
   <%= @profissional.nome_completo %> - <%= @profissional.funcao %>
   <%= link_to edit_pessoa_path(@profissional.pessoa) do %>

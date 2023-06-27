@@ -76,8 +76,8 @@
   <% end %>
 </div>
 
-<table style="width:100%;">
-  <caption>Recebimentos</caption>
+<table class="tabela-recebimentos">
+  <caption>Recebimentos - <%= t('date.month_names')[@mes.to_i] %>/<%= @ano %></caption>
   <thead>
     <tr>
       <th>Beneficiário</th>
@@ -94,11 +94,11 @@
       <tr>
         <td><%= recebimento.beneficiario.nome_abreviado %></td>
         <td><%= recebimento.pagante.nome_abreviado %></td>
-        <td><%= render_data_brasil recebimento.data %></td>
+        <td style="text-align:center;"><%= render_data_brasil recebimento.data %></td>
         <td class="dinheiro"><%= render_dinheiro_centavos recebimento.valor %></td>
-        <td><%= recebimento.profissional.descricao_completa %></td>
-        <td><%= recebimento.acompanhamento.tipo.upcase %></td>
-        <td><%= link_to "Editar", edit_recebimento_url(recebimento) %></td>
+        <td style="text-align:center;"><%= recebimento.profissional.descricao_completa %></td>
+        <td style="text-align:center;"><%= recebimento.acompanhamento.tipo.upcase %></td>
+        <td style="text-align:center;"><%= link_to "Editar", edit_recebimento_url(recebimento) %></td>
       </tr>
     <% end %>
   </tbody>

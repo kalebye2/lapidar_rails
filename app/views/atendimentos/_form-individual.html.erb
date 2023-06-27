@@ -16,15 +16,15 @@
       <%= form.select :atendimento_tipo_id, AtendimentoTipo.order(:tipo).map { |atendimento_tipo| [atendimento_tipo.tipo.upcase, atendimento_tipo.id] } %>
     </div>
 
-    <div class="field">
-      <%= form.label :presenca, "Presença" %>
+    <div class="checkbox">
       <%= form.check_box :presenca %>
+      <%= form.label :presenca, "Presença" %>
     </div>
 
     <% if !atendimento.presenca %>
-      <div class="field">
-        <%= form.label "Reagendado?" %>
+      <div class="checkbox">
         <%= form.check_box :reagendado %>
+        <%= form.label "Reagendado?" %>
       </div>
     <% end %>
 

@@ -64,7 +64,7 @@ class RelatosController < ApplicationController
     @relato = Relato.new(relato_params)
     respond_to do |format|
       if @relato.save
-        Atendimento.find(params[relato][:id]).update(consideracoes: params[:relato][:atendimento_attributes][:consideracoes])
+        #Atendimento.find(params[relato][:id]).update(consideracoes: params[:relato][:atendimento_attributes][:consideracoes])
         format.html { redirect_to relato_url(@relato), notice: "Relato registrado." }
         format.json { render :show, status: :created, location: @relato }
       else

@@ -34,7 +34,7 @@ class Recebimento < ApplicationRecord
     "#{pagante.nome_completo},#{pagante.cpf},#{beneficiario.nome_completo},#{beneficiario.cpf},#{data},#{modalidade},#{valor},#{acompanhamento.acompanhamento_tipo.tipo}" + "\n"
   end
 
-  def self.para_csv(collection = all)
+  def self.para_csv(collection = all, formato_data: "%Y-%m-%d")
     CSV.generate(col_sep: ',') do |csv|
       csv << [
         "DATA",
@@ -52,7 +52,7 @@ class Recebimento < ApplicationRecord
       ]
       collection.each do |r|
         csv << [
-          r.data,
+          r.data.strftime(formato_data),
           r.valor.to_s,
           r.beneficiario.nome_completo,
           r.beneficiario.cpf,
@@ -68,5 +68,4 @@ class Recebimento < ApplicationRecord
       end
     end
   end
-
 end

@@ -1,5 +1,6 @@
 <% titulo "Profissionais" %>
 <h1>Quadro de profissionais</h1>
+<p>Profissionais cadastrados: <%= @profissionais.count %></p>
 <%= link_to "+ profissional", new_profissional_path %>
 
 <%= form_with url: profissionais_path, method: :get, local: true, data: { turbo_frame: 'profissionais' } do |form| %>

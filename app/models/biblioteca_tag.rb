@@ -5,4 +5,8 @@ class BibliotecaTag < ApplicationRecord
   def obra
     biblioteca_obra
   end
+
+  def obra_juncao
+    biblioteca_obra_tag_juncao
+  end
 end
