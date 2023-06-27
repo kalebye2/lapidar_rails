@@ -1,0 +1,32 @@
+.tabela-recebimentos {
+	width: 100%;
+	border-collapse: collapse;
+
+	caption {
+		background-color: darkgreen;
+		color: white;
+		margin-bottom: 0;
+		padding-top: .5em;
+		padding-bottom: .5em;
+		text-align: center;
+	}
+
+	th {
+		background-color: green;
+		color: white;
+	}
+
+	tr {
+		color: black;
+
+		&:nth-child(n) {
+			background-color: white;
+		}
+		&:nth-child(2n) {
+			background-color: #ddffdd;
+		}
+		&:hover {
+			background-color: lightgreen;
+		}
+	}
+}

@@ -15,36 +15,71 @@
  */
 
 :root {
+	/* principais cores do tema */
+	--main-color: red;
+	--secondary-color: darkred;
+	--main-light-color: white;
 	/* cores a substituir nos temas */
 	--doc-bg-color: #eee;
 	--doc-text-color: #333;
-	--doc-shade-color: green;
+	--doc-shade-color: #111;
 	--doc-a-color: darkblue;
 
+	--table-dark-color: #333;
+	--table-medium-color: #777;
+	--table-light-color: #ddd;
+
 	/* para cadastros no geral */
-	--male-bg-color: lightblue;
-	--male-shade-color: darkcyan;
-	--male-text-color: darkblue;
-	--female-bg-color: pink;
-	--female-shade-color: firebrick;
-	--female-text-color: darkred;
+	--male-light-color: lightblue;
+	--male-medium-color: darkcyan;
+	--male-dark-color: darkblue;
+	--female-light-color: pink;
+	--female-medium-color: firebrick;
+	--female-dark-color: darkred;
 	
-	--profissional-bg-color: lightyellow;
-	--profissional-shade-color: orange;
-	--profissional-text-color: darkgoldenrod;
+	--profissional-light-color: lightyellow;
+	--profissional-medium-color: orange;
+	--profissional-dark-color: darkgoldenrod;
 
 	/* cores de acompanhamentos */
-	--acompanhamento-em-andamento-bg-color: lightcyan;
-	--acompanhamento-em-andamento-text-color: darkslateblue;
+	--acompanhamento-em-andamento-light-color: lightcyan;
+	--acompanhamento-em-andamento-dark-color: darkslateblue;
 	--acompanhamento-finalizado-opacity: .7;
-	--acompanhamento-finalizado-alta-bg-color: lightgreen;
-	--acompanhamento-finalizado-alta-text-color: darkgreen;
-	--acompanhamento-finalizado-encaminhamento-bg-color: lightblue;
-	--acompanhamento-finalizado-encaminhamento-text-color: darkcyan;
-	--acompanhamento-finalizado-questoes-financeiras-bg-color: lightyellow;
-	--acompanhamento-finalizado-questoes-financeiras-text-color: darkgoldenrod;
-	--acompanhamento-finalizado-desistencia-bg-color: pink;
-	--acompanhamento-finalizado-desistencia-text-color: darkred;
+	--acompanhamento-finalizado-alta-light-color: lightgreen;
+	--acompanhamento-finalizado-alta-dark-color: darkgreen;
+	--acompanhamento-finalizado-encaminhamento-light-color: lightblue;
+	--acompanhamento-finalizado-encaminhamento-dark-color: darkcyan;
+	--acompanhamento-finalizado-questoes-financeiras-light-color: lightyellow;
+	--acompanhamento-finalizado-questoes-financeiras-dark-color: darkgoldenrod;
+	--acompanhamento-finalizado-desistencia-light-color: pink;
+	--acompanhamento-finalizado-desistencia-dark-color: darkred;
+
+	/* cores de atendimentos */
+	--atendimento-default-bg-color: white;
+	--atendimento-default-text-color: black;
+	--atendimento-default-shade-color: gray;
+	--atendimento-default-highlight-color: lightgray;
+	--atendimento-a-ocorrer-light-color: lightblue;
+	--atendimento-a-ocorrer-medium-color: blue;
+	--atendimento-a-ocorrer-medium-light-color: #ddddff;
+	--atendimento-a-ocorrer-dark-color: darkblue;
+	--atendimento-presente-light-color: lightgreen;
+	--atendimento-presente-medium-color: green;
+	--atendimento-presente-medium-light-color: #ddffdd;
+	--atendimento-presente-dark-color: darkgreen;
+	--atendimento-ausente-light-color: pink;
+	--atendimento-ausente-medium-color: red;
+	--atendimento-ausente-medium-light-color: #ffdddd;
+	--atendimento-ausente-dark-color: darkred;
+	--atendimento-em-andamento-light-color: #ddd;
+	--atendimento-em-andamento-medium-color: #777;
+	--atendimento-em-andamento-medium-light-color: #ccc;
+	--atendimento-em-andamento-dark-color: #333;
+	--atendimento-em-breve-light-color: #ffffde;
+	--atendimento-em-breve-medium-color: orange;
+	--atendimento-em-breve-medium-light-color: #ffffcc;
+	--atendimento-em-breve-dark-color: darkorange;
+
 
 	/* fontes (talvez alterar com temas?) */
 	--doc-heading-font: 'tex gyre adventor', 'ubuntu', sans-serif;
@@ -56,18 +91,119 @@
 	--doc-bg-color: #eee;
 	--doc-text-color: #333;
 	--doc-a-color: #332211;
+
+	--table-bg-color: var(--table-light-color);
+	--table-text-color: var(--table-dark-color);
+
+	/* para cadastros no geral */
+	--male-bg-color: var(--male-light-color);
+	--male-shade-color: var(--male-medium-color);
+	--male-text-color: var(--male-dark-color);
+	--female-bg-color: var(--female-light-color);
+	--female-shade-color: var(--female-medium-color);
+	--female-text-color: var(--female-dark-color);
+	
+	--profissional-bg-color: var(--profissional-light-color);
+	--profissional-shade-color: var(--profissional-medium-color);
+	--profissional-text-color: var(--profissional-dark-color);
+
+	/* cores de acompanhamentos */
+	--acompanhamento-em-andamento-bg-color: var(--acompanhamento-em-andamento-light-color);
+	--acompanhamento-em-andamento-text-color: var(--acompanhamento-em-andamento-dark-color);
+	--acompanhamento-finalizado-opacity: .7;
+	--acompanhamento-finalizado-alta-bg-color: var(	--acompanhamento-finalizado-alta-light-color);
+	--acompanhamento-finalizado-alta-text-color: var(--acompanhamento-finalizado-alta-dark-color);
+	--acompanhamento-finalizado-encaminhamento-bg-color: var(--acompanhamento-finalizado-encaminhamento-light-color);
+	--acompanhamento-finalizado-encaminhamento-text-color: var(--acompanhamento-finalizado-encaminhamento-dark-color);
+	--acompanhamento-finalizado-questoes-financeiras-bg-color: var(--acompanhamento-finalizado-questoes-financeiras-light-color);
+	--acompanhamento-finalizado-questoes-financeiras-text-color: var(--acompanhamento-finalizado-questoes-financeiras-dark-color);
+	--acompanhamento-finalizado-desistencia-bg-color: var(--acompanhamento-finalizado-desistencia-light-color);
+	--acompanhamento-finalizado-desistencia-text-color: var(--acompanhamento-finalizado-desistencia-dark-color);
+
+	/* cores de atendimentos */
+	--atendimento-a-ocorrer-bg-color: var(--atendimento-a-ocorrer-light-color);
+	--atendimento-a-ocorrer-shade-color: var(--atendimento-a-ocorrer-medium-color);
+	--atendimento-a-ocorrer-highlight-color: var(--atendimento-a-ocorrer-medium-light-color);
+	--atendimento-a-ocorrer-text-color: var(--atendimento-a-ocorrer-dark-color);
+	--atendimento-presente-bg-color: var(--atendimento-presente-light-color);
+	--atendimento-presente-shade-color: var(--atendimento-presente-medium-color);
+	--atendimento-presente-highlight-color: var(--atendimento-presente-medium-light-color);
+	--atendimento-presente-text-color: var(--atendimento-presente-dark-color);
+	--atendimento-ausente-bg-color: var(--atendimento-ausente-light-color);
+	--atendimento-ausente-shade-color: var(--atendimento-ausente-medium-color);
+	--atendimento-ausente-highlight-color: var(--atendimento-ausente-medium-light-color);
+	--atendimento-ausente-text-color: var(--atendimento-ausente-dark-color);
+	--atendimento-em-andamento-bg-color: var(--atendimento-em-andamento-light-color);
+	--atendimento-em-andamento-shade-color: var(--atendimento-em-andamento-medium-color);
+	--atendimento-em-andamento-highlight-color: var(--atendimento-em-andamento-medium-light-color);
+	--atendimento-em-andamento-text-color: var(--atendimento-em-andamento-dark-color);
+	--atendimento-em-breve-bg-color: var(--atendimento-em-breve-light-color);
+	--atendimento-em-breve-shade-color: var(--atendimento-em-breve-medium-color);
+	--atendimento-em-breve-highlight-color: var(--atendimento-em-breve-medium-light-color);
+	--atendimento-em-breve-text-color: var(--atendimento-em-breve-dark-color);
 }
 
 .dark {
-	--doc-bg-color: #333;
+	--doc-bg-color: #222;
 	--doc-text-color: #eee;
 	--doc-a-color: #ccddee;
+	--table-bg-color: var(--table-dark-color);
+	--table-text-color: var(--table-light-color);
+
+	/* para cadastros no geral */
+	--male-bg-color: var(--male-dark-color);
+	--male-shade-color: var(--male-medium-color);
+	--male-text-color: var(--male-light-color);
+	--female-bg-color: var(--female-dark-color);
+	--female-shade-color: var(--female-medium-color);
+	--female-text-color: var(--female-light-color);
+	
+	--profissional-bg-color: var(--profissional-dark-color);
+	--profissional-shade-color: var(--profissional-medium-color);
+	--profissional-text-color: var(--profissional-light-color);
+
+	/* cores de acompanhamentos */
+	--acompanhamento-em-andamento-bg-color: var(--acompanhamento-em-andamento-dark-color);
+	--acompanhamento-em-andamento-text-color: var(--acompanhamento-em-andamento-light-color);
+	--acompanhamento-finalizado-opacity: .7;
+	--acompanhamento-finalizado-alta-bg-color: var(	--acompanhamento-finalizado-alta-dark-color);
+	--acompanhamento-finalizado-alta-text-color: var(--acompanhamento-finalizado-alta-light-color);
+	--acompanhamento-finalizado-encaminhamento-bg-color: var(--acompanhamento-finalizado-encaminhamento-dark-color);
+	--acompanhamento-finalizado-encaminhamento-text-color: var(--acompanhamento-finalizado-encaminhamento-light-color);
+	--acompanhamento-finalizado-questoes-financeiras-bg-color: var(--acompanhamento-finalizado-questoes-financeiras-dark-color);
+	--acompanhamento-finalizado-questoes-financeiras-text-color: var(--acompanhamento-finalizado-questoes-financeiras-light-color);
+	--acompanhamento-finalizado-desistencia-bg-color: var(--acompanhamento-finalizado-desistencia-dark-color);
+	--acompanhamento-finalizado-desistencia-text-color: var(--acompanhamento-finalizado-desistencia-light-color);
+
+	/* cores de atendimentos */
+	--atendimento-a-ocorrer-bg-color: var(--atendimento-a-ocorrer-medium-color);
+	--atendimento-a-ocorrer-shade-color: var(--atendimento-a-ocorrer-dark-color);
+	--atendimento-a-ocorrer-highlight-color: var(--atendimento-a-ocorrer-dark-color);
+	--atendimento-a-ocorrer-text-color: var(--atendimento-a-ocorrer-light-color);
+	--atendimento-presente-bg-color: var(--atendimento-presente-medium-color);
+	--atendimento-presente-shade-color: var(--atendimento-presente-dark-color);
+	--atendimento-presente-highlight-color: var(--atendimento-presente-dark-color);
+	--atendimento-presente-text-color: var(--atendimento-presente-light-color);
+	--atendimento-ausente-bg-color: var(--atendimento-ausente-medium-color);
+	--atendimento-ausente-shade-color: var(--atendimento-ausente-dark-color);
+	--atendimento-ausente-highlight-color: var(--atendimento-ausente-dark-color);
+	--atendimento-ausente-text-color: var(--atendimento-ausente-light-color);
+	--atendimento-em-andamento-bg-color: var(--atendimento-em-andamento-medium-color);
+	--atendimento-em-andamento-shade-color: var(--atendimento-em-andamento-dark-color);
+	--atendimento-em-andamento-highlight-color: var(--atendimento-em-andamento-dark-color);
+	--atendimento-em-andamento-text-color: var(--atendimento-em-andamento-light-color);
+	--atendimento-em-breve-bg-color: var(--atendimento-em-breve-medium-color);
+	--atendimento-em-breve-shade-color: var(--atendimento-em-breve-dark-color);
+	--atendimento-em-breve-highlight-color: var(--atendimento-em-breve-dark-color);
+	--atendimento-em-breve-text-color: var(--atendimento-em-breve-light-color);
 }
 
 body {
 	background-color: var(--doc-bg-color);
 	color: var(--doc-text-color);
 	font-family: var(--doc-text-font);
+
+	margin: 0;
 }
 
 a {
@@ -179,9 +315,125 @@ h1, h2, h3, h4, h5, h6 {
 	grid-template-columns: 1fr 1fr 1fr;
 }
 
+/* default input style */
+input, select, textarea {
+	background-color: var(--doc-bg-color);
+	color: var(--doc-text-color);
+	padding: .5em;
+	font-size: 1.1em;
+	margin-top: .4em;
+	margin-bottom: 1em;
+	margin-inline: .3em;
+	border-style: solid;
+	border-color: var(--doc-highlight-color);
+	border-radius: 1em;
+	border-width: 1px;
+	
+	&:hover {
+		border-color: var(--main-color);
+	}
+
+	&:focus {
+		background-color: lightyellow;
+		color: darkblue;
+	}
+}
+input[type="submit"]{
+	cursor: pointer;
+
+	transition: transform 300ms ease-out,
+		box-shadow 300ms ease-out;
+	&:hover {
+		transform: translateY(-.2em);
+		box-shadow: 0 .3em var(--doc-text-color);
+	}
+}
+.checkbox {
+	display: flex;
+	align-items: center;
+}
+input[type="checkbox"] {
+	--size: 2em;
+	position: relative;
+	display: inline-block;
+	appearance: none;
+	height: var(--size);
+	width: var(--size);
+	background-color: lightgray;
+	border-radius: 1em;
+	cursor: pointer;
+
+	& + label {
+		font-size: 1.5em;
+	}
+
+	&::after {
+		display: flex;
+		opacity: 0;
+		align-items: center;
+		justify-content: center;
+		content: "x";
+	}
+	&:hover {
+		background-color: gray;
+	}
+	&:checked {
+		background-color: green;
+		&::after {
+			opacity: 1;
+			color: white;
+			content: "x";
+		}
+		&:hover {
+			background-color: darkgreen;
+		}
+	}
+}
+select option {
+	background-color: var(--doc-bg-color);
+	color: var(--doc-text-color);
+}
+.field, .checkbox {
+	background-color: var(--acompanhamento-em-andamento-bg-color);
+	margin-bottom: 1em;
+	margin-top: 2em;
+	border-radius: 0 1em 1em 1em;
+	border-style: solid;
+	border-width: 1px;
+	border-color: var(--doc-text-color);
+}
+.field {
+	& label {
+		--padding-inline: 1em;
+		position: absolute;
+		transform: translateY(-1.5em);
+		padding-bottom: .3em;
+		padding-top: 0;
+		padding-left: var(--padding-inline);
+		padding-right: var(--padding-inline);
+		margin-left: 0;
+		background-color: var(--atendimento-em-andamento-bg-color);
+		color: var(--doc-text-color);
+		border-radius: 1em 1em 0 0;
+		border-color: var(--doc-text-color);
+		border-style: solid;
+		border-width: 1px;
+		z-index: -1;
+	}
+}
+
 /* default table style */
 table {
 	--default-padding: .5em;
+	box-shadow: .3em .3em 0 gray;
+	& caption {
+		font-family: var(--doc-heading-font);
+		font-size: 1.5em;
+		text-transform: uppercase;
+		font-weight: bold;
+		margin-bottom: 1em;
+	}
+
 	.resultado {
 		font-weight: bold;
 		text-align: right;
@@ -192,6 +444,11 @@ table {
 		text-align: right;
 	}
 }
+tr {
+	--bg-color: var(--table-bg-color);
+	--text-color: var(--table-text-color);
+	padding: 1em .5em 1em .5em;
+}
 th {
 	padding: var(--default-padding);
 	font-family: var(--doc-heading-font);
@@ -199,3 +456,32 @@ th {
 td {
 	padding: var(--default-padding);
 }
+
+/* navbar */
+.navbar {
+	background-color: var(--main-color);
+	font-family: var(--doc-heading-font);
+	font-weight: bold;
+
+	& ul {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+		background-color: var(--main-color);
+		overflow: hidden;
+
+		& li {
+			float: left;
+			& a {
+				padding: .5em;
+				display: block;
+				text-align: center;
+				color: var(--main-light-color);
+				&:hover {
+					background-color: var(--secondary-color);
+				}
+			}
+		}
+	}
+}
+

@@ -10,8 +10,10 @@
 }
 
 .atendimento-card {
-	--bg-color: white;
-	--text-color: black;
+	--bg-color: var(--atendimento-default-bg-color);
+	--text-color: var(--atendimento-default-text-color);
+	--shade-color: var(--atendimento-default-shade-color);
+	--highlight-color: var(--atendimento-default-highlight-color);
 	--padding: .3em 1em .2em 1em;
 	--border-bottom-size: .3em;
 	--border-sides-size: 0em;
@@ -34,111 +36,94 @@
 		box-shadow: 0 .1em gray;
 		z-index: 1;
 		transform: translate(0, -.2em);
+		--bg-color: var(--highlight-color);
 	}
 }
 
 .atendimento-presente {
-	--bg-color: green;
-	--border-color: #004400;
-	--text-color: white;
-	a {
-		color: white;
-	}
-
-	&:hover {
-		--bg-color: darkgreen;
-	}
+	--bg-color: var(--atendimento-presente-bg-color);
+	--border-color: var(--atendimento-presente-shade-color);
+	--shade-color: var(--atendimento-presente-shade-color);
+	--highlight-color: var(--atendimento-presente-highlight-color);
+	--text-color: var(--atendimento-presente-text-color);
 }
 
 .atendimento-ausente {
-	--bg-color: red;
-	--border-color: #440000;
-	--text-color: white;
-	a {
-
-	}
-
-	&:hover {
-		--bg-color: darkred;
-	}
+	--bg-color: var(--atendimento-ausente-bg-color);
+	--border-color: var(--atendimento-ausente-shade-color);
+	--shade-color: var(--atendimento-ausente-shade-color);
+	--highlight-color: var(--atendimento-ausente-highlight-color);
+	--text-color: var(--atendimento-ausente-text-color);
 }
 
 .atendimento-futuro, .atendimento-a-ocorrer {
-	--border-color: darkcyan;
-	--bg-color: white;
-	--text-color: darkblue;
-	a {
-
-	}
-
-	&:hover {
-		--bg-color: lightcyan;
-	}
+	--bg-color: var(--atendimento-a-ocorrer-bg-color);
+	--border-color: var(--atendimento-a-ocorrer-shade-color);
+	--shade-color: var(--atendimento-a-ocorrer-shade-color);
+	--highlight-color: var(--atendimento-a-ocorrer-highlight-color);
+	--text-color: var(--atendimento-a-ocorrer-text-color);
 }
 
 .atendimento-em-breve {
-	--bg-color: lightyellow;
-	--border-color: darkorange;
-	--text-color: darkorange;
+	--bg-color: var(--atendimento-em-breve-bg-color);
+	--border-color: var(--atendimento-em-breve-shade-color);
+	--shade-color: var(--atendimento-em-breve-shade-color);
+	--highlight-color: var(--atendimento-em-breve-highlight-color);
+	--text-color: var(--atendimento-em-breve-text-color);
 }
 
-table {
-	box-shadow: .3em .3em 0 gray;
-	caption {
+.table-atendimento {
+	border-collapse: collapse;
+	width: 100%;
+
+	th {
 		font-family: var(--doc-heading-font);
-		font-size: 1.5em;
+		background-color: var(--acompanhamento-em-andamento-bg-color);
+		color: var(--acompanhamento-em-andamento-text-color);
+		padding: .7em;
 		text-transform: uppercase;
-		font-weight: bold;
-		margin-bottom: 1em;
+
 	}
+}
 
-	&.table-atendimento {
-		border-collapse: collapse;
-		width: 100%;
 
-		th {
-			font-family: var(--doc-heading-font);
-			background-color: lightcyan;
-			padding: .7em;
-			text-transform: uppercase;
+.tr-atendimento {
+	--bg-color: transparent;
+	--text-color: black;
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	text-align: center;
+	border-bottom: 2px solid var(--text-color);
 
+	a {
+		padding: .5em;
+		color: var(--text-color);
+		text-decoration: underline;
+		&:hover {
+			color: var(--bg-color);
+			background-color: var(--text-color);
 		}
 	}
 }
 
-tr {
-	--bg-color: white;
-	--text-color: black;
-	padding: 1em .5em 1em .5em;
+.tr-atendimento-presente {
+	--bg-color: var(--atendimento-presente-bg-color);
+	--text-color: var(--atendimento-presente-text-color);
+}
 
-	td {
-		padding: 1em .5em 1em .5em;
-	}
-	&.tr-atendimento {
-		text-align: center;
-	}
+.tr-atendimento-ausente {
+	--bg-color: var(--atendimento-ausente-bg-color);
+	--text-color: var(--atendimento-ausente-text-color);
+}
 
-	background-color: var(--bg-color);
-	color: var(--text-color);
+.tr-atendimento-futuro, .tr-atendimento-a-ocorrer {
+	--bg-color: var(--atendimento-a-ocorrer-bg-color);
+	--text-color: var(--atendimento-a-ocorrer-text-color);
+}
 
-	&.tr-atendimento-presente {
-		--bg-color: lightgreen;
-		--text-color: darkgreen;
-	}
-
-	&.tr-atendimento-ausente {
-		--bg-color: pink;
-		--text-color: darkred;
-	}
-
-	&.tr-atendimento-futuro, &.tr-atendimento-a-ocorrer {
-		--text-color: darkblue;
-	}
-
-	&.tr-atendimento-em-breve {
-		--bg-color: lightyellow;
-		--text-color: darkorange;
-	}
+.tr-atendimento-em-breve {
+	--bg-color: var(--atendimento-em-breve-bg-color);
+	--text-color: var(--atendimento-em-breve-text-color);
 }
 
 textarea {
