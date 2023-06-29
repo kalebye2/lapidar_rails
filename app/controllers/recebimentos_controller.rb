@@ -4,7 +4,7 @@ class RecebimentosController < ApplicationController
   before_action :set_recebimento, only: %i[ show update edit delete recibo ]
 
   def index
-    @pessoas = Pessoa.joins(:atendimento_valor).distinct.order(nome: :asc, sobrenome: :asc)
+    @pessoas = Pessoa.joins(:atendimento_valores).distinct.order(nome: :asc, sobrenome: :asc)
     @ano = params[:ano] || Date.today.year
     @mes = params[:mes] || Date.today.month
     @ano_mes = "#{@ano}-#{@mes.to_s.rjust(2, "0")}"
