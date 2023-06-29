@@ -1,0 +1,2 @@
+class EscolaTipo < ApplicationRecord
+end
