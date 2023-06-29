@@ -8,24 +8,28 @@ class Pessoa < ApplicationRecord
   has_one :usuario
   # quando o cadastro for de um profissional
   has_one :profissional
+  has_many :profissional_acompanhamento, through: :profissional, source: :acompanhamento
 
-  has_many :acompanhamento
-  has_many :acompanhamento_responsavel, class_name: "Acompanhamento", foreign_key: :pessoa_responsavel_id
+  # quando o cadastro for de um paciente
+  has_many :acompanhamentos
+  has_many :atendimentos, through: :acompanhamentos
   has_many :profissionais_acompanhando, class_name: "Profissional", through: :acompanhamento, source: :profissional
+  has_many :devolutivas, class_name: "PessoaDevolutiva", foreign_key: :pessoa_id
+  has_many :laudo, through: :acompanhamento
+  # quando o cadastro for de um resopnsável
+  has_many :acompanhamentos_responsavel, class_name: "Acompanhamento", foreign_key: :pessoa_responsavel_id
   has_many :profissionais_a_quem_responde, class_name: "Profissional", through: :acompanhamento_responsavel, source: :profissional
+  has_many :responsavel_devolutivas, class_name: "PessoaDevolutiva", foreign_key: :pessoa_responsavel_id
 
-  has_many :recebimento, through: :acompanhamento
-  has_many :recebimento_pagante, class_name: "Recebimento", foreign_key: :pessoa_pagante_id
+  has_many :recebimentos, through: :acompanhamentos
+  has_many :recebimentos_pagante, class_name: "Recebimento", foreign_key: :pessoa_pagante_id
 
-  has_many :recebimento_beneficiario_old, class_name: "Recebimento", foreign_key: :pessoa_beneficiario_id
+  #has_many :recebimento_beneficiario_old, class_name: "Recebimento", foreign_key: :pessoa_beneficiario_id
 
-  has_many :atendimento, through: :acompanhamento
-  has_many :atendimento_valor, through: :atendimento
+  has_many :atendimento_valores, through: :atendimentos
 
   has_many :pessoa_extra_informacao
 
-  has_many :devolutiva, class_name: "PessoaDevolutiva", foreign_key: :pessoa_id
-  has_many :responsavel_devolutiva, class_name: "PessoaDevolutiva", foreign_key: :pessoa_responsavel_id
 
 
   def nome_completo
@@ -93,9 +97,9 @@ class Pessoa < ApplicationRecord
     data_nascimento.strftime("%d/%m/%Y")
   end
 
-  def render_idade
+  def render_idade(data = Time.now.to_date)
     if data_nascimento == nil then return "idade não informada" end
-    hoje = Time.now.to_date
+    hoje = data
     #hoje = Date.parse '1996-11-07'
 
 
@@ -186,15 +190,15 @@ class Pessoa < ApplicationRecord
   end
 
   def atendimentos_futuros
-    atendimento.where("DATEDIFF(data, CURRENT_DATE) > 0 OR (DATEDIFF(data, CURRENT_DATE) = 0 AND HOUR(horario) > HOUR(CURRENT_TIME))")
+    atendimentos.where("DATEDIFF(data, CURRENT_DATE) > 0 OR (DATEDIFF(data, CURRENT_DATE) = 0 AND HOUR(horario) > HOUR(CURRENT_TIME))")
   end
 
-  def recebimento_beneficiario
-    recebimento
+  def recebimentos_beneficiario
+    recebimentos
   end
 
   def valor_a_cobrar_ate_mes_passado
-    atendimento_valor.where(atendimento: {data: [..(Date.today - 1.month).end_of_month]}).sum("valor - desconto") - recebimento.sum(:valor)
+    atendimento_valores.where(atendimentos: {data: [..(Date.today - 1.month).end_of_month]}).sum("valor - desconto") - recebimentos.sum(:valor)
   end
 
   def pronome_tratamento
@@ -217,6 +221,6 @@ class Pessoa < ApplicationRecord
 
   # recebimentos
   def valor_a_cobrar
-    atendimento_valor.sum("valor - desconto") - recebimento.sum(:valor)
+    atendimento_valores.sum("valor - desconto") - recebimento.sum(:valor)
   end
 end

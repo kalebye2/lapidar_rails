@@ -9,6 +9,8 @@ class Profissional < ApplicationRecord
   has_many :atendimento_valor, through: :atendimento
   has_many :repasse, class_name: "ProfissionalFinanceiroRepasse"
 
+  has_many :profissional_documento_modelo
+
   def documento
     if profissional_funcao.documento_tipo == nil then return "" end
 
