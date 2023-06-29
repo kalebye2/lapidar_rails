@@ -1,0 +1,8 @@
+<% titulo "Modelos de documentos" %>
+<h1>Modelos de documentos</h1>
+
+<ul>
+  <% @profissional_documento_modelos.each do |modelo| %>
+    <li><%= link_to modelo do %><%= modelo.profissional.nome_completo %> - <%= modelo.titulo %> (<%= modelo.usado_para %>)<% end %></li>
+  <% end %>
+</ul>

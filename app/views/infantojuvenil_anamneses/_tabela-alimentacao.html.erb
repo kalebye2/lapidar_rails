@@ -1,0 +1,64 @@
+<% cl = "tabela-infantojuvenil-anamnese-alimentacao" %>
+<tr class="<%= cl %>">
+  <th colspan="100%">Alimentação</th>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Com quantos meses recebeu alimentação sólida</th>
+  <td><%= alimentacao.solida_meses.nil? ? "Sem informação" :  "#{alimentacao.solida_meses} meses" %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Teve sucção boa?</th>
+  <td><%= alimentacao.succao_boa.nil? ? "Sem informação" : alimentacao.succao_boa? ? "Sim" : "Não" %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>A deglutição foi boa?</th>
+  <td><%= alimentacao.degluticao_boa.nil? ? "Sem informação" : alimentacao.degluticao_boa? ? "Sim" : "Não" %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Usou mamadeira?</th>
+  <td><%= alimentacao.usou_mamadeira.nil? ? "Sem informação" : alimentacao.usou_mamadeira? ? "Sim" : "Não" %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Com quantos meses foi introduzida comida com sal?</th>
+  <td><%= alimentacao.comida_sal_introducao_meses.nil? ? "Sem informação" :  "#{alimentacao.comida_sal_introducao_meses} meses" %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Com quantos meses ocorreu o desmame?</th>
+  <td><%= alimentacao.desmame_meses.nil? ? "Sem informação" :  "#{alimentacao.desmame_meses} meses" %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>A criança rejeita comida?</th>
+  <td><%= alimentacao.rejeicao.nil? ? "Sem informação" : alimentacao.rejeicao? ? "Sim" : "Não" %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Com quantos meses a criança começou a comer sozinha?</th>
+  <td><%= alimentacao.comer_sozinho_inicio_meses.nil? ? "Sem informação" :  "#{alimentacao.comer_sozinho_inicio_meses} meses" %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Qual ou quais alimentos a criança comia sozinha no início?</th>
+  <td><%= alimentacao.comer_sozinho_inicio_alimento.nil? ? "Sem informação" :  alimentacao.comer_sozinho_inicio_alimento %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Como é o comportamento da criança à mesa?</th>
+  <td><%= alimentacao.comportamento_mesa.nil? ? "Sem informação" :  alimentacao.comportamento_mesa %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>A criança precisa de ajuda para comer?</th>
+  <td><%= alimentacao.precisa_ajuda.nil? ? "Sem informação" :  "#{alimentacao.precisa_ajuda} meses" %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Com quantos meses recebeu alimentação sólida</th>
+  <td><%= alimentacao.solida_meses.nil? ? "Sem informação" :  "#{alimentacao.solida_meses} meses" %></td>
+</tr>

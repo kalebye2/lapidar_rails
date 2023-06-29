@@ -1,5 +1,5 @@
 <% if !atendimentos.empty? %>
-  <table class="table-atendimento">
+  <table class="tabela-atendimentos">
     <caption>Atendimentos de hoje</caption>
     <thead>
       <tr>
@@ -7,6 +7,7 @@
         <th>Paciente</th>
         <th>Descrição</th>
         <th>Horário</th>
+        <th>Local</th>
         <th>Status</th>
       </tr>
     </thead>
@@ -29,6 +30,7 @@
           <td>
             <%= link_to (render_hora_brasil ah.horario), ah %>
           </td>
+          <td><%= ah.local %></td>
           <td>
             <%= ah.status %>
             <% if !ah.pessoa_presente && ah.em_breve_ou_em_andamento %>

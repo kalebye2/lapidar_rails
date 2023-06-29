@@ -1,0 +1,29 @@
+<% titulo @profissional_documento_modelo.titulo %>
+<div class="documento-modelo-wrapper">
+  <div class="documento-modelo-descricao">
+    <h1>Documento: <%= @profissional_documento_modelo.titulo %></h1>
+    <h2>Por <%= @profissional_documento_modelo.profissional.nome_abreviado %> (<%= @profissional_documento_modelo.profissional.funcao %>)</h2>
+  </div>
+
+  <%# para teste %>
+  <% acompanhamento = AcompanhamentoView.find_by(id: @profissional_documento_modelo.profissional.acompanhamento.em_andamento.last.id) %>
+  <%# mudar conteúdo do texto com um monte de baboseiras %>
+  <% texto_conteudo = @profissional_documento_modelo.conteudo %>
+  <% acompanhamento.attributes.each do |k,v| %>
+    <% valor_formatado = nil %>
+    <% if v.kind_of?(Date) %>
+      <% valor_formatado = render_data_brasil(v) %>
+    <% elsif v.kind_of?(BigDecimal) || v.kind_of?(Float) %>
+      <% valor_formatado = number_to_currency v.to_f, unit: "", separator: ",", delimiter: ".", precision: 2 %>
+    <% else %>
+      <% valor_formatado = v.to_s %>
+    <% end %>
+
+    <% texto_conteudo.gsub!("{%#{k.to_s}%}", valor_formatado.to_s) %>
+  <% end %>
+
+  <div class="documento">
+    <%= link_to "Editar", edit_profissional_documento_modelo_path(@profissional_documento_modelo), {class: "documento-modelo-edit-btn"} %>
+    <%== Kramdown::Document.new(@profissional_documento_modelo.conteudo).to_html.html_safe %>
+  </div>
+</div>

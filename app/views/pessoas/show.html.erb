@@ -58,8 +58,8 @@
 
       <!-- se é usuário -->
       <!-- últimos atendimentos ou próximos -->
-      <% if !@pessoa.acompanhamento.empty? %>
-        <% if !@pessoa.atendimento.where("DATEDIFF(data, CURRENT_DATE) > 0 OR (DATEDIFF(data, CURRENT_DATE) = 0 AND HOUR(horario) > HOUR(CURRENT_TIME))").empty? %>
+      <% if !@pessoa.acompanhamentos.empty? %>
+        <% if !@pessoa.atendimentos.where("DATEDIFF(data, CURRENT_DATE) > 0 OR (DATEDIFF(data, CURRENT_DATE) = 0 AND HOUR(horario) > HOUR(CURRENT_TIME))").empty? %>
           <div class="pessoa-proximos-atendimentos">
             <h3>Próximos atendimentos</h3>
               <ul>
@@ -81,7 +81,7 @@
         <div class="pessoa-acompanhamentos">
           <h3>Acompanhamentos</h3>
           <ul>
-            <% @pessoa.acompanhamento.order(data_inicio: :desc).each do |a| %>
+            <% @pessoa.acompanhamentos.order(data_inicio: :desc).each do |a| %>
               <%= link_to a do %><li><%= a.render_info_para_pessoa %></li><% end %>
             <% end %>
           </ul>
@@ -89,7 +89,7 @@
       <% end %>
 
       <!-- se é responsável -->
-      <% if !@pessoa.acompanhamento_responsavel.empty? %>
+      <% if !@pessoa.acompanhamentos_responsavel.empty? %>
         <div class="pessoa-acompanhamentos-responsavel">
           <h3>Acompanhamentos pelos quais responde</h3>
           <% if @pessoa.acompanhamento_responsavel != nil %>
@@ -102,41 +102,8 @@
     </div>
 
     <!-- se for usuário mostrar dados dos atendimentos -->
-    <% if !@pessoa.atendimento.empty? %>
-      <div class="caso-resumo">
-        <h2>
-          Resumo do caso
-        </h2>
-        <% @pessoa.atendimento.where.not(consideracoes: nil).each do |at| %>
-          <div class="consideracoes">
-            <h3><%= at.tipo %> - <%= render_data_brasil at.data %></h3>
-            <h4><%= at.profissional.descricao_completa %> (<%= at.acompanhamento.tipo.upcase %>)</h4>
-            <%== Kramdown::Document.new(at.consideracoes || "Sem considerações").to_html %>
-          </div>
-        <% end %>
-      </div>
-    <% end %>
-    <!-- se for usuário mostrar informações extras -->
-    <% if !@pessoa.informacoes_extras.empty? %>
-      <div class="informacoes-extras">
-        <h3>
-          Informações extras
-          <%= link_to new_pessoa_extra_informacao_path do %>
-            <span>+ informação extra</span>
-          <% end %>
-        </h3>
-        <ul>
-          <% @pessoa.informacoes_extras.order(data: :desc).each do |ei| %>
-            <%= link_to ei do %>
-              <li>
-                <%= render_data_brasil ei.data %> -
-                <%= ei.meio %>
-              </li>
-              <%= link_to "PDF", {controller: :pessoa_extra_informacoes, action: :show_pdf, id: ei.id } %>
-            <% end %>
-          <% end %>
-        </ul>
-      </div>
+    <% if !@pessoa.atendimentos.empty? %>
+      <%= render "resumo-caso", pessoa: @pessoa %>
     <% end %>
 </div>
 

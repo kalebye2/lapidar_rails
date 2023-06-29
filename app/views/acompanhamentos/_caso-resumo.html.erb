@@ -1,16 +1,29 @@
 <% if acompanhamento != nil %>
-<div class="caso-resumo">
-  <h2>
-    Resumo do caso
-    <span style="font-size:.7em">
-      <%= link_to "Baixar", { controller: :acompanhamentos, action: "caso_detalhes", id: acompanhamento.id, format: :pdf }, { target: "_blank", class: "btn-download" } %>
-    </span>
-  </h2>
-<% acompanhamento.atendimento.where.not(consideracoes: nil).each do |at| %>
-  <div class="consideracoes">
-    <h5><%= render_data_brasil at.data %></h5>
-  <%== Kramdown::Document.new(at.consideracoes || "Sem considerações").to_html %>
-  </div>
-<% end %>
-</div>
+  <table class="tabela">
+    <caption>
+      Considerações do acompanhamento<br />
+      <span style="font-size:.7em;"><%= link_to "Baixar", { controller: :acompanhamentos, action: :caso_detalhes, id: acompanhamento.id, format: :pdf }, { target: :blank } %>
+      </span>
+    </caption>
+    <thead>
+      <tr>
+        <th>Data do atendimento</th>
+        <th>Modalidade de atendimento</th>
+        <th>Tipo de atendimento</th>
+        <th>Anotações do profissional</th>
+        <th>Opções</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% acompanhamento.atendimento.each do |a| %>
+      <tr>
+        <td><%= render_data_brasil a.data %></td>
+        <td><%= a.modalidade.upcase %></td>
+        <td><%= a.tipo.upcase %></td>
+        <td><%== Kramdown::Document.new(a.consideracoes || "Sem considerações").to_html %></td>
+        <td><%= link_to "Visualizar", a %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
 <% end %>

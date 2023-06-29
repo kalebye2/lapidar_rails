@@ -1,0 +1,14 @@
+<% cl = "tabela-infantojuvenil-anamnese-psicomotricidade" %>
+<tr class="<%= cl %>">
+  <th colspan="100%">Psicomotricidade</th>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Com quantos meses a criança sorriu?</th>
+  <td><%= psicomotricidade.sorriu_meses? ? "#{psicomotricidade.sorriu_meses} meses" : "Sem informação" %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Com quantos meses a criança começou a se dirigir aos outros?</th>
+  <td><%= psicomotricidade.dirigir_ativamente_pessoas_meses? ? "#{psicomotricidade.dirigir_ativamente_pessoas_meses} meses" : "Sem informação" %></td>
+</tr>

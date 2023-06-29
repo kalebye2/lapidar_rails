@@ -1,14 +1,16 @@
 <% titulo "Anamnese infantojuvenil" %>
 <h1>Anamnese infantojuvenil</h1>
-<%= link_to "editar", infantojuvenil_anamneses_edit_path(@infantojuvenil_anamnese) %>
+<%= link_to "editar", edit_infantojuvenil_anamnese_path(@infantojuvenil_anamnese) %>
 
 <div style="position:fixed;width:30%;top:2em;right:2em;padding:2em;background-color:darkred;color:white;border-radius:2em;opacity:.5;">
-  <%= @infantojuvenil_anamnese.alimentacao.attributes.keys %>
+  <%= @infantojuvenil_anamnese.psicomotricidade.attributes.keys %>
 </div>
 
-<table class="infantojuvenil-anamnese-tabela" style="width:90%;margin:auto;">
+<table class="tabela-infantojuvenil-anamnese" style="width:90%;margin:auto;">
   <%= render "tabela-dados-principais", infantojuvenil_anamnese: @infantojuvenil_anamnese %>
   <tbody>
     <%= render "tabela-gestacao", gestacao: @infantojuvenil_anamnese.gestacao %>
+    <%= render "tabela-alimentacao", alimentacao: @infantojuvenil_anamnese.alimentacao %>
+    <%= render "tabela-psicomotricidade", psicomotricidade: @infantojuvenil_anamnese.psicomotricidade %>
   </tbody>
 </table>

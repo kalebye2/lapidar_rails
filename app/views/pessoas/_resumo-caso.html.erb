@@ -1,0 +1,27 @@
+<table class="tabela">
+  <caption>Resumo do caso</caption>
+  <thead>
+    <tr>
+      <th>Profissional</th>
+      <th>Data do atendimento</th>
+      <th>Tipo de acompanhamento</th>
+      <th>Motivo do acompanhamento</th>
+      <th>Status do atendimento</th>
+      <th>Anotações do profissional</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% pessoa.atendimentos.each do |a| %>
+      <tr>
+        <td><%= a.profissional.nome_abreviado %></td>
+        <td><%= render_data_brasil a.data %></td>
+        <td><%= a.acompanhamento.tipo.upcase %></td>
+        <td><%= a.acompanhamento.motivo %></td>
+        <td><%= a.status %></td>
+        <td><%== Kramdown::Document.new(a.consideracoes || "Sem anotações").to_html %></td>
+        <td><%= link_to "visualizar", a %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

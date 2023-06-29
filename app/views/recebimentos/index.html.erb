@@ -37,8 +37,8 @@
     <h3>Valores a cobrar até mês passado</h3>
     <% @a_receber = 0 %>
     <% @pessoas.each do |pessoa| %>
-      <% a_receber_ate_mes_passado = pessoa.atendimento_valor.where("atendimentos.data" => [..(Date.today - 1.month).end_of_month]).sum("valor - desconto") %>
-      <% ja_recebidos = pessoa.recebimento.sum(:valor) %>
+      <% a_receber_ate_mes_passado = pessoa.atendimento_valores.where("atendimentos.data" => [..(Date.today - 1.month).end_of_month]).sum("valor - desconto") %>
+      <% ja_recebidos = pessoa.recebimentos.sum(:valor) %>
       <% resultado = a_receber_ate_mes_passado - ja_recebidos %>
 
       <% if resultado > 0 %>
@@ -56,8 +56,8 @@
     <h3>Valores pendentes este mês</h3>
     <% @a_receber_mes_atual = 0 %>
     <% @pessoas.each do |pessoa| %>
-      <% ja_recebidos = pessoa.recebimento.sum(:valor) %>
-      <% resultado = pessoa.atendimento_valor.where(atendimentos: {data: [..Date.today]}).sum("valor - desconto") - ja_recebidos %>
+      <% ja_recebidos = pessoa.recebimentos.sum(:valor) %>
+      <% resultado = pessoa.atendimento_valores.where(atendimentos: {data: [..Date.today]}).sum("valor - desconto") - ja_recebidos %>
       <% if resultado > 0 %>
         <% @a_receber_mes_atual += resultado %>
         <div class="pessoa-devendo">
