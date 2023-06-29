@@ -1,0 +1,65 @@
+.documento-modelo-wrapper {
+	display: grid;
+	grid-template-columns: .5fr 1fr;
+	margin-inline: 2em;
+}
+
+.documento-modelo-descricao {
+	h1, h2 {
+		background-color: var(--main-color);
+		color: white;
+		padding: 1em;
+		border-radius: 1em;
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+}
+
+.documento {
+	color: #333;
+	p {
+		text-align: justify;
+	}
+	background-color: white;
+	padding-left: 4em;
+	padding-right: 4em;
+	padding-top: 3em;
+	padding-bottom: 5em;
+	height: 70vh;
+	overflow-y: scroll;
+	box-shadow: .3em .3em 0 0 gray;
+
+	table {
+		--caption-position: bottom;
+		--caption-bg: transparent;
+		--caption-size: .8em;
+		--caption-margin: 1em 0 0 0;
+		--caption-color: var(--doc-text-color);
+		--caption-text-transform: none;
+		--caption-weight: normal;
+		--caption-font: var(--doc-text-font);
+
+		--header-bg: lightgray;
+		--header-color: var(--doc-text-color);
+		--highlight-bg: none;
+		/*
+		caption {
+			margin-top: 1em;
+			font-size: .8em;
+			text-transform: none;
+			font-weight: normal;
+			font-family: var(--doc-text-font);
+		}
+		th {
+			background-color: lightgray;
+		}
+		tr {
+			&:nth-child(2n) {
+				background-color: #eee;
+			}
+			&:hover {
+			}
+		}
+		*/
+	}
+}

@@ -1,26 +1,34 @@
-.infantojuvenil-anamnese-tabela {
-	th {
-		text-align: right;
-		background-color: #e7e7e7;
+.tabela-infantojuvenil-anamnese {
+	--header-align: right;
+	--header-bg: inherit;
 
-		&[colspan="2"] {
-			font-size: 2em;
-			text-align: center;
-		}
-		&.tabela-infantojuvenil-anamnese-gestacao {
-			background-color: pink;
-		}
+	--big-header-bg: #444;
+	--big-header-size: 2em;
+	--big-header-align: center;
+
+	& [colspan="100%"] {
+		--header-bg: var(--big-header-bg);
+		--header-color: white;
+		--header-size: var(--big-header-size);
+		--header-align: var(--big-header-align);
 	}
+	--header-color: black;
+	--data-bg: white;
+	--highlight-bg: lightgray;
 
-	td {
-		&.tabela-infantojuvenil-anamnese-gestacao {
-			background-color: #fee;
-		}
+	& .tabela-infantojuvenil-anamnese-gestacao {
+		--row-even-bg: #fee;
+		--highlight-bg: pink;
+		--big-header-bg: salmon;
 	}
-	border-collapse: collapse;
-	background-color: #f9f9f9;
+	& .tabela-infantojuvenil-anamnese-alimentacao {
+		--big-header-bg: orange;
+		--row-even-bg: #ffe;
+		--highlight-bg: #ffb;
+	}
+	& .tabela-infantojuvenil-anamnese-psicomotricidade {
+		--big-header-bg: darkred;
+		--row-even-bg: #fdd;
+		--highlight-bg: #fcc;
+	}
 }
-
-th {
-}
-

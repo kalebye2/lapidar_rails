@@ -16,8 +16,8 @@
 
 :root {
 	/* principais cores do tema */
-	--main-color: red;
-	--secondary-color: darkred;
+	--main-color: darkred;
+	--secondary-color: #aa1111;
 	--main-light-color: white;
 	/* cores a substituir nos temas */
 	--doc-bg-color: #eee;
@@ -27,7 +27,12 @@
 
 	--table-dark-color: #333;
 	--table-medium-color: #777;
-	--table-light-color: #ddd;
+	--table-light-color: #fff;
+	--table-dark-alt-color: #111;
+	--table-light-alt-color: #eee;
+	--table-medium-alt-color: #7b7b7b;
+	--table-dark-highlight-color: #000;
+	--table-light-highlight-color: #fee;
 
 	/* para cadastros no geral */
 	--male-light-color: lightblue;
@@ -63,14 +68,14 @@
 	--atendimento-a-ocorrer-medium-color: blue;
 	--atendimento-a-ocorrer-medium-light-color: #ddddff;
 	--atendimento-a-ocorrer-dark-color: darkblue;
-	--atendimento-presente-light-color: lightgreen;
-	--atendimento-presente-medium-color: green;
-	--atendimento-presente-medium-light-color: #ddffdd;
-	--atendimento-presente-dark-color: darkgreen;
-	--atendimento-ausente-light-color: pink;
-	--atendimento-ausente-medium-color: red;
-	--atendimento-ausente-medium-light-color: #ffdddd;
-	--atendimento-ausente-dark-color: darkred;
+	--atendimento-realizado-light-color: lightgreen;
+	--atendimento-realizado-medium-color: green;
+	--atendimento-realizado-medium-light-color: #ddffdd;
+	--atendimento-realizado-dark-color: darkgreen;
+	--atendimento-nao-realizado-light-color: pink;
+	--atendimento-nao-realizado-medium-color: red;
+	--atendimento-nao-realizado-medium-light-color: #ffdddd;
+	--atendimento-nao-realizado-dark-color: darkred;
 	--atendimento-em-andamento-light-color: #ddd;
 	--atendimento-em-andamento-medium-color: #777;
 	--atendimento-em-andamento-medium-light-color: #ccc;
@@ -93,7 +98,9 @@
 	--doc-a-color: #332211;
 
 	--table-bg-color: var(--table-light-color);
+	--table-bg-alt-color: var(--table-light-alt-color);
 	--table-text-color: var(--table-dark-color);
+	--table-highlight-color: var(--table-light-highlight-color);
 
 	/* para cadastros no geral */
 	--male-bg-color: var(--male-light-color);
@@ -125,14 +132,14 @@
 	--atendimento-a-ocorrer-shade-color: var(--atendimento-a-ocorrer-medium-color);
 	--atendimento-a-ocorrer-highlight-color: var(--atendimento-a-ocorrer-medium-light-color);
 	--atendimento-a-ocorrer-text-color: var(--atendimento-a-ocorrer-dark-color);
-	--atendimento-presente-bg-color: var(--atendimento-presente-light-color);
-	--atendimento-presente-shade-color: var(--atendimento-presente-medium-color);
-	--atendimento-presente-highlight-color: var(--atendimento-presente-medium-light-color);
-	--atendimento-presente-text-color: var(--atendimento-presente-dark-color);
-	--atendimento-ausente-bg-color: var(--atendimento-ausente-light-color);
-	--atendimento-ausente-shade-color: var(--atendimento-ausente-medium-color);
-	--atendimento-ausente-highlight-color: var(--atendimento-ausente-medium-light-color);
-	--atendimento-ausente-text-color: var(--atendimento-ausente-dark-color);
+	--atendimento-realizado-bg-color: var(--atendimento-realizado-light-color);
+	--atendimento-realizado-shade-color: var(--atendimento-realizado-medium-color);
+	--atendimento-realizado-highlight-color: var(--atendimento-realizado-medium-light-color);
+	--atendimento-realizado-text-color: var(--atendimento-realizado-dark-color);
+	--atendimento-nao-realizado-bg-color: var(--atendimento-nao-realizado-light-color);
+	--atendimento-nao-realizado-shade-color: var(--atendimento-nao-realizado-medium-color);
+	--atendimento-nao-realizado-highlight-color: var(--atendimento-nao-realizado-medium-light-color);
+	--atendimento-nao-realizado-text-color: var(--atendimento-nao-realizado-dark-color);
 	--atendimento-em-andamento-bg-color: var(--atendimento-em-andamento-light-color);
 	--atendimento-em-andamento-shade-color: var(--atendimento-em-andamento-medium-color);
 	--atendimento-em-andamento-highlight-color: var(--atendimento-em-andamento-medium-light-color);
@@ -148,6 +155,7 @@
 	--doc-text-color: #eee;
 	--doc-a-color: #ccddee;
 	--table-bg-color: var(--table-dark-color);
+	--table-bg-alt-color: var(--table-dark-alt-color);
 	--table-text-color: var(--table-light-color);
 
 	/* para cadastros no geral */
@@ -180,14 +188,14 @@
 	--atendimento-a-ocorrer-shade-color: var(--atendimento-a-ocorrer-dark-color);
 	--atendimento-a-ocorrer-highlight-color: var(--atendimento-a-ocorrer-dark-color);
 	--atendimento-a-ocorrer-text-color: var(--atendimento-a-ocorrer-light-color);
-	--atendimento-presente-bg-color: var(--atendimento-presente-medium-color);
-	--atendimento-presente-shade-color: var(--atendimento-presente-dark-color);
-	--atendimento-presente-highlight-color: var(--atendimento-presente-dark-color);
-	--atendimento-presente-text-color: var(--atendimento-presente-light-color);
-	--atendimento-ausente-bg-color: var(--atendimento-ausente-medium-color);
-	--atendimento-ausente-shade-color: var(--atendimento-ausente-dark-color);
-	--atendimento-ausente-highlight-color: var(--atendimento-ausente-dark-color);
-	--atendimento-ausente-text-color: var(--atendimento-ausente-light-color);
+	--atendimento-realizado-bg-color: var(--atendimento-realizado-medium-color);
+	--atendimento-realizado-shade-color: var(--atendimento-realizado-dark-color);
+	--atendimento-realizado-highlight-color: var(--atendimento-realizado-dark-color);
+	--atendimento-realizado-text-color: var(--atendimento-realizado-light-color);
+	--atendimento-nao-realizado-bg-color: var(--atendimento-nao-realizado-medium-color);
+	--atendimento-nao-realizado-shade-color: var(--atendimento-nao-realizado-dark-color);
+	--atendimento-nao-realizado-highlight-color: var(--atendimento-nao-realizado-dark-color);
+	--atendimento-nao-realizado-text-color: var(--atendimento-nao-realizado-light-color);
 	--atendimento-em-andamento-bg-color: var(--atendimento-em-andamento-medium-color);
 	--atendimento-em-andamento-shade-color: var(--atendimento-em-andamento-dark-color);
 	--atendimento-em-andamento-highlight-color: var(--atendimento-em-andamento-dark-color);
@@ -423,38 +431,124 @@ select option {
 }
 
 /* default table style */
+/* em inglês pra seguir o padrão da tag */
 table {
-	--default-padding: .5em;
+	--caption-position: top;
+
+	/* padding */
+	--default-padding: 1em;
+	--data-padding: var(--default-padding);
+	--row-padding: var(--default-padding);
+	--caption-padding: var(--default-padding);
+	--header-padding: var(--default-padding);
+
+	/* margin */
+	--default-margin: 0;
+	--data-margin: var(--default-margin);
+	--row-margin: var(--default-margin);
+	--caption-margin: var(--default-margin);
+	--header-margin: var(--default-margin);
+
+	/* fonts and text */
+	--caption-font: var(--doc-heading-font);
+	--caption-size: 1.5em;
+	--caption-align: center;
+	--caption-text-transform: uppercase;
+	--caption-weight: bold;
+	--caption-decoration: none;
+	--caption-font-style: normal;
+	--header-font: var(--doc-heading-font);
+	--header-size: 1em;
+	--header-align: center;
+	--header-text-transform: none;
+	--header-weight: bold;
+	--header-decoration: none;
+	--header-font-style: normal;
+	--data-font: var(--doc-text-font);
+	--data-align: left;
+	--data-text-transform: none;
+	--data-weight: normal;
+	--data-decoration: none;
+	--data-font-style: normal;
+
+	/* colors */
+	--caption-bg: var(--main-color);
+	--caption-color: var(--main-light-color);
+	--header-bg: var(--secondary-color);
+	--header-color: var(--main-light-color);
+	--data-bg: transparent;
+	--data-color: var(--doc-text-color);
+	--row-odd-bg: var(--table-bg-color);
+	--row-even-bg: var(--table-bg-alt-color);
+	--highlight-bg: var(--table-highlight-color);
+	--highlight-color: var(--doc-text-color);
+	width: 90%;
+	margin: auto;
 	box-shadow: .3em .3em 0 gray;
+	border-collapse: collapse;
+	caption-side: var(--caption-position);
+
 	& caption {
-		font-family: var(--doc-heading-font);
-		font-size: 1.5em;
-		text-transform: uppercase;
-		font-weight: bold;
-		margin-bottom: 1em;
+		background: var(--caption-bg);
+		font-family: var(--caption-font);
+		color: var(--caption-color);
+		font-size: var(--caption-size);
+		text-transform: var(--caption-text-transform);
+		font-weight: var(--caption-weight);
+		margin: var(--caption-margin);
+		padding: var(--caption-padding);
 	}
 
-	.resultado {
-		font-weight: bold;
-		text-align: right;
+
+	& tr {
+		--bg: var(--row-odd-bg);
+		--text-color: var(--table-text-color);
+		padding: var(--row-padding);
+		background: var(--bg);
+		&:nth-child(2n) {
+			--bg: var(--row-even-bg);
+		}
+		&:hover {
+			--bg: var(--highlight-bg);
+		}
+	}
+
+	& th {
+		text-align: var(--header-align);
+		padding: var(--header-padding);
+		font-size: var(--header-size);
+		font-family: var(--header-font);
+		font-weight: var(--header-weight);
+		text-decoration: var(--header-decoration);
+		text-transform: var(--header-text-transform);
+		font-style: var(--header-font-style);
+		background: var(--header-bg);
+		color: var(--header-color);
+	}
+
+	& td {
+		text-align: var(--data-align);
+		font-family: var(--data-font);
+		font-weight: var(--data-weight);
+		text-decoration: var(--data-decoration);
+		text-transform: var(--data-text-transform);
+		font-style: var(--data-font-style);
+		padding: var(--data-padding);
+		margin: var(--data-margin);
+		color: var(--data-color);
 	}
 
 	.dinheiro {
-		font-style: italic;
-		text-align: right;
+		--data-align: right;
+		--data-font-style: italic;
 	}
-}
-tr {
-	--bg-color: var(--table-bg-color);
-	--text-color: var(--table-text-color);
-	padding: 1em .5em 1em .5em;
-}
-th {
-	padding: var(--default-padding);
-	font-family: var(--doc-heading-font);
-}
-td {
-	padding: var(--default-padding);
+
+	.resultado {
+		--data-align: right;
+		--data-weight: bold;
+		--data-font-style: italic;
+		--data-decoration: underline;
+	}
 }
 
 /* navbar */
@@ -478,7 +572,7 @@ td {
 				text-align: center;
 				color: var(--main-light-color);
 				&:hover {
-					background-color: var(--secondary-color);
+					background: var(--secondary-color);
 				}
 			}
 		}

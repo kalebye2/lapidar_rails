@@ -40,20 +40,20 @@
 	}
 }
 
-.atendimento-presente {
-	--bg-color: var(--atendimento-presente-bg-color);
-	--border-color: var(--atendimento-presente-shade-color);
-	--shade-color: var(--atendimento-presente-shade-color);
-	--highlight-color: var(--atendimento-presente-highlight-color);
-	--text-color: var(--atendimento-presente-text-color);
+.atendimento-realizado {
+	--bg-color: var(--atendimento-realizado-bg-color);
+	--border-color: var(--atendimento-realizado-shade-color);
+	--shade-color: var(--atendimento-realizado-shade-color);
+	--highlight-color: var(--atendimento-realizado-highlight-color);
+	--text-color: var(--atendimento-realizado-text-color);
 }
 
-.atendimento-ausente {
-	--bg-color: var(--atendimento-ausente-bg-color);
-	--border-color: var(--atendimento-ausente-shade-color);
-	--shade-color: var(--atendimento-ausente-shade-color);
-	--highlight-color: var(--atendimento-ausente-highlight-color);
-	--text-color: var(--atendimento-ausente-text-color);
+.atendimento-nao-realizado {
+	--bg-color: var(--atendimento-nao-realizado-bg-color);
+	--border-color: var(--atendimento-nao-realizado-shade-color);
+	--shade-color: var(--atendimento-nao-realizado-shade-color);
+	--highlight-color: var(--atendimento-nao-realizado-highlight-color);
+	--text-color: var(--atendimento-nao-realizado-text-color);
 }
 
 .atendimento-futuro, .atendimento-a-ocorrer {
@@ -72,23 +72,18 @@
 	--text-color: var(--atendimento-em-breve-text-color);
 }
 
-.table-atendimento {
-	border-collapse: collapse;
-	width: 100%;
-
-	th {
-		font-family: var(--doc-heading-font);
-		background-color: var(--acompanhamento-em-andamento-bg-color);
-		color: var(--acompanhamento-em-andamento-text-color);
-		padding: .7em;
-		text-transform: uppercase;
-
-	}
+.tabela-atendimentos {
+	--header-bg: var(--acompanhamento-em-andamento-bg-color);
+	--header-color: var(--acompanhamento-em-andamento-color);
+	--header-padding: .7em;
+	--header-text-transform: uppercase;
+	--data-padding: 1em;
+	--data-align: center;
 }
 
 
 .tr-atendimento {
-	--bg-color: transparent;
+	--bg-color: white;
 	--text-color: black;
 	background-color: var(--bg-color);
 	color: var(--text-color);
@@ -99,6 +94,8 @@
 		padding: .5em;
 		color: var(--text-color);
 		text-decoration: underline;
+		border-radius: 1em;
+		display: block;
 		&:hover {
 			color: var(--bg-color);
 			background-color: var(--text-color);
@@ -106,14 +103,14 @@
 	}
 }
 
-.tr-atendimento-presente {
-	--bg-color: var(--atendimento-presente-bg-color);
-	--text-color: var(--atendimento-presente-text-color);
+.tr-atendimento-realizado {
+	--bg-color: var(--atendimento-realizado-bg-color);
+	--text-color: var(--atendimento-realizado-text-color);
 }
 
-.tr-atendimento-ausente {
-	--bg-color: var(--atendimento-ausente-bg-color);
-	--text-color: var(--atendimento-ausente-text-color);
+.tr-atendimento-nao-realizado {
+	--bg-color: var(--atendimento-nao-realizado-bg-color);
+	--text-color: var(--atendimento-nao-realizado-text-color);
 }
 
 .tr-atendimento-futuro, .tr-atendimento-a-ocorrer {
