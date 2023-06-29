@@ -1,0 +1,47 @@
+<% if !laudo.nil? %>
+  <%= form_for laudo, local: true do |form| %>
+    <div class="field">
+      <%= form.label :acompanhamento %>
+      <%= form.select :acompanhamento_id, Acompanhamento.joins(:pessoa).order("pessoas.nome" => :asc, "pessoas.sobrenome" => :asc).map { |a| [a.render_info_para_profissional, a.id] } %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Interessado" %>
+      <%= form.text_field :interessado, style: "width:50em;" %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Data da avaliação" %>
+      <%= form.date_field :data_avaliacao %>
+    </div>
+
+    <div class="field">
+      <%= form.label :finalidade %>
+      <%= form.text_field :finalidade, style: "width:50em;" %>
+    </div>
+
+    <div class="field">
+      <%= form.label :demanda %>
+      <%= form.text_field :demanda, style: "width:50em;" %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Técnicas" %>
+      <%= form.text_area :tecnicas, size: "50x20" %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Análise" %>
+      <%= form.text_area :analise, size: "50x20" %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Conclusão" %>
+      <%= form.text_area :conclusao, size: "50x20" %>
+    </div>
+
+    <div class="action">
+      <%= form.submit %>
+    </div>
+  <% end %>
+<% end %>

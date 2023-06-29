@@ -1,0 +1,66 @@
+<% titulo "Laudo" %>
+<h1>Ver laudo</h1>
+<%= link_to "editar", edit_laudo_path(@laudo) %>
+
+<table style="width:90%;margin:auto;">
+  <caption><%= @laudo.finalidade %> por <%= @laudo.profissional.nome_abreviado %></caption>
+  <thead>
+    <tr>
+      <th colspan=2>Identificação</th>
+    </tr>
+
+    <tr>
+      <th>Avaliador</th>
+      <td><%= @laudo.profissional.nome_completo %></td>
+    </tr>
+
+    <tr>
+      <th>Nome do paciente</th>
+      <td><%= @laudo.paciente.nome_completo %></td>
+    </tr>
+
+    <tr>
+      <th>Sexo</th>
+      <td><%= @laudo.paciente.render_sexo %></td>
+    </tr>
+
+    <tr>
+      <th>Idade na avaliação</th>
+      <td><%= @laudo.paciente.render_idade(@laudo.data_avaliacao) %></td>
+    </tr>
+
+    <tr>
+      <th>Interessado</th>
+      <td><%= @laudo.interessado || @laudo.paciente.nome_completo %></td>
+    </tr>
+
+    <tr>
+      <th>Finalidade da avaliação</th>
+      <td><%= @laudo.finalidade %></td>
+    </tr>
+
+    <tr>
+      <th>Demanda</th>
+      <td><%= @laudo.demanda || "Não definida" %></td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th colspan=2>Informações</th>
+    </tr>
+    <tr>
+      <th>Técnicas utilizadas</th>
+      <td><%= @laudo.tecnicas %></td>
+    </tr>
+
+    <tr>
+      <th>Análise</th>
+      <td><%= @laudo.analise %></td>
+    </tr>
+
+    <tr>
+      <th>Conclusão</th>
+      <td><%= @laudo.conclusao %></td>
+    </tr>
+  </tbody>
+</table>
