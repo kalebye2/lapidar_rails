@@ -1,0 +1,2 @@
+class InfantojuvenilAnamneseSexualidade < ApplicationRecord
+end

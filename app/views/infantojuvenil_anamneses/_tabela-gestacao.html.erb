@@ -1,0 +1,139 @@
+<% cl = "tabela-infantojuvenil-anamnese-gestacao" %>
+<tr>
+  <th colspan=2 class="<%= cl %>">Gestação e nascimento</th>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Gestação foi desejada?</th>
+  <td class="<%= cl %>"><%= gestacao.foi_desejada? %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Idade da mãe</th>
+  <td class="<%= cl %>"><%= gestacao.idade_mae %> anos</td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Idade do pai</th>
+  <td class="<%= cl %>"><%= gestacao.idade_pai %> anos</td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Irmãos mais velhos</th>
+  <td class="<%= cl %>"><%= gestacao.irmaos_mais_velhos %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Irmãos mais novos</th>
+  <td class="<%= cl %>"><%= gestacao.irmaos_mais_novos %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Com quantos meses após a gestação anterior a criança foi concebida?</th>
+  <td class="<%= cl %>"><%= gestacao.gestacao_anterior_meses ? "#{gestacao.gestacao_anterior_meses} meses" : "Não informado" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Abortos anteriores (espontâneos e/ou intencionais)</th>
+  <td class="<%= cl %>"><%= gestacao.abortos_anteriores %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Data do pré-natal</th>
+  <td class="<%= cl %>"><%= gestacao.data_pre_natal ? render_data_brasil(gestacao.data_pre_natal) : "Não informada" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Como era a saúde da mãe durante a gestação?</th>
+  <td class="<%= cl %>"><%= gestacao.mae_saude %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Quais foram as sensações sentidas pela mãe durante a gestação?</th>
+  <td class="<%= cl %>"><%= gestacao.mae_sensacoes || "Sem informações" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Houve internações da mãe durante a gravidez?</th>
+  <td class="<%= cl %>"><%= gestacao.mae_internacoes || "Sem informações" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">A mãe sentiu enjoos?</th>
+  <td class="<%= cl %>"><%= gestacao.mae_enjoos || "Sem informações" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">A mãe vomitou durante a gravidez?</th>
+  <td class="<%= cl %>"><%= gestacao.mae_vomitos || "Sem informações" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">A mãe teve diabetes durante a gravidez?</th>
+  <td class="<%= cl %>"><%= gestacao.mae_diabetes || "Sem informações" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">A mãe sofreu traumatismos durante a gravidez?</th>
+  <td class="<%= cl %>"><%= gestacao.mae_traumatismo || "Sem informações" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">A mãe teve convulsões durante a gravidez?</th>
+  <td class="<%= cl %>"><%= gestacao.mae_convulsoes || "Sem informações" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">A mãe chegou a tomar medicamentos durante a gravidez?</th>
+  <td class="<%= cl %>"><%= gestacao.mae_medicamentos || "Sem informações" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Local do parto</th>
+  <td class="<%= cl %>"><%= gestacao.parto_local.local || "Sem informações" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Tipo de parto</th>
+  <td class="<%= cl %>"><%= gestacao.parto_tipo.descricao || "Sem informações" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Peso da criança ao nascer</th>
+  <td class="<%= cl %>"><%= gestacao.nascimento_peso_g ? "#{number_to_currency(gestacao.nascimento_peso_g, precision: 0, delimiter: ".", unit: "")}g" : "Sem informações" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Comprimento da criança ao nascer</th>
+  <td class="<%= cl %>"><%= gestacao.nascimento_comprimento_cm ? "#{number_to_currency(gestacao.nascimento_comprimento_cm, precision: 0, delimiter: ".", unit: "")}cm" : "Sem informações" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Duração da gestação</th>
+  <td class="<%= cl %>"><%= gestacao.gestacao_semanas ? "#{gestacao.gestacao_semanas} semanas" : "Sem informações" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Condições da criança ao nascer</th>
+  <td class="<%= cl %>"><%= gestacao.nascimento_crianca_condicoes || "Sem informações" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Reação da mãe ao nascimento da criança</th>
+  <td class="<%= cl %>"><%= gestacao.nascimento_reacao_mae || "Sem informações" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Reação do pai ao nascimento da criança</th>
+  <td class="<%= cl %>"><%= gestacao.nascimento_reacao_pai || "Sem informações" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Reação dos irmãos ao nascimento da criança</th>
+  <td class="<%= cl %>"><%= gestacao.nascimento_reacao_irmaos || "Sem informações" %></td>
+</tr>
+
+<tr>
+  <th class="<%= cl %>">Desenvolvimento do parto</th>
+  <td class="<%= cl %>"><%= gestacao.desenvolvimento_parto || "Sem informações" %></td>
+</tr>

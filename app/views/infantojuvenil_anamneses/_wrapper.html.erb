@@ -1,0 +1,31 @@
+<div class="infantojuvenil-anamnese-wrapper">
+  <div class="infantojuvenil-anamnese-conteudo infantojuvenil-anamnese-dados-principais">
+    <h2>
+      <%= infantojuvenil_anamnese.pessoa.nome_completo %>
+    </h2>
+    <div class="infantojuvenil-anamnese-dados-principais">
+      <h3>Dados principais</h3>
+      <p><strong>Responsável:</strong>
+      <%= infantojuvenil_anamnese.pessoa_responsavel.nome_completo %>
+      (<%= infantojuvenil_anamnese.pessoa_responsavel.render_idade %>)
+      </p>
+      <p><strong>Profissional:</strong>
+        <%= infantojuvenil_anamnese.profissional.descricao_completa %>
+      </p>
+      <p><strong>Motivo da consulta:</strong>
+        <%= infantojuvenil_anamnese.motivo_consulta %>
+      </p>
+      <p><strong>Diagnóstico preliminar:</strong>
+        <%= infantojuvenil_anamnese.diagnostico_preliminar %>
+      </p>
+      <p><strong>Plano de tratamento:</strong>
+        <%= infantojuvenil_anamnese.plano_tratamento %>
+      </p>
+      <p><strong>Prognóstico:</strong>
+        <%= infantojuvenil_anamnese.prognostico %>
+      </p>
+      <%= infantojuvenil_anamnese.attributes.keys %>
+    </div>
+  </div>
+  <%= render "gestacao-card", gestacao: @gestacao %>
+</div>

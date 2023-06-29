@@ -1,0 +1,2 @@
+class InfantojuvenilAnamneseSocioafetividade < ApplicationRecord
+end

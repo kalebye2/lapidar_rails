@@ -1,0 +1,8 @@
+<% titulo "Anamneses infantojuvenis" %>
+<h1>Anamneses infantojuvenis</h1>
+
+<div class="infantojuvenil-anamneses-container">
+  <% @infantojuvenil_anamneses.each do |anamnese| %>
+    <%= render "card", infantojuvenil_anamnese: anamnese %>
+  <% end %>
+</div>

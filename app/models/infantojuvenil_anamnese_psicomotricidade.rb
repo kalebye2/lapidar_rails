@@ -1,0 +1,2 @@
+class InfantojuvenilAnamnesePsicomotricidade < ApplicationRecord
+end

@@ -1,0 +1,55 @@
+<% if !gestacao.nil? %>
+  <div class="infantojuvenil-anamnese-conteudo infantojuvenil-anamnese-gestacao">
+    <h3>Gestação e nascimento</h3>
+
+    <p><strong>Gestação desejada?</strong>
+    <%= gestacao.foi_desejada? %>
+    </p>
+
+    <p><strong>Idade da mãe:</strong>
+    <%= gestacao.idade_mae %> anos
+    </p>
+
+    <p><strong>Idade do pai:</strong>
+    <%= gestacao.idade_pai %> anos
+    </p>
+
+    <p><strong>Irmãos mais velhos:</strong>
+    <%= gestacao.irmaos_mais_velhos %>
+    </p>
+
+    <p><strong>Irmãos mais novos:</strong>
+    <%= gestacao.irmaos_mais_novos %>
+    </p>
+
+    <p><strong>Quantos meses depois da última gestação ocorreu a concepção?</strong>
+    <%= gestacao.gestacao_anterior_meses ? "#{gestacao.gestacao_anterior_meses} meses" : "Não informado" %>
+    </p>
+
+    <p><strong>Quantos abortos ocorreram anteriormente (espontâneos ou intencionais)?</strong>
+    <%= gestacao.abortos_anteriores %>
+    </p>
+
+    <p><strong>Data do pré-natal:</strong>
+    <%= gestacao.data_pre_natal ? render_data_brasil(gestacao.data_pre_natal) : "Não informado" %>
+    </p>
+
+    <p><strong>Como estava a saúde da mãe durante a concepção?</strong>
+    <%= gestacao.mae_saude || "Não informado" %>
+    </p>
+
+    <p><strong>Quais foram as sensações da mãe durante a gravidez?</strong>
+    <%= gestacao.mae_sensacoes || "Não informado" %>
+    </p>
+
+    <p><strong>A mãe foi internada durante a gravidez?</strong>
+    <%= gestacao.mae_internacoes || "Não informado" %>
+    </p>
+
+    <p><strong>A mãe teve enjoos durante a gravidez?</strong>
+    <%= gestacao.mae_internacoes || "Não informado" %>
+    </p>
+
+    <p><%= gestacao.attributes.keys %></p>
+  </div>
+<% end %>

@@ -1,0 +1,2 @@
+class InfantojuvenilAnamneseManipulacao < ApplicationRecord
+end

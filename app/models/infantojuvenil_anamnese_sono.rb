@@ -1,0 +1,2 @@
+class InfantojuvenilAnamneseSono < ApplicationRecord
+end

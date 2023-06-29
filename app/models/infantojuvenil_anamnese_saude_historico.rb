@@ -1,0 +1,2 @@
+class InfantojuvenilAnamneseSaudeHistorico < ApplicationRecord
+end

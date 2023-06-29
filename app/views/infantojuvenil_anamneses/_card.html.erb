@@ -1,0 +1,17 @@
+<% if infantojuvenil_anamnese != nil %>
+  <%= link_to infantojuvenil_anamnese, {class: "infantojuvenil-anamnese-card"} do %>
+  <div class="infantojuvenil-anamnese-card">
+    <h2><%= infantojuvenil_anamnese.pessoa.nome_abreviado %></h2>
+    <h3>Responsável:
+      <%= infantojuvenil_anamnese.pessoa_responsavel.nome_abreviado %>
+    </h3>
+    <p>Realizado por:
+    <%= infantojuvenil_anamnese.profissional.nome_abreviado %>
+    em
+    <%= render_data_brasil infantojuvenil_anamnese.atendimento.data %>
+    às
+    <%= render_hora_brasil infantojuvenil_anamnese.atendimento.horario %>
+    </h4>
+  </p>
+  <% end %>
+<% end %>

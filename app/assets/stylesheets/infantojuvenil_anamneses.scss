@@ -1,0 +1,26 @@
+.infantojuvenil-anamnese-tabela {
+	th {
+		text-align: right;
+		background-color: #e7e7e7;
+
+		&[colspan="2"] {
+			font-size: 2em;
+			text-align: center;
+		}
+		&.tabela-infantojuvenil-anamnese-gestacao {
+			background-color: pink;
+		}
+	}
+
+	td {
+		&.tabela-infantojuvenil-anamnese-gestacao {
+			background-color: #fee;
+		}
+	}
+	border-collapse: collapse;
+	background-color: #f9f9f9;
+}
+
+th {
+}
+

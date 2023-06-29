@@ -1,0 +1,2 @@
+module InfantojuvenilAnamnesesHelper
+end

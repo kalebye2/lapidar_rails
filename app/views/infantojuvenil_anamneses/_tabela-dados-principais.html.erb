@@ -1,0 +1,64 @@
+<thead>
+  <tr>
+    <th colspan=2>Dados principais</th>
+  </tr>
+
+  <tr>
+    <th>Paciente</th>
+    <td><%= infantojuvenil_anamnese.pessoa.nome_completo %></td>
+  </tr>
+
+  <tr>
+    <th>Data de nascimento</th>
+    <td><%= render_data_brasil infantojuvenil_anamnese.pessoa.data_nascimento %></td>
+  </tr>
+
+  <tr>
+    <th>Idade na anamnese</th>
+    <td><%= infantojuvenil_anamnese.pessoa.render_idade(infantojuvenil_anamnese.atendimento.data) %></td>
+  </tr>
+
+  <tr>
+    <th>Sexo</th>
+    <td><%= infantojuvenil_anamnese.pessoa.render_sexo %></td>
+  </tr>
+
+  <tr>
+    <th>Responsável legal</th>
+    <td>
+      <%= infantojuvenil_anamnese.pessoa_responsavel.nome_completo %>
+      <%= infantojuvenil_anamnese.pessoa_responsavel.render_sexo_sigla %>
+    </td>
+  </tr>
+
+  <tr>
+    <th>Serviço procurado</th>
+    <td><%= infantojuvenil_anamnese.acompanhamento.tipo.upcase %></td>
+  </tr>
+
+  <tr>
+    <th>Profissional</th>
+    <td><%= infantojuvenil_anamnese.profissional.descricao_completa %></td>
+  </tr>
+
+  <tr>
+    <th>Motivo da consulta</th>
+    <td><%= infantojuvenil_anamnese.motivo_consulta %></td>
+  </tr>
+
+  <tr>
+    <th>Hipótese diagnóstica</th>
+    <td><%= infantojuvenil_anamnese.diagnostico_preliminar %></td>
+  </tr>
+
+  <tr>
+    <th>Plano de tratamento</th>
+    <td><%= infantojuvenil_anamnese.plano_tratamento %></td>
+  </tr>
+
+  <tr>
+    <th>Prognóstico</th>
+    <td><%= infantojuvenil_anamnese.prognostico %></td>
+  </tr>
+
+</thead>

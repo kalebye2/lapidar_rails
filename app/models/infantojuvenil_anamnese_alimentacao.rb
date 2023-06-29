@@ -1,0 +1,2 @@
+class InfantojuvenilAnamneseAlimentacao < ApplicationRecord
+end
