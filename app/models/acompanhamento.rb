@@ -8,7 +8,11 @@ class Acompanhamento < ApplicationRecord
 
   has_many :atendimento
   has_many :atendimento_valor, through: :atendimento
+  has_many :instrumento_relatos, through: :atendimento
+  has_many :instrumentos_aplicados, through: :instrumento_relatos, source: :instrumento
   has_many :recebimento
+
+  has_many :laudos
 
   def render_info_para_profissional
     p = pessoa
@@ -26,9 +30,21 @@ class Acompanhamento < ApplicationRecord
     return "#{p.nome_abreviado} #{p.render_sexo_sigla} #{if r then 'respondido por ' + r.nome_abreviado + ')' end} - #{profissional.nome_abreviado} (#{tipo.to_s.upcase} com início em #{data_inicio.strftime("%d/%m/%Y")})"
   end
 
+  def paciente
+    pessoa
+  end
+
+  def responsavel_legal
+    pessoa_responsavel
+  end
+
   def tipo upper: false, titulo: false, lower: false
     t = acompanhamento_tipo.tipo
     upper ? t.upcase : titulo ? t.titleize : lower ? t.downcase : t
+  end
+
+  def instrumentos_aplicados_ate(data = Date.today)
+    instrumentos_aplicados.where("atendimentos.data" => [..data])
   end
 
   def self.em_andamento

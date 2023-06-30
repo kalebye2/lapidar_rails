@@ -1,7 +1,19 @@
 .tabela-valores, .tabela-recebimentos, .tabela-gastos, .tabela-repasses {
+	--caption-size: .7em;
+	--caption-align: left;
 	--caption-bg: darkgreen;
 	--header-bg: green;
+	--header-size: .7em;
+	--header-padding: .3em;
+	--data-padding: .2em;
+	--data-size: .8em;
 	--row-odd-bg: white;
 	--row-even-bg: #ddffdd;
 	--highlight-bg: lightgreen;
+}
+
+.financeiro-tabelas {
+	padding: .5em;
+	margin-left: auto;
+	margin-right: auto;
 }

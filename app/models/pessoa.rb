@@ -13,6 +13,8 @@ class Pessoa < ApplicationRecord
   # quando o cadastro for de um paciente
   has_many :acompanhamentos
   has_many :atendimentos, through: :acompanhamentos
+  has_many :instrumento_relatos, through: :atendimentos
+  has_many :instrumentos_aplicados, through: :instrumento_relatos, source: :instrumento
   has_many :profissionais_acompanhando, class_name: "Profissional", through: :acompanhamento, source: :profissional
   has_many :devolutivas, class_name: "PessoaDevolutiva", foreign_key: :pessoa_id
   has_many :laudo, through: :acompanhamento

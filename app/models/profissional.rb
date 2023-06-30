@@ -8,6 +8,8 @@ class Profissional < ApplicationRecord
   has_many :recebimento, through: :acompanhamento
   has_many :atendimento_valor, through: :atendimento
   has_many :repasse, class_name: "ProfissionalFinanceiroRepasse"
+  has_many :instrumento_relatos, through: :atendimento
+  has_many :instrumentos_que_aplicou, through: :instrumento_relatos, source: :instrumento
 
   has_many :profissional_documento_modelo
 

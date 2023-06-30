@@ -489,6 +489,7 @@ table {
 	caption-side: var(--caption-position);
 
 	& caption {
+		text-align: var(--caption-align);
 		background: var(--caption-bg);
 		font-family: var(--caption-font);
 		color: var(--caption-color);
@@ -533,6 +534,7 @@ table {
 		text-decoration: var(--data-decoration);
 		text-transform: var(--data-text-transform);
 		font-style: var(--data-font-style);
+		font-size: var(--data-size);
 		padding: var(--data-padding);
 		margin: var(--data-margin);
 		color: var(--data-color);
