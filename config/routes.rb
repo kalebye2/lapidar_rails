@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   get 'financeiro/repasse_profissionais'
 
   resources :instrumento_relatos
+  resources :infantojuvenil_anamneses
+  resources :biblioteca_obras
   
   scope :financeiro do
     resources :atendimento_valores
@@ -23,6 +25,7 @@ Rails.application.routes.draw do
     end
   end
   resources :pessoa_devolutivas
+  resources :laudos
   resources :crp_regioes
   resources :profissional_notas
   #resources :pessoas
@@ -46,6 +49,8 @@ Rails.application.routes.draw do
   end
   resources :relatos
   resources :pessoa_extra_informacoes
+
+  resources :profissional_documento_modelos
 
   root to: "application#index"
   get '/financeiro', to: "financeiro#index"
