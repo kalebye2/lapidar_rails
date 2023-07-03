@@ -91,6 +91,28 @@ class AcompanhamentosController < ApplicationController
     end
   end
 
+  def new_atendimento_proxima_semana
+    @acompanhamento = Acompanhamento.find(params[:acompanhamento_id])
+    semanas_pra_passar = 4 / @acompanhamento.sessoes_atuais
+
+    au = @acompanhamento.atendimento.last
+    atendimento = @acompanhamento.atendimento.new
+    auvalor = au.atendimento_valor
+    avalor = atendimento.build_atendimento_valor
+    atendimento.data = au.data + semanas_pra_passar.week
+    atendimento.horario = au.horario
+    atendimento.modalidade_id = au.modalidade_id
+    atendimento.atendimento_local_id = au.atendimento_local_id
+    atendimento.atendimento_tipo_id = au.atendimento_tipo_id
+    avalor.valor = @acompanhamento.valor_atual
+    avalor.taxa_porcentagem_interna = auvalor.taxa_porcentagem_interna
+    avalor.taxa_porcentagem_externa = auvalor.taxa_porcentagem_externa
+
+    atendimento.save!
+    avalor.save!
+    #atendimento = @acompanhamento.atendimento.create(data: au.data + 7.day, horario: au.horario, modalidade_id: au.modalidade_id, atendimento_local_id: au.atendimento_local_id, atendimento_tipo_id: au.atendimento_tipo_id)
+    redirect_to @acompanhamento, notice: "Novo atendimento registrado"
+  end
 
   private
 
@@ -105,5 +127,4 @@ class AcompanhamentosController < ApplicationController
   def dados_atendimento_pdf at
     return "#{at.data.strftime('%d/%m/%Y')}\n#{(at.consideracoes || 'Sem considerações')}"
   end
-
 end

@@ -3,7 +3,7 @@
 <%= link_to "editar", edit_laudo_path(@laudo) %>
 
 <table style="width:90%;margin:auto;">
-  <caption><%= @laudo.finalidade %> por <%= @laudo.profissional.nome_abreviado %></caption>
+  <caption><%= @laudo.finalidade %> por <%= @laudo.profissional.nome_abreviado %> - <%= @laudo.profissional.funcao %> <%= @laudo.profissional.documento %></caption>
   <thead>
     <tr>
       <th colspan=2>Identificação</th>
@@ -25,6 +25,11 @@
     </tr>
 
     <tr>
+      <th>Data da avaliação</th>
+      <td><%= render_data_brasil @laudo.data_avaliacao %></td>
+    </tr>
+
+    <tr>
       <th>Idade na avaliação</th>
       <td><%= @laudo.paciente.render_idade(@laudo.data_avaliacao) %></td>
     </tr>
@@ -41,7 +46,7 @@
 
     <tr>
       <th>Demanda</th>
-      <td><%= @laudo.demanda || "Não definida" %></td>
+      <td><%== Kramdown::Document.new(@laudo.demanda).to_html || "Não definida" %></td>
     </tr>
   </thead>
   <tbody>
@@ -50,17 +55,17 @@
     </tr>
     <tr>
       <th>Técnicas utilizadas</th>
-      <td><%= @laudo.tecnicas %></td>
+      <td><%== Kramdown::Document.new(@laudo.tecnicas).to_html %></td>
     </tr>
 
     <tr>
       <th>Análise</th>
-      <td><%= @laudo.analise %></td>
+      <td><%== Kramdown::Document.new(@laudo.analise).to_html %></td>
     </tr>
 
     <tr>
       <th>Conclusão</th>
-      <td><%= @laudo.conclusao %></td>
+      <td><%== Kramdown::Document.new(@laudo.conclusao).to_html %></td>
     </tr>
   </tbody>
 </table>

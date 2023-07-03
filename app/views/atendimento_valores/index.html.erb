@@ -1,26 +1,84 @@
 <%= titulo "Valores de atendimentos" %>
-<h1>Valores de atendimentos</h1>
+<h1>Valores de atendimentos - <%= t('date.month_names')[@mes.to_i] %>/<%= @ano %></h1>
 
-<table style="width:100%;">
+<%= form_with url: atendimento_valores_path, local: true, method: :get do |form| %>
+  <%= form.select :mes,
+    [1,2,3,4,5,6,7,8,9,10,11,12].map { |i| [t('date.month_names')[i], i] }, selected: @mes %>
+  <% anos = [] %>
+  <% ano_atual = Date.today.year %>
+  <% while ano_atual != Atendimento.minimum(:data).year - 1 do %>
+    <% anos << ano_atual %>
+    <% ano_atual -=1 %>
+  <% end %>
+  <%= form.select :ano, anos, selected: @ano %>
+  <%= form.submit %>
+<% end %>
+
+<%= link_to "CSV", { url: atendimento_valores_path, format: :csv } %>
+
+<table class="tabela-valores">
   <thead>
     <tr>
       <th rowspan=2>Paciente</th>
       <th rowspan=2>Atendimento</th>
-      <th rowspan=2>Valor</th>
-      <th colspan=2>Taxas</th>
+      <th colspan=3>Dados</th>
+      <th colspan=3>Taxas</th>
+      <th rowspan=2>Total líquido</th>
     </tr>
     <tr>
+      <th>Valor</th>
+      <th>Desconto</th>
+      <th>Valor com desconto</th>
       <th>Externa</th>
       <th>Clínica</th>
+      <th>Total</th>
     </tr>
   </thead>
+  <% soma_valores = {
+    bruto: 0,
+    desconto: 0,
+    bruto_com_desconto: 0,
+    taxa_externa: 0,
+    taxa_interna: 0,
+    taxa_total: 0,
+    liquido: 0,
+  } %>
 <% @atendimento_valores.each do |atendimento_valor| %>
   <tr>
+    <% valor_bruto_com_desconto = atendimento_valor.valor - atendimento_valor.desconto %>
+    <% valor_taxa_total = (atendimento_valor.valor * atendimento_valor.taxa_porcentagem_externa / 10000) + (atendimento_valor.valor * atendimento_valor.taxa_porcentagem_interna / 10000) %>
     <td><%= atendimento_valor.pessoa.nome_completo %></td>
     <td><%= render_data_brasil atendimento_valor.data %></td>
-    <td><%= render_dinheiro_centavos atendimento_valor.valor %></td>
-    <td><%= render_dinheiro_centavos(atendimento_valor.valor * atendimento_valor.taxa_porcentagem_externa / 10000) %></td>
-    <td><%= render_dinheiro_centavos(atendimento_valor.valor * atendimento_valor.taxa_porcentagem_interna / 10000) %></td>
+
+    <td class="dinheiro"><%= render_dinheiro_centavos atendimento_valor.valor %></td>
+    <% soma_valores[:bruto] += atendimento_valor.valor %>
+
+    <td class="dinheiro"><%= render_dinheiro_centavos atendimento_valor.desconto %></td>
+    <% soma_valores[:desconto] += atendimento_valor.desconto %>
+
+    <td class="dinheiro resultado"><%= render_dinheiro_centavos atendimento_valor.valor - atendimento_valor.desconto %></td>
+    <% soma_valores[:bruto_com_desconto] += atendimento_valor.valor - atendimento_valor.desconto %>
+
+    <td class="dinheiro"><%= render_dinheiro_centavos(atendimento_valor.valor * atendimento_valor.taxa_porcentagem_externa / 10000) %></td>
+    <% soma_valores[:taxa_externa] += atendimento_valor.valor * atendimento_valor.taxa_porcentagem_externa / 10000 %>
+
+    <td class="dinheiro"><%= render_dinheiro_centavos(atendimento_valor.valor * atendimento_valor.taxa_porcentagem_interna / 10000) %></td>
+    <% soma_valores[:taxa_interna] += atendimento_valor.valor * atendimento_valor.taxa_porcentagem_interna / 10000 %>
+
+    <td class="dinheiro"><%= render_dinheiro_centavos valor_taxa_total %></td>
+    <% soma_valores[:taxa_total] += valor_taxa_total %>
+
+    <td class="dinheiro resultado"><%= render_dinheiro_centavos valor_bruto_com_desconto - valor_taxa_total %></td>
+    <% soma_valores[:liquido] += valor_bruto_com_desconto - valor_taxa_total %>
+
   </tr>
 <% end %>
+  <th colspan=2 class="resultado">Total</th>
+  <td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:bruto] %></td>
+  <td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:desconto] %></td>
+  <td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:bruto_com_desconto] %></td>
+  <td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:taxa_externa] %></td>
+  <td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:taxa_interna] %></td>
+  <td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:taxa_total] %></td>
+  <td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:liquido] %></td>
 </table>

@@ -17,7 +17,7 @@ class Pessoa < ApplicationRecord
   has_many :instrumentos_aplicados, through: :instrumento_relatos, source: :instrumento
   has_many :profissionais_acompanhando, class_name: "Profissional", through: :acompanhamento, source: :profissional
   has_many :devolutivas, class_name: "PessoaDevolutiva", foreign_key: :pessoa_id
-  has_many :laudo, through: :acompanhamento
+  has_many :laudos, through: :acompanhamentos
   # quando o cadastro for de um resopnsável
   has_many :acompanhamentos_responsavel, class_name: "Acompanhamento", foreign_key: :pessoa_responsavel_id
   has_many :profissionais_a_quem_responde, class_name: "Profissional", through: :acompanhamento_responsavel, source: :profissional

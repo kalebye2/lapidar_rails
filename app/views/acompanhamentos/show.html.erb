@@ -19,6 +19,7 @@
 <p><%= @acompanhamento.data_final ? (render_data_brasil @acompanhamento.data_final) : "Em andamento" %><%= @acompanhamento.acompanhamento_finalizacao_motivo ? " (finalização por #{@acompanhamento.acompanhamento_finalizacao_motivo.motivo})" : "" %></p>
 
 <%= link_to "+ Atendimento", new_atendimento_path, data: { "turbo_frame" => "modal" }%>
+<%= button_to "Adicionar atendimento para próxima semana", acompanhamento_new_atendimento_proxima_semana_path(@acompanhamento) %>
 
 <p>Valor da sessão: <%= render_dinheiro_centavos @acompanhamento.valor_atual %></p>
 

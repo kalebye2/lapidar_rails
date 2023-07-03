@@ -40,7 +40,9 @@ Rails.application.routes.draw do
   end
   resources :paises
   resources :continentes
-  resources :acompanhamentos
+  resources :acompanhamentos do
+    post :new_atendimento_proxima_semana, path: 'novo_atendimento_proxima_semana'
+  end
   resources :atendimentos do
     member do
       post :reagendar_para_proxima_semana

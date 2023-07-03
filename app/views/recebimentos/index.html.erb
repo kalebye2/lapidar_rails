@@ -12,7 +12,7 @@
     <%#= f.label :ano, "Selecionar ano" %>
     <% anos = [] %>
     <% ano_atual = Date.today.year %>
-    <% while ano_atual != 1969 do %>
+    <% while ano_atual != Recebimento.minimum(:data) - 1 do %>
       <% anos << ano_atual %>
       <% ano_atual -= 1 %>
     <% end %>

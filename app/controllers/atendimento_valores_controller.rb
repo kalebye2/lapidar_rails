@@ -1,8 +1,21 @@
 class AtendimentoValoresController < ApplicationController
+  require 'csv'
+
   before_action :set_atendimento_valor, only: %i[ show show_pdf edit delete ]
 
   def index
-    @atendimento_valores = AtendimentoValor.joins("JOIN atendimentos ON atendimento_valores.atendimento_id = atendimentos.id").order(data: :desc, horario: :desc).where("data < CURRENT_DATE OR (data = CURRENT_DATE AND HOUR(horario) < HOUR(CURRENT_TIME))").all
+    @ano = params[:ano] || Date.today.year
+    @mes = params[:mes] || Date.today.month
+
+    @ano_mes = "#{@ano}-#{@mes.to_s.rjust(2, "0")}"
+    @atendimento_valores = AtendimentoValor.joins(:atendimento).order(data: :asc, horario: :asc).where(atendimento: { data: ["#{@ano}-#{@mes}-01".."#{@ano}-#{@mes}-01".to_date.end_of_month.to_s] })
+
+    respond_to do |format|
+      format.html
+      format.csv do
+        send_data AtendimentoValor.para_csv(@atendimento_valores), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@ano}-#{@mes.to_s.rjust(2, "0")}.csv", type: "text/csv"
+      end
+    end
   end
 
   def index_pdf

@@ -21,7 +21,11 @@ class AtendimentosController < ApplicationController
 
     respond_to do |format|
       if @atendimento.save
-        @atendimento.build_atendimento_valor.save
+        valor = @atendimento.build_atendimento_valor
+        valor.taxa_porcentagem_externa = @atendimento.acompanhamento.atendimento.last.valor_atendimento.taxa_porcentagem_externa
+        valor.taxa_porcentagem_interna = @atendimento.acompanhamento.atendimento.last.valor_atendimento.taxa_porcentagem_interna
+        valor.valor = @atendimento.acompanhamento.valor_atual
+        valor.save
         format.html { redirect_to atendimento_url(@atendimento), notice: "Atendimento registrado com sucesso!" }
         format.json { render :show, status: :created, location: @atendimento }
       else
