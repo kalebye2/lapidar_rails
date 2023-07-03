@@ -1,0 +1,53 @@
+wb = xlsx_package.workbook
+
+wb.styles do |style|
+	project_heading = style.add_style(b: true, sz: 14, bg_color: "FF008000", fg_color: "FFFFFFFF")
+	heading = style.add_style(b: true, bg_color: "FF008000", fg_color: "FFFFFFFF")
+	dinheiro = style.add_style(format_code: "R$ #.##0,00;[Red]R$ #.##0,00")
+
+	wb.add_worksheet(name: "Recebimentos") do |sheet|
+		# titulo
+		sheet.add_row ["Recebimentos #{@mes.to_s.rjust(2, "0")}/#{@ano}"], style: project_heading
+
+		# informações do documento
+		sheet.add_row ["Baixado em", Time.now.strftime("%d/%m/%Y - %H:%M:%S")]
+		
+		# linha branca
+		sheet.add_row []
+
+		# headers
+		sheet.add_row [
+			"DATA",
+			"VALOR",
+			"BENEFICIÁRIO",
+			"CPF BENEFICIÁRIO",
+			"PAGANTE",
+			"CPF PAGANTE",
+			"PROFISSIONAL",
+			"REGISTRO PROFISSIONAL",
+			"CPF PROFISSIONAL",
+			"CIDADE PROFISSIONAL",
+			"SERVIÇO PRESTADO",
+			"MODALIDADE DE PAGAMENTO"
+		], style: heading
+
+
+		# valores
+		@recebimentos.each do |r|
+			sheet.add_row [
+			  r.data,
+			  r.valor.to_f / 100,
+			  r.beneficiario.nome_completo,
+			  r.beneficiario.cpf,
+			  r.pagante.nome_completo,
+			  r.pagante.cpf,
+			  r.profissional.nome_completo,
+			  r.profissional.documento,
+			  r.profissional.pessoa.cpf,
+			  r.profissional.pessoa.cidade,
+			  r.servico_prestado.upcase,
+			  r.modalidade
+			], style: [nil, dinheiro, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil]
+		end
+	end
+end

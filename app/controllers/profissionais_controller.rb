@@ -33,7 +33,7 @@ class ProfissionaisController < ApplicationController
   end
 
   def acompanhamentos
-    @acompanhamentos = @profissional.acompanhamento
+    @acompanhamentos = @profissional.acompanhamentos
   end
 
   private

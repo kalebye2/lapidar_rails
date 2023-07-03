@@ -18,11 +18,11 @@
   <% end %>
 </div>
 
-<% if !@profissional.atendimento_futuro.empty? %>
+<% if !@profissional.atendimentos_futuros.empty? %>
   <div class="atendimentos-futuros">
     <h3>Atendimentos futuros</h3>
     <ul>
-      <% @profissional.atendimento_futuro.each do |af| %>
+      <% @profissional.atendimentos_futuros.each do |af| %>
         <li>
           <%= link_to af.informacoes_com_pessoa, af %>
         </li>
@@ -33,8 +33,8 @@
 <div class="profissional-acompanhamentos">
   <h3>Casos</h3>
   <p>
-  <%= pluralize(@profissional.acompanhamento.count, 'caso', plural: 'casos') %>,
-  <%= @profissional.acompanhamento_em_andamento.count %> em andamento.
+  <%= pluralize(@profissional.acompanhamentos.count, 'caso', plural: 'casos') %>,
+  <%= @profissional.acompanhamentos_em_andamento.count %> em andamento.
   <%= link_to "Ver mais", acompanhamentos_profissional_path %>
   </p>
   <%= render 'acompanhamentos-resumo', profissional: @profissional %>

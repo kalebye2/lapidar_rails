@@ -3,15 +3,15 @@ class Profissional < ApplicationRecord
   belongs_to :profissional_funcao
   has_and_belongs_to_many :especializacao, through: :profissional_especializacao_juncoes
 
-  has_many :acompanhamento
-  has_many :atendimento, through: :acompanhamento
-  has_many :recebimento, through: :acompanhamento
-  has_many :atendimento_valor, through: :atendimento
-  has_many :repasse, class_name: "ProfissionalFinanceiroRepasse"
+  has_many :acompanhamentos
+  has_many :atendimentos, through: :acompanhamentos
+  has_many :recebimentos, through: :acompanhamentos
+  has_many :atendimento_valores, through: :atendimentos
+  has_many :repasses, class_name: "ProfissionalFinanceiroRepasse"
   has_many :instrumento_relatos, through: :atendimento
   has_many :instrumentos_que_aplicou, through: :instrumento_relatos, source: :instrumento
 
-  has_many :profissional_documento_modelo
+  has_many :profissional_documento_modelos
 
   def documento
     if profissional_funcao.documento_tipo == nil then return "" end
@@ -51,15 +51,15 @@ class Profissional < ApplicationRecord
     pessoa.feminino
   end
 
-  def acompanhamento_em_andamento
-    acompanhamento.where(data_final: nil, acompanhamento_finalizacao_motivo: nil)
+  def acompanhamentos_em_andamento
+    acompanhamentos.where(data_final: nil, acompanhamento_finalizacao_motivo: nil)
   end
 
-  def acompanhamento_finalizado
-    acompanhamento.where.not(data_final: nil, acompanhamento_finalizacao_motivo: nil)
+  def acompanhamentos_finalizado
+    acompanhamentos.where.not(data_final: nil, acompanhamento_finalizacao_motivo: nil)
   end
 
-  def atendimento_futuro
-    atendimento.where("DATEDIFF(data, CURRENT_DATE) > 0 OR (DATEDIFF(data, CURRENT_DATE) = 0 AND HOUR(horario) > HOUR(CURRENT_TIME))").order(data: :asc, horario: :asc)
+  def atendimentos_futuros
+    atendimentos.where("DATEDIFF(data, CURRENT_DATE) > 0 OR (DATEDIFF(data, CURRENT_DATE) = 0 AND HOUR(horario) > HOUR(CURRENT_TIME))").order(data: :asc, horario: :asc)
   end
 end

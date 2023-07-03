@@ -46,7 +46,7 @@
 
     <tr>
       <th>Demanda</th>
-      <td><%== Kramdown::Document.new(@laudo.demanda).to_html || "Não definida" %></td>
+      <td><%== Kramdown::Document.new(@laudo.demanda.to_s).to_html || "Não definida" %></td>
     </tr>
   </thead>
   <tbody>
@@ -55,17 +55,17 @@
     </tr>
     <tr>
       <th>Técnicas utilizadas</th>
-      <td><%== Kramdown::Document.new(@laudo.tecnicas).to_html %></td>
+      <td><%== Kramdown::Document.new(@laudo.tecnicas.to_s).to_html %></td>
     </tr>
 
     <tr>
       <th>Análise</th>
-      <td><%== Kramdown::Document.new(@laudo.analise).to_html %></td>
+      <td><%== Kramdown::Document.new(@laudo.analise.to_s).to_html %></td>
     </tr>
 
     <tr>
       <th>Conclusão</th>
-      <td><%== Kramdown::Document.new(@laudo.conclusao).to_html %></td>
+      <td><%== Kramdown::Document.new(@laudo.conclusao.to_s).to_html %></td>
     </tr>
   </tbody>
 </table>
