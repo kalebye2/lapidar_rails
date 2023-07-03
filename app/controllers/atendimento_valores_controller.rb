@@ -15,6 +15,9 @@ class AtendimentoValoresController < ApplicationController
       format.csv do
         send_data AtendimentoValor.para_csv(@atendimento_valores), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@ano}-#{@mes.to_s.rjust(2, "0")}.csv", type: "text/csv"
       end
+      format.xlsx do
+        response.headers['Content-Disposition'] = "attachment; filename=#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@ano}-#{@mes.to_s.rjust(2, "0")}.xlsx"
+      end
     end
   end
 

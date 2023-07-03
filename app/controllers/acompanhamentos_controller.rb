@@ -75,7 +75,7 @@ class AcompanhamentosController < ApplicationController
         pdf.stroke_horizontal_rule
         pdf.move_down 20
         # atendimentos
-        @acompanhamento.atendimento.where.not(consideracoes: nil).each do |at|
+        @acompanhamento.atendimentos.where.not(consideracoes: nil).each do |at|
           pdf.text (dados_atendimento_pdf at)
           pdf.stroke_horizontal_rule
           pdf.move_down 10
@@ -95,8 +95,8 @@ class AcompanhamentosController < ApplicationController
     @acompanhamento = Acompanhamento.find(params[:acompanhamento_id])
     semanas_pra_passar = 4 / @acompanhamento.sessoes_atuais
 
-    au = @acompanhamento.atendimento.last
-    atendimento = @acompanhamento.atendimento.new
+    au = @acompanhamento.atendimentos.last
+    atendimento = @acompanhamento.atendimentos.new
     auvalor = au.atendimento_valor
     avalor = atendimento.build_atendimento_valor
     atendimento.data = au.data + semanas_pra_passar.week

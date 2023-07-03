@@ -1,3 +1,3 @@
 class AtendimentoLocalTipo < ApplicationRecord
-  has_many :atendimento_local
+  has_many :atendimento_locais
 end

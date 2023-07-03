@@ -12,7 +12,7 @@
     </tr>
   </thead>
   <tbody>
-    <% pessoa.atendimentos.each do |a| %>
+    <% pessoa.atendimentos.order(data: :desc, horario: :desc).each do |a| %>
       <tr>
         <td><%= a.profissional.nome_abreviado %></td>
         <td><%= render_data_brasil a.data %></td>

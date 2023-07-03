@@ -1,3 +1,3 @@
 class AtendimentoModalidade < ApplicationRecord
-  has_many :atendimento
+  has_many :atendimentos
 end

@@ -1,8 +1,8 @@
 class Atendimento < ApplicationRecord
-  belongs_to :acompanhamento, inverse_of: :atendimento
-  belongs_to :atendimento_local, inverse_of: :atendimento, optional: true
+  belongs_to :acompanhamento, inverse_of: :atendimentos
+  belongs_to :atendimento_local, inverse_of: :atendimentos, optional: true
   belongs_to :atendimento_tipo
-  belongs_to :atendimento_modalidade, foreign_key: :modalidade_id, inverse_of: :atendimento
+  belongs_to :atendimento_modalidade, foreign_key: :modalidade_id, inverse_of: :atendimentos
 
   has_one :atendimento_valor, foreign_key: :atendimento_id, primary_key: :id, inverse_of: :atendimento
   has_one :instrumento_relato

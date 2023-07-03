@@ -1,0 +1,45 @@
+wb = xlsx_package.workbook
+
+wb.styles do |style|
+	project_heading = style.add_style(b: true, size: 14)
+	heading = style.add_style(b: true)
+	dinheiro = style.add_style(format_code: "R$ #.##0,00;[Red]R$ #.##0,00")
+
+	wb.add_worksheet(name: "Valores") do |sheet|
+		# titulo
+		sheet.add_row ["Valores de atendimentos - #{@mes.to_s.rjust(2, "0")}/#{@ano}"], style: project_heading
+
+		# informações do documento
+		sheet.add_row ["Baixado em", Time.now.strftime("%d/%m/%Y - %H:%M:%S")]
+		
+		# linha branca
+		sheet.add_row []
+
+		# headings
+		sheet.add_row [
+			"Data",
+			"Horário",
+			"Paciente",
+			"Profissional",
+			"Tipo de atendimento",
+			"Valor",
+			"Desconto",
+			"Taxa externa",
+			"Taxa interna",
+		], style: heading
+
+		@atendimento_valores.each do |v|
+			sheet.add_row [
+			  v.data.strftime("%d/%m/%Y"),
+			  v.horario.strftime("%H:%M:%S"),
+			  v.paciente.nome_completo,
+			  v.profissional.nome_completo,
+			  v.atendimento_tipo,
+			  v.valor.to_f / 100,
+			  v.desconto.to_f / 100,
+			  (v.valor * v.taxa_porcentagem_externa / 10000) / 100,
+			  (v.valor * v.taxa_porcentagem_interna / 10000) / 100,
+			], style: [nil, nil, nil, nil, nil, dinheiro, dinheiro, dinheiro, dinheiro]
+		end
+	end
+end

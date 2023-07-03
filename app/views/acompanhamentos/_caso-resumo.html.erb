@@ -2,24 +2,26 @@
   <table class="tabela">
     <caption>
       Considerações do acompanhamento<br />
-      <span style="font-size:.7em;"><%= link_to "Baixar", { controller: :acompanhamentos, action: :caso_detalhes, id: acompanhamento.id, format: :pdf }, { target: :blank } %>
-      </span>
+      <!--span style="font-size:.7em;"><%#= link_to "Baixar", { controller: :acompanhamentos, action: :caso_detalhes, id: acompanhamento.id, format: :pdf }, { target: :blank } %>
+    </span>-->
     </caption>
     <thead>
       <tr>
         <th>Data do atendimento</th>
         <th>Modalidade de atendimento</th>
         <th>Tipo de atendimento</th>
+        <th>Status</th>
         <th>Anotações do profissional</th>
         <th>Opções</th>
       </tr>
     </thead>
     <tbody>
-    <% acompanhamento.atendimento.each do |a| %>
+    <% acompanhamento.atendimentos.order(data: :desc, horario: :desc).each do |a| %>
       <tr>
         <td><%= render_data_brasil a.data %></td>
         <td><%= a.modalidade.upcase %></td>
         <td><%= a.tipo.upcase %></td>
+        <td><%= a.status %></td>
         <td><%== Kramdown::Document.new(a.consideracoes || "Sem considerações").to_html %></td>
         <td><%= link_to "Visualizar", a %></td>
       </tr>

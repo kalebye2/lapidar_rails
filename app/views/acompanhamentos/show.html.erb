@@ -24,23 +24,3 @@
 <p>Valor da sessão: <%= render_dinheiro_centavos @acompanhamento.valor_atual %></p>
 
 <%= render "caso-resumo", acompanhamento: @acompanhamento %>
-
-<div class="atendimentos-lista">
-  <ul>
-    <% @acompanhamento.atendimento.order(data: :desc).each do |a| %>
-      <%= link_to a, class: "atendimento", data: { turbo_frame: :modal } do %><li><%= render_data_brasil a.data %> às <%= render_hora_brasil a.horario %> <%= a.status.upcase %></li><% end %>
-      <% if a.atendimento_valor != nil %>
-        <%= render_dinheiro_centavos a.atendimento_valor.valor %><%= a.atendimento_valor.taxa_porcentagem_externa > 0 ? " (taxa de #{render_porcentagem_int a.atendimento_valor.taxa_porcentagem_externa})" : "" %>
-        Líquido: <%= render_dinheiro_centavos (a.atendimento_valor.valor - (a.atendimento_valor.valor * a.atendimento_valor.taxa_porcentagem_externa / 10000 )) %>
-      <% else %>
-        Atendimento sem registro de cobrança
-      <% end %>
-      <p><%= a.atendimento_tipo.tipo.upcase %></p>
-      <p><%== Kramdown::Document.new(a.consideracoes.to_s).to_html %></p>
-
-      <% if a.relato %>
-        <%= link_to "Relato", { controller: :relatos, id: a.id, action: :show, format: :pdf },{ class: "btn-relato", target: "_blank" }%>
-      <% end %>
-    <% end %>
-  </ul>
-</div>

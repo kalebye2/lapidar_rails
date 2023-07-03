@@ -21,7 +21,7 @@
       <h2><%= "#{p.nome_abreviado} #{p.render_sexo_sigla}" %></h2>
       <h3><%= pro.nome_abreviado %> <span style="font-size:.8em;font-weight:normal;"><%= pro.documento %></span></h3>
       <p><%= render_data_brasil a.data_inicio %> - <%= (render_data_brasil a.data_final) || "Em andamento" %> <%= a.data_final ? "(#{a.acompanhamento_finalizacao_motivo.motivo.upcase})" : "" %></p>
-      <p><%= a.atendimento.count %> <%= a.atendimento.count == 1 ? 'sessão' : 'sessões' %></p>
+      <p><%= a.atendimentos.count %> <%= a.atendimentos.count == 1 ? 'sessão' : 'sessões' %></p>
     </div>
   <% end %>
   <% end %>

@@ -1,5 +1,5 @@
 <ul>
-<% profissional.acompanhamento_em_andamento.order(data_inicio: :desc).first(5).each do |a| %>
+<% profissional.acompanhamentos_em_andamento.order(data_inicio: :desc).first(5).each do |a| %>
   <%= link_to a, class: "#{a.data_final && !a.acompanhamento_finalizacao_motivo.nil? ? 'acompanhamento-finalizado ' + 'acompanhamento-finalizado-' + a.acompanhamento_finalizacao_motivo.motivo.parameterize : 'acompanhamento-em-andamento'}" do %>
     <li>
       <%= a.render_info_para_profissional %>
