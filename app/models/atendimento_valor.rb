@@ -41,6 +41,7 @@ class AtendimentoValor < ApplicationRecord
         "DESCONTO",
         "TAXA EXTERNA",
         "TAXA INTERNA",
+        "PLATAFORMA PARA TAXA EXTERNA",
       ]
       collection.each do |v|
         csv << [
@@ -53,6 +54,7 @@ class AtendimentoValor < ApplicationRecord
           v.desconto.to_s,
           v.valor * v.taxa_porcentagem_externa / 10000,
           v.valor * v.taxa_porcentagem_interna / 10000,
+          v.acompanhamento.atendimento_plataforma.nome
         ]
       end
     end

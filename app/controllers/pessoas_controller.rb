@@ -1,5 +1,6 @@
 class PessoasController < ApplicationController
   before_action :set_pessoa, only: %i[ show edit update destroy devolutivas informacoes_extras informacao_extra_edit informacao_extra_new ]
+  include Pagy::Backend
 
   # GET /pessoas or /pessoas.json
   def index
@@ -8,6 +9,7 @@ class PessoasController < ApplicationController
     else
       @pessoas = Pessoa.all.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc)
     end
+    @pagy, @pessoas = pagy(@pessoas, items: 10)
   end
 
   # GET /pessoas/1 or /pessoas/1.json

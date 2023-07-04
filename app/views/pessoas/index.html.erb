@@ -2,7 +2,7 @@
 <p id="notice"><%= notice %></p>
 
 <h1>Cadastros</h1>
-<p>Quantidade de cadastros: <%= @pessoas.count %></p>
+<p>Quantidade de cadastros: <%= Pessoa.all.count %></p>
 
 <%= link_to '+ cadastro', new_pessoa_path %>
 
@@ -13,6 +13,7 @@
   <%= form.submit "Pesquisar" %>
 <% end %>
 <!-- onde as pessoas ficam -->
+<%== pagy_nav @pagy %>
 <%= turbo_frame_tag 'pessoas' do %>
   <div class="pessoas-container">
   <% if !@pessoas.empty? %>

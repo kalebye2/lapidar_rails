@@ -1,0 +1,44 @@
+<p style="size:3em;" id="titulo">
+  <%= @laudo.finalidade %>
+</p>
+# Identificação
+
+**Avaliado**: <%= @laudo.paciente.nome_completo %>
+
+**Sexo**: <%= @laudo.paciente.render_sexo %>
+
+**Data**: <%= render_data_brasil @laudo.data_final %>
+
+**Idade**: <%= @laudo.paciente.render_idade %>
+
+**Interessado**: <%= @laudo.interessado %>
+
+**Sessões**: <%= @laudo.num_sessoes %>
+
+**Avaliador**: <%= @laudo.profissional.descricao_completa %>
+
+**Finalidade**: <%= @laudo.finalidade %>
+
+
+
+# Demanda
+<%== Kramdown::Document.new(@laudo.demanda.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo)).to_html %>
+
+# Técnicas utilizadas
+<%== Kramdown::Document.new(@laudo.tecnicas.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo)).to_html %>
+
+# Análise
+<%== Kramdown::Document.new(@laudo.analise.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo)).to_html %>
+
+# Conclusão
+<%== Kramdown::Document.new(@laudo.conclusao.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo)).to_html %>
+
+
+
+<p style="center">
+<%= @laudo.profissional.nome_completo %> -
+<%= @laudo.profissional.funcao %>
+<% if !@laudo.profissional.documento_valor.nil? %>
+  <%= @laudo.profissional.documento %>
+<% end %>
+</p>

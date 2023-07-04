@@ -4,6 +4,7 @@ wb.styles do |style|
 	project_heading = style.add_style(b: true, size: 14)
 	heading = style.add_style(b: true)
 	dinheiro = style.add_style(format_code: "R$ #.##0,00;[Red]R$ #.##0,00")
+	resultado = style.add_style(b: true, u: true)
 
 	wb.add_worksheet(name: "Valores") do |sheet|
 		# titulo
@@ -26,6 +27,7 @@ wb.styles do |style|
 			"Desconto",
 			"Taxa externa",
 			"Taxa interna",
+			"Plataforma taxa externa",
 		], style: heading
 
 		@atendimento_valores.each do |v|
@@ -37,9 +39,10 @@ wb.styles do |style|
 			  v.atendimento_tipo,
 			  v.valor.to_f / 100,
 			  v.desconto.to_f / 100,
-			  (v.valor * v.taxa_porcentagem_externa / 10000) / 100,
-			  (v.valor * v.taxa_porcentagem_interna / 10000) / 100,
-			], style: [nil, nil, nil, nil, nil, dinheiro, dinheiro, dinheiro, dinheiro]
+			  (v.valor * v.taxa_porcentagem_externa / 10000).to_f / 100,
+			  (v.valor * v.taxa_porcentagem_interna / 10000).to_f / 100,
+			  v.acompanhamento.atendimento_plataforma.nome
+			], style: [nil, nil, nil, nil, nil, dinheiro, dinheiro, dinheiro, dinheiro, nil]
 		end
 	end
 end

@@ -5,6 +5,10 @@ class LaudosController < ApplicationController
   end
 
   def show
+    respond_to do |format|
+      format.md
+      format.html
+    end
   end
 
   def new

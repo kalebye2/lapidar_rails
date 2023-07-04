@@ -34,7 +34,7 @@
 <h3><%= @atendimentos.count %> atendimento(s) nesta semana</h3>
 <p>
   <% atendidos = @atendimentos.where(presenca: true).count %>
-  <% nao_atendidos = @atendimentos.where("(data < CURRENT_DATE AND presenca = FALSE) OR (data = CURRENT_DATE AND HOUR(horario) < HOUR(CURRENT_TIME) AND presenca = FALSE)").count %>
+  <% nao_atendidos = @atendimentos.nao_realizados.count %>
   <% futuros = @atendimentos.where("data > CURRENT_DATE OR (data = CURRENT_DATE && HOUR(horario) > HOUR(CURRENT_TIME))").count %>
   <%= atendidos %> <%= 'realizados'.pluralize(atendidos) %>,
   <%= nao_atendidos %> <%= 'não realizado'.pluralize(nao_atendidos) %>,

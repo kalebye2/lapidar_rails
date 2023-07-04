@@ -100,7 +100,7 @@ class Atendimento < ApplicationRecord
   end
 
   def self.nao_realizados
-    where(presenca: false)
+    where(presenca: false, data: [..Date.yesterday])
   end
 
   def self.do_mes_atual

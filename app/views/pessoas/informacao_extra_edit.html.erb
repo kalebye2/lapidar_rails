@@ -1,2 +1,4 @@
 <% titulo "Editar informação extra" %>
 <h1>Editar informação</h1>
+
+<%== Kramdown::Document.new(@extra_informacao.conteudo_material).to_html %>

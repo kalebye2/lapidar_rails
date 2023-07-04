@@ -47,6 +47,10 @@ class Acompanhamento < ApplicationRecord
     instrumentos_aplicados.where("atendimentos.data" => [..data])
   end
 
+  def num_sessoes(inicio: "1900-01-01".to_date, final: Date.today)
+    atendimentos.where(data: [inicio..final]).count
+  end
+
   def self.em_andamento
     where(data_final: nil, acompanhamento_finalizacao_motivo: nil)
   end
