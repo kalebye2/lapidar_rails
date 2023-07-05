@@ -2,11 +2,11 @@ class BibliotecaObra < ApplicationRecord
   belongs_to :biblioteca_editora, optional: true, foreign_key: :editora_id
   belongs_to :biblioteca_obra_tipo, foreign_key: :obra_tipo_id
   belongs_to :biblioteca_obra, foreign_key: :periodico_id, optional: true
-  has_many :biblioteca_identificador, foreign_key: :obra_id
+  has_many :biblioteca_identificadores, foreign_key: :obra_id
   has_many :biblioteca_obra_autor_juncao, foreign_key: :obra_id
-  has_many :biblioteca_autor, through: :biblioteca_obra_autor_juncao
-  has_many :biblioteca_obra_tag_juncao, foreign_key: :obra_id
-  has_many :biblioteca_tag, through: :biblioteca_obra_tag_juncao
+  has_many :biblioteca_autores, through: :biblioteca_obra_autor_juncao
+  has_many :biblioteca_obra_tag_juncoes, foreign_key: :obra_id
+  has_many :biblioteca_tags, through: :biblioteca_obra_tag_juncoes
 
 
   def editora

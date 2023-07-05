@@ -1,6 +1,6 @@
 class BibliotecaEditora < ApplicationRecord
-  has_many :biblioteca_obra, foreign_key: :editora_id
-  has_many :biblioteca_autor, through: :biblioteca_obra
+  has_many :biblioteca_obras, foreign_key: :editora_id
+  has_many :biblioteca_autores, through: :biblioteca_obra
 
   def obra
     biblioteca_obra
