@@ -68,4 +68,16 @@ class Recebimento < ApplicationRecord
       end
     end
   end
+
+  def self.do_mes_passado
+    where(data: (Date.today - 1.month).all_month)
+  end
+
+  def self.do_mes_atual
+    where(data: Date.today.all_month)
+  end
+
+  def self.deste_mes
+    self.do_mes_atual
+  end
 end
