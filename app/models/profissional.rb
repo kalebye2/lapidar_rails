@@ -4,6 +4,8 @@ class Profissional < ApplicationRecord
   has_and_belongs_to_many :especializacao, through: :profissional_especializacao_juncoes
 
   has_many :acompanhamentos
+  has_many :pacientes, through: :acompanhamentos, source: :pessoa
+  has_many :responsaveis_por_pacientes, through: :acompanhamentos, source: :pessoa_responsavel
   has_many :atendimentos, through: :acompanhamentos
   has_many :recebimentos, through: :acompanhamentos
   has_many :atendimento_valores, through: :atendimentos
@@ -12,6 +14,7 @@ class Profissional < ApplicationRecord
   has_many :instrumentos_que_aplicou, through: :instrumento_relatos, source: :instrumento
 
   has_many :profissional_documento_modelos
+
 
   def documento
     if profissional_funcao.documento_tipo == nil then return "" end
@@ -37,6 +40,11 @@ class Profissional < ApplicationRecord
 
   def nome_e_sobrenome
     pessoa.nome_e_sobrenome
+  end
+
+  def username_padrao
+    n = pessoa.nome_e_sobrenome.split.reverse
+    "#{n[0].downcase}.#{n[1].downcase}"
   end
 
   def funcao
