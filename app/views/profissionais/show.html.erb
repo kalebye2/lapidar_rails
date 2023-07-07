@@ -1,14 +1,27 @@
 <%= titulo "#{@profissional.funcao} #{@profissional.nome_abreviado}" %>
 <h1>
   <%= @profissional.nome_completo %> - <%= @profissional.funcao %>
-  <%= link_to edit_pessoa_path(@profissional.pessoa) do %>
-    <span style="font-size:.7em">
-      Editar cadastro
-    </span>
+  <% if usuario_atual.secretaria? %>
+    <%= link_to edit_pessoa_path(@profissional.pessoa) do %>
+      <span style="font-size:.7em">
+        Editar cadastro
+      </span>
+    <% end %>
   <% end %>
 </h1>
+
+<%# para editar o usuário. TODO: não permitir edição de quem seria o profissional para o usuário %>
+<% if usuario_atual.informatica? %>
+  <% if @profissional.usuario.nil? %>
+      <%= link_to "Criar usuário", new_usuario_path %>
+    <% else %>
+      <%= link_to "Editar usuário", edit_usuario_path %>
+  <% end %>
+<% end %>
 <h2><%= @profissional.documento %></h2>
-<%= link_to "editar profissional", edit_profissional_path(@profissional) %>
+<% if usuario_atual.secretaria? %>
+  <%= link_to "editar profissional", edit_profissional_path(@profissional) %>
+<% end %>
 
 <div class="profissional-bio">
   <% if !@profissional.bio.nil? %>
@@ -18,7 +31,7 @@
   <% end %>
 </div>
 
-<% if !@profissional.atendimentos_futuros.empty? %>
+<% if !@profissional.atendimentos_futuros.empty? && usuario_atual.profissional == @profissional %>
   <div class="atendimentos-futuros">
     <h3>Atendimentos futuros</h3>
     <ul>

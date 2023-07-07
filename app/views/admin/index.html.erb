@@ -1,0 +1,9 @@
+<h1>Painel administrativo</h1>
+<h2>Escolha o painel para editar</h2>
+
+<h3>Administração de Base de dados - Informações</h3>
+<ul>
+  <%= AdminController.paths.each do |m| %>
+    <li><%= link_to m.to_sym, "admin/#{m}" %></li>
+  <% end %>
+</ul>

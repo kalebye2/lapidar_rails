@@ -79,19 +79,19 @@ class Pessoa < ApplicationRecord
     cr.at(0..2) + "." + cr.at(3..5) + "." + cr.at(6..8) + "-" + cr.at(-2..) 
   end
 
-  def tem_telefone
+  def tem_telefone?
     fone_cod_area && fone_num && fone_cod_pais
   end
   
   def render_fone
-    tem_telefone ?
+    tem_telefone? ?
       fr = "+" + fone_cod_pais + " (" + fone_cod_area + ") " + fone_num[..-5] + "-" + fone_num[-4..]
     :
       nil
   end
 
   def render_fone_link
-    "+#{fone_cod_pais}#{fone_cod_area}#{fone_num}"
+    tem_telefone? ? "#{fone_cod_area}#{fone_num}" : nil
   end
 
 

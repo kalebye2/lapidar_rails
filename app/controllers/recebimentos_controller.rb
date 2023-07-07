@@ -2,14 +2,22 @@ class RecebimentosController < ApplicationController
   require 'csv'
 
   before_action :set_recebimento, only: %i[ show update edit delete recibo ]
+  before_action :validar_usuario#, only: %i[ show update edit delete recibo ]
 
   def index
-    @pessoas = Pessoa.joins(:atendimento_valores).distinct.order(nome: :asc, sobrenome: :asc)
     @ano = params[:ano] || Date.today.year
     @mes = params[:mes] || Date.today.month
     @ano_mes = "#{@ano}-#{@mes.to_s.rjust(2, "0")}"
-    @atendimento_valores = AtendimentoValor.joins(:atendimento).where("atendimentos.data" => "#{@ano_mes}-01".."#{@ano_mes}-01".to_date.end_of_month.to_s)
-    @recebimentos = Recebimento.where("YEAR(data) = #{@ano} AND MONTH(data) = #{@mes}").order(data: :desc)
+    #@recebimentos = nil
+    if usuario_atual.financeiro?
+      @pessoas = Pessoa.joins(:atendimento_valores).distinct.order(nome: :asc, sobrenome: :asc)
+      @atendimento_valores = AtendimentoValor.joins(:atendimento).where("atendimentos.data" => "#{@ano_mes}-01".."#{@ano_mes}-01".to_date.end_of_month.to_s)
+      @recebimentos = Recebimento.do_periodo(mes: @mes, ano: @ano)
+    else
+      @pessoas = usuario_atual.profissional.pacientes
+      @atendimento_valores = usuario_atual.profissional.atendimento_valores.joins(:atendimento).where("atendimentos.data" => "#{@ano_mes}-01".."#{@ano_mes}-01".to_date.end_of_month.to_s)
+      @recebimentos = usuario_atual.profissional.recebimentos.do_periodo(mes: @mes, ano: @ano)
+    end
     respond_to do |format|
       format.html
       format.csv do
@@ -32,6 +40,12 @@ class RecebimentosController < ApplicationController
   end
 
   def create
+    if !usuario_atual.financeiro?
+      if !usuario_atual.profissional.acompanhamentos.map(&:id).include?(params[:recebimento][:acompanhamento_id])
+        render file: "#{Rails.root}/public/404.html", status: 403
+        return
+      end
+    end
     @recebimento = Recebimento.new(recebimento_params)
     if params[:recebimento][:direto_profissional]
       p = params[:recebimento]
@@ -50,6 +64,12 @@ class RecebimentosController < ApplicationController
   end
 
   def update
+    if !usuario_atual.financeiro?
+      if !usuario_atual.profissional.acompanhamentos.map(&:id).include?(params[:recebimento][:acompanhamento_id])
+        render file: "#{Rails.root}/public/404.html", status: 403
+        return
+      end
+    end
     respond_to do |format|
       if @recebimento.update(recebimento_params)
         format.html { redirect_to recebimento_url(@recebimento), notice: "recebimento was successfully updated." }
@@ -78,5 +98,11 @@ class RecebimentosController < ApplicationController
 
   def recebimento_params
     params.require(:recebimento).permit(:pessoa_pagante_id, :acompanhamento_id, :valor, :data, :modalidade_id)
+  end
+
+  def validar_usuario
+    if usuario_atual.nil? || !(usuario_atual.corpo_clinico? || usuario_atual.financeiro?)
+      render file: "#{Rails.root}/public/404.html", status: 403
+    end
   end
 end

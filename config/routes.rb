@@ -1,18 +1,27 @@
 Rails.application.routes.draw do
-  get 'instrumentos/index'
-  get 'instrumentos/new'
-  get 'instrumentos/edit'
-  get 'instrumento_relatos/index'
-  get 'instrumento_relatos/new'
-  get 'instrumento_relatos/edit'
   get 'financeiro/index'
   get 'financeiro/atendimento_valor'
   get 'financeiro/recebimento_pessoa'
   get 'financeiro/repasse_profissionais'
 
+  # usuarios do sistema e sessão
+  resources :usuarios
+  resources :sessoes
+  get 'criar_usuario', to: "usuarios#new", as: 'criar_usuario'
+  get 'entrar', to: "sessoes#new", as: 'entrar'
+  get 'sair', to: "sessoes#destroy", as: 'sair'
+
+  # instrumentos
+  resources :instrumentos
   resources :instrumento_relatos
+
+  # anamneses
   resources :infantojuvenil_anamneses
+
+  # biblioteca
   resources :biblioteca_obras
+  resources :biblioteca_autores
+  resources :biblioteca_tags
   
   scope :financeiro do
     resources :atendimento_valores
@@ -58,6 +67,11 @@ Rails.application.routes.draw do
   get '/financeiro', to: "financeiro#index"
 
   scope :admin do
+    get '/', to: "admin#index", as: 'admin'
+    AdminController.paths.each do |m|
+      resources m.to_sym
+      #get m.to_sym, to: "admin##{m}", as: m.to_s
+    end
   end
 
   # rotas pdf

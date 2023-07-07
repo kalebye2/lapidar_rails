@@ -28,31 +28,32 @@
 =end
 %>
 
+<% if !usuario_atual.nil? %>
+  <!-- calendário semanal? -->
+  <h2><%= @start_date.to_date.year %> - Semana <%= @start_date.to_date.strftime("%U") %></h2>
+  <h3><%= @atendimentos.count %> atendimento(s) nesta semana</h3>
+  <p>
+    <% atendidos = @atendimentos.where(presenca: true).count %>
+    <% nao_atendidos = @atendimentos.nao_realizados.count %>
+    <% futuros = @atendimentos.where("data > CURRENT_DATE OR (data = CURRENT_DATE && HOUR(horario) > HOUR(CURRENT_TIME))").count %>
+    <%= atendidos %> <%= 'realizados'.pluralize(atendidos) %>,
+    <%= nao_atendidos %> <%= 'não realizado'.pluralize(nao_atendidos) %>,
+    <%= futuros %> <%= 'futuro'.pluralize(futuros) %>.
+  </p>
 
-<!-- calendário semanal? -->
-<h2><%= @start_date.to_date.year %> - Semana <%= @start_date.to_date.strftime("%U") %></h2>
-<h3><%= @atendimentos.count %> atendimento(s) nesta semana</h3>
-<p>
-  <% atendidos = @atendimentos.where(presenca: true).count %>
-  <% nao_atendidos = @atendimentos.nao_realizados.count %>
-  <% futuros = @atendimentos.where("data > CURRENT_DATE OR (data = CURRENT_DATE && HOUR(horario) > HOUR(CURRENT_TIME))").count %>
-  <%= atendidos %> <%= 'realizados'.pluralize(atendidos) %>,
-  <%= nao_atendidos %> <%= 'não realizado'.pluralize(nao_atendidos) %>,
-  <%= futuros %> <%= 'futuro'.pluralize(futuros) %>.
-</p>
+  <%= form_with url: root_path, method: :get do |form| %>
+    <%= form.label :semana_select, "Selecionar semana" %>
+    <%= form.week_field [start_date: @start_date], onchange: "if (this.value != '') window.location.search = '?start_date=' + this.value", value: @start_date %>
+  <% end %>
 
-<%= form_with url: root_path, method: :get do |form| %>
-  <%= form.label :semana_select, "Selecionar semana" %>
-  <%= form.week_field [start_date: @start_date], onchange: "if (this.value != '') window.location.search = '?start_date=' + this.value", value: @start_date %>
-<% end %>
+  <%= link_to "+ atendimento", new_atendimento_path %>
 
-<%= link_to "+ atendimento", new_atendimento_path %>
-
-<%= week_calendar(events: @atendimentos, attribute: :data) do |date, atendimentos|%>
-  <div class="day">
-    <%= date.day %>
-  </div>
-  <% atendimentos.each do |atendimento| %>
-    <%= render "atendimentos/atendimento-card", atendimento: atendimento %>
+  <%= week_calendar(events: @atendimentos, attribute: :data) do |date, atendimentos|%>
+    <div class="day">
+      <%= date.day %>
+    </div>
+    <% atendimentos.each do |atendimento| %>
+      <%= render "atendimentos/atendimento-card", atendimento: atendimento %>
+    <% end %>
   <% end %>
 <% end %>

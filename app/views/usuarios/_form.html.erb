@@ -12,14 +12,42 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :pessoa_id %>
-    <%= form.text_field :pessoa_id %>
+    <%= form.label :profissional_id %>
+    <%= form.select :profissional_id, Profissional.all.map { |p| [p.descricao_completa, p.id] } %>
   </div>
 
   <div class="field">
-    <%= form.label :profissao %>
-    <%= form.text_field :profissao %>
+    <%= form.label "Nome de usuário" %>
+    <%= form.text_field :username %>
   </div>
+
+  <div class="field">
+    <%= form.label :senha %>
+    <%= form.password_field :password %>
+  </div>
+
+  <div class="field">
+    <%= form.label :confirmar_senha %>
+    <%= form.password_field :password_confirmation %>
+  </div>
+
+  <%= form.check_box :admin %>
+  <%= form.label :admin %>
+
+  <%= form.check_box :corpo_clinico %>
+  <%= form.label "Corpo clínico" %>
+
+  <%= form.check_box :secretaria %>
+  <%= form.label "Secretaria" %>
+
+  <%= form.check_box :secretaria %>
+  <%= form.label "Secretaria" %>
+
+  <%= form.check_box :financeiro %>
+  <%= form.label :financeiro %>
+
+  <%= form.check_box :informatica %>
+  <%= form.label "TI" %>
 
   <div class="actions">
     <%= form.submit %>

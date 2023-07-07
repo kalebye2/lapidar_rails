@@ -14,8 +14,9 @@
   <%= form_with(model: recebimento, local: true) do |form| %>
 
     <div class="field">
+      <% acompanhamentos = usuario_atual.financeiro? ? Acompanhamento.all.order(data_inicio: :asc) : usuario_atual.profissional.acompanhamentos.order(data_inicio: :asc) %>
       <%= form.label "Acompanhamento" %>
-      <%= form.select :acompanhamento_id, Acompanhamento.all.order(data_inicio: :asc).map { |a| [a.render_info_padrao, a.id] } %>
+      <%= form.select :acompanhamento_id, acompanhamentos.map { |a| [a.render_info_padrao, a.id] } %>
     </div>
 
     <div class="field">

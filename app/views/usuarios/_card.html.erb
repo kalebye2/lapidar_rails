@@ -1,0 +1,8 @@
+<% if usuario %>
+  <%= link_to usuario, class: "usuario-card" do %>
+    <div>
+      <h2><%= usuario.profissional.nome_completo %></h2>
+      <p><%= usuario.username %></p>
+    </div>
+  <% end %>
+<% end %>

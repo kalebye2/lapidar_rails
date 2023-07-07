@@ -12,7 +12,7 @@
     <% mes_passado = [(Date.today - 1.month).beginning_of_month..(Date.today - 1.month).end_of_month] %>
     <% mes_atual = [Date.today.beginning_of_month..Date.today.end_of_month] %>
 
-    <% Profissional.all.each do |profissional| %>
+    <% profissionais.all.each do |profissional| %>
       <tr>
         <td><%= profissional.nome_abreviado %> - <%= profissional.documento %></td>
         <td class="dinheiro"><%= render_dinheiro_centavos profissional.repasses.where(data: mes_passado).sum(:valor) %> (<%= profissional.repasses.where(data: mes_passado).count %> repasses)</td>

@@ -12,9 +12,27 @@ class Atendimento < ApplicationRecord
 
   accepts_nested_attributes_for :atendimento_valor
 
+  # scopes
+  scope :realizados, -> { where(presenca: true) }
+  scope :nao_realizados, -> { where(presenca: false) }
+  scope :futuros, -> { where(data: [Date.today + 1.day..]).or(self.where(data: Date.today, horario: [Time.now.beginning_of_hour - 3.hour..])) }
+  scope :de_hoje, -> (ordem = :asc) { where(data: Date.today).order(horario: ordem) }
+  scope :da_semana, -> (semana: Date.today.all_week, ordem_data: :asc, ordem_horario: :asc) { where(data: semana).order(data: ordem_data, horario: ordem_horario) }
+  scope :do_mes_atual, -> { where(data: Date.today.all_month) }
+  scope :deste_mes, -> { self.do_mes_atual }
+  scope :do_mes_passado, -> { where(data: (Date.today - 1.month).all_month) }
+  scope :do_ano_atual, -> { where(data: Date.today.all_year) }
+  scope :deste_ano, -> { self.do_ano_atual }
+  scope :do_ano_passado, -> { where(data: (Date.today - 1.year).all_year) }
+  scope :reagendados, -> { where(reagendado: true) }
+  
   # pessoas envolvidas
   def pessoa
     acompanhamento.pessoa
+  end
+
+  def paciente
+    pessoa
   end
 
   def profissional
@@ -91,43 +109,4 @@ class Atendimento < ApplicationRecord
   end
 
 
-  def self.realizados
-    where(presenca: :true)
-  end
-
-  def self.futuros
-    where(data: [Date.today + 1.day..]).or(self.where(data: Date.today, horario: [Time.now.beginning_of_hour - 3.hour..]))
-  end
-
-  def self.nao_realizados
-    where(presenca: false, data: [..Date.yesterday])
-  end
-
-  def self.do_mes_atual
-    where(data: Date.today.all_month)
-  end
-
-  def self.deste_mes
-    self.do_mes_atual
-  end
-
-  def self.do_mes_passado
-    where(data: (Date.today - 1.month).all_month)
-  end
-
-  def self.do_ano_atual
-    where(data: Date.today.all_year)
-  end
-
-  def self.deste_ano
-    self.do_ano_atual
-  end
-
-  def self.do_ano_passado
-    where(data: (Date.today - 1.year).all_year)
-  end
-
-  def self.reagendados
-    where(reagendado: true)
-  end
 end

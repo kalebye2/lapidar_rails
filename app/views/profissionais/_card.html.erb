@@ -1,17 +1,38 @@
 <% if profissional != nil %>
   <% pessoa = profissional.pessoa %>
-  <%= link_to profissional, class: "pessoa-card" + " " + (profissional.feminino ? "feminino" : "masculino") do %>
-    <div>
-      <h2><%= profissional.nome_abreviado %></h2>
+  <% if !usuario_atual.nil? %>
+    <%= link_to profissional, class: "pessoa-card" + " " + (profissional.feminino ? "feminino" : "masculino") do %>
+      <div>
+        <h2><%= profissional.nome_abreviado %></h2>
 
-      <h3>
-        <%= profissional.funcao %>
-      </h3>
-      <h6><%= profissional.documento %></h6>
-      <!-- informações -->
-      <p><%= profissional.acompanhamentos.where(data_final: nil, acompanhamento_finalizacao_motivo: nil).count %> acompanhamentos em andamento</p>
-      <p><%= pessoa.email ? pessoa.email : "Não definido" %></p>
-      <p><%= (pessoa.fone_cod_pais || pessoa.fone_cod_area || pessoa.fone_num) ? pessoa.render_fone : "Não definido" %></p>
-    </div>
+        <h3>
+          <%= profissional.funcao %>
+        </h3>
+        <h6><%= profissional.documento %></h6>
+        <!-- informações -->
+        <p><%= profissional.acompanhamentos.where(data_final: nil, acompanhamento_finalizacao_motivo: nil).count %> acompanhamentos em andamento</p>
+        <p><%= pessoa.email ? pessoa.email : "Não definido" %></p>
+        <p><%= (pessoa.fone_cod_pais || pessoa.fone_cod_area || pessoa.fone_num) ? pessoa.render_fone : "Não definido" %></p>
+      </div>
+    <% end %>
+  <% else %>
+    <% classe_sexual = profissional.feminino ? "feminino" : "masculino" %>
+    <span class="<%= "pessoa-card #{classe_sexual}" %>">
+      <div>
+        <h2><%= profissional.nome_abreviado %></h2>
+
+        <h3>
+          <%= profissional.funcao %>
+        </h3>
+        <h6><%= profissional.documento %></h6>
+        <!-- informações -->
+        <% if pessoa.email %>
+          <p><%= mail_to pessoa.email, class: "pessoa-email" %></p>
+        <% end %>
+        <% if pessoa.tem_telefone? %>
+          <p><%= phone_to pessoa.render_fone_link, pessoa.render_fone, country_code: pessoa.fone_cod_pais %></p>
+        <% end %>
+      </div>
+      </span>
   <% end %>
 <% end %>

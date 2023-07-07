@@ -1,14 +1,48 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Pessoa:</strong>
-  <%= @usuario.pessoa %>
-</p>
+<h1>
+  <%= @usuario.nome_completo %>
+</h1>
 
-<p>
-  <strong>Profissao:</strong>
-  <%= @usuario.profissao %>
-</p>
+<h2>
+  <%= @usuario.papel %>
+</h2>
+
+<table>
+<!--
+  <caption>Permissões</caption>
+-->
+  <thead>
+    <th>Papel</th>
+    <th>Permissão</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Administração</td>
+      <td><%= sim_ou_nao @usuario.admin? %></td>
+    </tr>
+
+    <tr>
+      <td>Corpo Clínico</td>
+      <td><%= sim_ou_nao @usuario.corpo_clinico? %></td>
+    </tr>
+
+    <tr>
+      <td>Secretaria</td>
+      <td><%= sim_ou_nao @usuario.secretaria? %></td>
+    </tr>
+
+    <tr>
+      <td>Financeiro</td>
+      <td><%= sim_ou_nao @usuario.financeiro? %></td>
+    </tr>
+
+    <tr>
+      <td>T.I.</td>
+      <td><%= sim_ou_nao @usuario.informatica? %></td>
+    </tr>
+  </tbody>
+</table>
 
 <%= link_to 'Edit', edit_usuario_path(@usuario) %> |
 <%= link_to 'Back', usuarios_path %>

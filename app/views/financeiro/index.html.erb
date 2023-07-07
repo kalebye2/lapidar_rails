@@ -4,11 +4,13 @@
 <!-- tabela de profissionais e o quanto ganham no mês -->
 <div class="grid-2">
   <div class="financeiro-tabelas">
-    <%= render "tabela-resumo" %>
+    <%= render "tabela-resumo", profissionais: @profissionais %>
     <br />
-    <%= render "tabela-repasses" %>
+    <%= render "tabela-repasses", profissionais: @profissionais %>
     <br />
-    <%= render "tabela-gastos" %>
+    <% if usuario_atual.financeiro? %>
+      <%= render "tabela-gastos" %>
+    <% end %>
   </div>
   <div class="grid-3">
     <div>

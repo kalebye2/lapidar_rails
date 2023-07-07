@@ -25,9 +25,9 @@
 
       <!-- informações de contato -->
       <div class="contato">
-        <%= link_to @pessoa.email, "mailto:#{@pessoa.email}" %>
-        <% if @pessoa.tem_telefone %>
-          <%= phone_to @pessoa.render_fone, "#{@pessoa.render_fone_link}" %>
+        <%= mail_to @pessoa.email %>
+        <% if @pessoa.tem_telefone? %>
+          <%= phone_to @pessoa.fone_cod_pais + @pessoa.render_fone_link, @pessoa.render_fone %>
           <%= link_to "ZAPZAP", "https://wa.me/#{@pessoa.render_fone_link}", target: :_blank %>
         <% end %>
       </div>
@@ -65,7 +65,11 @@
               <ul>
                 <% @pessoa.atendimentos_futuros.each do |at| %>
                   <li>
-                    <%= link_to at do %>
+                    <% if usuario_atual.secretaria? || usuario_atual.profissional_id == at.profissional.id %>
+                      <%= link_to at do %>
+                        <%= at.acompanhamento_tipo.to_s.upcase %> - <%= render_data_brasil at.data %> às <%= render_hora_brasil at.horario %>
+                      <% end %>
+                    <% else %>
                       <%= at.acompanhamento_tipo.to_s.upcase %> - <%= render_data_brasil at.data %> às <%= render_hora_brasil at.horario %>
                     <% end %>
                     <%= link_to at.profissional do %>

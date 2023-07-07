@@ -1,5 +1,6 @@
 class PessoasController < ApplicationController
   before_action :set_pessoa, only: %i[ show edit update destroy devolutivas informacoes_extras informacao_extra_edit informacao_extra_new ]
+  before_action :validar_usuario#, only: %i[ show edit update destroy devolutivas informacoes_extras informacao_extra_edit informacao_extra_new ]
   include Pagy::Backend
 
   # GET /pessoas or /pessoas.json
@@ -135,5 +136,11 @@ class PessoasController < ApplicationController
     # Only allow a list of trusted parameters through.
     def pessoa_params
       params.require(:pessoa).permit(:nome, :nome_do_meio, :sobrenome, :cpf, :fone_cod_pais, :fone_cod_area, :fone_num, :feminino, :civil_estado_id, :instrucao_grau_id, :data_nascimento, :email, :pais_id, :estado, :cidade, :endereco_cep, :endereco_logradouro, :endereco_numero, :endereco_complemento, :profissao, :preferencia_contato, :imagem_perfil, :pessoa_tratamento_pronome_id, :inverter_pronome_tratamento)
+    end
+
+    def validar_usuario
+      if usuario_atual.nil? || !(usuario_atual.corpo_clinico? || usuario_atual.secretaria?)
+        render file: "#{Rails.root}/public/404.html", status: 404
+      end
     end
 end

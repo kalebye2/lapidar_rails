@@ -58,3 +58,8 @@ pt:
             - qui
             - sex
             - sáb
+
+    activerecord:
+        errors:
+                messages:
+                        record_invalid: "Tudo errado"

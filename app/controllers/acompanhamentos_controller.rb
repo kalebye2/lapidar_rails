@@ -1,8 +1,14 @@
 class AcompanhamentosController < ApplicationController
   before_action :set_acompanhamento, only: %i[ show edit update destroy caso_detalhes ]
+  before_action :validar_usuario
+  before_action :validar_edicao, only: %i[ edit update destroy ]
 
   def index
-    @acompanhamentos = Acompanhamento.all.order(data_inicio: :desc)
+    if !usuario_atual.secretaria?
+      @acompanhamentos = usuario_atual.profissional.acompanhamentos.all.order(data_inicio: :desc)
+    else
+      @acompanhamentos = Acompanhamento.all.order(data_inicio: :desc)
+    end
   end
 
   def show
@@ -93,6 +99,11 @@ class AcompanhamentosController < ApplicationController
 
   def new_atendimento_proxima_semana
     @acompanhamento = Acompanhamento.find(params[:acompanhamento_id])
+    # retorna se não for secretária que trabalha o dia inteiro comigo ou o profissional responsável
+    if @acompanhamento.profissional != usuario_atual.profissional
+      redirect_to acompanhamento_path(@acompanhamento), notice: "Não senhor!"
+      return
+    end
     semanas_pra_passar = 4 / @acompanhamento.sessoes_atuais
 
     au = @acompanhamento.atendimentos.last
@@ -117,6 +128,19 @@ class AcompanhamentosController < ApplicationController
   private
 
   def set_acompanhamento
+=begin
+    if usuario_atual.secretaria?
+      @acompanhamento = Acompanhamento.find(params[:id])
+    else
+      begin
+      @acompanhamento = usuario_atual.profissional.acompanhamentos.find(params[:id])
+      rescue ActiveRecord::RecordNotFound => e
+        @acompanhamento = nil
+        render file: "#{Rails.root}/public/404.html", status: 403
+        return
+      end
+    end
+=end
     @acompanhamento = Acompanhamento.find(params[:id])
   end
 
@@ -126,5 +150,19 @@ class AcompanhamentosController < ApplicationController
 
   def dados_atendimento_pdf at
     return "#{at.data.strftime('%d/%m/%Y')}\n#{(at.consideracoes || 'Sem considerações')}"
+  end
+
+  def validar_usuario
+    if usuario_atual.nil? || !(usuario_atual.corpo_clinico || usuario_atual.secretaria?)
+      render file: "#{Rails.root}/public/404.html", status: 403
+      return
+    end
+  end
+
+  def validar_edicao
+    if !(usuario_atual.secretaria? || usuario_atual.profissional == @acompanhamento.profissional)
+      render file: "#{Rails.root}/public/404.html", status: 403
+      return
+    end
   end
 end

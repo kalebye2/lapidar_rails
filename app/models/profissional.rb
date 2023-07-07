@@ -1,13 +1,16 @@
 class Profissional < ApplicationRecord
   belongs_to :pessoa
   belongs_to :profissional_funcao
-  has_and_belongs_to_many :especializacao, through: :profissional_especializacao_juncoes
+  has_one :usuario
+  has_many :profissional_especializacao_juncoes
+  has_many :especializacao, through: :profissional_especializacao_juncoes
 
   has_many :acompanhamentos
   has_many :pacientes, through: :acompanhamentos, source: :pessoa
   has_many :responsaveis_por_pacientes, through: :acompanhamentos, source: :pessoa_responsavel
   has_many :atendimentos, through: :acompanhamentos
   has_many :recebimentos, through: :acompanhamentos
+  has_many :laudos, through: :acompanhamentos
   has_many :atendimento_valores, through: :atendimentos
   has_many :repasses, class_name: "ProfissionalFinanceiroRepasse"
   has_many :instrumento_relatos, through: :atendimento
@@ -15,6 +18,12 @@ class Profissional < ApplicationRecord
 
   has_many :profissional_documento_modelos
 
+  has_many :profissional_especializacao_juncoes
+  has_many :profissional_especializacoes, through: :profissional_especializacao_juncoes
+
+  def clientes
+    pacientes
+  end
 
   def documento
     if profissional_funcao.documento_tipo == nil then return "" end

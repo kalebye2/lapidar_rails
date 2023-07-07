@@ -8,6 +8,7 @@
   <%= form.submit "Pesquisar" %>
 <% end %>
 
+<%== pagy_nav @pagy %>
 <div class="profissionais-container">
   <% @profissionais.each do |pro| %>
     <%= render 'card', profissional: pro %>

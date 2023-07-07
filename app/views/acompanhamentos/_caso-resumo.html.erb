@@ -12,7 +12,9 @@
         <th>Tipo de atendimento</th>
         <th>Status</th>
         <th>Anotações do profissional</th>
-        <th>Opções</th>
+        <% if @acompanhamento.profissional_id == usuario_atual.profissional_id %>
+          <th>Opções</th>
+        <% end %>
       </tr>
     </thead>
     <tbody>
@@ -23,7 +25,9 @@
         <td><%= a.tipo.upcase %></td>
         <td><%= a.status %></td>
         <td><%== Kramdown::Document.new(a.consideracoes || "Sem considerações").to_html %></td>
-        <td><%= link_to "Visualizar", a %></td>
+        <% if usuario_atual.secretaria? || usuario_atual.profissional == a.profissional %>
+          <td><%= link_to "Visualizar", a %></td>
+        <% end %>
       </tr>
     <% end %>
     </tbody>

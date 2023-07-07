@@ -1,6 +1,12 @@
 class Recebimento < ApplicationRecord
   require "csv"
 
+  scope :do_mes_passado, -> { where(data: (Date.today - 1.month).all_month) }
+  scope :do_mes_atual, -> { where(data: Date.today.all_month) }
+  scope :deste_mes, -> { do_mes_atual }
+
+  scope :do_periodo, -> (mes: Date.today.month, ano: Date.today.year, ordem: :desc) { where("YEAR(data) = #{ano} AND MONTH(data) = #{mes}").order(data: ordem) }
+
   belongs_to :acompanhamento
 
   has_one :pessoa, through: :acompanhamento
@@ -67,17 +73,5 @@ class Recebimento < ApplicationRecord
         ]
       end
     end
-  end
-
-  def self.do_mes_passado
-    where(data: (Date.today - 1.month).all_month)
-  end
-
-  def self.do_mes_atual
-    where(data: Date.today.all_month)
-  end
-
-  def self.deste_mes
-    self.do_mes_atual
   end
 end

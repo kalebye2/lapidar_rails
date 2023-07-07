@@ -2,13 +2,18 @@ class AtendimentoValoresController < ApplicationController
   require 'csv'
 
   before_action :set_atendimento_valor, only: %i[ show show_pdf edit delete ]
+  before_action :validar_usuario
 
   def index
     @ano = params[:ano] || Date.today.year
     @mes = params[:mes] || Date.today.month
 
     @ano_mes = "#{@ano}-#{@mes.to_s.rjust(2, "0")}"
-    @atendimento_valores = AtendimentoValor.joins(:atendimento).order(data: :asc, horario: :asc).where(atendimento: { data: ["#{@ano}-#{@mes}-01".."#{@ano}-#{@mes}-01".to_date.end_of_month.to_s] })
+    if usuario_atual.secretaria?
+      @atendimento_valores = AtendimentoValor.joins(:atendimento).order(data: :asc, horario: :asc).where(atendimento: { data: ["#{@ano}-#{@mes}-01".."#{@ano}-#{@mes}-01".to_date.end_of_month.to_s] })
+    else
+      @atendimento_valores = usuario_atual.profissional.atendimento_valores.joins(:atendimento).order("atendimentos.data" => :asc, "atendimentos.horario" => :asc).where(atendimento: { data: ["#{@ano}-#{@mes}-01".."#{@ano}-#{@mes}-01".to_date.end_of_month.to_s]})
+    end
 
     respond_to do |format|
       format.html
@@ -74,5 +79,12 @@ class AtendimentoValoresController < ApplicationController
 
   def atendimento_valor_params
     params.require(:atendimento_valor).permit(:atendimento_id, :valor, :desconto, :taxa_porcentagem_interna, :taxa_porcentagem_externa)
+  end
+
+  def validar_usuario
+    if usuario_atual.nil? || !(usuario_atual.corpo_clinico? || usuario_atual.financeiro?)
+      render file: "#{Rails.root}/public/404.html", status: 403
+      return
+    end
   end
 end

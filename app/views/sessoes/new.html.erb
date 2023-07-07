@@ -1,0 +1,18 @@
+<div class="center">
+  <h1>Entrar</h1>
+  <%= form_with url: sessoes_path, action: :new, local: true do |form| %>
+    <div class="field">
+      <%= form.label "Nome de usuário" %>
+      <%= form.text_field :username %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Senha" %>
+      <%= form.password_field :password %>
+    </div>
+
+    <div class="action">
+      <%= form.submit "Entrar" %>
+    </div>
+  <% end %>
+</div>

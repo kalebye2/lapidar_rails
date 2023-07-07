@@ -9,6 +9,9 @@
         <th>Horário</th>
         <th>Local</th>
         <th>Status</th>
+        <% if !usuario_atual.nil? %>
+          <th>Ações</th>
+        <% end %>
       </tr>
     </thead>
 
@@ -17,23 +20,22 @@
         <% presenca_class = "tr-atendimento-#{ah.status.parameterize}" %>
         <tr class="<%= presenca_class %> tr-atendimento">
           <td>
-            <%= link_to ah.profissional, {class: "atendimento-profissional"} do %><%= ah.profissional.nome_abreviado %>
+            <%= ah.profissional.nome_abreviado %>
               <span style="font-size:.7em;"><%= ah.profissional.documento %></span>
-          <% end %>
           </td>
           <td>
-            <%= link_to ah.pessoa.nome_abreviado, ah.pessoa, {class: "atendimento-pessoa atendimento-pessoa-#{ah.pessoa.render_sexo.parameterize}"} %>
+            <%= ah.paciente.nome_abreviado %>
           </td>
           <td>
-            <%= ah.tipo %> <%= ah.modalidade %>
+            <%= ah.tipo %> - <%= ah.modalidade %>
           </td>
           <td>
-            <%= link_to (render_hora_brasil ah.horario), ah %>
+            <%= render_hora_brasil ah.horario %>
           </td>
           <td><%= ah.local %></td>
           <td>
             <%= ah.status %>
-            <% if !ah.pessoa_presente && ah.em_breve_ou_em_andamento %>
+            <% if !ah.pessoa_presente && ah.em_breve_ou_em_andamento && !usuario_atual.nil? %>
               <%= form_with model: ah, local: true do |form| %>
                 <%= form.label "Presente?" %>
                 <%= form.check_box :presenca %>
@@ -41,6 +43,14 @@
               <% end %>
             <% end %>
           </td>
+
+          <% if !usuario_atual.nil? && (usuario_atual.secretaria? || usuario_atual.profissional == ah.profissional)%>
+            <td>
+              <%= link_to "ver", ah %>
+            </td>
+          <% else %>
+            <td></td>
+          <% end %>
         </tr>
       <% end %>
     </tbody>

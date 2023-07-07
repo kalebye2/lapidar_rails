@@ -1,7 +1,12 @@
 class LaudosController < ApplicationController
   before_action :set_laudo, only: %i[ show edit update delete ]
+  before_action :validar_usuario
   def index
+    if usuario_atual.secretaria?
     @laudos = Laudo.order(data_avaliacao: :desc)
+    elsif usuario_atual.corpo_clinico?
+      @laudos = usuario_atual.profissional.laudos.order(data_avaliacao: :desc)
+    end
   end
 
   def show
@@ -51,10 +56,25 @@ class LaudosController < ApplicationController
   private
 
   def set_laudo
-    @laudo = Laudo.find(params[:id])
+    if usuario_atual.secretaria?
+      @laudo = Laudo.find(params[:id])
+    else
+      begin
+        @laudo = usuario_atual.profissional.laudos.find(params[:id])
+      rescue ActiveRecord::RecordNotFound => e
+        @laudo = nil
+        render file: "#{Rails.root}/public/404.html", status: 403
+      end
+    end
   end
 
   def laudo_params
     params.require(:laudo).permit(:acompanhamento_id, :interessado, :data_avaliacao, :finalidade, :demanda, :tecnicas, :analise, :conclusao)
+  end
+
+  def validar_usuario
+    if usuario_atual.nil? || !(usuario_atual.corpo_clinico? || usuario_atual.secretaria?)
+      render file: "#{Rails.root}/public/404.html", status: 403
+    end
   end
 end

@@ -33,4 +33,8 @@ module ApplicationHelper
     "%0.2f%%" % [porcentagem_int / 100]
   end
 
+  def sim_ou_nao valor=false
+    valor ? "Sim" : "Não"
+  end
+
 end

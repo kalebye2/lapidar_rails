@@ -1,55 +1,60 @@
-<% links = [
-  {
-    nome: "Home",
-    path: root_path,
-    sublinks: nil,
-    style: nil,
-  },
-  {
-    nome: "Cadastros",
-    path: pessoas_path,
-    sublinks: nil,
-    style: nil,
-  },
-  {
-    nome: "Profissionais",
-    path: profissionais_path,
-    sublinks: nil,
-    style: nil,
-  },
-  {
-    nome: "Acompanhamentos",
-    path: acompanhamentos_path,
-    sublinks: nil,
-    style: nil,
-  },
-  {
-    nome: "Financeiro",
-    path: financeiro_path,
-    sublinks: [],
-    style: nil,
-  },
-  {
-    nome: "Laudos",
-    path: laudos_path,
-    sublinks: [],
-    style: nil,
-  },
-  {
-    nome: "Entrar",
-    path: financeiro_path,
-    sublinks: nil,
-    style: "float:right;",
-  },
-]
-%>
-
 <nav class="navbar">
   <ul class="navbar-ul">
-    <% links.each do |link| %>
-      <li class="navbar-li" style="<%= link[:style] %>">
-        <%= link_to link[:path], class: "navbar-link" do %>
-          <%= link[:nome] %>
+    <li>
+      <%= link_to "Home", root_path %>
+    </li>
+
+    <% if !usuario_atual.nil? && (usuario_atual.corpo_clinico? || usuario_atual.secretaria?)%>
+      <li>
+        <%= link_to "Cadastros", pessoas_path %>
+      </li>
+    <% end %>
+
+    <li>
+      <%= link_to "Profissionais", profissionais_path %>
+    </li>
+
+    <% if !usuario_atual.nil? %>
+      <% if usuario_atual.corpo_clinico? || usuario_atual.secretaria? %>
+        <li>
+          <%= link_to "Acompanhamentos", acompanhamentos_path %>
+        </li>
+      <% end %>
+
+      <% if usuario_atual.corpo_clinico? || usuario_atual.financeiro? %>
+        <li>
+          <%= link_to "Financeiro", financeiro_path %>
+        </li>
+      <% end %>
+
+      <% if usuario_atual.corpo_clinico? || usuario_atual.secretaria? %>
+        <li>
+          <%= link_to "Laudos", laudos_path %>
+        </li>
+      <% end %>
+
+      <% if usuario_atual.informatica? %>
+        <li>
+          <%= link_to "Admin", admin_path %>
+        </li>
+      <% end %>
+    <% end %>
+    <!-- link do usuário -->
+    <!-- se não estiver logado -->
+    <% if usuario_atual.nil? %>
+      <li class="navbar-li" style="float:right;color:white;">
+        <%= link_to "Entrar", entrar_path, { class: "navbar-link" } %>
+      </li>
+    <% else %>
+      <li class="navbar-li" style="float:right;color:white;">
+        <%= link_to "Sair", sair_path %>
+      </li>
+      <li class="navbar-li" style="float:right;color:white;">
+        <%= link_to usuario_atual.profissional do %>
+          <%= usuario_atual.nome_abreviado %>
+          <span style="font-size:.8em;">
+            [<%= usuario_atual.papel %>]
+          </span>
         <% end %>
       </li>
     <% end %>
