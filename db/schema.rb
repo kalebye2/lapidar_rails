@@ -126,13 +126,13 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   create_table "biblioteca_obra_autor_juncoes", primary_key: ["obra_id", "autor_id"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "obra_id", null: false
     t.integer "autor_id", null: false
-    t.index ["autor_id"], name: "autor_id"
+    t.index ["autor_id"], name: "biblioteca_obra_autor_juncoes_ibfk_2"
   end
 
   create_table "biblioteca_obra_tag_juncoes", primary_key: ["obra_id", "tag_id"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "obra_id", null: false
     t.integer "tag_id", null: false
-    t.index ["tag_id"], name: "tag_id"
+    t.index ["tag_id"], name: "biblioteca_obra_tag_juncoes_ibfk_2"
   end
 
   create_table "biblioteca_obra_tipos", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -719,14 +719,10 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "atendimentos", "atendimento_modalidades", column: "modalidade_id", name: "atendimentos_ibfk_3", on_update: :cascade
   add_foreign_key "atendimentos", "atendimento_tipos", name: "atendimentos_ibfk_2", on_update: :cascade
   add_foreign_key "biblioteca_identificadores", "biblioteca_obras", column: "obra_id", name: "biblioteca_identificadores_ibfk_1"
-  add_foreign_key "biblioteca_obra_autor_juncoes", "biblioteca_autores", column: "autor_id", name: "biblioteca_obra_autor_juncoes_ibfk_2"
-  add_foreign_key "biblioteca_obra_autor_juncoes", "biblioteca_autores", column: "autor_id", name: "biblioteca_obra_autor_juncoes_ibfk_3", on_update: :cascade
-  add_foreign_key "biblioteca_obra_autor_juncoes", "biblioteca_obras", column: "obra_id", name: "biblioteca_obra_autor_juncoes_ibfk_1"
-  add_foreign_key "biblioteca_obra_autor_juncoes", "biblioteca_obras", column: "obra_id", name: "biblioteca_obra_autor_juncoes_ibfk_4"
-  add_foreign_key "biblioteca_obra_tag_juncoes", "biblioteca_obras", column: "obra_id", name: "biblioteca_obra_tag_juncoes_ibfk_1"
-  add_foreign_key "biblioteca_obra_tag_juncoes", "biblioteca_obras", column: "obra_id", name: "biblioteca_obra_tag_juncoes_ibfk_3", on_update: :cascade
-  add_foreign_key "biblioteca_obra_tag_juncoes", "biblioteca_tags", column: "tag_id", name: "biblioteca_obra_tag_juncoes_ibfk_2"
-  add_foreign_key "biblioteca_obra_tag_juncoes", "biblioteca_tags", column: "tag_id", name: "biblioteca_obra_tag_juncoes_ibfk_4", on_update: :cascade
+  add_foreign_key "biblioteca_obra_autor_juncoes", "biblioteca_autores", column: "autor_id", name: "biblioteca_obra_autor_juncoes_ibfk_2", on_update: :cascade
+  add_foreign_key "biblioteca_obra_autor_juncoes", "biblioteca_obras", column: "obra_id", name: "biblioteca_obra_autor_juncoes_ibfk_1", on_update: :cascade
+  add_foreign_key "biblioteca_obra_tag_juncoes", "biblioteca_obras", column: "obra_id", name: "biblioteca_obra_tag_juncoes_ibfk_1", on_update: :cascade
+  add_foreign_key "biblioteca_obra_tag_juncoes", "biblioteca_tags", column: "tag_id", name: "biblioteca_obra_tag_juncoes_ibfk_2", on_update: :cascade
   add_foreign_key "biblioteca_obras", "biblioteca_editoras", column: "editora_id", name: "biblioteca_obras_ibfk_2"
   add_foreign_key "biblioteca_obras", "biblioteca_obra_tipos", column: "obra_tipo_id", name: "biblioteca_obras_ibfk_1"
   add_foreign_key "biblioteca_obras", "biblioteca_periodicos", column: "periodico_id", name: "biblioteca_obras_ibfk_3", on_update: :cascade
