@@ -13,7 +13,8 @@ class PessoaExtraInformacoesController < ApplicationController
     @pessoa_extra_informacao = PessoaExtraInformacao.new(pessoa_extra_informacao_params)
     respond_to do |format|
       if @pessoa_extra_informacao.save
-        format.html { redirect_to pessoa_extra_informacoes_url(@pessoa_extra_informacao), notice: "Informação extra adicionada!" }
+        pessoa_id = @pessoa_extra_informacao.pessoa_id
+        format.html { redirect_to "/cadastros/#{pessoa_id}/informacoes_extras", notice: "Informação extra adicionada!" }
         format.json { render :show, status: :created, location: @pessoa_extra_informacao }
       else
         format.html { render :new, status: :unprocessable_identity }
@@ -35,7 +36,8 @@ class PessoaExtraInformacoesController < ApplicationController
   def update
     respond_to do |format|
       if @pessoa_extra_informacao.update(pessoa_extra_informacao_params)
-        format.html { redirect_to pessoa_extra_informacao_url(@pessoa_extra_informacao), notice: "Informação extra atualizada." }
+        pessoa_id = @pessoa_extra_informacao.pessoa_id
+        format.html { redirect_to "/cadastros/#{pessoa_id}/informacoes_extras", notice: "Informação extra atualizada." }
         format.json { render :show, status: :ok, location: @pessoa_extra_informacao }
       else
         format.html { render :edit, status: :unprocessable_entity }

@@ -2,3 +2,24 @@
 <h1>Editar informação</h1>
 
 <%== Kramdown::Document.new(@extra_informacao.conteudo_material).to_html %>
+
+<%= form_for @extra_informacao, local: true do |form| %>
+  <div class="field">
+    <%= form.label :data %>
+    <%= form.date_field :data %>
+  </div>
+
+  <div class="field">
+    <%= form.label :meio %>
+    <%= form.text_field :meio %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Conteúdo" %>
+    <%= form.text_area :conteudo_material, size: "70x15" %>
+  </div>
+
+  <div class="action">
+    <%= form.submit %>
+  </div>
+<% end %>

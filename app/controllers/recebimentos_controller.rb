@@ -54,8 +54,8 @@ class RecebimentosController < ApplicationController
 
     respond_to do |format|
       if @recebimento.save
-        format.html { redirect_to recebimento_url(@recebimento), notice: "recebimento was successfully created." }
-        format.json { render :show, status: :created, location: @recebimento }
+        format.html { redirect_to recebimentos_path, notice: "recebimento was successfully created." }
+        format.json { render :index, status: :created }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @recebimento.errors, status: :unprocessable_entity }
@@ -72,8 +72,8 @@ class RecebimentosController < ApplicationController
     end
     respond_to do |format|
       if @recebimento.update(recebimento_params)
-        format.html { redirect_to recebimento_url(@recebimento), notice: "recebimento was successfully updated." }
-        format.json { render :show, status: :ok, location: @recebimento }
+        format.html { redirect_to recebimentos_path, notice: "recebimento was successfully updated." }
+        format.json { render :index, status: :ok}
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @recebimento.errors, status: :unprocessable_entity }

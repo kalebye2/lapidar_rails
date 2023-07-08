@@ -1,8 +1,8 @@
 <h1>Laudos</h1>
-<p>Encontre os laudos</p>
+<p>Selecione o laudo para visualizar</p>
 
 <ul>
   <% @laudos.each do |laudo| %>
-    <li><%= link_to laudo.data_avaliacao, laudo %>
+    <li><%= link_to "#{laudo.profissional.nome_abreviado} em #{render_data_brasil laudo.data_avaliacao} - #{laudo.finalidade}", laudo %>
   <% end %>
 </ul>

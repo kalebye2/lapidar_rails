@@ -1,4 +1,6 @@
+<% titulo "Informações extras de #{@pessoa.nome_abreviado}" %>
 <h1><%= @pessoa.nome_completo %> - Informações Extras</h1>
+<%= link_to "voltar", @pessoa %>
 <%= link_to "+ informação extra", informacao_extra_new_pessoa_path %>
 <% @pessoa.pessoa_extra_informacao.each do |ie| %>
   <p><%= ie.data %> <%= ie.meio.upcase %> (<%= link_to "editar", informacao_extra_edit_pessoa_path(extra_info_id: ie.id) %>)</p>
