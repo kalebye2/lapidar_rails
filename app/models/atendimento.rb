@@ -107,6 +107,4 @@ class Atendimento < ApplicationRecord
   def local
     atendimento_local.nil? ? "Não definido" : atendimento_local.descricao
   end
-
-
 end

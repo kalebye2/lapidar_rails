@@ -4,6 +4,9 @@ class Recebimento < ApplicationRecord
   scope :do_mes_passado, -> { where(data: (Date.today - 1.month).all_month) }
   scope :do_mes_atual, -> { where(data: Date.today.all_month) }
   scope :deste_mes, -> { do_mes_atual }
+  scope :do_ano_atual, -> { where(data: Date.today.all_year) }
+  scope :deste_ano, -> { do_ano_atual }
+  scope :do_ano_passado, -> { where(data: (Date.today - 1.year).all_year) }
 
   scope :do_periodo, -> (mes: Date.today.month, ano: Date.today.year, ordem: :desc) { where("YEAR(data) = #{ano} AND MONTH(data) = #{mes}").order(data: ordem) }
 
