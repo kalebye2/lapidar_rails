@@ -1,4 +1,7 @@
 <% if atendimento %>
+  <% if atendimento.atendimento_valor.nil? %>
+    <%= button_to "Gerar valor",  { controller: :atendimentos, action: :create_atendimento_valor } %>
+  <% end %>
   <%= form_with model: atendimento, local: true, method: :put do |form| %>
     <div class="field">
       <%= form.label "Data e hora" %>

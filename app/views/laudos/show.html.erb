@@ -3,7 +3,7 @@
 <%= link_to "editar", edit_laudo_path(@laudo) %>
 <%= link_to "download markdown", laudo_path(@laudo, format: :md), { target: :blank } %>
 
-<table style="width:90%;margin:auto;">
+<table class="tabela-laudo">
   <caption><%= @laudo.finalidade %> por <%= @laudo.profissional.nome_abreviado %> - <%= @laudo.profissional.funcao %> <%= @laudo.profissional.documento %></caption>
   <thead>
     <tr>
