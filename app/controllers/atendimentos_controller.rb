@@ -1,5 +1,5 @@
 class AtendimentosController < ApplicationController
-  before_action :set_atendimento, only: %i[ show edit update destroy reagendar_para_proxima_semana gerar_atendimento_valor ]
+  before_action :set_atendimento, only: %i[ show edit update destroy reagendar_para_proxima_semana gerar_atendimento_valor create_atendimento_valor ]
   before_action :validar_usuario
   before_action :validar_edicao, only: %i[ show edit update destroy reagendar_para_proxima_semana gerar_atendimento_valor ]
 
@@ -23,17 +23,29 @@ class AtendimentosController < ApplicationController
 
     respond_to do |format|
       if @atendimento.save
-        valor = @atendimento.build_atendimento_valor
-        valor.taxa_porcentagem_externa = @atendimento.acompanhamento.atendimentos.last.valor_atendimento.taxa_porcentagem_externa
-        valor.taxa_porcentagem_interna = @atendimento.acompanhamento.atendimentos.last.valor_atendimento.taxa_porcentagem_interna
-        valor.valor = @atendimento.acompanhamento.valor_atual
-        valor.save
+        create_atendimento_valor
         format.html { redirect_to atendimento_url(@atendimento), notice: "Atendimento registrado com sucesso!" }
         format.json { render :show, status: :created, location: @atendimento }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @atendimento.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def create_atendimento_valor
+    if @atendimento.nil? then return end
+    valor = @atendimento.build_atendimento_valor
+    if @atendimento.acompanhamento.atendimento_valores.last.nil?
+      valor.taxa_porcentagem_externa = @atendimento.acompanhamento.atendimento_valores.last.taxa_porcentagem_externa
+      valor.taxa_porcentagem_interna = @atendimento.acompanhamento.atendimento_valores.last.taxa_porcentagem_interna
+      valor.valor = @atendimento.acompanhamento.valor_atual
+      valor.save
+    else
+      valor.taxa_porcentagem_externa = 0
+      valor.taxa_porcentagem_interna = 0
+      valor.valor = @atendimento.acompanhamento.valor_atual
+      valor.save
     end
   end
 

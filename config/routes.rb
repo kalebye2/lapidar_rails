@@ -56,6 +56,7 @@ Rails.application.routes.draw do
     member do
       post :reagendar_para_proxima_semana
       get :reagendar_para_proxima_semana
+      post :create_atendimento_valor
     end
   end
   resources :relatos
