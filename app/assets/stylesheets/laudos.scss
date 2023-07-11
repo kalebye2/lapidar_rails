@@ -1,0 +1,12 @@
+table.tabela-laudo {
+	background-color: red;
+
+	& th {
+		&[colspan="2"] {
+			background: var(--header-bg);
+			color: var(--header-color);
+		}
+		background: inherit;
+		color: inherit;
+	}
+}
