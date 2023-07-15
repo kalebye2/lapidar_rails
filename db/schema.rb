@@ -522,14 +522,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "email", null: false
   end
 
-  create_table "pessoa_extra_informacoes", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.integer "pessoa_id", null: false
-    t.text "conteudo_material", size: :medium
-    t.date "data", null: false
-    t.string "meio"
-    t.index ["pessoa_id"], name: "usuario_id"
-  end
-
   create_table "pessoa_responsaveis", primary_key: ["pessoa_dependente_id", "pessoa_responsavel_id"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "pessoa_dependente_id", null: false
     t.integer "pessoa_responsavel_id", null: false
@@ -680,10 +672,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.index ["pessoa_pagante_id"], name: "pessoa_pagante_id"
   end
 
-  create_table "relatos", id: :integer, default: nil, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.text "relato"
-  end
-
   create_table "subtestes", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "instrumento_id"
     t.integer "psicologia_subfuncao_id"
@@ -757,7 +745,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "pessoa_devolutivas", "pessoas", name: "pessoa_devolutivas_ibfk_4", on_update: :cascade
   add_foreign_key "pessoa_devolutivas", "pessoas", name: "pessoa_devolutivas_ibfk_6", on_update: :cascade
   add_foreign_key "pessoa_devolutivas", "profissionais", name: "pessoa_devolutivas_ibfk_3", on_update: :cascade
-  add_foreign_key "pessoa_extra_informacoes", "pessoas", name: "pessoa_extra_informacoes_ibfk_1", on_update: :cascade
   add_foreign_key "pessoas", "civil_estados", name: "pessoas_ibfk_1"
   add_foreign_key "pessoas", "instrucao_graus", name: "pessoas_ibfk_2"
   add_foreign_key "pessoas", "paises", name: "pessoas_ibfk_3"
@@ -775,6 +762,5 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "recebimentos", "acompanhamentos", name: "recebimentos_ibfk_6", on_update: :cascade
   add_foreign_key "recebimentos", "pagamento_modalidades", column: "modalidade_id", name: "recebimentos_ibfk_2", on_update: :cascade
   add_foreign_key "recebimentos", "pessoas", column: "pessoa_pagante_id", name: "recebimentos_ibfk_5", on_update: :cascade
-  add_foreign_key "relatos", "atendimentos", column: "id", name: "SYS_FK_1294", on_update: :cascade, on_delete: :cascade
   add_foreign_key "usuarios", "profissionais", name: "usuarios_ibfk_1", on_update: :cascade
 end
