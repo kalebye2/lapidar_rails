@@ -5,6 +5,9 @@ class AtendimentoValor < ApplicationRecord
 
   has_one :acompanhamento, through: :atendimento
 
+  scope :do_mes_atual, -> { joins(:atendimento).where("atendimentos.data" => Date.today.all_month) }
+  scope :deste_mes, -> { do_mes_atual }
+
   def data
     atendimento.data
   end

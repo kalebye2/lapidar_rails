@@ -78,10 +78,23 @@ class PessoasController < ApplicationController
 
   def informacoes_extras
     @extra_informacoes = @pessoa.pessoa_extra_informacao.order(data: :asc)
+    respond_to do |format|
+      format.html
+      format.csv do
+        send_data PessoaExtraInformacao.para_csv(@extra_informacoes), filename: "#{Rails.application.class.module_parent_name.to_s}_#{@pessoa.nome_completo.parameterize}.csv", type: 'text/csv'
+      end
+    end
   end
 
   def informacao_extra_edit
     @extra_informacao = PessoaExtraInformacao.find(params[:extra_info_id])
+    respond_to do |format|
+      format.html
+      format.md do
+        conteudo = "*Informação obtida por: #{(@extra_informacao.meio || "meio desconhecido").upcase} em #{@extra_informacao.data.strftime("%d/%m/%Y")}*\n\n---\n#{@extra_informacao.conteudo_material}"
+        send_data conteudo, filename: "#{@extra_informacao.pessoa.nome_completo}_#{@extra_informacao.data}_#{(@extra_informacao.meio || "limbo").upcase}.md"
+      end
+    end
   end
 
   def informacao_extra_update

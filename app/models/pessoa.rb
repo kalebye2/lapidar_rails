@@ -183,7 +183,7 @@ class Pessoa < ApplicationRecord
     "#{c} - #{e}"
   end
 
-  def nome_relato
+  def nome_confidencial
     "#{nome[-2..].upcase}#{sobrenome[..2].upcase}#{nome[..1].upcase}"
   end
 

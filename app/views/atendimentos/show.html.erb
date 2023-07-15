@@ -11,13 +11,7 @@
 
 <h4><%= @atendimento.acompanhamento.motivo %></h4>
 
-<%= link_to "Relato de instrumento usado", (@atendimento.instrumento_relato.nil? ? new_instrumento_relato_path : edit_instrumento_relato_path(@atendimento.instrumento_relato)) %>
 <br /><br /><br />
 <%= render "form-individual", atendimento: @atendimento %>
 
-<% if !@atendimento.relato.nil? %>
-<%= link_to "relato", @atendimento.relato %>
-<% else %>
-  <%= link_to "escrever relato", new_relato_path %>
-<% end %>
 </div>

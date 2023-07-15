@@ -8,8 +8,6 @@ class Atendimento < ApplicationRecord
   has_one :instrumento_relato
   has_one :infantojuvenil_anamnese
 
-  has_one :relato, foreign_key: :id, primary_key: :id, inverse_of: :atendimento
-
   accepts_nested_attributes_for :atendimento_valor
 
   # scopes
@@ -73,9 +71,9 @@ class Atendimento < ApplicationRecord
    "#{data.strftime('%d/%m/%Y')} às #{horario.strftime('%Hh%M')}" 
   end
 
-  def informacoes_relato
+  def informacoes_confidencial
     p = acompanhamento.pessoa
-    "#{p.nome_relato}
+    "#{p.nome_confidencial}
     - #{data.strftime('%d/%m/%Y')} às #{horario.strftime('%Hh%M')}"
   end
 

@@ -42,9 +42,6 @@ Rails.application.routes.draw do
     member do
       get :devolutivas, path: 'devolutivas'
       get :responsavel_devolutivas
-      get :informacoes_extras
-      get :informacao_extra_new, path: "informacoes_extras/new"
-      get :informacao_extra_edit, path: "informacoes_extras/:extra_info_id"
     end
   end
   resources :paises
@@ -59,8 +56,6 @@ Rails.application.routes.draw do
       post :create_atendimento_valor
     end
   end
-  resources :relatos
-  resources :pessoa_extra_informacoes
 
   resources :profissional_documento_modelos
 
@@ -77,8 +72,6 @@ Rails.application.routes.draw do
 
   # rotas pdf
   get "/acompanhamentos/:id/detalhes", to: "acompanhamentos#caso_detalhes"
-  get "/relatos/:id/pdf", to: "relatos#show_pdf"
-  get "/pessoa_extra_informacoes/:id/pdf", to: "pessoa_extra_informacoes#show_pdf"
 
   # get pdf
   get "/pdf_download", to: "application#pdf_download"
