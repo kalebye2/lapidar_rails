@@ -3,7 +3,7 @@ class PessoaDevolutivasController < ApplicationController
 
   # GET /pessoa_devolutivas or /pessoa_devolutivas.json
   def index
-    @pessoa_devolutivas = pessoaDevolutiva.all
+    @pessoa_devolutivas = PessoaDevolutiva.all
   end
 
   # GET /pessoa_devolutivas/1 or /pessoa_devolutivas/1.json

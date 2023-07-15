@@ -1,34 +1,39 @@
 <p id="notice"><%= notice %></p>
+<%= link_to 'Edit', edit_pessoa_devolutiva_path(@pessoa_devolutiva) %> |
+<%= link_to 'Back', pessoa_devolutivas_path %>
 
-<p>
-  <strong>Usuario:</strong>
-  <%= @usuario_devolutiva.usuario %>
-</p>
+<table>
+  <caption>Devolutiva</caption>
+  <tbody>
+    <tr>
+      <th>Paciente</th>
+      <td><%= @pessoa_devolutiva.paciente.nome_completo %></td>
+    </tr>
 
-<p>
-  <strong>Usuario responsavel:</strong>
-  <%= @usuario_devolutiva.usuario_responsavel_id %>
-</p>
+    <tr>
+      <th>Responsável</th>
+      <td><%= @pessoa_devolutiva.responsavel.nome_completo %></td>
+    </tr>
 
-<p>
-  <strong>Profissional:</strong>
-  <%= @usuario_devolutiva.profissional %>
-</p>
+    <tr>
+      <th>Profissional</th>
+      <td><%= @pessoa_devolutiva.profissional.descricao_completa %></td>
+    </tr>
 
-<p>
-  <strong>Data:</strong>
-  <%= @usuario_devolutiva.data %>
-</p>
+    <tr>
+      <th>Data</th>
+      <td><%= render_data_brasil @pessoa_devolutiva.data %></td>
+    </tr>
 
-<p>
-  <strong>Feedback responsavel:</strong>
-  <%= @usuario_devolutiva.feedback_responsavel %>
-</p>
+    <tr>
+      <th>Feedback do responsável</th>
+      <td><%== Kramdown::Document.new(@pessoa_devolutiva.feedback_responsavel).to_html %></td>
+    </tr>
 
-<p>
-  <strong>Orientacoes profissional:</strong>
-  <%= @usuario_devolutiva.orientacoes_profissional %>
-</p>
+    <tr>
+      <th>Orientações</th>
+      <td><%== Kramdown::Document.new(@pessoa_devolutiva.orientacoes_profissional).to_html %></td>
+    </tr>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_usuario_devolutiva_path(@usuario_devolutiva) %> |
-<%= link_to 'Back', usuario_devolutivas_path %>
