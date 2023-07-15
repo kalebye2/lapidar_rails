@@ -3,15 +3,15 @@ class BibliotecaAutor < ApplicationRecord
   has_many :biblioteca_obras, through: :biblioteca_obra_autor_juncoes
   has_many :biblioteca_tags, through: :biblioteca_obra
 
-  def obra
-    biblioteca_obra
+  def obras
+    biblioteca_obras
   end
 
-  def obra_juncao
+  def obra_juncoes
     biblioteca_obra_autor_juncoes
   end
 
-  def tag
-    biblioteca_tag
+  def tags
+    biblioteca_tags
   end
 end
