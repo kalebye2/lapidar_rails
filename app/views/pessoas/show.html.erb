@@ -95,8 +95,8 @@
       <% if !@pessoa.acompanhamentos_responsavel.empty? %>
         <div class="pessoa-acompanhamentos-responsavel">
           <h3>Acompanhamentos pelos quais responde</h3>
-          <% if @pessoa.acompanhamento_responsavel != nil %>
-            <% @pessoa.acompanhamento_responsavel.order(data_inicio: :desc).each do |a| %>
+          <% if @pessoa.acompanhamentos_responsavel != nil %>
+            <% @pessoa.acompanhamentos_responsavel.order(data_inicio: :desc).each do |a| %>
               <%= link_to a do %><li><%= a.render_info_para_pessoa %></li><% end %>
             <% end %>
           <% end %>
