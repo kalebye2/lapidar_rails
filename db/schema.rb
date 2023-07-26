@@ -92,7 +92,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "acompanhamento_id", null: false
     t.boolean "presenca"
     t.integer "atendimento_tipo_id"
-    t.text "consideracoes", size: :medium
+    t.text "anotacoes", size: :medium
     t.integer "atendimento_local_id"
     t.boolean "reagendado", default: false
     t.index ["acompanhamento_id"], name: "acompanhamento_id"

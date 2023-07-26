@@ -8,6 +8,7 @@
 <%= link_to u, class:"pessoa" do %><h2><%= u.nome_completo %></h2><% end %>
 <%= link_to pro, class:"profissional" do %><h3><%= pro.nome_completo %> <%= pro.documento %></h3><% end %>
 <%= button_to "reagendar para próxima semana", { action: :reagendar_para_proxima_semana } if !(@atendimento.reagendado || @atendimento.presenca) %>
+<%= button_to "Apagar atendimento", { action: :destroy }, { method: :delete, data: { confirm: "Tem certeza que deseja remover este atendimento?" } } %>
 
 <h4><%= @atendimento.acompanhamento.motivo %></h4>
 

@@ -62,6 +62,15 @@ class AtendimentosController < ApplicationController
   end
 
   def destroy
+    if !@atendimento.atendimento_valor.nil?
+      @atendimento.atendimento_valor.destroy
+    end
+    @atendimento.destroy
+
+    respond_to do |format|
+      format.html { redirect_to root_path, notice: "Atendimento removido com sucesso" }
+      format.json { head :no_content }
+    end
   end
 
   def gerar_atendimento_valor
@@ -91,7 +100,7 @@ class AtendimentosController < ApplicationController
   end
 
   def atendimento_params
-    params.require(:atendimento).permit(:data, :horario, :modalidade_id, :acompanhamento_id, :presenca, :atendimento_tipo_id, :consideracoes, :remarcado, :atendimento_local_id, :reagendado, atendimento_valor_attributes: [:atendimento_id, :valor, :desconto, :taxa_porcentagem_externa, :taxa_porcentagem_interna, :id])
+    params.require(:atendimento).permit(:data, :horario, :modalidade_id, :acompanhamento_id, :presenca, :atendimento_tipo_id, :anotacoes, :remarcado, :atendimento_local_id, :reagendado, atendimento_valor_attributes: [:atendimento_id, :valor, :desconto, :taxa_porcentagem_externa, :taxa_porcentagem_interna, :id])
   end
 
   def validar_usuario

@@ -23,6 +23,10 @@ class Atendimento < ApplicationRecord
   scope :deste_ano, -> { self.do_ano_atual }
   scope :do_ano_passado, -> { where(data: (Date.today - 1.year).all_year) }
   scope :reagendados, -> { where(reagendado: true) }
+
+  def consideracoes
+    anotacoes
+  end
   
   # pessoas envolvidas
   def pessoa
