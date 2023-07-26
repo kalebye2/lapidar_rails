@@ -1,7 +1,7 @@
 <% if acompanhamento != nil %>
   <table class="tabela">
     <caption>
-      Considerações do acompanhamento<br />
+      Anotações do acompanhamento<br />
       <!--span style="font-size:.7em;"><%#= link_to "Baixar", { controller: :acompanhamentos, action: :caso_detalhes, id: acompanhamento.id, format: :pdf }, { target: :blank } %>
     </span>-->
     </caption>
@@ -24,7 +24,7 @@
         <td><%= a.modalidade.upcase %></td>
         <td><%= a.tipo.upcase %></td>
         <td><%= a.status %></td>
-        <td><%== Kramdown::Document.new(a.consideracoes || "Sem considerações").to_html %></td>
+        <td><%== Kramdown::Document.new(a.anotacoes || "Sem anotações").to_html %></td>
         <% if usuario_atual.secretaria? || usuario_atual.profissional == a.profissional %>
           <td><%= link_to "Visualizar", a %></td>
         <% end %>
