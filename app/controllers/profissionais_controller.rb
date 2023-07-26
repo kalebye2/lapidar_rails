@@ -1,6 +1,6 @@
 class ProfissionaisController < ApplicationController
   before_action :set_profissional, only: %i[ show edit update delete acompanhamentos ]
-  before_action :validar_usuario, only: %i[ show edit update delete acompanhamentos ]
+  before_action :validar_usuario, only: %i[ new show edit update delete acompanhamentos ]
 
   include Pagy::Backend
 
