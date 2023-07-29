@@ -46,10 +46,8 @@
 
           <% if !usuario_atual.nil? && (usuario_atual.secretaria? || usuario_atual.profissional == ah.profissional)%>
             <td>
-              <%= link_to "ver", ah %>
+              <%= link_to "acompanhar", ah.acompanhamento %>
             </td>
-          <% else %>
-            <td></td>
           <% end %>
         </tr>
       <% end %>

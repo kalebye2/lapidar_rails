@@ -51,6 +51,18 @@ class Acompanhamento < ApplicationRecord
     atendimentos.where(data: [inicio..final]).count
   end
 
+  def em_andamento?
+    data_final.nil? && finalizacao_motivo_id.nil?
+  end
+
+  def em_espera?
+    !data_final.nil? && finalizacao_motivo_id.nil?
+  end
+
+  def finalizado?
+    !em_andamento?
+  end
+
   def self.em_andamento
     where(data_final: nil, acompanhamento_finalizacao_motivo: nil)
   end

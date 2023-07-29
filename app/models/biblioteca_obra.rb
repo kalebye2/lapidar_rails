@@ -14,7 +14,7 @@ class BibliotecaObra < ApplicationRecord
   end
 
   def periodico
-    biblioteca_periodico
+    biblioteca_obra
   end
 
   def autores
@@ -37,11 +37,26 @@ class BibliotecaObra < ApplicationRecord
     biblioteca_obra_tipo
   end
 
+  def tipo
+    obra_tipo.tipo.upcase
+  end
+
   def titulo_completo
     if subtitulo.nil?
       titulo
     else
       titulo + ': ' + subtitulo
+    end
+  end
+
+  def isbn_formatado
+  end
+
+  def data_formatada
+    if biblioteca_obra_tipo == BibliotecaObraTipo.find_by(tipo: "Livro")
+      data_publicacao.strftime("%Y")
+    else
+      data_publicacao.strftime("%m/%Y")
     end
   end
   # variáveis da classe

@@ -3,6 +3,12 @@ class Pessoa < ApplicationRecord
   belongs_to :instrucao_grau, optional: true
   belongs_to :pais, optional: true
   belongs_to :pessoa_tratamento_pronome, optional: true
+
+  scope :do_sexo_feminino, -> { where(feminino: true) }
+  scope :do_sexo_masculino, -> { where(feminino: false) }
+  scope :mulheres, -> { do_sexo_feminino }
+  scope :homens, -> { do_sexo_masculino }
+  scope :profissionais, -> { joins(:profissional) }
   
   # has associations
   has_one :usuario

@@ -24,7 +24,7 @@ class AtendimentosController < ApplicationController
     respond_to do |format|
       if @atendimento.save
         create_atendimento_valor
-        format.html { redirect_to atendimento_url(@atendimento), notice: "Atendimento registrado com sucesso!" }
+        format.html { redirect_to acompanhamento_url(@atendimento.acompanhamento), notice: "Atendimento registrado com sucesso!" }
         format.json { render :show, status: :created, location: @atendimento }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -52,7 +52,7 @@ class AtendimentosController < ApplicationController
   def update
     respond_to do |format|
       if @atendimento.update(atendimento_params)
-        format.html { redirect_to atendimento_url(@atendimento), notice: "Atendimento atualizado com sucesso." }
+        format.html { redirect_to acompanhamento_url(@atendimento.acompanhamento), notice: "Atendimento atualizado com sucesso." }
         format.json { render :show, status: :ok, location: @atendimento }
       else
         format.html { render :edit, status: :unprocessable_entity }

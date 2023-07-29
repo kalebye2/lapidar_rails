@@ -1,0 +1,23 @@
+.biblioteca-obras-container {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-gap: 1em;
+}
+
+.biblioteca-obra-card {
+	padding: 1em;
+	border-radius: 1em;
+	height: 90%;
+}
+
+.biblioteca-livro {
+	background-color: lightgray;
+
+	transition: transform 200ms ease-out,
+	box-shadow 300ms ease-out;
+
+	&:hover {
+		transform: translateY(-2%);
+		box-shadow: 0 .5em black;
+	}
+}

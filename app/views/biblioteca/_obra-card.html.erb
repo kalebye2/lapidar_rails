@@ -1,0 +1,16 @@
+<% if obra %>
+  <%= link_to obra do %>
+    <div class="biblioteca-obra-card biblioteca-<%= obra.tipo.parameterize %>">
+      <h2><%= obra.titulo_completo %></h2>
+      <p>
+        <%= obra.data_formatada %>
+      </p>
+      <p>
+        <%= obra.tipo %>
+      </p>
+      <p>
+      <%= obra.autores.map {|a| a.nome_referencia}.to_sentence(words_connector: ", ", two_words_connector: " & ", last_word_connector: " & ") %>
+      </p>
+    </div>
+  <% end %>
+<% end %>

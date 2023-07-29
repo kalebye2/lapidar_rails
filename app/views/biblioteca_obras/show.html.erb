@@ -1,2 +1,39 @@
-<h1>BibliotecaObras#show</h1>
-<p>Find me in app/views/biblioteca_obras/show.html.erb</p>
+<% titulo @obra.titulo_completo %>
+<h1><%= @obra.titulo_completo %></h1>
+<h2>
+<% autores_count = @obra.autores.count %>
+<% @obra.autores.map { |a| [a.nome_completo, a] }.each_with_index do |autor, id| %>
+  <%= link_to autor[0], autor[1] %><% if id != autores_count - 1 %>;<% end %>
+<% end %>
+</h2>
+<hr>
+
+<%= link_to "voltar", biblioteca_path %>
+
+<div class="biblioteca-obra-resumo">
+  <%= @obra.resumo || "LOREM IPSUM DOLOR SIT AMET CONSECTETUR" %>
+</div>
+
+<div class="biblioteca-obra-informacoes">
+  <p><%= @obra.tipo %></p>
+  <p><%= @obra.editora.nome %></p>
+  <p><%= @obra.data_formatada %></p>
+  <p>ISBN: <%= @obra.isbn || "Não informado" %></p>
+
+  <% if @obra.obra_virtual %>
+    <%= link_to "Visualizar", @obra.caminho %>
+  <% end %>
+
+  <% if @obra.edicao > 0 %>
+    <p><%= @obra.edicao %>ª edição</p>
+  <% end %>
+
+  <% if @obra.volume > 0 %>
+    <p>Volume <%= @obra.volume %></p>
+  <% end %>
+
+  <% if @obra.periodico %>
+    <p><%= @obra.periodico.nome %></p>
+  <% end %>
+
+</div>

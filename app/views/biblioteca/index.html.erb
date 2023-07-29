@@ -1,0 +1,10 @@
+<% titulo "Biblioteca" %>
+<h1>Biblioteca</h1>
+<div class="biblioteca-resumo">
+  <p><strong>Obras registradas</strong>: <%= BibliotecaObra.count %></p>
+</div>
+<div class="biblioteca-obras-container">
+<% @obras.each do |obra| %>
+  <%= render "obra-card", obra: obra %>
+<% end %>
+</div>
