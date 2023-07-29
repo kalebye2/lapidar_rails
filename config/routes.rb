@@ -19,9 +19,17 @@ Rails.application.routes.draw do
   resources :infantojuvenil_anamneses
 
   # biblioteca
-  resources :biblioteca_obras
-  resources :biblioteca_autores
-  resources :biblioteca_tags
+  scope :biblioteca do
+    resources :biblioteca_autores, path: '/autores'
+    get '/', to: "biblioteca#index", as: 'biblioteca'
+    resources :biblioteca_obras, path: '/obras'
+    resources :biblioteca_tags, path: '/tags'
+    resources :biblioteca_periodicos, path: '/periodicos'
+    resources :biblioteca_editoras, path: '/editoras'
+  end
+  #resources :biblioteca_obras
+  #resources :biblioteca_autores
+  #resources :biblioteca_tags
   
   scope :financeiro do
     resources :atendimento_valores
@@ -33,6 +41,7 @@ Rails.application.routes.draw do
       get :acompanhamentos
     end
   end
+  resources :pessoa_devolutivas, path: '/devolutivas', as: "devolutivas"
   resources :pessoa_devolutivas
   resources :laudos
   resources :crp_regioes
@@ -70,12 +79,14 @@ Rails.application.routes.draw do
     end
   end
 
+
   # rotas pdf
   get "/acompanhamentos/:id/detalhes", to: "acompanhamentos#caso_detalhes"
 
   # get pdf
   get "/pdf_download", to: "application#pdf_download"
   get "/pdf_preview", to: "application#pdf_preview"
+
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
