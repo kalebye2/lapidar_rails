@@ -1,39 +1,6 @@
+<% titulo "Devolutiva #{@pessoa_devolutiva.paciente.nome_abreviado}" %>
 <p id="notice"><%= notice %></p>
 <%= link_to 'Edit', edit_pessoa_devolutiva_path(@pessoa_devolutiva) %> |
 <%= link_to 'Back', pessoa_devolutivas_path %>
 
-<table>
-  <caption>Devolutiva</caption>
-  <tbody>
-    <tr>
-      <th>Paciente</th>
-      <td><%= @pessoa_devolutiva.paciente.nome_completo %></td>
-    </tr>
-
-    <tr>
-      <th>Responsável</th>
-      <td><%= @pessoa_devolutiva.responsavel.nome_completo %></td>
-    </tr>
-
-    <tr>
-      <th>Profissional</th>
-      <td><%= @pessoa_devolutiva.profissional.descricao_completa %></td>
-    </tr>
-
-    <tr>
-      <th>Data</th>
-      <td><%= render_data_brasil @pessoa_devolutiva.data %></td>
-    </tr>
-
-    <tr>
-      <th>Feedback do responsável</th>
-      <td><%== Kramdown::Document.new(@pessoa_devolutiva.feedback_responsavel).to_html %></td>
-    </tr>
-
-    <tr>
-      <th>Orientações</th>
-      <td><%== Kramdown::Document.new(@pessoa_devolutiva.orientacoes_profissional).to_html %></td>
-    </tr>
-  </tbody>
-</table>
-
+<%= render "tabela-resumo", devolutiva: @pessoa_devolutiva %>

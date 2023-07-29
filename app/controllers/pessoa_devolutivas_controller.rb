@@ -25,7 +25,7 @@ class PessoaDevolutivasController < ApplicationController
 
     respond_to do |format|
       if @pessoa_devolutiva.save
-        format.html { redirect_to pessoa_devolutiva_url(@pessoa_devolutiva), notice: "pessoa devolutiva was successfully created." }
+        format.html { redirect_to devolutiva_url(@pessoa_devolutiva), notice: "pessoa devolutiva was successfully created." }
         format.json { render :show, status: :created, location: @pessoa_devolutiva }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +38,7 @@ class PessoaDevolutivasController < ApplicationController
   def update
     respond_to do |format|
       if @pessoa_devolutiva.update(pessoa_devolutiva_params)
-        format.html { redirect_to pessoa_devolutiva_url(@pessoa_devolutiva), notice: "pessoa devolutiva was successfully updated." }
+        format.html { redirect_to devolutiva_url(@pessoa_devolutiva), notice: "pessoa devolutiva was successfully updated." }
         format.json { render :show, status: :ok, location: @pessoa_devolutiva }
       else
         format.html { render :edit, status: :unprocessable_entity }
