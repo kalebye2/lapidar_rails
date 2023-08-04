@@ -126,12 +126,14 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   create_table "biblioteca_obra_autor_juncoes", primary_key: ["obra_id", "autor_id"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "obra_id", null: false
     t.integer "autor_id", null: false
+    t.integer "ordem", null: false
     t.index ["autor_id"], name: "biblioteca_obra_autor_juncoes_ibfk_2"
   end
 
   create_table "biblioteca_obra_tag_juncoes", primary_key: ["obra_id", "tag_id"], charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "obra_id", null: false
     t.integer "tag_id", null: false
+    t.integer "ordem", null: false
     t.index ["tag_id"], name: "biblioteca_obra_tag_juncoes_ibfk_2"
   end
 
@@ -702,7 +704,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "acompanhamentos", "pessoas", name: "acompanhamentos_ibfk_5", on_update: :cascade
   add_foreign_key "acompanhamentos", "profissionais", name: "acompanhamentos_ibfk_4", on_update: :cascade
   add_foreign_key "atendimento_locais", "atendimento_local_tipos", name: "atendimento_locais_ibfk_1", on_update: :cascade
-  add_foreign_key "atendimento_valores", "atendimentos", name: "atendimento_valores_ibfk_1", on_update: :cascade
+  add_foreign_key "atendimento_valores", "atendimentos", name: "atendimento_valores_ibfk_1", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimentos", "acompanhamentos", name: "atendimentos_ibfk_1", on_update: :cascade
   add_foreign_key "atendimentos", "atendimento_modalidades", column: "modalidade_id", name: "atendimentos_ibfk_3", on_update: :cascade
   add_foreign_key "atendimentos", "atendimento_tipos", name: "atendimentos_ibfk_2", on_update: :cascade

@@ -36,7 +36,7 @@ class AtendimentosController < ApplicationController
   def create_atendimento_valor
     if @atendimento.nil? then return end
     valor = @atendimento.build_atendimento_valor
-    if @atendimento.acompanhamento.atendimento_valores.last.nil?
+    if !@atendimento.acompanhamento.atendimento_valores.last.nil?
       valor.taxa_porcentagem_externa = @atendimento.acompanhamento.atendimento_valores.last.taxa_porcentagem_externa
       valor.taxa_porcentagem_interna = @atendimento.acompanhamento.atendimento_valores.last.taxa_porcentagem_interna
       valor.valor = @atendimento.acompanhamento.valor_atual

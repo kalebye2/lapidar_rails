@@ -26,7 +26,7 @@ class BibliotecaObra < ApplicationRecord
   end
 
   def tags
-    biblioteca_tags
+    biblioteca_tags.order(ordem: :asc)
   end
 
   def tag_juncoes

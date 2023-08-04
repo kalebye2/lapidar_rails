@@ -6,7 +6,7 @@
   </div>
 
   <%# para teste %>
-  <% acompanhamento = AcompanhamentoView.find_by(id: @profissional_documento_modelo.profissional.acompanhamento.em_andamento.last.id) %>
+  <% acompanhamento = AcompanhamentoView.find_by(id: @profissional_documento_modelo.profissional.acompanhamentos.em_andamento.last.id) %>
   <%# mudar conteúdo do texto com um monte de baboseiras %>
   <% texto_conteudo = @profissional_documento_modelo.conteudo %>
   <% acompanhamento.attributes.each do |k,v| %>
@@ -24,6 +24,6 @@
 
   <div class="documento">
     <%= link_to "Editar", edit_profissional_documento_modelo_path(@profissional_documento_modelo), {class: "documento-modelo-edit-btn"} %>
-    <%== Kramdown::Document.new(@profissional_documento_modelo.conteudo).to_html.html_safe %>
+    <%== Kramdown::Document.new(texto_conteudo).to_html.html_safe %>
   </div>
 </div>

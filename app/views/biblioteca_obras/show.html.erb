@@ -35,5 +35,7 @@
   <% if @obra.periodico %>
     <p><%= @obra.periodico.nome %></p>
   <% end %>
-
+  <p><strong>Tags:</strong>
+  <%= @obra.tags.map { |t| t.nome } %>
+  </p>
 </div>

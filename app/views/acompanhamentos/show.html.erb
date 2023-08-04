@@ -1,8 +1,14 @@
 <%= titulo "#{@acompanhamento.tipo(titulo: true)}: #{@acompanhamento.pessoa.nome_completo}"%>
 <%= link_to "Voltar", acompanhamentos_path %>
 <% p = @acompanhamento.pessoa %>
+<% r = @acompanhamento.pessoa_responsavel %>
 <% pro = @acompanhamento.profissional.pessoa %>
 <%= link_to p, class: "pessoa" do %><h1><%= p.nome_abreviado %> <%= p.render_sexo_sigla %> <span style="font-size:.6em;font-weight:normal;"><%= @acompanhamento.tipo(upper: true) %></span></h1><% end %>
+<% if !r.nil? %>
+  <%= link_to r, class: "pessoa" do %>
+    <h2><%= r.nome_abreviado %> <%- r.render_sexo_sigla %></h2>
+  <% end %>
+<% end %>
 
 <%= link_to @acompanhamento.profissional, class: "profissional" do %>
   <h2>
