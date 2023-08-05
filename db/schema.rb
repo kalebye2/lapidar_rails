@@ -148,7 +148,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "editora_id"
     t.string "ordem"
     t.date "data_publicacao"
-    t.string "isbn", limit: 13
+    t.string "isbn"
     t.string "caminho"
     t.boolean "obra_virtual", default: false
     t.integer "num_paginas"
@@ -232,6 +232,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "comportamento_mesa"
     t.boolean "precisa_ajuda"
     t.text "alimentacao_atual"
+    t.text "outras_consideracoes"
   end
 
   create_table "infantojuvenil_anamnese_comunicacoes", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -244,6 +245,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "disturbio_fala", limit: 100
     t.boolean "relata_situacoes"
     t.string "linguas_ouvidas_casa", limit: 500
+    t.text "outras_consideracoes"
   end
 
   create_table "infantojuvenil_anamnese_escola_historicos", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -256,6 +258,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "atitudes_pais_dificuldades"
     t.text "participacao_pais"
     t.string "atividades_extras", limit: 500
+    t.text "outras_consideracoes"
     t.index ["escola_tipo_id"], name: "SYS_FK_2350"
   end
 
@@ -268,6 +271,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "ambiente_familiar_residentes_casa", limit: 1000
     t.string "ambiente_familiar_relacionamento_pais", limit: 1000
     t.string "ambiente_familiar_pais_filhos", limit: 1000
+    t.text "outras_consideracoes"
   end
 
   create_table "infantojuvenil_anamnese_gestacoes", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -298,6 +302,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "nascimento_reacao_mae"
     t.text "nascimento_reacao_irmaos"
     t.text "desenvolvimento_parto"
+    t.text "outras_consideracoes"
     t.index ["parto_local_id"], name: "SYS_FK_2300"
     t.index ["parto_tipo_id"], name: "SYS_FK_2299"
   end
@@ -313,6 +318,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "arranca_cabelos"
     t.text "outros"
     t.text "atitudes_tomadas_responsaveis"
+    t.text "outras_consideracoes"
   end
 
   create_table "infantojuvenil_anamnese_psicomotricidades", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -335,6 +341,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "veste_sozinho"
     t.boolean "caia_muito"
     t.boolean "conhecimento_lateralidade"
+    t.text "outras_consideracoes"
   end
 
   create_table "infantojuvenil_anamnese_saude_historicos", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -347,6 +354,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "inteligencia"
     t.boolean "acidente_sofrido"
     t.text "acidente_consequencias"
+    t.text "outras_consideracoes"
   end
 
   create_table "infantojuvenil_anamnese_sexualidades", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -354,6 +362,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "masturba"
     t.string "atitude_pais", limit: 1000
     t.string "educacao_sexual", limit: 1000
+    t.text "outras_consideracoes"
   end
 
   create_table "infantojuvenil_anamnese_socioafetividades", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -373,6 +382,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "carinhoso"
     t.text "comportamentos_adequados"
     t.text "comportamentos_inadequados"
+    t.text "outras_consideracoes"
   end
 
   create_table "infantojuvenil_anamnese_sonos", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -392,6 +402,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "dormiu_quarto_pais_meses"
     t.boolean "vai_cama_pais"
     t.string "cama_pais_atitude_pais", limit: 1000
+    t.text "outras_consideracoes"
   end
 
   create_table "infantojuvenil_anamneses", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
