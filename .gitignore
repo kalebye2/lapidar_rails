@@ -11,6 +11,10 @@
 /db/*.sqlite3
 /db/*.sqlite3-journal
 
+# Ignore database dump
+/db/data.yml
+/db/data.yaml
+
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
