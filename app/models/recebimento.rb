@@ -8,7 +8,7 @@ class Recebimento < ApplicationRecord
   scope :deste_ano, -> { do_ano_atual }
   scope :do_ano_passado, -> { where(data: (Date.today - 1.year).all_year) }
 
-  scope :do_periodo, -> (mes: Date.today.month, ano: Date.today.year, ordem: :desc) { where("YEAR(data) = #{ano} AND MONTH(data) = #{mes}").order(data: ordem) }
+  scope :do_periodo, -> (mes: Date.today.month, ano: Date.today.year, ordem: :desc) { where(data: ["01-#{mes}-#{ano}".to_date.."01-#{mes}-#{ano}".to_date.end_of_month]).order(data: ordem) }
 
   belongs_to :acompanhamento
 

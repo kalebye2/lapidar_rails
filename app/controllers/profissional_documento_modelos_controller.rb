@@ -6,6 +6,15 @@ class ProfissionalDocumentoModelosController < ApplicationController
   end
 
   def show
+    respond_to do |format|
+      format.html
+      format.md do
+        if params["acompanhamento"]
+        @acompanhamento = Acompanhamento.find(params["acompanhamento"])
+        @acompanhamento_view = AcompanhamentoView.find_by(id: params["acompanhamento"])
+        end
+      end
+    end
   end
 
   def new
@@ -29,7 +38,7 @@ class ProfissionalDocumentoModelosController < ApplicationController
   end
 
   def update
-    params["profissional_documento_modelo"]["cpf"] = params["profissional_documento_modelo"]["cpf"].gsub(/\D/, '')[-11..]
+    #params["profissional_documento_modelo"]["cpf"] = params["profissional_documento_modelo"]["cpf"].gsub(/\D/, '')[-11..]
     respond_to do |format|
       if @profissional_documento_modelo.update(profissional_documento_modelo_params)
         format.html { redirect_to profissional_documento_modelo_url(@profissional_documento_modelo), notice: "profissional_documento_modelo was successfully updated." }

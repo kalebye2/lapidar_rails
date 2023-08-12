@@ -16,13 +16,12 @@ default: &default
 development:
         <<: *default
         encoding: utf8
-        adapter: mysql2
-        #database: psi_atendimentos
-        #username: psi_atendimentos
-        #password: relacionamento
+        # descomente o adaptador que for usar
+        #adapter: mysql2
+        adapter: postgresql
         database: lapidar_data
-        username: lapidar
-        password: relacionamento
+        #username: lapidar
+        #password: sua senha aqui
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

@@ -71,7 +71,10 @@ gem "simple_calendar", "~> 2.4"
 
 gem 'kramdown'
 
+# database
 gem 'mysql2'
+gem 'pg'
+gem 'yaml_db'
 
 gem 'turbo-rails'
 gem 'stimulus-rails'

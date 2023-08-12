@@ -8,6 +8,7 @@ class BibliotecaObra < ApplicationRecord
   has_many :biblioteca_obra_tag_juncoes, foreign_key: :obra_id
   has_many :biblioteca_tags, through: :biblioteca_obra_tag_juncoes
 
+  scope :por_isbn, -> (val) { where("isbn LIKE '%#{val}%'") }
 
   def editora
     biblioteca_editora
@@ -50,6 +51,15 @@ class BibliotecaObra < ApplicationRecord
   end
 
   def isbn_formatado
+    case isbn.length
+    when 13
+      return "#{isbn[..2]}-#{isbn[3..4]}-#{isbn[5..8]}-#{isbn[-4..-2]}-#{isbn[-1]}"
+    when 10
+      return "#{isbn[0]}-#{isbn[1..5]}-#{isbn[-4..-2]}-#{isbn[-1]}"
+    else
+      isbn
+    end
+    isbn
   end
 
   def data_formatada

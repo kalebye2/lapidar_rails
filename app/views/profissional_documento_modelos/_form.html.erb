@@ -1,0 +1,39 @@
+<% if !profissional_documento_modelo.nil? %>
+  <%= form_for(profissional_documento_modelo, local: true) do |form| %>
+  <% if profissional_documento_modelo.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(profissional_documento_modelo.errors.count, "error") %> prohibited this profissional_documento_modelo from being saved:</h2>
+
+      <ul>
+      <% profissional_documento_modelo.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :profissional %>
+    <%= form.select :profissional_id, Profissional.all.map { |pro| [pro.descricao_completa, pro.id] } %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Título" %>
+    <%= form.text_field :titulo %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Descrição" %>
+    <%= form.text_field :descricao %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Conteúdo" %>
+    <%= form.text_area :conteudo, size: "90x30" %>
+  </div>
+
+  <div class="action">
+    <%= form.submit %>
+  </div>
+  <% end %>
+<% end %>

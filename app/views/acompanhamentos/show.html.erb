@@ -23,6 +23,7 @@
 
 <p>Início em <%= render_data_brasil @acompanhamento.data_inicio %></p>
 <p><%= @acompanhamento.data_final ? (render_data_brasil @acompanhamento.data_final) : "Em andamento" %><%= @acompanhamento.acompanhamento_finalizacao_motivo ? " (finalização por #{@acompanhamento.acompanhamento_finalizacao_motivo.motivo})" : "" %></p>
+<p><%= pluralize(@acompanhamento.atendimentos.count, "atendimento", "atendimentos") %></p>
 
 <% if usuario_atual.secretaria? || usuario_atual.profissional == @acompanhamento.profissional %>
   <%= link_to "+ Atendimento", new_atendimento_path, data: { "turbo_frame" => "modal" }%>

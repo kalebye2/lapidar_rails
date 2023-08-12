@@ -608,6 +608,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "descricao", limit: 1000
     t.text "conteudo"
     t.string "usado_para", default: "Acompanhamento", null: false
+    t.string "tamanho_papel"
     t.index ["profissional_id"], name: "profissional_id"
   end
 

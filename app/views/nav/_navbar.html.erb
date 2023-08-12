@@ -28,11 +28,18 @@
       <% end %>
 
       <% if usuario_atual.corpo_clinico? || usuario_atual.secretaria? %>
+        <!-- todos estes são de documentos. Melhorar depois! -->
         <li>
           <%= link_to "Laudos", laudos_path %>
         </li>
         <li>
           <%= link_to "Devolutivas", devolutivas_path %>
+        </li>
+        <li>
+          <%= link_to "Anamneses", infantojuvenil_anamneses_path %>
+        </li>
+        <li>
+          <%= link_to "modelos docs", profissional_documento_modelos_path %>
         </li>
       <% end %>
 

@@ -24,6 +24,7 @@
 
   <div class="documento">
     <%= link_to "Editar", edit_profissional_documento_modelo_path(@profissional_documento_modelo), {class: "documento-modelo-edit-btn"} %>
+    <%= link_to "markdown", @profissional_documento_modelo, params.merge(format: :md) %>
     <%== Kramdown::Document.new(texto_conteudo).to_html.html_safe %>
   </div>
 </div>
