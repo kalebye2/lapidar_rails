@@ -31,4 +31,52 @@
 		--row-even-bg: #fdd;
 		--highlight-bg: #fcc;
 	}
+
+	& .tabela-infantojuvenil-anamnese-sono {
+		--big-header-bg: darkcyan;
+		--row-even-bg: lightcyan;
+		--highlight-bg: lightblue;
+	}
+
+	& .tabela-infantojuvenil-anamnese-socioafetividade {
+		--big-header-bg: darkgreen;
+		--row-even-bg: lightgreen;
+		--highlight-bg: #cceecc;
+	}
+
+	& .tabela-infantojuvenil-anamnese-comunicacao {
+		--big-header-bg: darkblue;
+		--row-even-bg: lightblue;
+		--highlight-bg: #ddddff;
+	}
+
+	& .tabela-infantojuvenil-anamnese-manipulacao {
+		--big-header-bg: darkorange;
+		--row-even-bg: #eeee33;
+		--highlight-bg: orange;
+	}
+
+	& .tabela-infantojuvenil-anamnese-saude-historico {
+		--big-header-bg: brown;
+		--row-even-bg: #ffaf77;
+		--highlight-bg: #feae44;
+	}
+
+	& .tabela-infantojuvenil-anamnese-escola-historico {
+		--big-header-bg: darkcyan;
+		--row-even-bg: lightcyan;
+		--highlight-bg: lightblue;
+	}
+
+	& .tabela-infantojuvenil-anamnese-sexualidade {
+		--big-header-bg: darkred;
+		--row-even-bg: #fdd;
+		--highlight-bg: #fcc;
+	}
+
+	& .tabela-infantojuvenil-anamnese-familia-historico {
+		--big-header-bg: darkgreen;
+		--row-even-bg: lightgreen;
+		--highlight-bg: #cceecc;
+	}
 }

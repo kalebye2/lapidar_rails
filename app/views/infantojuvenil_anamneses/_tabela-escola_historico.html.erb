@@ -1,0 +1,57 @@
+<% cl = 'tabela-infantojuvenil-anamnese-escola-historico' %>
+
+<tr class='<%= cl %>'>
+  <th colspan="100%">
+    Histórico escolar
+  </th>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>Em qual tipo de escola a criança estuda?</th>
+  <td><%= escola_historico.tipo_de_escola %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>Com quantos anos a criança entrou na escola?</th>
+  <td><%= pluralize(escola_historico.idade_entrada_anos, 'ano', 'anos') %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>Como é o aproveitamento escolar desta criança?</th>
+  <td><%== markdown_to_html escola_historico.aproveitamento %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>Quais dificuldades a criança tem na escola?</th>
+  <td><%== markdown_to_html escola_historico.dificuldades %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>Quais foram as mudanças percebidas na criança durante o período escolar?</th>
+  <td><%== markdown_to_html escola_historico.mudancas %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>Quais são as atitudes da criança com a vida escolar?</th>
+  <td><%== markdown_to_html escola_historico.atitudes_paciente_vida_escolar %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>Quais as atitudes dos pais em relação às dificuldades da criança na escola?</th>
+  <td><%== markdown_to_html escola_historico.atitudes_pais_dificuldades %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>Como é a participação dos pais na vida escolar da criança?</th>
+  <td><%== markdown_to_html escola_historico.participacao_pais %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>Quais são as atividades extracurriculares da criança?</th>
+  <td><%== markdown_to_html escola_historico.atividades_extras %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>Há alguma outra consideração sobre a vida escolar da criança?</th>
+  <td><%== markdown_to_html escola_historico.outras_consideracoes, "Não" %></td>
+</tr>

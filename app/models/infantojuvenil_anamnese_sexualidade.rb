@@ -1,5 +1,5 @@
 class InfantojuvenilAnamneseSexualidade < ApplicationRecord
-  attribute :masturba, ActiveRecord::Type::Integer.new
+  attribute :masturba
 
   def masturba?
     masturba.nil? ? nil : masturba > 0

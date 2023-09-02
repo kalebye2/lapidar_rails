@@ -5,6 +5,13 @@ class InfantojuvenilAnamnesesController < ApplicationController
   end
 
   def show
+    respond_to do |format|
+      format.html
+      format.md do
+        response.headers['Content-Type'] = "text/markdown"
+        response.headers['Content-Disposition'] = "attachment; filename=anamnese-infantojuvenil_#{@infantojuvenil_anamnese.pessoa.nome_completo.parameterize}_#{@infantojuvenil_anamnese.atendimento.data}.md"
+      end
+    end
   end
 
   def new

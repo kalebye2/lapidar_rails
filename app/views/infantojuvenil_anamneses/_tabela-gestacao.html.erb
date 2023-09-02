@@ -5,37 +5,37 @@
 
 <tr class="<%= cl %>">
   <th>Gestação foi desejada?</th>
-  <td><%= gestacao.foi_desejada? %></td>
+  <td><%= sim_ou_nao gestacao.desejada %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>Idade da mãe</th>
-  <td><%= gestacao.idade_mae %> anos</td>
+  <td><%= deixar_no_plural gestacao.idade_mae, 'ano', 'anos' %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>Idade do pai</th>
-  <td><%= gestacao.idade_pai %> anos</td>
+  <td><%= deixar_no_plural gestacao.idade_pai, 'ano', 'anos' %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>Irmãos mais velhos</th>
-  <td><%= gestacao.irmaos_mais_velhos %></td>
+  <td><%= deixar_no_plural gestacao.irmaos_mais_velhos %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>Irmãos mais novos</th>
-  <td><%= gestacao.irmaos_mais_novos %></td>
+  <td><%= deixar_no_plural gestacao.irmaos_mais_novos %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>Com quantos meses após a gestação anterior a criança foi concebida?</th>
-  <td><%= gestacao.gestacao_anterior_meses ? "#{gestacao.gestacao_anterior_meses} meses" : "Não informado" %></td>
+  <td><%= deixar_no_plural gestacao.gestacao_anterior_meses %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>Abortos anteriores (espontâneos e/ou intencionais)</th>
-  <td><%= gestacao.abortos_anteriores %></td>
+  <td><%= deixar_no_plural gestacao.abortos_anteriores %></td>
 </tr>
 
 <tr class="<%= cl %>">
@@ -45,67 +45,67 @@
 
 <tr class="<%= cl %>">
   <th>Como era a saúde da mãe durante a gestação?</th>
-  <td><%= gestacao.mae_saude %></td>
+  <td><%== markdown_to_html gestacao.mae_saude %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>Quais foram as sensações sentidas pela mãe durante a gestação?</th>
-  <td><%= gestacao.mae_sensacoes || "Sem informações" %></td>
+  <td><%== markdown_to_html gestacao.mae_sensacoes %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>Houve internações da mãe durante a gravidez?</th>
-  <td><%= gestacao.mae_internacoes || "Sem informações" %></td>
+  <td><%== markdown_to_html gestacao.mae_internacoes %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>A mãe sentiu enjoos?</th>
-  <td><%= gestacao.mae_enjoos || "Sem informações" %></td>
+  <td><%= sim_ou_nao gestacao.mae_enjoos %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>A mãe vomitou durante a gravidez?</th>
-  <td><%= gestacao.mae_vomitos || "Sem informações" %></td>
+  <td><%== markdown_to_html gestacao.mae_vomitos %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>A mãe teve diabetes durante a gravidez?</th>
-  <td><%= gestacao.mae_diabetes || "Sem informações" %></td>
+  <td><%== markdown_to_html gestacao.mae_diabetes %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>A mãe sofreu traumatismos durante a gravidez?</th>
-  <td><%= gestacao.mae_traumatismo || "Sem informações" %></td>
+  <td><%== markdown_to_html gestacao.mae_traumatismo %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>A mãe teve convulsões durante a gravidez?</th>
-  <td><%= gestacao.mae_convulsoes || "Sem informações" %></td>
+  <td><%== markdown_to_html gestacao.mae_convulsoes %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>A mãe chegou a tomar medicamentos durante a gravidez?</th>
-  <td><%= gestacao.mae_medicamentos || "Sem informações" %></td>
+  <td><%== markdown_to_html gestacao.mae_medicamentos %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>Local do parto</th>
-  <td><%= gestacao.parto_local.local || "Sem informações" %></td>
+  <td><%= gestacao.local_do_parto %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>Tipo de parto</th>
-  <td><%= gestacao.parto_tipo.descricao || "Sem informações" %></td>
+  <td><%= gestacao.tipo_de_parto %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>Peso da criança ao nascer</th>
-  <td><%= gestacao.nascimento_peso_g ? "#{number_to_currency(gestacao.nascimento_peso_g, precision: 0, delimiter: ".", unit: "")}g" : "Sem informações" %></td>
+  <td><%= numero_com_medida gestacao.nascimento_peso_g, 'g' %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>Comprimento da criança ao nascer</th>
-  <td><%= gestacao.nascimento_comprimento_cm ? "#{number_to_currency(gestacao.nascimento_comprimento_cm, precision: 0, delimiter: ".", unit: "")}cm" : "Sem informações" %></td>
+  <td><%= numero_com_medida gestacao.nascimento_comprimento_cm, 'cm' %></td>
 </tr>
 
 <tr class="<%= cl %>">
@@ -115,25 +115,25 @@
 
 <tr class="<%= cl %>">
   <th>Condições da criança ao nascer</th>
-  <td><%= gestacao.nascimento_crianca_condicoes || "Sem informações" %></td>
+  <td><%== markdown_to_html gestacao.nascimento_crianca_condicoes %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>Reação da mãe ao nascimento da criança</th>
-  <td><%= gestacao.nascimento_reacao_mae || "Sem informações" %></td>
+  <td><%== markdown_to_html gestacao.nascimento_reacao_mae %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>Reação do pai ao nascimento da criança</th>
-  <td><%= gestacao.nascimento_reacao_pai || "Sem informações" %></td>
+  <td><%== markdown_to_html gestacao.nascimento_reacao_pai %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>Reação dos irmãos ao nascimento da criança</th>
-  <td><%= gestacao.nascimento_reacao_irmaos || "Sem informações" %></td>
+  <td><%== markdown_to_html gestacao.nascimento_reacao_irmaos %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>Desenvolvimento do parto</th>
-  <td><%= gestacao.desenvolvimento_parto || "Sem informações" %></td>
+  <td><%== markdown_to_html gestacao.desenvolvimento_parto %></td>
 </tr>

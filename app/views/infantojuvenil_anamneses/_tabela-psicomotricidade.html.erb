@@ -5,10 +5,100 @@
 
 <tr class="<%= cl %>">
   <th>Com quantos meses a criança sorriu?</th>
-  <td><%= psicomotricidade.sorriu_meses? ? "#{psicomotricidade.sorriu_meses} meses" : "Sem informação" %></td>
+  <td><%= deixar_no_plural psicomotricidade.sorriu_meses, 'mês', 'meses' %></td>
 </tr>
 
 <tr class="<%= cl %>">
   <th>Com quantos meses a criança começou a se dirigir aos outros?</th>
-  <td><%= psicomotricidade.dirigir_ativamente_pessoas_meses? ? "#{psicomotricidade.dirigir_ativamente_pessoas_meses} meses" : "Sem informação" %></td>
+  <td><%= deixar_no_plural psicomotricidade.dirigir_ativamente_pessoas_meses, 'mês', 'meses' %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Com quantos meses a criança ergueu a cabeça?</th>
+  <td><%= deixar_no_plural psicomotricidade.ergueu_cabeca_meses, 'mês', 'meses' %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Com quantos meses a criança sentou?</th>
+  <td><%= deixar_no_plural psicomotricidade.sentou_meses, 'mês', 'meses' %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Com quantos meses a criança engatinhou?</th>
+  <td><%= deixar_no_plural psicomotricidade.engatinhou_meses, 'mês', 'meses' %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Com quantos meses a criança andou?</th>
+  <td><%= deixar_no_plural psicomotricidade.andou_meses, 'mês', 'meses' %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Com quantos meses apareceu a dentição?</th>
+  <td><%= deixar_no_plural psicomotricidade.denticao_meses, 'mês', 'meses' %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>É canhoto?</th>
+  <td><%= sim_ou_nao psicomotricidade.canhoto %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Com quantos meses a criança teve controle do esfíncter (cocô) durante o dia?</th>
+  <td><%= deixar_no_plural psicomotricidade.controle_esfincter_diurno_meses, 'mês', 'meses' %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Com quantos meses a criança teve controle do esfíncter (cocô) durante a noite?</th>
+  <td><%= deixar_no_plural psicomotricidade.controle_esfincter_noturno_meses, 'mês', 'meses' %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Com quantos meses a criança teve controle vesical (xixi) durante o dia?</th>
+  <td><%= deixar_no_plural psicomotricidade.controle_vesical_diurno_meses, 'mês', 'meses' %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Com quantos meses a criança teve controle vesical (xixi) durante a noite?</th>
+  <td><%= deixar_no_plural psicomotricidade.controle_vesical_noturno_meses, 'mês', 'meses' %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Como foi ensinado o controle do esfíncter (cocô)?</th>
+  <td><%== markdown_to_html psicomotricidade.ensino_controle_esfincter %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Como era a atitude da criança diante da enurese (xixi na cama)?</th>
+  <td><%== markdown_to_html psicomotricidade.atitude_enurese %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>A criança precisa de ajuda para usar o banheiro?</th>
+  <td><%= sim_ou_nao psicomotricidade.precisa_ajuda_banheiro %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>A criança toma banho sozinha?</th>
+  <td><%= sim_ou_nao psicomotricidade.toma_banho_sozinho %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>A criança se veste sozinha?</th>
+  <td><%= sim_ou_nao psicomotricidade.veste_sozinho %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>A criança caía muito?</th>
+  <td><%= sim_ou_nao psicomotricidade.caia_muito %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>A criança tem conhecimento de lateralidade (esquerdo e direito)?</th>
+  <td><%= sim_ou_nao psicomotricidade.conhecimento_lateralidade %></td>
+</tr>
+
+<tr class="<%= cl %>">
+  <th>Outras considerações sobre a psicomotricidade</th>
+  <td><%== markdown_to_html(psicomotricidade.outras_consideracoes, 'Nenhuma') %></td>
 </tr>

@@ -1,0 +1,32 @@
+# Histórico escolar
+
+Em qual tipo de escola a criança estuda?
+: <%= escola_historico.tipo_de_escola %>
+
+Com quantos anos a criança entrou na escola?
+: <%= pluralize(escola_historico.idade_entrada_anos, 'ano', 'anos') %>
+
+Como é o aproveitamento escolar desta criança?
+: <%==  escola_historico.aproveitamento %>
+
+Quais dificuldades a criança tem na escola?
+: <%==  escola_historico.dificuldades %>
+
+Quais foram as mudanças percebidas na criança durante o período escolar?
+: <%==  escola_historico.mudancas %>
+
+Quais são as atitudes da criança com a vida escolar?
+: <%==  escola_historico.atitudes_paciente_vida_escolar %>
+
+Quais as atitudes dos pais em relação às dificuldades da criança na escola?
+: <%==  escola_historico.atitudes_pais_dificuldades %>
+
+Como é a participação dos pais na vida escolar da criança?
+: <%==  escola_historico.participacao_pais %>
+
+Quais são as atividades extracurriculares da criança?
+: <%==  escola_historico.atividades_extras %>
+
+Há alguma outra consideração sobre a vida escolar da criança?
+: <%==  escola_historico.outras_consideracoes %>
+

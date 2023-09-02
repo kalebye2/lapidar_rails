@@ -43,22 +43,22 @@
 
   <tr>
     <th>Motivo da consulta</th>
-    <td><%= infantojuvenil_anamnese.motivo_consulta %></td>
+    <td><%== markdown_to_html infantojuvenil_anamnese.motivo_consulta %></td>
   </tr>
 
   <tr>
     <th>Hipótese diagnóstica</th>
-    <td><%= infantojuvenil_anamnese.diagnostico_preliminar %></td>
+    <td><%== markdown_to_html infantojuvenil_anamnese.diagnostico_preliminar %></td>
   </tr>
 
   <tr>
     <th>Plano de tratamento</th>
-    <td><%= infantojuvenil_anamnese.plano_tratamento %></td>
+    <td><%== markdown_to_html infantojuvenil_anamnese.plano_tratamento %></td>
   </tr>
 
   <tr>
     <th>Prognóstico</th>
-    <td><%= infantojuvenil_anamnese.prognostico %></td>
+    <td><%== markdown_to_html infantojuvenil_anamnese.prognostico %></td>
   </tr>
 
 </thead>

@@ -1,15 +1,15 @@
 class InfantojuvenilAnamneseSono < ApplicationRecord
-  attribute :dorme_bem, ActiveRecord::Type::Integer.new
-  attribute :pula, ActiveRecord::Type::Integer.new
-  attribute :baba, ActiveRecord::Type::Integer.new
-  attribute :range_dentes, ActiveRecord::Type::Integer.new
-  attribute :fala_grita, ActiveRecord::Type::Integer.new
-  attribute :sudorese, ActiveRecord::Type::Integer.new
-  attribute :movimento_demasiado, ActiveRecord::Type::Integer.new
-  attribute :movimento_sem_lembrar_dia_seguinte, ActiveRecord::Type::Integer.new
-  attribute :acorda_varias_vezes, ActiveRecord::Type::Integer.new
-  attribute :volta_dormir_facilmente, ActiveRecord::Type::Integer.new
-  attribute :dorme_quarto_separado_pais, ActiveRecord::Type::Integer.new
-  attribute :cama_individual, ActiveRecord::Type::Integer.new
-  attribute :vai_cama_pais, ActiveRecord::Type::Integer.new
+  attribute :dorme_bem
+  attribute :pula
+  attribute :baba
+  attribute :range_dentes
+  attribute :fala_grita
+  attribute :sudorese
+  attribute :movimento_demasiado
+  attribute :movimento_sem_lembrar_dia_seguinte
+  attribute :acorda_varias_vezes
+  attribute :volta_dormir_facilmente
+  attribute :dorme_quarto_separado_pais
+  attribute :cama_individual
+  attribute :vai_cama_pais
 end

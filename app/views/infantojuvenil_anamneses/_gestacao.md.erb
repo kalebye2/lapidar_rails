@@ -1,0 +1,82 @@
+# Gestação
+
+A gestação foi desejada?
+: <%== sim_ou_nao gestacao.desejada %>
+
+Idade da mãe:
+: <%== deixar_no_plural gestacao.idade_mae %>
+
+Idade do pai:
+: <%== deixar_no_plural gestacao.idade_pai %>
+
+Irmãos mais velhos:
+: <%== gestacao.irmaos_mais_velhos %>
+
+Irmãos mais novos:
+: <%== gestacao.irmaos_mais_novos %>
+
+Com quantos meses após a gestação anterior a criança foi concebida?
+: <%== deixar_no_plural gestacao.gestacao_anterior_meses %>
+
+Abortos anteriores (espontâneos e/ou intencionais):
+: <%== gestacao.abortos_anteriores %>
+
+Data do pré-natal:
+: <%== render_data_brasil gestacao.data_pre_natal %>
+
+Como era a saúde da mãe durante a gestação?
+: <%== gestacao.mae_saude || "Sem informações" %>
+
+Sensações da mãe durante a gravidez:
+: <%== gestacao.mae_sensacoes || "Sem informações" %>
+
+Houve internações da mãe durante a gravidez?
+: <%== gestacao.mae_internacoes %>
+
+A mãe sentiu enjoos?
+: <%== gestacao.mae_enjoos %>
+
+A mãe vomitou durante a gravidez?
+: <%== gestacao.mae_vomitos %>
+
+A mãe teve diabetes durante a gravidez?
+: <%== gestacao.mae_diabetes || "Sem informações" %>
+
+A mãe sofreu traumatismos durante a gravidez?
+: <%== gestacao.mae_traumatismo || "Sem informações" %>
+
+A mãe teve convulsões durante a gravidez?
+: <%== gestacao.mae_convulsoes || "Sem informações" %>
+
+A mãe chegou a tomar medicamentos durante a gravidez?
+: <%== gestacao.mae_medicamentos || "Sem informações" %>
+
+Local do parto
+: <%== gestacao.local_do_parto %>
+
+Tipo de parto
+: <%== gestacao.tipo_de_parto %>
+
+Peso da criança ao nascer:
+: <%== numero_com_medida gestacao.nascimento_peso_g %>
+
+Comprimento da criança ao nascer:
+: <%== numero_com_medida(gestacao.nascimento_comprimento_cm, "cm") %>
+
+Duração da gestação (semanas):
+: <%== numero_com_medida(gestacao.gestacao_semanas, " semanas") %>
+
+Condições da criança ao nascer:
+: <%== gestacao.nascimento_crianca_condicoes %>
+
+Reação da mãe ao nascimento da criança:
+: <%== gestacao.nascimento_reacao_mae %>
+
+Reação do pai ao nascimento da criança:
+: <%== gestacao.nascimento_reacao_pai %>
+
+Reação do(s) irmão(s) ao nascimento da criança:
+: <%== gestacao.nascimento_reacao_irmaos %>
+
+Desenvolvimento do parto
+: <%== informar gestacao.desenvolvimento_parto %>

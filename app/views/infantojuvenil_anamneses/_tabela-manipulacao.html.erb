@@ -1,0 +1,56 @@
+<% cl = 'tabela-infantojuvenil-anamnese-manipulacao' %>
+<tr class='<%= cl %>'>
+  <th colspan="100%">
+    Manipulação de objetos
+  </th>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>A criança usou chupeta?</th>
+  <td><%= sim_ou_nao manipulacao.chupeta_usou %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>Por quanto tempo a criança usou chupeta?</th>
+  <td><%= deixar_no_plural manipulacao.chupeta_usou_meses, 'mês', 'meses' %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>Como foi a retirada da chupeta?</th>
+  <td><%== markdown_to_html manipulacao.chupeta_relato_retirada, "Não há informação" %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>A criança chupou dedo?</th>
+  <td><%= sim_ou_nao manipulacao.chupou_dedo %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>Por quanto tempo a criança chupou os dedos?</th>
+  <td><%= deixar_no_plural manipulacao.chupou_dedo_meses, 'mês', 'meses' %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>Como foi a retirada da chupeta?</th>
+  <td><%== markdown_to_html manipulacao.chupou_dedo_relato_retirada, "Não há informação" %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>A criança roe unhas?</th>
+  <td><%= sim_ou_nao manipulacao.roe_unhas %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>A criança arranca os próprios cabelos?</th>
+  <td><%= sim_ou_nao manipulacao.arranca_cabelos %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>Outras considerações importantes sobre a manipulação de objetos</th>
+  <td><%== markdown_to_html manipulacao.outros, "Nenhuma" %></td>
+</tr>
+
+<tr class='<%= cl %>'>
+  <th>Atitudes tomadas pelos responsáveis em relação às manipulações relatadas</th>
+  <td><%== markdown_to_html manipulacao.atitudes_tomadas_responsaveis, "Nenhuma" %></td>
+</tr>

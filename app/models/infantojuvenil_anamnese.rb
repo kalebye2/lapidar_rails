@@ -25,6 +25,10 @@ class InfantojuvenilAnamnese < ApplicationRecord
     acompanhamento.pessoa
   end
 
+  def paciente
+    pessoa
+  end
+
   def pessoa_responsavel
     acompanhamento.pessoa_responsavel
   end
@@ -73,4 +77,19 @@ class InfantojuvenilAnamnese < ApplicationRecord
   def sono
     infantojuvenil_anamnese_sono
   end
+
+  def criar_anamnese_completa
+    if infantojuvenil_anamnese_alimentacao.nil? then build_infantojuvenil_anamnese_alimentacao.save! end
+    if infantojuvenil_anamnese_comunicacao.nil? then build_infantojuvenil_anamnese_comunicacao.save! end
+    if infantojuvenil_anamnese_escola_historico.nil? then build_infantojuvenil_anamnese_escola_historico.save! end
+    if infantojuvenil_anamnese_familia_historico.nil? then build_infantojuvenil_anamnese_familia_historico.save! end
+    if infantojuvenil_anamnese_gestacao.nil? then build_infantojuvenil_anamnese_gestacao.save! end
+    if infantojuvenil_anamnese_manipulacao.nil? then build_infantojuvenil_anamnese_manipulacao.save! end
+    if infantojuvenil_anamnese_psicomotricidade.nil? then build_infantojuvenil_anamnese_psicomotricidade.save! end
+    if infantojuvenil_anamnese_saude_historico.nil? then build_infantojuvenil_anamnese_saude_historico.save! end
+    if infantojuvenil_anamnese_sexualidade.nil? then build_infantojuvenil_anamnese_sexualidade.save! end
+    if infantojuvenil_anamnese_socioafetividade.nil? then build_infantojuvenil_anamnese_socioafetividade.save! end
+    if infantojuvenil_anamnese_sono.nil? then build_infantojuvenil_anamnese_sono.save! end
+  end
+
 end

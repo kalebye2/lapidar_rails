@@ -1,0 +1,99 @@
+---
+# Para ser usado com Pandoc
+# convertendo para LaTeX ou PDF
+# Caso queira saber mais visite https://pandoc.org
+#
+title: Anamnese
+author-meta: <%= @infantojuvenil_anamnese.profissional.descricao_completa %>
+date-meta: <%= render_data_brasil @infantojuvenil_anamnese.atendimento.data %>
+
+# Formatação
+# tire o "#" onde quiser mudar valor
+papersize: a4
+fontsize: 12pt
+# mainfont: Arial
+#classoption:
+#  - margin=2cm
+header-includes:
+- |
+    ```{=latex}
+    % Tire o símbolo "%" do início das linhas que você quiser usar uma regra
+    %\usepackage{indentfirst} % para indentar o primeiro parágrafo como os seguintes
+
+    %\setlength\parindent{2em} % recuo da primeira linha do parágrafo
+
+    %\parskip=1.5em % alterar o espaço entre parágrafos
+    %\renewcommand{\baselinestretch}{1.5} % alterar o espaço entre linhas
+    ```
+
+---
+
+# Identificação
+
+Nome completo:
+: <%= @infantojuvenil_anamnese.paciente.nome_completo %>
+
+Data de nascimento:
+: <%= render_data_brasil @infantojuvenil_anamnese.paciente.data_nascimento %>
+
+Idade:
+: <%= @infantojuvenil_anamnese.pessoa.render_idade(@infantojuvenil_anamnese.atendimento.data) %>
+
+Sexo:
+: <%= @infantojuvenil_anamnese.pessoa.render_sexo %>
+
+Responsável legal:
+: <%= @infantojuvenil_anamnese.pessoa_responsavel.nome_completo %>
+<%= @infantojuvenil_anamnese.pessoa_responsavel.render_sexo_sigla %>
+
+Serviço procurado:
+: <%= @infantojuvenil_anamnese.acompanhamento.tipo.upcase %>
+
+Profissional:
+: <%= @infantojuvenil_anamnese.profissional.descricao_completa %>
+
+Motivo da consulta:
+: <%= @infantojuvenil_anamnese.motivo_consulta %>
+
+<%= render 'gestacao', gestacao: @infantojuvenil_anamnese.gestacao %>
+
+<%= render 'alimentacao', alimentacao: @infantojuvenil_anamnese.alimentacao %>
+
+<%= render 'psicomotricidade', psicomotricidade: @infantojuvenil_anamnese.psicomotricidade %>
+
+<%= render 'sono', sono: @infantojuvenil_anamnese.sono %>
+
+<%= render 'socioafetividade', socioafetividade: @infantojuvenil_anamnese.socioafetividade %>
+
+<%= render 'comunicacao', comunicacao: @infantojuvenil_anamnese.comunicacao %>
+
+<%= render 'manipulacao', manipulacao: @infantojuvenil_anamnese.manipulacao %>
+
+<%= render 'saude_historico', saude_historico: @infantojuvenil_anamnese.saude_historico %>
+
+<%= render 'escola_historico', escola_historico: @infantojuvenil_anamnese.escola_historico %>
+
+<%= render 'sexualidade', sexualidade: @infantojuvenil_anamnese.sexualidade %>
+
+<%= render 'familia_historico', familia_historico: @infantojuvenil_anamnese.familia_historico %>
+
+# Anotações do profissional
+
+Diagnóstico preliminar
+: <%= @infantojuvenil_anamnese.diagnostico_preliminar %>
+
+Plano de tratamento
+: <%= @infantojuvenil_anamnese.plano_tratamento %>
+
+Prognóstico
+: <%= @infantojuvenil_anamnese.prognostico %>
+
+
+\vspace{3cm}
+
+\center
+
+---
+
+<%== @infantojuvenil_anamnese.profissional.descricao_completa %>
+<%== render_data_extenso @infantojuvenil_anamnese.atendimento.data %>

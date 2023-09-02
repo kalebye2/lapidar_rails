@@ -1,10 +1,10 @@
 class InfantojuvenilAnamnesePsicomotricidade < ApplicationRecord
-  attribute :canhoto, ActiveRecord::Type::Integer.new
-  attribute :precisa_ajuda_banheiro, ActiveRecord::Type::Integer.new
-  attribute :toma_banho_sozinho, ActiveRecord::Type::Integer.new
-  attribute :veste_sozinho, ActiveRecord::Type::Integer.new
-  attribute :caia_muito, ActiveRecord::Type::Integer.new
-  attribute :conhecimento_lateralidade, ActiveRecord::Type::Integer.new
+  attribute :canhoto
+  attribute :precisa_ajuda_banheiro
+  attribute :toma_banho_sozinho
+  attribute :veste_sozinho
+  attribute :caia_muito
+  attribute :conhecimento_lateralidade
 
   def canhoto?
     canhoto.nil? ? nil : canhoto > 0
@@ -29,4 +29,5 @@ class InfantojuvenilAnamnesePsicomotricidade < ApplicationRecord
   def conhecimento_lateralidade?
     conhecimento_lateralidade.nil? ? nil : conhecimento_lateralidade > 0
   end
+
 end
