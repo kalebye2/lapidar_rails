@@ -16,6 +16,11 @@ module ApplicationHelper
     data.strftime("%d/%m/%Y")
   end
 
+  def render_data_extenso data
+    if data == nil then return data end
+    "#{data.day} de #{t('date.month_names')[data.month].downcase} de #{data.year}"
+  end
+
   def render_hora_brasil hora, zona = nil
     if hora == nil then return nil end
     return hora.strftime("%Hh%M#{zona ? '%z' : ''}")
@@ -34,7 +39,26 @@ module ApplicationHelper
   end
 
   def sim_ou_nao valor=false
-    valor ? "Sim" : "Não"
+    !valor.nil? ? valor.to_i > 0 ? "Sim" : "Não" : "Sem informação"
   end
 
+  def markdown_to_html valor, default = "Sem informação"
+    valor.nil? ? default : Kramdown::Document.new(valor).to_html
+  end
+
+  def markdown valor, default = "Nada"
+    valor.nil? ? default : Kramdown::Document.new(valor.to_s).to_kramdown
+  end
+
+  def informar valor, default = "Sem informações"
+    valor.nil? ? default : valor
+  end
+
+  def deixar_no_plural numero, singular='', plural='', se_nulo="Sem informação"
+    numero.nil? ? se_nulo : pluralize(numero, singular, plural)
+  end
+
+  def numero_com_medida numero, medida = "", default = "Sem informação", casas_decimais: 0
+    numero.nil? ? default : "#{number_to_currency(numero, precision: casas_decimais, delimiter: ".", unit: "")}#{medida}"
+  end
 end

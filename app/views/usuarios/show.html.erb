@@ -4,6 +4,9 @@
   <%= @usuario.nome_completo %>
 </h1>
 
+<%= link_to 'Edit', edit_usuario_path(@usuario) %> |
+<%= link_to 'Back', usuarios_path %>
+
 <h2>
   <%= @usuario.papel %>
 </h2>
@@ -43,6 +46,3 @@
     </tr>
   </tbody>
 </table>
-
-<%= link_to 'Edit', edit_usuario_path(@usuario) %> |
-<%= link_to 'Back', usuarios_path %>

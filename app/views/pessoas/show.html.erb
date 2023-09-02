@@ -58,7 +58,7 @@
       <!-- se é usuário -->
       <!-- últimos atendimentos ou próximos -->
       <% if !@pessoa.acompanhamentos.empty? %>
-        <% if !@pessoa.atendimentos.where("DATEDIFF(data, CURRENT_DATE) > 0 OR (DATEDIFF(data, CURRENT_DATE) = 0 AND HOUR(horario) > HOUR(CURRENT_TIME))").empty? %>
+        <% if !@pessoa.atendimentos_a_partir_de_hoje.empty? %>
           <div class="pessoa-proximos-atendimentos">
             <h3>Próximos atendimentos</h3>
               <ul>

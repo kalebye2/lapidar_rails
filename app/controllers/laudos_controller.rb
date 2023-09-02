@@ -11,7 +11,10 @@ class LaudosController < ApplicationController
 
   def show
     respond_to do |format|
-      format.md
+      format.md do
+        response.headers['Content-Type'] = 'text/markdown'
+        response.headers['Content-Disposition'] = "attachment; filename=laudo_#{@laudo.paciente.nome_completo.parameterize}_#{@laudo.data_avaliacao}.md"
+      end
       format.html
     end
   end

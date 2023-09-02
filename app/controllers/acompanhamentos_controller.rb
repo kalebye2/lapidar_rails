@@ -40,6 +40,7 @@ class AcompanhamentosController < ApplicationController
 
     respond_to do |format|
       if @acompanhamento.save
+        atendimento = Atendimento.create(acompanhamento: @acompanhamento, data: @acompanhamento.data_inicio, horario: "08:00", atendimento_tipo: AtendimentoTipo.first, atendimento_modalidade: AtendimentoModalidade.first)
         format.html { redirect_to acompanhamento_url(@acompanhamento), notice: "Acompanhamento registrado com sucesso!" }
         format.json { render :show, status: :created, location: @acompanhamento }
       else

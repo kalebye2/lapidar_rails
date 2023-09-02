@@ -25,7 +25,7 @@
 
 <div class="profissional-bio">
   <% if !@profissional.bio.nil? %>
-    <%== Kramdown::Document.new(@profissional.bio).to_html %>
+    <%== markdown_to_html @profissional.bio %>
   <% else %>
     <p>Biografia não disponível.</p>
   <% end %>

@@ -83,7 +83,7 @@ class AtendimentosController < ApplicationController
 
   def reagendar_para_proxima_semana
     respond_to do |format|
-      if @atendimento.update(data: @atendimento.data + 7.day, reagendado: true)
+      if @atendimento.update(data: @atendimento.data + 7.day, reagendado: @atendimento.data == Date.today)
         format.html { redirect_to atendimento_url(@atendimento), notice: "Atendimento agendado para a semana seguinte" }
         format.json { render :show, status: :ok, location: @atendimento }
       else

@@ -24,7 +24,7 @@
         <td><%= a.modalidade.upcase %></td>
         <td><%= a.tipo.upcase %></td>
         <td><%= a.status %></td>
-        <td><%== Kramdown::Document.new(a.anotacoes || "Sem anotações").to_html %></td>
+        <td><%== markdown_to_html a.anotacoes || "Sem anotações" %></td>
         <% if usuario_atual.secretaria? || usuario_atual.profissional == a.profissional %>
           <td><%= link_to "Visualizar", a %></td>
         <% end %>

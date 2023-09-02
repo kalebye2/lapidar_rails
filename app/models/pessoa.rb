@@ -3,12 +3,14 @@ class Pessoa < ApplicationRecord
   belongs_to :instrucao_grau, optional: true
   belongs_to :pais, optional: true
   belongs_to :pessoa_tratamento_pronome, optional: true
+  belongs_to :nascimento_pais, class_name: "Pais", optional: true
 
   scope :do_sexo_feminino, -> { where(feminino: true) }
   scope :do_sexo_masculino, -> { where(feminino: false) }
   scope :mulheres, -> { do_sexo_feminino }
   scope :homens, -> { do_sexo_masculino }
   scope :profissionais, -> { joins(:profissional) }
+  scope :atendidas_hoje, -> { joins(:atendimentos).where("atendimentos.data" => Date.today) }
   
   # has associations
   has_one :usuario
@@ -198,7 +200,8 @@ class Pessoa < ApplicationRecord
   end
 
   def atendimentos_futuros
-    atendimentos.where("DATEDIFF(data, CURRENT_DATE) > 0 OR (DATEDIFF(data, CURRENT_DATE) = 0 AND HOUR(horario) > HOUR(CURRENT_TIME))")
+    # depois ajusta
+    atendimentos.where(data: [Date.today, Date.today + 1.day..], horario: Time.now..)
   end
 
   def recebimentos_beneficiario
@@ -209,12 +212,20 @@ class Pessoa < ApplicationRecord
     atendimento_valores.where(atendimentos: {data: [..(Date.today - 1.month).end_of_month]}).sum("valor - desconto") - recebimentos.sum(:valor)
   end
 
+  def valor_a_cobrar
+    (atendimento_valores.sum("valor - desconto") - recebimentos.sum(:valor)).to_i
+  end
+
   def pronome_tratamento
     pronome_no_feminino = (feminino && !inverter_pronome_tratamento) || (!feminino && inverter_pronome_tratamento)
     pronome_no_feminino ? pessoa_tratamento_pronome.pronome_feminino : pessoa_tratamento_pronome.pronome_masculino
   end
 
   def pronome_tratamento_abreviado
+  end
+
+  def atendimentos_a_partir_de_hoje
+    atendimentos.where(data: Date.today..)
   end
 
   private
@@ -226,9 +237,5 @@ class Pessoa < ApplicationRecord
     str_abreviar.join(separator)
   end
 
-
   # recebimentos
-  def valor_a_cobrar
-    atendimento_valores.sum("valor - desconto") - recebimento.sum(:valor)
-  end
 end

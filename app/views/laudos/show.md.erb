@@ -1,6 +1,33 @@
-<p style="size:3em;" id="titulo">
-  <%= @laudo.finalidade %>
-</p>
+---
+# Para ser usado com Pandoc
+# convertendo para LaTeX ou PDF
+# Caso queira saber mais visite https://pandoc.org
+#
+title: <%= @laudo.finalidade %>
+author-meta: <%= @laudo.profissional.nome_completo %> <%= @laudo.profissional.documento %>
+date-meta: <%= render_data_brasil @laudo.data_avaliacao %>
+
+# Formatação
+# tire o "#" onde quiser mudar valor
+papersize: a4
+fontsize: 12pt
+# mainfont: Arial
+#classoption:
+#  - margin=2cm
+header-includes:
+- |
+    ```{=latex}
+    % Tire o símbolo "%" do início das linhas que você quiser usar uma regra
+    %\usepackage{indentfirst} % para indentar o primeiro parágrafo como os seguintes
+
+    %\setlength\parindent{2em} % recuo da primeira linha do parágrafo
+
+    %\parskip=1.5em % alterar o espaço entre parágrafos
+    %\renewcommand{\baselinestretch}{1.5} % alterar o espaço entre linhas
+    ```
+
+---
+
 # Identificação
 
 **Avaliado**: <%= @laudo.paciente.nome_completo %>
@@ -22,23 +49,43 @@
 
 
 # Demanda
-<%== Kramdown::Document.new(@laudo.demanda.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo)).to_html %>
+
+<%== @laudo.demanda.to_s.gsub(/{%\s*paciente\s*%}/, @laudo.paciente.nome_completo) %>
+
+<%#== markdown_to_html @laudo.demanda.to_s.gsub(/{%\s*paciente\s*%}/, @laudo.paciente.nome_completo) %>
 
 # Técnicas utilizadas
-<%== Kramdown::Document.new(@laudo.tecnicas.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo)).to_html %>
+
+<%== @laudo.tecnicas.to_s.gsub(/{%\s*paciente\s*%}/, @laudo.paciente.nome_completo) %>
+
+<%#== markdown_to_html @laudo.tecnicas.to_s.gsub(/{%\s*paciente\s*%}/, @laudo.paciente.nome_completo) %>
 
 # Análise
-<%== Kramdown::Document.new(@laudo.analise.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo)).to_html %>
+
+<%== @laudo.analise.to_s.gsub(/{%\s*paciente\s*%}/, @laudo.paciente.nome_completo).gsub(/{%\s*paciente_nome_sobrenome\s*%}/, @laudo.paciente.nome_e_sobrenome) %>
+
+<%#== markdown_to_html @laudo.analise.to_s.gsub(/{%\s*paciente\s*%}/, @laudo.paciente.nome_completo) %>
 
 # Conclusão
-<%== Kramdown::Document.new(@laudo.conclusao.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo)).to_html %>
+
+<%== @laudo.conclusao.to_s.gsub(/{%\s*paciente\s*%}/, @laudo.paciente.nome_completo) %>
+
+<%#== markdown_to_html @laudo.conclusao.to_s.gsub(/{%\s*paciente\s*%}/, @laudo.paciente.nome_completo) %>
 
 
+\vspace{3cm}
 
-<p style="center">
+---
+
+\center
 <%= @laudo.profissional.nome_completo %> -
 <%= @laudo.profissional.funcao %>
 <% if !@laudo.profissional.documento_valor.nil? %>
-  <%= @laudo.profissional.documento %>
+<%= @laudo.profissional.documento %>
 <% end %>
-</p>
+
+<% if !@laudo.referencias.nil? %>
+# Referências
+
+<%== @laudo.referencias %>
+<% end %>

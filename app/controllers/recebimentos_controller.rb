@@ -30,6 +30,13 @@ class RecebimentosController < ApplicationController
   end
 
   def show
+    respond_to do |format|
+      format.html
+      format.md do
+        response.headers['Content-Type'] = 'text/markdown'
+        response.headers['Content-Disposition'] = "attachment; filename=recibo_#{@recebimento.beneficiario.nome_completo.parameterize}_#{@recebimento.data}.md"
+      end
+    end
   end
 
   def new

@@ -28,12 +28,12 @@
 
     <tr>
       <th>Feedback do responsável</th>
-      <td><%== Kramdown::Document.new(devolutiva.feedback_responsavel).to_html %></td>
+      <td><%== markdown_to_html devolutiva.feedback_responsavel %></td>
     </tr>
 
     <tr>
       <th>Orientações</th>
-      <td><%== Kramdown::Document.new(devolutiva.orientacoes_profissional).to_html %></td>
+      <td><%== markdown_to_html devolutiva.orientacoes_profissional %></td>
     </tr>
   </tbody>
 </table>

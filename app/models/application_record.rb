@@ -10,6 +10,10 @@ class ApplicationRecord < ActiveRecord::Base
     end
   end
 
+  def sim_ou_nao(valor = false)
+    valor.to_i
+  end
+
   def test
     
   end

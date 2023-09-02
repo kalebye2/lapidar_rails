@@ -21,6 +21,8 @@ class Profissional < ApplicationRecord
   has_many :profissional_especializacao_juncoes
   has_many :profissional_especializacoes, through: :profissional_especializacao_juncoes
 
+  scope :com_atendimentos_futuros, -> { joins(:atendimentos).where("atendimentos.data" => Date.today.. )}
+
   def clientes
     pacientes
   end
@@ -60,6 +62,18 @@ class Profissional < ApplicationRecord
     pessoa.feminino? ? (profissional_funcao.flexao_feminino || profissional_funcao.funcao[..-2] +  'a') : profissional_funcao.funcao
   end
 
+  def servico
+    profissional_funcao.servico
+  end
+
+  def cidade
+    pessoa.cidade
+  end
+
+  def render_cpf
+    pessoa.render_cpf
+  end
+
   def descricao_completa
     nome_completo + ' - ' + funcao + ' ' + documento
   end
@@ -81,6 +95,7 @@ class Profissional < ApplicationRecord
   end
 
   def atendimentos_futuros
-    atendimentos.where("DATEDIFF(data, CURRENT_DATE) > 0 OR (DATEDIFF(data, CURRENT_DATE) = 0 AND HOUR(horario) > HOUR(CURRENT_TIME))").order(data: :asc, horario: :asc)
+    #atendimentos.where("DATEDIFF(data, CURRENT_DATE) > 0 OR (DATEDIFF(data, CURRENT_DATE) = 0 AND HOUR(horario) > HOUR(CURRENT_TIME))").order(data: :asc, horario: :asc)
+    atendimentos.where(data: Date.today..)
   end
 end

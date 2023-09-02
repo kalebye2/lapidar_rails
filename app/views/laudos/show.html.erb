@@ -62,7 +62,7 @@
 
     <tr>
       <th>Demanda</th>
-      <td><%== Kramdown::Document.new(@laudo.demanda.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo)).to_html || "Não definida" %></td>
+      <td><%== markdown_to_html @laudo.demanda.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo) || "Não definida" %></td>
     </tr>
   </thead>
   <tbody>
@@ -71,17 +71,22 @@
     </tr>
     <tr>
       <th>Técnicas utilizadas</th>
-      <td><%== Kramdown::Document.new(@laudo.tecnicas.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo)).to_html %></td>
+      <td><%== markdown_to_html @laudo.tecnicas.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo) %></td>
     </tr>
 
     <tr>
       <th>Análise</th>
-      <td><%== Kramdown::Document.new(@laudo.analise.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo)).to_html %></td>
+      <td><%== markdown_to_html @laudo.analise.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo) %></td>
     </tr>
 
     <tr>
       <th>Conclusão</th>
-      <td><%== Kramdown::Document.new(@laudo.conclusao.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo)).to_html %></td>
+      <td><%== markdown_to_html @laudo.conclusao.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo) %></td>
+    </tr>
+
+    <tr>
+      <th>Referências</th>
+      <td><%== markdown_to_html @laudo.referencias.to_s %></td>
     </tr>
   </tbody>
 </table>

@@ -2,22 +2,26 @@
 title: <%= @profissional_documento_modelo.titulo %>
 author: <%= @profissional_documento_modelo.profissional.descricao_completa %>
 date: <%= @acompanhamento.nil? ? "" : render_data_brasil(@acompanhamento.data_inicio) %>
+
+# Formatação
 papersize: <%= @profissional_documento_modelo.tamanho_papel || "a4" %>
 fontsize: 12pt
 lang: pt
 toc: false
----
-<% texto_conteudo = @profissional_documento_modelo.conteudo %>
-<% @acompanhamento_view.attributes.each do |k,v| %>
-  <% valor_formatado = nil %>
-  <% if v.kind_of?(Date) %>
-    <% valor_formatado = render_data_brasil(v) %>
-  <% elsif v.kind_of?(BigDecimal) || v.kind_of?(Float) %>
-    <% valor_formatado = number_to_currency v.to_f, unit: "", separator: ",", delimiter: ".", precision: 2 %>
-  <% else %>
-    <% valor_formatado = v.to_s %>
-  <% end %>
 
-  <% texto_conteudo.gsub!("{%#{k.to_s}%}", valor_formatado.to_s) %>
-<% end %>
-<%= texto_conteudo %>
+---
+
+<%# texto_conteudo = @profissional_documento_modelo.conteudo %>
+<%# @acompanhamento_view.attributes.each do |k,v| %>
+  <%# valor_formatado = nil %>
+  <%# if v.kind_of?(Date) %>
+    <%# valor_formatado = render_data_brasil(v) %>
+  <%# elsif v.kind_of?(BigDecimal) || v.kind_of?(Float) %>
+    <%# valor_formatado = number_to_currency v.to_f, unit: "", separator: ",", delimiter: ".", precision: 2 %>
+  <%# else %>
+    <%# valor_formatado = v.to_s %>
+  <%# end %>
+
+  <%# texto_conteudo.gsub!("{%#{k.to_s}%}", valor_formatado.to_s) %>
+<%# end %>
+<%== @profissional_documento_modelo.conteudo %>

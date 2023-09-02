@@ -3,8 +3,8 @@
   <div class="devolutiva">
     <h2><%= render_data_brasil devolutiva.data %>
     <h3>Feedback Responsável</h3>
-    <%== Kramdown::Document.new(devolutiva.feedback_responsavel).to_html %>
+    <%== markdown_to_html devolutiva.feedback_responsavel %>
     <h3>Orientações do profissional</h3>
-    <%== Kramdown::Document.new(devolutiva.orientacoes_profissional).to_html %>
+    <%== markdown_to_html devolutiva.orientacoes_profissional %>
   </div>
 <% end %>

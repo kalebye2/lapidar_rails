@@ -19,7 +19,7 @@
         <td><%= a.acompanhamento.tipo.upcase %></td>
         <td><%= a.acompanhamento.motivo %></td>
         <td><%= a.status %></td>
-        <td><%== Kramdown::Document.new(a.consideracoes || "Sem anotações").to_html %></td>
+        <td><%== markdown_to_html a.consideracoes || "Sem anotações" %></td>
         <% if usuario_atual.profissional == a.profissional %>
           <td><%= link_to "visualizar", a %></td>
         <% else %>

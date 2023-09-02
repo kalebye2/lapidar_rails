@@ -3,6 +3,13 @@
 
 <ul>
   <% @laudos.each do |laudo| %>
-    <li><%= link_to "#{laudo.profissional.nome_abreviado} em #{render_data_brasil laudo.data_avaliacao} - #{laudo.finalidade}", laudo %>
+    <li>
+      <%= link_to laudo do %>
+        <strong><%= laudo.paciente.nome_abreviado %></strong>
+        -
+        <%= laudo.profissional.nome_abreviado %>
+        (<%= render_data_brasil laudo.data_avaliacao %>)
+      <% end %>
+    </li>
   <% end %>
 </ul>
