@@ -90,7 +90,7 @@ class Profissional < ApplicationRecord
     acompanhamentos.where(data_final: nil, acompanhamento_finalizacao_motivo: nil)
   end
 
-  def acompanhamentos_finalizado
+  def acompanhamentos_finalizados
     acompanhamentos.where.not(data_final: nil, acompanhamento_finalizacao_motivo: nil)
   end
 

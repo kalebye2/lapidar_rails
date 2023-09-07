@@ -5,8 +5,17 @@ class ProfissionaisController < ApplicationController
   include Pagy::Backend
 
   def index
-    @profissionais = params[:q].present? ? Profissional.joins(:pessoa).where("CONCAT(nome, ' ', COALESCE(nome_do_meio, ''), ' ', sobrenome) LIKE ?", "%#{params[:q]}%") : Profissional.all.joins("JOIN pessoas ON profissionais.pessoa_id = pessoas.id").order(nome: :asc, sobrenome: :asc)
-    @pagy, @profissionais = pagy(@profissionais, items: 10)
+    @profissionais = params[:q].present? ? Profissional.joins(:pessoa).where("LOWER(CONCAT(nome, ' ', COALESCE(nome_do_meio, ''), ' ', sobrenome)) LIKE LOWER(?)", "%#{params[:q]}%") : Profissional.all.joins("JOIN pessoas ON profissionais.pessoa_id = pessoas.id").order(nome: :asc, sobrenome: :asc)
+    if params[:ajax].present?
+      if params[:q].present?
+        @pagy = nil
+      else
+        @pagy, @profissionais = pagy(@profissionais, items: 9)
+      end
+      render partial: "profissionais/profissionais-container", locals: {profissionais: @profissionais}
+    else
+      @pagy, @profissionais = pagy(@profissionais, items: 9)
+    end
   end
 
   def show

@@ -63,6 +63,23 @@ Rails.application.routes.draw do
       post :reagendar_para_proxima_semana
       get :reagendar_para_proxima_semana
       post :create_atendimento_valor
+
+      # partials (ajax)
+      get :anotacoes
+      get :anotacoes_edit
+      patch :anotacoes_update
+
+      get :data
+      get :data_edit
+      patch :data_update
+
+      get :horario
+      get :horario_edit
+      patch :horario_update
+
+      get :status
+      get :status_edit
+      patch :status_update
     end
   end
 
@@ -78,6 +95,12 @@ Rails.application.routes.draw do
       #get m.to_sym, to: "admin##{m}", as: m.to_s
     end
   end
+
+  # rotas de parciais
+  # application
+  get '/update_tabela_atendimentos_hoje', to: "application#update_tabela_atendimentos_hoje"
+  get '/update_calendario_atendimentos_semana', to: "application#update_calendario_atendimentos_semana"
+  post '/update_calendario_atendimentos_semana', to: "application#update_calendario_atendimentos_semana"
 
 
   # rotas pdf

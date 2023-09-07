@@ -2,12 +2,30 @@ class AcompanhamentosController < ApplicationController
   before_action :set_acompanhamento, only: %i[ show edit update destroy caso_detalhes ]
   before_action :validar_usuario
   before_action :validar_edicao, only: %i[ edit update destroy ]
+  include Pagy::Backend
 
   def index
     if !usuario_atual.secretaria?
       @acompanhamentos = usuario_atual.profissional.acompanhamentos.all.order(data_inicio: :desc)
     else
       @acompanhamentos = Acompanhamento.all.order(data_inicio: :desc)
+    end
+    
+    if !params[:tipo].present?
+      @pagy, @acompanhamentos = pagy(@acompanhamentos, items: 9)
+    end
+
+    # filtrar
+    if params[:tipo].present?
+      @acompanhamentos = @acompanhamentos.where(acompanhamento_tipo_id: params[:tipo])
+    end
+
+    if params[:em_andamento].present?
+      params[:em_andamento] ? @acompanhamentos = @acompanhamentos.em_andamento : @acompanhamentos.finalizados
+    end
+
+    if params[:ajax].present?
+      render partial: "acompanhamentos-container", locals: { acompanhamentos: @acompanhamentos }
     end
   end
 

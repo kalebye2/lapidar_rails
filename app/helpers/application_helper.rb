@@ -43,7 +43,7 @@ module ApplicationHelper
   end
 
   def markdown_to_html valor, default = "Sem informação"
-    valor.nil? ? default : Kramdown::Document.new(valor).to_html
+    valor.nil? ? default : Kramdown::Document.new(valor.to_s).to_html
   end
 
   def markdown valor, default = "Nada"

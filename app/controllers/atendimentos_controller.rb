@@ -1,5 +1,5 @@
 class AtendimentosController < ApplicationController
-  before_action :set_atendimento, only: %i[ show edit update destroy reagendar_para_proxima_semana gerar_atendimento_valor create_atendimento_valor ]
+  before_action :set_atendimento, only: %i[ show edit update destroy reagendar_para_proxima_semana gerar_atendimento_valor create_atendimento_valor anotacoes_update anotacoes anotacoes_edit data data_update data_edit horario horario_update horario_edit status status_edit status_update ]
   before_action :validar_usuario
   before_action :validar_edicao, only: %i[ show edit update destroy reagendar_para_proxima_semana gerar_atendimento_valor ]
 
@@ -52,13 +52,97 @@ class AtendimentosController < ApplicationController
   def update
     respond_to do |format|
       if @atendimento.update(atendimento_params)
-        format.html { redirect_to acompanhamento_url(@atendimento.acompanhamento), notice: "Atendimento atualizado com sucesso." }
+        format.html do
+          if !params.has_key?(:ajax)
+            redirect_to acompanhamento_url(@atendimento.acompanhamento), notice: "Atendimento atualizado com sucesso."
+          else
+            render partial: "atendimentos/atendimento-em-tabela", locals: {atendimento: @atendimento}
+          end
+        end
         format.json { render :show, status: :ok, location: @atendimento }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @atendimento.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  # ajax
+
+  def anotacoes_update
+    if @atendimento.update(atendimento_params)
+      render partial: "atendimentos/anotacoes_show", locals: { atendimento: @atendimento }
+    end
+  end
+
+  def anotacoes
+    render partial: "atendimentos/anotacoes_show", locals: { atendimento: @atendimento }
+  end
+
+  def anotacoes_edit
+    render partial: "atendimentos/anotacoes_edit", locals: { atendimento: @atendimento }
+  end
+
+  def status_update
+    if @atendimento.update(atendimento_params)
+      status
+    else
+      status
+    end
+  end
+
+  def status
+    render partial: "atendimentos/status_show", locals: { atendimento: @atendimento }
+  end
+
+  def status_edit
+    render partial: "atendimentos/status_edit", locals: { atendimento: @atendimento }
+  end
+
+  def modalidade_update
+  end
+
+  def modalidade
+  end
+
+  def modalidade_edit
+  end
+
+  def tipo_update
+  end
+
+  def tipo
+  end
+
+  def tipo_edit
+  end
+
+  def data_update
+    if @atendimento.update(atendimento_params)
+      render partial: "atendimentos/data_show", locals: { atendimento: @atendimento }
+    end
+  end
+
+  def data
+    render partial: "atendimentos/data_show", locals: { atendimento: @atendimento }
+  end
+
+  def data_edit
+    render partial: "atendimentos/data_edit", locals: { atendimento: @atendimento }
+  end
+
+  def horario_update
+    if @atendimento.update(atendimento_params)
+      render partial: "atendimentos/horario_show", locals: { atendimento: @atendimento }
+    end
+  end
+
+  def horario
+    render partial: "atendimentos/horario_show", locals: { atendimento: @atendimento }
+  end
+
+  def horario_edit
+    render partial: "atendimentos/horario_edit", locals: { atendimento: @atendimento }
   end
 
   def destroy

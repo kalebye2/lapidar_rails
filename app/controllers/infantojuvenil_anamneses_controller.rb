@@ -19,12 +19,16 @@ class InfantojuvenilAnamnesesController < ApplicationController
   end
 
   def create
+    @infantojuvenil_anamnese.criar_anamnese_completa
   end
 
   def edit
   end
 
   def update
+    print infantojuvenil_anamnese_params
+    @infantojuvenil_anamnese.update(infantojuvenil_anamnese_params)
+    redirect_to infantojuvenil_anamneses_path
   end
 
   def delete
@@ -45,5 +49,16 @@ class InfantojuvenilAnamnesesController < ApplicationController
     @familia_historico = @infantojuvenil_anamnese.familia_historico
     @gestacao = @infantojuvenil_anamnese.gestacao
     @manipulacao = @infantojuvenil_anamnese.manipulacao
+  end
+
+  def infantojuvenil_anamnese_params
+    params.require(:infantojuvenil_anamnese).permit(:atendimento_id,
+      :motivo_consulta,
+      :diagnostico_preliminar,
+      :plano_tratamento,
+      :prognostico,
+      infantojuvenil_anamnese_gestacao: [
+        :mae_diabetes
+      ])
   end
 end

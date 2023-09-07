@@ -14,6 +14,14 @@ class Acompanhamento < ApplicationRecord
 
   has_many :laudos
 
+  # scopes
+  scope :em_andamento, -> { where(data_final: nil, acompanhamento_finalizacao_motivo: nil) }
+  scope :finalizados, -> { where.not(data_final: nil, acompanhamento_finalizacao_motivo: nil) }
+  scope :do_profissional, -> (profissional) { profissional.nil? ? all : where(profissional: profissional) }
+  scope :do_profissional_com_id, -> (id) { id.nil? ? all : where(profissional_id: id) }
+  scope :do_tipo, -> (tipo) { tipo.nil? ? all : where(acompanhamento_tipo: tipo) }
+  scope :do_tipo_com_id, -> (id) { id.nil? ? all : where(acompanhamento_tipo_id: id) }
+
   def render_info_para_profissional
     p = pessoa
     r = pessoa_responsavel
@@ -63,11 +71,13 @@ class Acompanhamento < ApplicationRecord
     !em_andamento?
   end
 
-  def self.em_andamento
-    where(data_final: nil, acompanhamento_finalizacao_motivo: nil)
-  end
-
-  def self.finalizado
-    where.not(data_final: nil, acompanhamento_finalizacao_motivo: nil)
+  def self.filter(attributes)
+    attributes.select { |k, v| v.present? }.reduce(all) do |scope, (key, value)|
+      case key.to_sym
+        # tipo id
+      when :acompanhamento_tipo_id
+        scope.where(key => value)
+      end
+    end
   end
 end

@@ -9,8 +9,14 @@ class PessoasController < ApplicationController
       @pessoas = Pessoa.where("LOWER(CONCAT(nome, ' ', COALESCE(nome_do_meio, ''), ' ', sobrenome)) LIKE ?", "%#{params[:q].to_s.downcase}%")
     else
       @pessoas = Pessoa.all.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc)
+      @pagy, @pessoas = pagy(@pessoas, items: 9)
     end
-    @pagy, @pessoas = pagy(@pessoas, items: 10)
+
+    if params[:ajax].present?
+      @numero_cadastros = params[:q].present? ? "#{@pessoas.count} cadastros encontrados" : nil
+      render partial: "pessoas/pessoas-container", locals: { pessoas: @pessoas }
+    else
+    end
   end
 
   # GET /pessoas/1 or /pessoas/1.json

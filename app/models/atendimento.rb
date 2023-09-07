@@ -5,7 +5,8 @@ class Atendimento < ApplicationRecord
   belongs_to :atendimento_modalidade, foreign_key: :modalidade_id, inverse_of: :atendimentos
 
   has_one :atendimento_valor, foreign_key: :atendimento_id, primary_key: :id, inverse_of: :atendimento
-  has_one :instrumento_relato
+  has_many :instrumento_relatos
+  has_many :instrumentos, through: :instrumento_relatos
   has_one :infantojuvenil_anamnese
 
   accepts_nested_attributes_for :atendimento_valor
@@ -108,5 +109,9 @@ class Atendimento < ApplicationRecord
 
   def local
     atendimento_local.nil? ? "Não definido" : atendimento_local.descricao
+  end
+
+  def instrumentos_aplicados
+    instrumentos
   end
 end

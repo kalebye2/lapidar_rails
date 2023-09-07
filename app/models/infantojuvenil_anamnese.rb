@@ -11,6 +11,8 @@ class InfantojuvenilAnamnese < ApplicationRecord
   has_one :infantojuvenil_anamnese_socioafetividade
   has_one :infantojuvenil_anamnese_sono
 
+  accepts_nested_attributes_for :infantojuvenil_anamnese_gestacao
+
   belongs_to :atendimento
 
   def acompanhamento
