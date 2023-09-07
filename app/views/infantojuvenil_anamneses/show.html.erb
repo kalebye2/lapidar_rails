@@ -1,10 +1,19 @@
 <% titulo "Anamnese infantojuvenil" %>
 <h1>Anamnese infantojuvenil</h1>
-<%= link_to "editar", edit_infantojuvenil_anamnese_path(@infantojuvenil_anamnese) %>
+<%#= link_to "editar", edit_infantojuvenil_anamnese_path(@infantojuvenil_anamnese) %>
 
 <%= link_to "Markdown", infantojuvenil_anamnese_path(@infantojuvenil_anamnese, format: :md) %>
 
-<table class="tabela-infantojuvenil-anamnese" style="width:90%;margin:auto;">
+<!--
+  <button hx-get=<%#= pessoa_path @infantojuvenil_anamnese.pessoa %> hx-target="#teste">
+        Click me
+  </button>
+
+  <button id="teste" hx-trigger="click" hx-get="/" hx-swap="delete">
+  </button>
+-->
+
+<table class="tabela-infantojuvenil-anamnese" style="width:90%;margin:auto;" id='tabela-anamnese'>
   <%= render "tabela-dados-principais", infantojuvenil_anamnese: @infantojuvenil_anamnese %>
   <tbody>
     <%= render "tabela-gestacao", gestacao: @infantojuvenil_anamnese.gestacao %>

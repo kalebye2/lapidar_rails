@@ -1,0 +1,9 @@
+<% if atendimento.instrumentos_aplicados.count > 0 %>
+<ul>
+<% atendimento.instrumentos_aplicados.each do |instrumento| %>
+  <li><%= instrumento.nome %></li>
+<% end %>
+</ul>
+<% else %>
+  <center>-</center>
+<% end %>

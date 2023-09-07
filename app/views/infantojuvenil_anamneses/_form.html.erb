@@ -1,0 +1,55 @@
+<%= form_with(model: infantojuvenil_anamnese) do |form| %>
+  <% if infantojuvenil_anamnese.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(infantojuvenil_anamnese.errors.count, "erro") %> não permitiu salvamento:</h2>
+      <ul>
+        <% infantojuvenil_anamnese.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div style="position:fixed;top:5%;right:5%;background-color:white;padding:.4em;">
+    <%= infantojuvenil_anamnese.attributes.keys %>
+  </div>
+
+  <div class="field">
+  <%= form.label "Atendimento" %>
+  <%= form.select :atendimento_id, Atendimento.order(data: :desc).where(atendimento_tipo: AtendimentoTipo.where(tipo: "anamnese")).map { 
+    |atendimento| ["#{atendimento.pessoa.nome_abreviado} acompanhado por #{atendimento.profissional.nome_abreviado} em #{render_data_brasil atendimento.data} respondido por #{atendimento.responsavel.nome_abreviado}", atendimento.id]
+  } %>
+  </div>
+
+<%= form.label :motivo_da_consulta %>
+<%= turbo_frame_tag dom_id(infantojuvenil_anamnese, 'motivo_consulta') do %>
+  <%= form.text_area :motivo_consulta, size: "50x20" %>
+  <%= link_to "Cancelar", infantojuvenil_anamnese %>
+<% end %>
+
+<%= fields_for :gestacao do |ff| %>
+<%= render "form_gestacao", form: ff %>
+<% end %>
+
+<%= fields_for :alimentacao do |ff| %>
+<%= render "form_alimentacao", alimentacao: infantojuvenil_anamnese.alimentacao, form: ff %>
+<% end %>
+
+<div class="field">
+<%= form.label "Diagnóstico preliminar" %>
+<%= form.text_field :diagnostico_preliminar %>
+</div>
+
+<div class="field">
+<%= form.label "Plano de tratamento" %>
+<%= form.text_field :plano_tratamento %>
+</div>
+
+<div class="field">
+<%= form.label "Prognóstico" %>
+<%= form.text_field :prognostico %>
+</div>
+
+<%= form.submit %>
+
+<% end %>

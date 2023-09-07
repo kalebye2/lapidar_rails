@@ -1,0 +1,9 @@
+<% interno = render_data_brasil atendimento.data %>
+<% if usuario_atual.secretaria? || usuario_atual.profissional == atendimento.profissional %>
+  <button hx-get="<%= data_edit_atendimento_path(atendimento) %>" hx-target="#<%= dom_id(atendimento) %>_data">
+    <%= interno %>
+  </button>
+
+<% else %>
+  <%= interno %>
+<% end %>

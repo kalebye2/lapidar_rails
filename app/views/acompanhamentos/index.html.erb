@@ -6,23 +6,13 @@
 
 <nav>
   <% AcompanhamentoTipo.all.each do |t| %>
+    <button
+      hx-get="<%= url_for(controller: :acompanhamentos, action: :index, tipo: t.id, em_andamento: params[:em_andamento], ajax: true) %>"
+      hx-target="#acompanhamentos-container"
+      hx-swap="outerHTML">
     <%= t.tipo.titlecase %>
+    </button>
   <% end %>
+  
 </nav>
-
-<div class="acompanhamentos-container">
-  <% @acompanhamentos.each do |a| %>
-    <%= link_to a, class: "acompanhamento-card" + " " + "#{a.data_final ? 'acompanhamento-finalizado' : 'acompanhamento-em-andamento'}" + " " + "#{a.acompanhamento_finalizacao_motivo ? 'acompanhamento-finalizado-' + a.acompanhamento_finalizacao_motivo.motivo.downcase.parameterize : ''}" do %>
-    <div>
-      <% p = a.pessoa %>
-      <% pro = a.profissional %>
-      <% prop = pro.pessoa %>
-      <h4><%= a.acompanhamento_tipo.tipo.to_s.upcase %></h4>
-      <h2><%= "#{p.nome_abreviado} #{p.render_sexo_sigla}" %></h2>
-      <h3><%= pro.nome_abreviado %> <span style="font-size:.8em;font-weight:normal;"><%= pro.documento %></span></h3>
-      <p><%= render_data_brasil a.data_inicio %> - <%= (render_data_brasil a.data_final) || "Em andamento" %> <%= a.data_final ? "(#{a.acompanhamento_finalizacao_motivo.motivo.upcase})" : "" %></p>
-      <p><%= a.atendimentos.count %> <%= a.atendimentos.count == 1 ? 'sessão' : 'sessões' %></p>
-    </div>
-  <% end %>
-  <% end %>
-</div>
+<%= render "acompanhamentos-container", acompanhamentos: @acompanhamentos %>

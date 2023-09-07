@@ -1,0 +1,20 @@
+<!-- onde as pessoas ficam -->
+<div id="cadastros-container">
+  <%= @numero_cadastros %>
+  <div class="pessoas-container">
+    <% if !pessoas.empty? %>
+      <% pessoas.each do |p| %>
+        <%= render partial: 'card', locals: {p: p} %>
+      <% end %>
+  </div>
+  <div id="replace" style="margin:auto;text-align:center;">
+    <% if @pagy %>
+      <% if @pagy.page < @pagy.pages %>
+        <button hx-get="cadastros?page=<%= @pagy.page + 1 %>&ajax=true" hx-target="#replace" hx-swap="outerHTML">
+          Carregar mais
+        </button>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
+</div>

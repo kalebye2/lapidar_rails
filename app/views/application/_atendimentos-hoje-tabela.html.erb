@@ -1,5 +1,9 @@
 <% if !atendimentos.empty? %>
-  <table class="tabela-atendimentos">
+  <table class="tabela-atendimentos" id="tabela-atendimentos"
+                                     hx-get="update_tabela_atendimentos_hoje"
+                                     hx-trigger="every 5s"
+                                     hx-target="#tabela-atendimentos"
+                                     hx-swap="outerHTML">
     <caption>Atendimentos de hoje</caption>
     <thead>
       <tr>
@@ -17,39 +21,7 @@
 
     <tbody>
       <% atendimentos.each do |ah| %>
-        <% presenca_class = "tr-atendimento-#{ah.status.parameterize}" %>
-        <tr class="<%= presenca_class %> tr-atendimento">
-          <td>
-            <%= ah.profissional.nome_abreviado %>
-              <span style="font-size:.7em;"><%= ah.profissional.documento %></span>
-          </td>
-          <td>
-            <%= ah.paciente.nome_abreviado %>
-          </td>
-          <td>
-            <%= ah.tipo %> - <%= ah.modalidade %>
-          </td>
-          <td>
-            <%= render_hora_brasil ah.horario %>
-          </td>
-          <td><%= ah.local %></td>
-          <td>
-            <%= ah.status %>
-            <% if !ah.pessoa_presente && ah.em_breve_ou_em_andamento && !usuario_atual.nil? %>
-              <%= form_with model: ah, local: true do |form| %>
-                <%= form.label "Presente?" %>
-                <%= form.check_box :presenca %>
-                <%= form.submit "🗸" %>
-              <% end %>
-            <% end %>
-          </td>
-
-          <% if !usuario_atual.nil? && (usuario_atual.secretaria? || usuario_atual.profissional == ah.profissional)%>
-            <td>
-              <%= link_to "acompanhar", ah.acompanhamento %>
-            </td>
-          <% end %>
-        </tr>
+        <%= render "atendimentos/atendimento-em-tabela", atendimento: ah %>
       <% end %>
     </tbody>
   </table>

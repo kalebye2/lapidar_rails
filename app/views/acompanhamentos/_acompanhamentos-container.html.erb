@@ -1,0 +1,17 @@
+<div id="acompanhamentos-container">
+  <div class="acompanhamentos-container">
+    <% acompanhamentos.each do |a| %>
+      <%= render "acompanhamento-card", acompanhamento: a %>
+    <% end %>
+  </div>
+  <div id="replace" style="text-align:center;margin:auto;">
+    <% if @pagy && @pagy.page < @pagy.pages %>
+      <button
+        hx-get="acompanhamentos?page=<%= @pagy.page + 1 %>&ajax=true"
+        hx-swap="outerHTML"
+        hx-target="#replace">
+        Carregar mais
+      </button>
+    <% end %>
+  </div>
+</div>

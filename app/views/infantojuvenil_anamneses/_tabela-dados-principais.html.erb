@@ -43,7 +43,11 @@
 
   <tr>
     <th>Motivo da consulta</th>
-    <td><%== markdown_to_html infantojuvenil_anamnese.motivo_consulta %></td>
+    <td>
+      <%= turbo_frame_tag dom_id(infantojuvenil_anamnese, 'motivo_consulta') do %>
+        <%== markdown_to_html infantojuvenil_anamnese.motivo_consulta %>
+      <% end %>
+    </td>
   </tr>
 
   <tr>

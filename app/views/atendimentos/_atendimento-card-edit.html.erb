@@ -1,0 +1,15 @@
+<div id="<%= dom_id(atendimento) %>-modal" class="modal-hidden">
+  <%= dom_id(atendimento) %>
+  <input type="date" value="<%= atendimento.data %>"
+                     name="atendimento"
+                     hx-put="<%= url_for(controller: :atendimentos, action: :update, id: atendimento.id, authenticity_token: form_authenticity_token.to_s) %>"
+                     >
+                     <input type="time"
+                            value="<%= atendimento.horario.strftime("%H:%M:%S") %>"
+                            name="atendimento[horario]"
+                            hx-put="<%= url_for(controller: :atendimentos, action: :update, id: atendimento.id, authenticity_token: form_authenticity_token.to_s) %>"
+                            >
+                            <button hx-post="<%= url_for(controller: :atendimentos, action: :update, id: atendimento.id, authenticity_token: form_authenticity_token.to_s) %>">
+                              Hello!
+                            </button>
+</div>

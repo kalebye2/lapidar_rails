@@ -1,0 +1,3 @@
+<button hx-get="<%= horario_edit_atendimento_path(atendimento) %>" hx-target="#<%= dom_id(atendimento) %>_horario" >
+<%= render_hora_brasil atendimento.horario %>
+</button>

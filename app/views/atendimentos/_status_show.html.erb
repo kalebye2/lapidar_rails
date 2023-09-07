@@ -1,0 +1,11 @@
+<% presente = atendimento.presenca || 0 > 0 ? 1 : 0%>
+<form
+        id="btn-<%= dom_id(atendimento) %>"
+        hx-patch="<%= status_update_atendimento_path(atendimento) %>"
+        hx-target="#<%= dom_id(atendimento) %>_status"
+  >
+  <input type="hidden" value="<%= form_authenticity_token.to_s %>" name="authenticity_token">
+  <button name="atendimento[presenca]" value="<%= presente == 0 %>">
+  <%= atendimento.status %>
+  </button>
+</form>

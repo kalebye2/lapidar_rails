@@ -6,22 +6,25 @@
 
 <%= link_to '+ cadastro', new_pessoa_path %>
 
-<%= form_with url: pessoas_path, method: :get, local: true, data: { turbo_frame: 'pessoas' } do |form| %>
-  <%= form.text_field :q, value: params[:q], placeholder: "Pesquisar por nome..." %>
-  <%#= form.label :sexo %>
-  <%#= form.select :sexo, [["Ambos", ''], ["Masculino", false], ["Feminino", true]] %>
-  <%= form.submit "Pesquisar" %>
-<% end %>
-<!-- onde as pessoas ficam -->
-<%== pagy_nav @pagy %>
-<%= turbo_frame_tag 'pessoas' do %>
-  <div class="pessoas-container">
-  <% if !@pessoas.empty? %>
-    <% @pessoas.each do |p| %>
-      <%= render partial: 'card', locals: {p: p} %>
-    <% end %>
-  <% end %>
+<%#= form_with url: pessoas_path, method: :get, local: true, data: { turbo_frame: 'pessoas' } do |form| %>
+  <%#= form.text_field :q, value: params[:q], placeholder: "Pesquisar por nome..." %>
+  <%##= form.label :sexo %>
+  <%##= form.select :sexo, [["Ambos", ''], ["Masculino", false], ["Feminino", true]] %>
+  <%#= form.submit "Pesquisar" %>
+
+<%# end %>
+
+<br>
+
+<input name="q"
+       type="text"
+       placeholder="Pesquisar por nome..."
+       hx-get="/cadastros?ajax=true"
+       hx-target="#cadastros-container"
+       hx-trigger="keyup delay:500ms changed"
+>
+<div id="query-name-field">
 </div>
-<% end %>
+<%= render "pessoas/pessoas-container", pessoas: @pessoas %>
 
 <br>

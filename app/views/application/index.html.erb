@@ -1,7 +1,6 @@
 <% content_for titulo "" %>
 <h1><%= Rails.application.class.module_parent_name %></h1>
 
-
 <!-- atendimentos de hoje -->
 <%= render "atendimentos-hoje-tabela", atendimentos: @atendimentos_hoje %>
 
@@ -41,19 +40,13 @@
     <%= futuros %> <%= 'futuro'.pluralize(futuros) %>.
   </p>
 
-  <%= form_with url: root_path, method: :get do |form| %>
-    <%= form.label :semana_select, "Selecionar semana" %>
-    <%= form.week_field [start_date: @start_date], onchange: "if (this.value != '') window.location.search = '?start_date=' + this.value", value: @start_date %>
-  <% end %>
+  <%#= form_with do |form| %>
+    <%#= form.label :semana_select, "Selecionar semana" %>
+    <%#= form.week_field [start_date: @start_date], value: @start_date %>
+  <%# end %>
+  <input type="week" hx-post="<%= url_for(action: :update_calendario_atendimentos_semana, controller: :application, authenticity_token: form_authenticity_token.to_s) %>" hx-target="#calendario-atendimentos-semana" hx-swap="outerHTML" name="start_date">
 
   <%= link_to "+ atendimento", new_atendimento_path %>
 
-  <%= week_calendar(events: @atendimentos, attribute: :data) do |date, atendimentos|%>
-    <div class="day">
-      <%= date.day %>
-    </div>
-    <% atendimentos.each do |atendimento| %>
-      <%= render "atendimentos/atendimento-card", atendimento: atendimento %>
-    <% end %>
-  <% end %>
+  <%= render "calendario-atendimentos-semana", events: @atendimentos %>
 <% end %>

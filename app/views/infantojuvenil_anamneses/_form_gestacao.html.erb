@@ -1,0 +1,71 @@
+<%= form.label "Gestação" %>
+
+<div class="field">
+  <%= form.label "Gestação desejada" %>
+  <%= form.select :desejada, [['Sem informação', nil], ['Sim', 1], ['Não', 0]] %>
+</div>
+
+<div class="field">
+  <%= form.label "Idade do pai na gestação (anos)" %>
+  <%= form.number_field :idade_pai %>
+</div>
+
+<div class="field">
+  <%= form.label "Idade da mãe na gestação (anos)" %>
+  <%= form.number_field :idade_mae %>
+</div>
+
+<div class="field">
+  <%= form.label "Irmãos mais velhos" %>
+  <%= form.number_field :irmaos_mais_velhos %>
+</div>
+
+<div class="field">
+  <%= form.label "Irmãos mais novos" %>
+  <%= form.number_field :irmaos_mais_novos %>
+</div>
+
+<div class="field">
+  <%= form.label "Quantos meses demorou da gestação anterior para esta gestação?" %>
+  <%= form.number_field :gestacao_anterior_meses %>
+</div>
+
+<div class="field">
+  <%= form.label "Quantidade de abortos anteriores (espontâneos e/ou intencionais" %>
+  <%= form.number_field :abortos_anteriores %>
+</div>
+
+<div class="field">
+  <%= form.label "Como era a saúde da mãe durante a gestação?" %>
+  <%= form.text_area :mae_saude, size: "50x10" %>
+</div>
+
+<div class="field">
+  <%= form.label "Data do pré-natal" %>
+  <%= form.date_field :data_pre_natal %>
+</div>
+
+<div class="field">
+  <%= form.label "Quais foram as sensações da mãe durante a gravidez?" %>
+  <%= form.text_area :mae_sensacoes, size: "50x10" %>
+</div>
+
+<div class="field">
+  <%= form.label "A mãe passou por internações durante a gravidez?" %>
+  <%= form.text_area :mae_internacoes, size: "50x10" %>
+</div>
+
+<div class="field">
+  <%= form.label "A mãe teve enjoos durante a gravidez?" %>
+  <%= form.text_area :mae_enjoos, size: "50x10" %>
+</div>
+
+<div class="field">
+  <%= form.label "A mãe teve vômitos durante a gravidez?" %>
+  <%= form.text_area :mae_vomitos, size: "50x10" %>
+</div>
+
+<div class="field">
+  <%= form.label "A mãe teve diabetes durante a gravidez?" %>
+  <%= form.select :mae_diabetes, [['Sem informações', nil], ['Sim', 1], ['Não', 0]] %>
+</div>

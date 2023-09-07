@@ -1,0 +1,10 @@
+<form hx-patch="<%= data_update_atendimento_path(atendimento) %>" hx-target="#<%= dom_id(atendimento) %>_data" id="edit_<%= dom_id(atendimento) %>">
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+  <input type="date" name="atendimento[data]" value="<%= atendimento.data %>">
+  <button hx-get="<%= data_atendimento_path(atendimento) %>">
+    Cancelar
+  </button>
+  <button>
+    Ok
+  </button>
+</form>

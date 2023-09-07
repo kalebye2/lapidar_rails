@@ -1,0 +1,17 @@
+<div id="profissionais-container">
+  <div class="profissionais-container">
+    <% profissionais.each do |pro| %>
+      <%= render 'card', profissional: pro %>
+    <% end %>
+  </div>
+  <div id="replace" style="text-align:center;margin:auto;">
+    <% if @pagy && @pagy.page < @pagy.pages %>
+      <button
+        hx-target="#replace"
+        hx-get="profissionais?ajax=true&page=<%= @pagy.page + 1 %>"
+        hx-swap="outerHTML">
+        Crica aqui
+      </button>
+    <% end%>
+  </div>
+</div>

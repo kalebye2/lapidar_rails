@@ -1,5 +1,5 @@
 <ul>
-<% profissional.acompanhamento_em_andamento.order(data_inicio: :desc).each do |a| %>
+<% profissional.acompanhamentos_em_andamento.order(data_inicio: :desc).each do |a| %>
   <%= link_to a, class: "#{a.data_final && !a.acompanhamento_finalizacao_motivo.nil? ? 'acompanhamento-finalizado ' + 'acompanhamento-finalizado-' + a.acompanhamento_finalizacao_motivo.motivo.parameterize : 'acompanhamento-em-andamento'}" do %>
     <li>
       <%= a.render_info_para_profissional %>
@@ -12,9 +12,9 @@
   <% end %>
 <% end %>
 </ul>
-<% if !profissional.acompanhamento_finalizado.empty? %>
+<% if !profissional.acompanhamentos_finalizados.empty? %>
   <ul>
-    <% profissional.acompanhamento_finalizado.order(data_final: :desc).each do |a| %>
+    <% profissional.acompanhamentos_finalizados.order(data_final: :desc).each do |a| %>
       <%= link_to a, class: "#{a.data_final && !a.acompanhamento_finalizacao_motivo.nil? ? 'acompanhamento-finalizado ' + 'acompanhamento-finalizado-' + a.acompanhamento_finalizacao_motivo.motivo.parameterize : 'acompanhamento-em-andamento'}" do %>
         <li>
           <%= a.render_info_para_profissional %>

@@ -8,10 +8,12 @@
     <thead>
       <tr>
         <th>Data do atendimento</th>
+        <th>Horário do atendimento</th>
         <th>Modalidade de atendimento</th>
         <th>Tipo de atendimento</th>
         <th>Status</th>
-        <th>Anotações do profissional</th>
+        <th width="30%">Anotações do profissional</th>
+        <th>Instrumentos usados</th>
         <% if @acompanhamento.profissional_id == usuario_atual.profissional_id %>
           <th>Opções</th>
         <% end %>
@@ -20,11 +22,17 @@
     <tbody>
     <% acompanhamento.atendimentos.order(data: :desc, horario: :desc).each do |a| %>
       <tr>
-        <td><%= render_data_brasil a.data %></td>
+        <td id="<%= dom_id(a) %>_data"><%= render "atendimentos/data_show", atendimento: a %></td>
+        <td id="<%= dom_id(a) %>_horario"><%= render "atendimentos/horario_show", atendimento: a %></td>
         <td><%= a.modalidade.upcase %></td>
         <td><%= a.tipo.upcase %></td>
-        <td><%= a.status %></td>
-        <td><%== markdown_to_html a.anotacoes || "Sem anotações" %></td>
+        <td id="<%= dom_id(a) %>_status">
+          <%= render "atendimentos/status_show", atendimento: a %>
+        </td>
+        <td id="<%= dom_id(a) %>_anotacoes">
+        <%= render "atendimentos/anotacoes_show", atendimento: a %>
+        </td>
+        <td><%= render "atendimentos/instrumentos_aplicados_show", atendimento: a %></td>
         <% if usuario_atual.secretaria? || usuario_atual.profissional == a.profissional %>
           <td><%= link_to "Visualizar", a %></td>
         <% end %>

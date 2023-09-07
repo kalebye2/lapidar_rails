@@ -1,0 +1,38 @@
+<% id = dom_id(atendimento) %>
+<% presenca_class = "tr-atendimento-#{atendimento.status.parameterize}" %>
+<tr class="<%= presenca_class %> tr-atendimento" id="<%= id %>">
+  <td>
+    <%= atendimento.profissional.nome_abreviado %>
+    <span style="font-size:.7em;"><%= atendimento.profissional.documento %></span>
+  </td>
+  <td>
+    <%= atendimento.paciente.nome_abreviado %>
+  </td>
+  <td>
+    <%= atendimento.tipo %> - <%= atendimento.modalidade %>
+  </td>
+  <td>
+    <%= render_hora_brasil atendimento.horario %>
+  </td>
+  <td><%= atendimento.local %></td>
+  <td id="<%= dom_id(atendimento) %>_status">
+      <% if !usuario_atual.nil? %>
+        <% presente = atendimento.presenca || 0 > 0 ? 1 : 0%>
+        <button class="btn-<%= atendimento.status.parameterize %>"
+                id="btn-<%= dom_id(atendimento) %>"
+                hx-patch="<%= atendimento_path(atendimento, atendimento: {presenca: presente == 0 ? 1 : 0, atendimento_id: atendimento.id}, authenticity_token: form_authenticity_token.to_s, ajax: true) %>"
+                hx-target="#<%= dom_id(atendimento) %>"
+                hx-swap="outerHTML">
+                <%= presente == 0 ? atendimento.status : "Realizado" %>
+        </button>
+      <% else %>
+        <%= atendimento.status %>
+      <% end %>
+  </td>
+
+  <% if !usuario_atual.nil? && (usuario_atual.secretaria? || usuario_atual.profissional == atendimento.profissional)%>
+    <td>
+      <%= link_to "acompanhar", atendimento.acompanhamento %>
+    </td>
+  <% end %>
+</tr>

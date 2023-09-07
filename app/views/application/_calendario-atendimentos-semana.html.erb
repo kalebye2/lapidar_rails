@@ -1,0 +1,12 @@
+<% if !events.nil? %>
+  <div id="calendario-atendimentos-semana" style="min-height:100vh;">
+    <%= week_calendar(events: events, attribute: :data) do |date, atendimentos|%>
+      <div class="day">
+        <%= date.day %>
+      </div>
+      <% atendimentos.each do |atendimento| %>
+        <%= render "atendimentos/atendimento-card", atendimento: atendimento %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
