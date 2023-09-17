@@ -43,6 +43,14 @@ class RecebimentosController < ApplicationController
     @recebimento = Recebimento.new
   end
 
+  def inline_new
+    render partial: "recebimentos/table-form", recebimento: Recebimento.new
+  end
+
+  def inline_adicionar
+    render partial: "recebimentos/table-adicionar"
+  end
+
   def edit
   end
 

@@ -1,5 +1,5 @@
 class LaudosController < ApplicationController
-  before_action :set_laudo, only: %i[ show edit update delete ]
+  before_action :set_laudo, only: %i[ show edit update delete data_final data_final_edit identificacao_update informacoes_update interessado interessado_edit finalidade finalidade_edit demanda demanda_edit tecnicas tecnicas_edit analise analise_edit conclusao conclusao_edit referencias referencias_edit]
   before_action :validar_usuario
   def index
     if usuario_atual.secretaria?
@@ -55,6 +55,83 @@ class LaudosController < ApplicationController
   def delete
   end
 
+  # ajax much
+
+  def identificacao_update
+    if @laudo.update(laudo_params)
+      render partial: "laudos/tabela-identificacao", locals: { laudo: @laudo }
+    end
+  end
+
+  def informacoes_update
+    if @laudo.update(laudo_params)
+      render partial: "laudos/tabela-informacoes", locals: { laudo: @laudo }
+    end
+  end
+  
+  def data_final
+    render partial: "laudos/tabela-identificacao/laudo-avaliacao-data-final", locals: { laudo: @laudo }
+  end
+
+  def data_final_edit
+    render partial: "laudos/tabela-identificacao/laudo-avaliacao-data-final-edit", locals: { laudo: @laudo }
+  end
+
+  def interessado
+    render partial: "laudos/tabela-identificacao/laudo-interessado", locals: { laudo: @laudo }
+  end
+
+  def interessado_edit
+    render partial: "laudos/tabela-identificacao/laudo-interessado-edit", locals: { laudo: @laudo }
+  end
+
+  def finalidade
+    render partial: "laudos/tabela-identificacao/laudo-finalidade", locals: { laudo: @laudo }
+  end
+
+  def finalidade_edit
+    render partial: "laudos/tabela-identificacao/laudo-finalidade-edit", locals: { laudo: @laudo }
+  end
+
+  def demanda
+    render partial: "laudos/tabela-identificacao/laudo-demanda", locals: { laudo: @laudo }
+  end
+
+  def demanda_edit
+    render partial: "laudos/tabela-identificacao/laudo-demanda-edit", locals: { laudo: @laudo }
+  end
+
+  def tecnicas
+    render partial: "laudos/tabela-informacoes/laudo-tecnicas", locals: { laudo: @laudo }
+  end
+
+  def tecnicas_edit
+    render partial: "laudos/tabela-informacoes/laudo-tecnicas-edit", locals: { laudo: @laudo }
+  end
+
+  def analise
+    render partial: "laudos/tabela-informacoes/laudo-analise", locals: { laudo: @laudo }
+  end
+
+  def analise_edit
+    render partial: "laudos/tabela-informacoes/laudo-analise-edit", locals: { laudo: @laudo }
+  end
+
+  def conclusao
+    render partial: "laudos/tabela-informacoes/laudo-conclusao", locals: { laudo: @laudo }
+  end
+
+  def conclusao_edit
+    render partial: "laudos/tabela-informacoes/laudo-conclusao-edit", locals: { laudo: @laudo }
+  end
+
+  def referencias
+    render partial: "laudos/tabela-informacoes/laudo-referencias", locals: { laudo: @laudo }
+  end
+
+  def referencias_edit
+    render partial: "laudos/tabela-informacoes/laudo-referencias-edit", locals: { laudo: @laudo }
+  end
 
   private
 
@@ -72,7 +149,7 @@ class LaudosController < ApplicationController
   end
 
   def laudo_params
-    params.require(:laudo).permit(:acompanhamento_id, :interessado, :data_avaliacao, :finalidade, :demanda, :tecnicas, :analise, :conclusao)
+    params.require(:laudo).permit(:acompanhamento_id, :interessado, :data_avaliacao, :finalidade, :demanda, :tecnicas, :analise, :conclusao, :referencias)
   end
 
   def validar_usuario

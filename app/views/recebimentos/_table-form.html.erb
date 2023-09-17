@@ -1,0 +1,51 @@
+<td>
+  <select>
+    <% Acompanhamento.all.each do |a| %>
+      <option><%= a.render_info_para_profissional %></option>
+    <% end %>
+  </select>
+</td>
+
+<td>
+  <select>
+    <option>[Deixe assim se o pagante for o beneficiário]</option>
+    <% Pessoa.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc).each do |p| %>
+      <option>
+      <%= p.nome_completo %> -
+      CPF <%= p.render_cpf %>
+      </option>
+    <% end %>
+  </select>
+</td>
+
+<td>
+  <input type="date" value="<%= Date.today %>">
+</td>
+
+<td>
+  <input type="number">
+</td>
+<td>
+  <select>
+    <% PagamentoModalidade.all.each do |pag| %>
+      <option>
+        <%= pag.modalidade %>
+      </option>
+    <% end %>
+  </select>
+</td>
+
+<td>
+  Pagamento direto
+  <input type="checkbox">
+</td>
+<td>-</td>
+<td>
+  <button>
+    Confirmar
+  </button>
+  <button
+      hx-get="recebimentos/inline-adicionar"
+      hx-target="#recebimento-adicionar">
+    Cancelar
+  </button>

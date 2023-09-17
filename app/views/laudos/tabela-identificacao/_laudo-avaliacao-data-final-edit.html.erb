@@ -1,0 +1,14 @@
+<form
+    hx-patch="<%= identificacao_update_laudo_path(laudo) %>"
+    hx-headers="{'authenticity_token': '<%= form_authenticity_token.to_s %>' }"
+    hx-target="#identificacao"
+    hx-trigger="change"
+    >
+    <input type="hidden"
+           name="authenticity_token"
+           value="<%= form_authenticity_token.to_s %>">
+    <input type="date"
+           name="laudo[data_avaliacao]"
+           value="<%= laudo.data_final %>"
+           type="date">
+</form>

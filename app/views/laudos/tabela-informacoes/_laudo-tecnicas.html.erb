@@ -1,0 +1,7 @@
+<% if usuario_atual != laudo.profissional.usuario %>
+  <%== markdown_to_html laudo.tecnicas.to_s.gsub(/{%\s+paciente\s+%}/, laudo.paciente.nome_completo) %>
+<% else %>
+  <div hx-swap="outerHTML"
+       hx-get="<%= tecnicas_edit_laudo_path(laudo) %>">
+    <%== markdown_to_html (laudo.tecnicas || 'Clique para editar').to_s.gsub(/{%\s+paciente\s+%}/, laudo.paciente.nome_completo) %> </div>
+<% end %>

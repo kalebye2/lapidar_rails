@@ -1,0 +1,6 @@
+<% if usuario_atual != laudo.profissional.usuario %>
+  <div style="text-align:justify;">
+<% else %>
+  <div hx-get="<%= conclusao_edit_laudo_path(laudo) %>" hx-swap="outerHTML" style="text-align:justify;">
+<% end %>
+<%== markdown_to_html (laudo.conclusao || 'Clique para editar').to_s.gsub(/{%\s+paciente\s+%}/, laudo.paciente.nome_completo) || "Não definida" %> </div>

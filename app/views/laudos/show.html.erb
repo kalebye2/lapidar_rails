@@ -3,90 +3,19 @@
 <%= link_to "editar", edit_laudo_path(@laudo) %>
 <%= link_to "download markdown", laudo_path(@laudo, format: :md), { target: :blank } %>
 
+  <h2>Escolha o caso</h2>
+  <p>
+    <%= form_for(@laudo, html: {'hx-patch' => identificacao_update_laudo_path(@laudo), 'hx-trigger' => "change", 'hx-target' => "#identificacao"}) do |form| %>
+      <%= form.select :acompanhamento_id, Acompanhamento.do_profissional(usuario_atual.profissional).order(:data_inicio).map { |acompanhamento| [acompanhamento.render_info_para_profissional, acompanhamento.id] } %>
+    <% end %>
+  </p>
+</tr>
 <table class="tabela-laudo">
   <caption><%= @laudo.finalidade %> por <%= @laudo.profissional.nome_abreviado %> - <%= @laudo.profissional.funcao %> <%= @laudo.profissional.documento %></caption>
-  <thead>
-    <tr>
-      <th colspan=2>Identificação</th>
-    </tr>
-
-    <tr>
-      <th>Avaliador</th>
-      <td><%= @laudo.profissional.nome_completo %></td>
-    </tr>
-
-    <tr>
-      <th>Nome do paciente</th>
-      <td><%= @laudo.paciente.nome_completo %></td>
-    </tr>
-
-    <tr>
-      <th>Sexo</th>
-      <td><%= @laudo.paciente.render_sexo %></td>
-    </tr>
-
-    <tr>
-      <th>Data de início</th>
-      <td><%= render_data_brasil @laudo.data_inicial %></td>
-    </tr>
-
-    <tr>
-      <th>Data da avaliação</th>
-      <td><%= render_data_brasil @laudo.data_final %></td>
-    </tr>
-
-    <tr>
-      <th>Dias de avaliação</th>
-      <td><%= @laudo.dias_de_avaliacao %></td>
-    </tr>
-
-    <tr>
-      <th>Idade na avaliação</th>
-      <td><%= @laudo.paciente.render_idade(@laudo.data_avaliacao) %></td>
-    </tr>
-
-    <tr>
-      <th>Interessado</th>
-      <td><%= @laudo.interessado || @laudo.paciente.nome_completo %></td>
-    </tr>
-
-    <tr>
-      <th>Finalidade da avaliação</th>
-      <td><%= @laudo.finalidade %></td>
-    </tr>
-
-    <tr>
-      <th>Sessões</th>
-      <td><%= @laudo.num_sessoes %></td>
-    </tr>
-
-    <tr>
-      <th>Demanda</th>
-      <td><%== markdown_to_html @laudo.demanda.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo) || "Não definida" %></td>
-    </tr>
+  <thead id="identificacao">
+    <%= render 'laudos/tabela-identificacao', laudo: @laudo %>
   </thead>
-  <tbody>
-    <tr>
-      <th colspan=2>Informações</th>
-    </tr>
-    <tr>
-      <th>Técnicas utilizadas</th>
-      <td><%== markdown_to_html @laudo.tecnicas.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo) %></td>
-    </tr>
-
-    <tr>
-      <th>Análise</th>
-      <td><%== markdown_to_html @laudo.analise.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo) %></td>
-    </tr>
-
-    <tr>
-      <th>Conclusão</th>
-      <td><%== markdown_to_html @laudo.conclusao.to_s.gsub(/{%\s+paciente\s+%}/, @laudo.paciente.nome_completo) %></td>
-    </tr>
-
-    <tr>
-      <th>Referências</th>
-      <td><%== markdown_to_html @laudo.referencias.to_s %></td>
-    </tr>
+  <tbody id="informacoes">
+    <%= render 'laudos/tabela-informacoes', laudo: @laudo %>
   </tbody>
 </table>

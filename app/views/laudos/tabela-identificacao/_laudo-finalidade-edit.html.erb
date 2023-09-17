@@ -1,0 +1,8 @@
+<form id="laudo-finalidade-edit"
+      hx-patch="<%= identificacao_update_laudo_path(laudo) %>"
+      hx-target="#identificacao">
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+  <input type="text" name="laudo[finalidade]" value="<%= laudo.finalidade %>" placeholder="Deixe em branco se o finalidade for o paciente">
+  <button>Ok</button>
+  <button hx-get="<%= finalidade_laudo_path(laudo) %>" hx-target="#laudo-finalidade-edit" hx-swap="outerHTML">Cancelar</button>
+</form>

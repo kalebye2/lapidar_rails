@@ -83,16 +83,22 @@ class Atendimento < ApplicationRecord
   end
 
   def horario_passado
-    data < Date.today || (data == Date.today && horario.hour < Time.now.hour)
+    if !horario.nil?
+      data < Date.today || (data == Date.today && horario.hour < Time.now.hour)
+    end
   end
 
   def em_andamento
-    data == Date.today && horario.hour == Time.now.hour
+    if !horario.nil?
+      data == Date.today && horario.hour == Time.now.hour
+    end
   end
 
 
   def no_futuro
-    data > Date.today || (data == Date.today && horario.hour > Time.now.hour)
+    if !horario.nil?
+      data > Date.today || (data == Date.today && horario.hour > Time.now.hour)
+    end
   end
 
   def status
@@ -100,7 +106,9 @@ class Atendimento < ApplicationRecord
   end
 
   def em_breve
-    data == Date.today && horario.hour == Time.now.hour + 1
+    if !horario.nil?
+      data == Date.today && horario.hour == Time.now.hour + 1
+    end
   end
 
   def em_breve_ou_em_andamento

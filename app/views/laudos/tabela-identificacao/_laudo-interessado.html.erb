@@ -1,0 +1,5 @@
+<% if usuario_atual != laudo.profissional.usuario %>
+  <%= laudo.interessado || laudo.paciente.nome_completo %>
+<% else %>
+  <%= button_tag laudo.interessado || laudo.paciente.nome_completo, 'hx-get' => interessado_edit_laudo_path(laudo), 'hx-swap' => "outerHTML" %>
+<% end %>

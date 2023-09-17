@@ -1,0 +1,5 @@
+<% if usuario_atual != laudo.profissional.usuario %>
+  <%= laudo.finalidade %>
+<% else %>
+  <%= button_tag laudo.finalidade, 'hx-get' => finalidade_edit_laudo_path(laudo), 'hx-swap' => "outerHTML" %>
+<% end %>

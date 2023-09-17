@@ -1,0 +1,9 @@
+<th>Data da avaliação</th>
+<td>
+  <% if !usuario_atual == laudo.profissional.usuario %>
+    <%= render_data_brasil laudo.data_final %>
+  <% else %>
+    <%= render "laudos/tabela-identificacao/laudo-avaliacao-data-final-edit", laudo: laudo %>
+    <%#= button_tag render_data_brasil(laudo.data_final), 'hx-get' => data_final_edit_laudo_path(laudo), 'hx-target' => "#laudo-avaliacao-data-final", 'hx-headers' => "{'authenticity_token': #{form_authenticity_token.to_s} }" %>
+  <% end %>
+</td>

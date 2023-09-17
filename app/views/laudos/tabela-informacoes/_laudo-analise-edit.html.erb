@@ -1,0 +1,9 @@
+<form id="laudo-analise-edit"
+    hx-target="#informacoes"
+    hx-patch="<%= informacoes_update_laudo_path(laudo) %>">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+  <textarea style="width:90%;height:10em;" name="laudo[analise]" value="<%= laudo.analise %>" placeholder="Descreva a analise detalhadamente"><%= laudo.analise %></textarea>
+  <br>
+  <button>Ok</button>
+  <button hx-get="<%= analise_laudo_path(laudo) %>" hx-target="#laudo-analise-edit" hx-swap="outerHTML">Cancelar</button>
+</form>
