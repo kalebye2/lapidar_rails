@@ -33,7 +33,12 @@ Rails.application.routes.draw do
   
   scope :financeiro do
     resources :atendimento_valores
-    resources :recebimentos
+    resources :recebimentos do
+      collection do
+        get 'inline-new', to: :inline_new
+        get 'inline-adicionar', to: :inline_adicionar
+      end
+    end
   end
 
   resources :profissionais do
@@ -43,7 +48,36 @@ Rails.application.routes.draw do
   end
   resources :pessoa_devolutivas, path: '/devolutivas', as: "devolutivas"
   resources :pessoa_devolutivas
-  resources :laudos
+  resources :laudos do
+    member do
+      # ajax much
+      patch :identificacao_update
+      patch :informacoes_update
+      get :data_final
+      get :data_final_edit
+
+      get :finalidade
+      get :finalidade_edit
+
+      get :interessado
+      get :interessado_edit
+
+      get :demanda
+      get :demanda_edit
+
+      get :tecnicas
+      get :tecnicas_edit
+
+      get :analise
+      get :analise_edit
+
+      get :conclusao
+      get :conclusao_edit
+
+      get :referencias
+      get :referencias_edit
+    end
+  end
   resources :crp_regioes
   resources :profissional_notas
   #resources :pessoas

@@ -11,18 +11,15 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 0) do
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
-  create_table "acompanhamento_finalizacao_motivos", id: :serial, force: :cascade do |t|
+  create_table "acompanhamento_finalizacao_motivos", force: :cascade do |t|
     t.string "motivo", limit: 100
   end
 
-  create_table "acompanhamento_tipos", id: :serial, force: :cascade do |t|
+  create_table "acompanhamento_tipos", force: :cascade do |t|
     t.string "tipo", limit: 100
   end
 
-  create_table "acompanhamentos", id: :serial, force: :cascade do |t|
+  create_table "acompanhamentos", force: :cascade do |t|
     t.integer "pessoa_id", null: false
     t.integer "profissional_id", null: false
     t.integer "plataforma_id"
@@ -38,15 +35,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "menor_de_idade", default: false
     t.integer "pessoa_responsavel_id"
     t.integer "sessoes_previstas"
-    t.index ["acompanhamento_tipo_id"], name: "acompanhamento_tipo_id"
-    t.index ["finalizacao_motivo_id"], name: "finalizacao_motivo_id"
-    t.index ["pessoa_id"], name: "usuario_id"
-    t.index ["pessoa_responsavel_id"], name: "usuario_responsavel_id"
-    t.index ["plataforma_id"], name: "plataforma_id"
-    t.index ["profissional_id"], name: "profissional_id"
   end
 
-  create_table "atendimento_locais", id: :serial, force: :cascade do |t|
+  create_table "atendimento_locais", force: :cascade do |t|
     t.integer "atendimento_local_tipo_id", null: false
     t.string "descricao", null: false
     t.integer "pais_id"
@@ -56,39 +47,39 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "endereco_logradouro"
     t.integer "endereco_numero"
     t.string "endereco_complemento"
-    t.decimal "latitude", precision: 7, scale: 4
-    t.decimal "longitude", precision: 7, scale: 4
-    t.index ["atendimento_local_tipo_id"], name: "atendimento_local_tipo_id"
+    t.decimal "latitude"
+    t.decimal "longitude"
   end
 
-  create_table "atendimento_local_tipos", id: :serial, force: :cascade do |t|
+  create_table "atendimento_local_tipos", force: :cascade do |t|
     t.string "tipo", null: false
   end
 
-  create_table "atendimento_modalidades", id: :serial, force: :cascade do |t|
+  create_table "atendimento_modalidades", force: :cascade do |t|
     t.string "modalidade", limit: 100
   end
 
-  create_table "atendimento_plataformas", id: :serial, force: :cascade do |t|
+  create_table "atendimento_plataformas", force: :cascade do |t|
     t.string "nome", limit: 50, null: false
     t.string "site", limit: 100
     t.string "descricao"
-    t.decimal "taxa_fixa", precision: 10, scale: 2
-    t.decimal "taxa_atendimento", precision: 10, scale: 2
+    t.decimal "taxa_fixa"
+    t.decimal "taxa_atendimento"
   end
 
-  create_table "atendimento_tipos", id: :serial, force: :cascade do |t|
+  create_table "atendimento_tipos", force: :cascade do |t|
     t.string "tipo", limit: 100
   end
 
-  create_table "atendimento_valores", primary_key: "atendimento_id", id: :integer, default: nil, force: :cascade do |t|
-    t.bigint "valor"
-    t.bigint "desconto", default: 0
-    t.bigint "taxa_porcentagem_externa", default: 0
+  create_table "atendimento_valores", id: false, force: :cascade do |t|
+    t.integer "atendimento_id", null: false
+    t.integer "valor"
+    t.integer "desconto", default: 0
+    t.integer "taxa_porcentagem_externa", default: 0
     t.integer "taxa_porcentagem_interna", default: 0
   end
 
-  create_table "atendimentos", id: :serial, force: :cascade do |t|
+  create_table "atendimentos", force: :cascade do |t|
     t.date "data"
     t.time "horario"
     t.integer "modalidade_id", null: false
@@ -99,12 +90,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "atendimento_local_id"
     t.boolean "reagendado", default: false
     t.time "horario_fim"
-    t.index ["acompanhamento_id"], name: "acompanhamento_id"
-    t.index ["atendimento_tipo_id"], name: "atendimento_tipo_id"
-    t.index ["modalidade_id"], name: "modalidade_id"
   end
 
-  create_table "biblioteca_autores", id: :serial, force: :cascade do |t|
+  create_table "biblioteca_autores", force: :cascade do |t|
     t.string "nome"
     t.string "nome_do_meio", limit: 1000
     t.string "sobrenome", null: false
@@ -114,38 +102,35 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "bio"
   end
 
-  create_table "biblioteca_editoras", id: :serial, force: :cascade do |t|
+  create_table "biblioteca_editoras", force: :cascade do |t|
     t.string "nome", null: false
     t.string "ordem"
     t.string "local"
   end
 
-  create_table "biblioteca_identificadores", id: :serial, force: :cascade do |t|
+  create_table "biblioteca_identificadores", force: :cascade do |t|
     t.integer "obra_id", null: false
     t.string "tipo", null: false
     t.string "valor", null: false
-    t.index ["obra_id"], name: "obra_id"
   end
 
   create_table "biblioteca_obra_autor_juncoes", primary_key: ["obra_id", "autor_id"], force: :cascade do |t|
     t.integer "obra_id", null: false
     t.integer "autor_id", null: false
     t.integer "ordem", null: false
-    t.index ["autor_id"], name: "biblioteca_obra_autor_juncoes_ibfk_2"
   end
 
   create_table "biblioteca_obra_tag_juncoes", primary_key: ["obra_id", "tag_id"], force: :cascade do |t|
     t.integer "obra_id", null: false
     t.integer "tag_id", null: false
     t.integer "ordem", null: false
-    t.index ["tag_id"], name: "biblioteca_obra_tag_juncoes_ibfk_2"
   end
 
-  create_table "biblioteca_obra_tipos", id: :serial, force: :cascade do |t|
+  create_table "biblioteca_obra_tipos", force: :cascade do |t|
     t.string "tipo", null: false
   end
 
-  create_table "biblioteca_obras", id: :serial, force: :cascade do |t|
+  create_table "biblioteca_obras", force: :cascade do |t|
     t.string "titulo", null: false
     t.string "subtitulo"
     t.integer "obra_tipo_id"
@@ -160,70 +145,76 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "edicao", default: 0, null: false
     t.integer "volume", default: 0, null: false
     t.integer "periodico_id"
-    t.index ["editora_id"], name: "editora_id"
-    t.index ["obra_tipo_id"], name: "obra_tipo_id"
-    t.index ["periodico_id"], name: "periodico_id"
   end
 
-  create_table "biblioteca_periodicos", id: :serial, force: :cascade do |t|
+  create_table "biblioteca_periodicos", force: :cascade do |t|
     t.string "nome", null: false
     t.string "ordem"
     t.string "local"
     t.string "url"
   end
 
-  create_table "biblioteca_tags", id: :serial, force: :cascade do |t|
+  create_table "biblioteca_tags", force: :cascade do |t|
     t.string "nome", null: false
   end
 
-  create_table "civil_estados", id: :serial, force: :cascade do |t|
+  create_table "civil_estados", force: :cascade do |t|
     t.string "estado", limit: 100, null: false
   end
 
-  create_table "continentes", id: :serial, force: :cascade do |t|
+  create_table "continentes", force: :cascade do |t|
     t.string "nome", limit: 50
   end
 
-  create_table "crefito_regioes", primary_key: "uf_id", id: :integer, default: nil, force: :cascade do |t|
-    t.integer "id", null: false
+  create_table "crefito_regioes", id: false, force: :cascade do |t|
+    t.integer "uf_id", null: false
+    t.integer "id"
   end
 
-  create_table "crefono_regioes", primary_key: "uf_id", id: :integer, default: nil, force: :cascade do |t|
-    t.integer "id", null: false
+  create_table "crefono_regioes", id: false, force: :cascade do |t|
+    t.integer "uf_id", null: false
+    t.integer "id"
   end
 
-  create_table "crn_regioes", primary_key: "uf_id", id: :integer, default: nil, force: :cascade do |t|
-    t.integer "id", null: false
+  create_table "crn_regioes", id: false, force: :cascade do |t|
+    t.integer "uf_id", null: false
+    t.integer "id"
   end
 
-  create_table "crp_regioes", primary_key: "uf_id", id: :integer, default: nil, force: :cascade do |t|
-    t.integer "id", null: false
+  create_table "crp_regioes", id: false, force: :cascade do |t|
+    t.integer "uf_id", null: false
+    t.integer "id"
   end
 
-  create_table "escola_tipos", id: :serial, force: :cascade do |t|
+  create_table "despesas", force: :cascade do |t|
+    t.integer "valor", default: 0, null: false
+    t.date "data"
+    t.string "descricao", default: "Gastos comuns", null: false
+  end
+
+  create_table "escola_tipos", force: :cascade do |t|
     t.string "tipo", limit: 100
   end
 
-  create_table "gasto_pagamentos", id: :serial, force: :cascade do |t|
+  create_table "gasto_pagamentos", force: :cascade do |t|
     t.integer "despesa_id", null: false
     t.integer "valor", default: 0, null: false
     t.date "data"
-    t.index ["despesa_id"], name: "despesa_id"
   end
 
-  create_table "gasto_tipos", id: :serial, force: :cascade do |t|
+  create_table "gasto_tipos", force: :cascade do |t|
     t.string "tipo", null: false
   end
 
-  create_table "gastos", id: :serial, force: :cascade do |t|
+  create_table "gastos", force: :cascade do |t|
     t.string "descricao", null: false
     t.integer "gasto_tipo_id"
     t.integer "valor", default: 0, null: false
     t.date "data"
-    t.index ["gasto_tipo_id"], name: "despesa_tipo_id"
   end
 
-  create_table "infantojuvenil_anamnese_alimentacoes", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, force: :cascade do |t|
+  create_table "infantojuvenil_anamnese_alimentacoes", id: false, force: :cascade do |t|
+    t.integer "infantojuvenil_anamnese_id", null: false
     t.integer "solida_meses"
     t.integer "succao_boa"
     t.integer "degluticao_boa"
@@ -239,7 +230,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "outras_consideracoes"
   end
 
-  create_table "infantojuvenil_anamnese_comunicacoes", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, force: :cascade do |t|
+  create_table "infantojuvenil_anamnese_comunicacoes", id: false, force: :cascade do |t|
+    t.integer "infantojuvenil_anamnese_id", null: false
     t.string "primeiras_silabas", limit: 100
     t.string "primeiras_palavras", limit: 100
     t.string "primeiras_frases", limit: 1000
@@ -252,7 +244,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "outras_consideracoes"
   end
 
-  create_table "infantojuvenil_anamnese_escola_historicos", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, force: :cascade do |t|
+  create_table "infantojuvenil_anamnese_escola_historicos", id: false, force: :cascade do |t|
+    t.integer "infantojuvenil_anamnese_id", null: false
     t.integer "idade_entrada_anos"
     t.integer "escola_tipo_id"
     t.text "aproveitamento"
@@ -263,10 +256,10 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "participacao_pais"
     t.string "atividades_extras", limit: 500
     t.text "outras_consideracoes"
-    t.index ["escola_tipo_id"], name: "SYS_FK_2350"
   end
 
-  create_table "infantojuvenil_anamnese_familia_historicos", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, force: :cascade do |t|
+  create_table "infantojuvenil_anamnese_familia_historicos", id: false, force: :cascade do |t|
+    t.integer "infantojuvenil_anamnese_id", null: false
     t.string "antecedentes_doenca_mental", limit: 1000
     t.string "antecedentes_dependencia_quimica", limit: 1000
     t.string "ambiente_familiar_condicoes_economicas", limit: 1000
@@ -278,7 +271,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "outras_consideracoes"
   end
 
-  create_table "infantojuvenil_anamnese_gestacoes", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, force: :cascade do |t|
+  create_table "infantojuvenil_anamnese_gestacoes", id: false, force: :cascade do |t|
+    t.integer "infantojuvenil_anamnese_id", null: false
     t.integer "desejada"
     t.integer "idade_pai"
     t.integer "idade_mae"
@@ -292,7 +286,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "mae_internacoes", limit: 1000
     t.string "mae_enjoos", limit: 1000
     t.string "mae_vomitos", limit: 1000
-    t.boolean "mae_diabetes"
+    t.integer "mae_diabetes"
     t.boolean "mae_traumatismo"
     t.boolean "mae_convulsoes"
     t.string "mae_medicamentos", limit: 1000
@@ -307,11 +301,10 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "nascimento_reacao_irmaos"
     t.text "desenvolvimento_parto"
     t.text "outras_consideracoes"
-    t.index ["parto_local_id"], name: "SYS_FK_2300"
-    t.index ["parto_tipo_id"], name: "SYS_FK_2299"
   end
 
-  create_table "infantojuvenil_anamnese_manipulacoes", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, force: :cascade do |t|
+  create_table "infantojuvenil_anamnese_manipulacoes", id: false, force: :cascade do |t|
+    t.integer "infantojuvenil_anamnese_id", null: false
     t.integer "chupeta_usou"
     t.integer "chupeta_usou_meses"
     t.text "chupeta_relato_retirada"
@@ -325,7 +318,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "outras_consideracoes"
   end
 
-  create_table "infantojuvenil_anamnese_psicomotricidades", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, force: :cascade do |t|
+  create_table "infantojuvenil_anamnese_psicomotricidades", id: false, force: :cascade do |t|
+    t.integer "infantojuvenil_anamnese_id", null: false
     t.integer "sorriu_meses"
     t.integer "dirigir_ativamente_pessoas_meses"
     t.integer "ergueu_cabeca_meses"
@@ -348,7 +342,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "outras_consideracoes"
   end
 
-  create_table "infantojuvenil_anamnese_saude_historicos", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, force: :cascade do |t|
+  create_table "infantojuvenil_anamnese_saude_historicos", id: false, force: :cascade do |t|
+    t.integer "infantojuvenil_anamnese_id", null: false
     t.text "doencas"
     t.text "doenca_grave_e_evolucao"
     t.integer "acompanhamento_medico"
@@ -361,7 +356,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "outras_consideracoes"
   end
 
-  create_table "infantojuvenil_anamnese_sexualidades", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, force: :cascade do |t|
+  create_table "infantojuvenil_anamnese_sexualidades", id: false, force: :cascade do |t|
+    t.integer "infantojuvenil_anamnese_id", null: false
     t.string "curiosidade_sexual", limit: 1000
     t.boolean "masturba"
     t.string "atitude_pais", limit: 1000
@@ -369,7 +365,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "outras_consideracoes"
   end
 
-  create_table "infantojuvenil_anamnese_socioafetividades", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, force: :cascade do |t|
+  create_table "infantojuvenil_anamnese_socioafetividades", id: false, force: :cascade do |t|
+    t.integer "infantojuvenil_anamnese_id", null: false
     t.integer "amizade_facil"
     t.integer "prefere_brincar_com_amigos"
     t.integer "prefere_brincar_com_criancas_menores"
@@ -389,7 +386,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "outras_consideracoes"
   end
 
-  create_table "infantojuvenil_anamnese_sonos", primary_key: "infantojuvenil_anamnese_id", id: :integer, default: nil, force: :cascade do |t|
+  create_table "infantojuvenil_anamnese_sonos", id: false, force: :cascade do |t|
+    t.integer "infantojuvenil_anamnese_id", null: false
     t.integer "dorme_bem"
     t.integer "pula"
     t.integer "baba"
@@ -409,40 +407,36 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "outras_consideracoes"
   end
 
-  create_table "infantojuvenil_anamneses", id: :serial, force: :cascade do |t|
+  create_table "infantojuvenil_anamneses", force: :cascade do |t|
     t.integer "atendimento_id", null: false
     t.text "motivo_consulta"
     t.string "diagnostico_preliminar", limit: 1000
     t.string "plano_tratamento", limit: 1000
     t.string "prognostico", limit: 1000
-    t.index ["atendimento_id"], name: "SYS_FK_2292"
   end
 
-  create_table "instrucao_graus", id: :serial, force: :cascade do |t|
+  create_table "instrucao_graus", force: :cascade do |t|
     t.string "grau", limit: 100, null: false
   end
 
-  create_table "instrumento_relatos", id: :serial, force: :cascade do |t|
+  create_table "instrumento_relatos", force: :cascade do |t|
     t.integer "atendimento_id"
     t.integer "instrumento_id"
     t.text "relato"
     t.text "resultados"
     t.text "observacoes"
-    t.index ["atendimento_id"], name: "atendimento_id"
-    t.index ["instrumento_id"], name: "instrumento_id"
   end
 
   create_table "instrumento_subfuncao_juncoes", primary_key: ["instrumento_id", "psicologia_subfuncao_id"], force: :cascade do |t|
     t.integer "instrumento_id", null: false
     t.integer "psicologia_subfuncao_id", null: false
-    t.index ["psicologia_subfuncao_id"], name: "psicologia_subfuncao_id"
   end
 
-  create_table "instrumento_tipos", id: :serial, force: :cascade do |t|
+  create_table "instrumento_tipos", force: :cascade do |t|
     t.string "tipo", limit: 100
   end
 
-  create_table "instrumentos", id: :serial, force: :cascade do |t|
+  create_table "instrumentos", force: :cascade do |t|
     t.string "nome"
     t.integer "instrumento_tipo_id"
     t.boolean "exclusivo_psicologo"
@@ -455,10 +449,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "indicacao"
     t.text "particularidades"
     t.boolean "tem_na_clinica", null: false
-    t.index ["instrumento_tipo_id"], name: "instrumento_tipo_id"
   end
 
-  create_table "laudos", id: :serial, force: :cascade do |t|
+  create_table "laudos", force: :cascade do |t|
     t.string "interessado", limit: 500
     t.date "data_avaliacao", null: false
     t.string "finalidade", limit: 500
@@ -470,10 +463,10 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "conclusao"
     t.integer "acompanhamento_id"
     t.text "referencias"
-    t.index ["acompanhamento_id"], name: "laudos_ibfk_1"
   end
 
-  create_table "neuropsicologico_adulto_anamneses", primary_key: "atendimento_id", id: :integer, default: nil, force: :cascade do |t|
+  create_table "neuropsicologico_adulto_anamneses", id: false, force: :cascade do |t|
+    t.integer "atendimento_id", null: false
     t.integer "escolaridade_anos"
     t.text "historico_profissional"
     t.text "aspectos_psicoemocionais"
@@ -496,11 +489,11 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "prognostico", limit: 1000
   end
 
-  create_table "pagamento_modalidades", id: :serial, force: :cascade do |t|
+  create_table "pagamento_modalidades", force: :cascade do |t|
     t.string "modalidade", limit: 50
   end
 
-  create_table "paises", id: :serial, force: :cascade do |t|
+  create_table "paises", force: :cascade do |t|
     t.string "nome_ingles"
     t.string "nome", null: false
     t.string "nome_oficial"
@@ -508,22 +501,21 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "sigla_3", limit: 3, null: false
     t.integer "iso_3166_numerico", null: false
     t.integer "continente_id"
-    t.index ["continente_id"], name: "continente_id"
   end
 
-  create_table "parentescos", id: :serial, force: :cascade do |t|
+  create_table "parentescos", force: :cascade do |t|
     t.string "parentesco", limit: 100
   end
 
-  create_table "parto_locais", id: :serial, force: :cascade do |t|
+  create_table "parto_locais", force: :cascade do |t|
     t.string "local", limit: 100, null: false
   end
 
-  create_table "parto_tipos", id: :serial, force: :cascade do |t|
+  create_table "parto_tipos", force: :cascade do |t|
     t.string "descricao", limit: 100, null: false
   end
 
-  create_table "pessoa_devolutivas", id: :serial, force: :cascade do |t|
+  create_table "pessoa_devolutivas", force: :cascade do |t|
     t.integer "pessoa_id"
     t.integer "pessoa_responsavel_id"
     t.integer "profissional_id"
@@ -533,12 +525,11 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   end
 
   create_table "pessoa_emails", id: false, force: :cascade do |t|
-    t.integer "pessoa_id", default: -> { "nextval('pessoa_emails_id_seq'::regclass)" }, null: false
+    t.integer "pessoa_id", null: false
     t.string "email", limit: 255, null: false
   end
 
-  create_table "pessoa_etnias", id: false, force: :cascade do |t|
-    t.serial "id", null: false
+  create_table "pessoa_etnias", force: :cascade do |t|
     t.string "etnia", limit: 255
   end
 
@@ -556,14 +547,14 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "descricao", limit: 255
   end
 
-  create_table "pessoa_tratamento_pronomes", id: :integer, default: nil, force: :cascade do |t|
+  create_table "pessoa_tratamento_pronomes", force: :cascade do |t|
     t.string "pronome_masculino", limit: 255, null: false
     t.string "pronome_feminino", limit: 255
     t.string "pronome_masculino_abreviado", limit: 10
     t.string "pronome_feminino_abreviado", limit: 10
   end
 
-  create_table "pessoas", id: :integer, default: -> { "nextval('pessoa_id_seq'::regclass)" }, force: :cascade do |t|
+  create_table "pessoas", force: :cascade do |t|
     t.string "nome", limit: 255
     t.string "nome_do_meio", limit: 255
     t.string "sobrenome", limit: 500
@@ -593,7 +584,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "nome_preferido", limit: 255
   end
 
-  create_table "profissionais", id: :integer, default: nil, force: :cascade do |t|
+  create_table "profissionais", force: :cascade do |t|
     t.integer "pessoa_id", null: false
     t.integer "profissional_funcao_id"
     t.integer "documento_regiao_id"
@@ -605,7 +596,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "ativo", default: true
   end
 
-  create_table "profissional_documento_modelos", id: :serial, force: :cascade do |t|
+  create_table "profissional_documento_modelos", force: :cascade do |t|
     t.integer "profissional_id", null: false
     t.string "titulo", limit: 255, null: false
     t.string "descricao", limit: 1000
@@ -614,62 +605,58 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "tamanho_papel", limit: 255
   end
 
-  create_table "profissional_especializacao_juncoes", id: false, force: :cascade do |t|
+  create_table "profissional_especializacao_juncoes", primary_key: ["profissional_id", "profissional_especializacao_id"], force: :cascade do |t|
     t.integer "profissional_id", null: false
     t.integer "profissional_especializacao_id", null: false
   end
 
-  create_table "profissional_especializacoes", id: false, force: :cascade do |t|
-    t.integer "id", null: false
+  create_table "profissional_especializacoes", force: :cascade do |t|
     t.string "especializacao", limit: 255, null: false
   end
 
-  create_table "profissional_financeiro_repasses", id: :serial, force: :cascade do |t|
+  create_table "profissional_financeiro_repasses", force: :cascade do |t|
     t.integer "profissional_id", null: false
     t.integer "valor", default: 0, null: false
     t.date "data"
     t.integer "modalidade_id", null: false
   end
 
-  create_table "profissional_funcoes", id: :integer, default: nil, force: :cascade do |t|
+  create_table "profissional_funcoes", force: :cascade do |t|
     t.string "funcao", limit: 255, null: false
     t.string "orgao_responsavel", limit: 255
     t.string "documento_tipo", limit: 255
     t.string "flexao_feminino", limit: 255
     t.string "servico", limit: 255
+    t.string "adjetivo_masc", limit: 255
+    t.string "adjetivo_fem", limit: 255
   end
 
-  create_table "profissional_notas", id: false, force: :cascade do |t|
-    t.integer "id", null: false
+  create_table "profissional_notas", force: :cascade do |t|
     t.integer "profissional_id", null: false
     t.date "data", default: -> { "CURRENT_DATE" }
-    t.time "hora"
+    t.time "hora", default: -> { "CURRENT_TIME" }
     t.string "titulo", limit: 1000
     t.text "nota"
     t.date "data_lembrar"
     t.time "hora_lembrar"
   end
 
-  create_table "psicologia_funcoes", id: false, force: :cascade do |t|
-    t.integer "id", null: false
+  create_table "psicologia_funcoes", force: :cascade do |t|
     t.string "nome", limit: 100
     t.string "descricao", limit: 1000
   end
 
-  create_table "psicologia_subfuncoes", id: false, force: :cascade do |t|
-    t.integer "id", null: false
+  create_table "psicologia_subfuncoes", force: :cascade do |t|
     t.integer "psicologia_funcao_id"
     t.string "nome", limit: 100
     t.string "descricao", limit: 1000
   end
 
-  create_table "reajuste_motivos", id: false, force: :cascade do |t|
-    t.integer "id", null: false
+  create_table "reajuste_motivos", force: :cascade do |t|
     t.string "motivo", limit: 100, null: false
   end
 
-  create_table "reajustes", id: false, force: :cascade do |t|
-    t.integer "id", null: false
+  create_table "reajustes", force: :cascade do |t|
     t.integer "acompanhamento_id", null: false
     t.date "data_ajuste", null: false
     t.integer "valor_novo"
@@ -677,16 +664,15 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "reajuste_motivo_id"
   end
 
-  create_table "recebimentos", id: :serial, force: :cascade do |t|
+  create_table "recebimentos", force: :cascade do |t|
     t.integer "pessoa_pagante_id"
     t.integer "acompanhamento_id", null: false
-    t.bigint "valor", default: 0, null: false
+    t.integer "valor", default: 0, null: false
     t.date "data", default: -> { "CURRENT_DATE" }, null: false
     t.integer "modalidade_id", default: 1, null: false
   end
 
-  create_table "subtestes", id: false, force: :cascade do |t|
-    t.integer "id", null: false
+  create_table "subtestes", force: :cascade do |t|
     t.integer "instrumento_id"
     t.integer "psicologia_subfuncao_id"
     t.string "descricao", limit: 100
@@ -694,13 +680,12 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "itens"
   end
 
-  create_table "ufs", id: false, force: :cascade do |t|
-    t.integer "id", null: false
+  create_table "ufs", force: :cascade do |t|
     t.string "nome", limit: 100, null: false
     t.string "sigla", limit: 2, null: false
   end
 
-  create_table "usuarios", id: :serial, force: :cascade do |t|
+  create_table "usuarios", force: :cascade do |t|
     t.integer "profissional_id", null: false
     t.string "username", limit: 255, null: false
     t.string "password_digest", limit: 255, null: false
@@ -711,6 +696,76 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "informatica", default: false
   end
 
-  add_foreign_key "pessoas", "paises", column: "nascimento_pais_id", name: "pessoa_nascimento_pais_fk", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "pessoas", "paises", column: "nascimento_pais_id", name: "pessoa_nascimento_pais_id", on_update: :cascade
+  add_foreign_key "acompanhamentos", "acompanhamento_tipos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "acompanhamentos", "pessoas", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "acompanhamentos", "plataformas", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "acompanhamentos", "profissionais", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "atendimento_locais", "atendimento_local_tipos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "atendimento_locais", "paises", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "atendimento_valores", "atendimentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "atendimentos", "acompanhamentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "atendimentos", "acompanhamentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "atendimentos", "atendimento_locais", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "atendimentos", "atendimento_modalidades", column: "modalidade_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "atendimentos", "atendimento_tipos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "biblioteca_identificadores", "biblioteca_obras", column: "obra_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "biblioteca_obra_autor_juncoes", "biblioteca_autores", column: "autor_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "biblioteca_obra_autor_juncoes", "biblioteca_obras", column: "obra_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "biblioteca_obra_tag_juncoes", "biblioteca_obras", column: "obra_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "biblioteca_obra_tag_juncoes", "biblioteca_tags", column: "tag_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "biblioteca_obras", "biblioteca_obra_tipos", column: "obra_tipo_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "biblioteca_obras", "biblioteca_periodicos", column: "periodico_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "crefito_regioes", "ufs", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "crefono_regioes", "ufs", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "crn_regioes", "ufs", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "crp_regioes", "ufs", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "gasto_pagamentos", "despesas", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "gastos", "gasto_tipos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "infantojuvenil_anamnese_alimentacoes", "infantojuvenil_anamneses", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "infantojuvenil_anamnese_comunicacoes", "infantojuvenil_anamneses", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "infantojuvenil_anamnese_escola_historicos", "infantojuvenil_anamneses", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "infantojuvenil_anamnese_familia_historicos", "infantojuvenil_anamneses", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "infantojuvenil_anamnese_gestacoes", "infantojuvenil_anamneses", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "infantojuvenil_anamnese_manipulacoes", "infantojuvenil_anamneses", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "infantojuvenil_anamnese_psicomotricidades", "infantojuvenil_anamneses", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "infantojuvenil_anamnese_saude_historicos", "infantojuvenil_anamneses", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "infantojuvenil_anamnese_sexualidades", "infantojuvenil_anamneses", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "infantojuvenil_anamnese_socioafetividades", "infantojuvenil_anamneses", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "infantojuvenil_anamnese_sonos", "infantojuvenil_anamneses", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "infantojuvenil_anamneses", "atendimentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "instrumento_relatos", "atendimentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "instrumento_relatos", "instrumentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "instrumento_subfuncao_juncoes", "instrumentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "instrumento_subfuncao_juncoes", "psicologia_subfuncoes", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "instrumentos", "instrumento_tipos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "laudos", "acompanhamentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "neuropsicologico_adulto_anamneses", "atendimentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoa_devolutivas", "pessoas", column: "pessoa_responsavel_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoa_devolutivas", "pessoas", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoa_devolutivas", "profissionais", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoa_emails", "pessoas", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoa_responsaveis", "pessoas", column: "pessoa_dependente_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoa_responsaveis", "pessoas", column: "pessoa_responsavel_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoa_telefones", "pessoas", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoas", "civil_estados", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoas", "instrucao_graus", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoas", "paises", column: "nascimento_pais_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoas", "paises", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "profissionais", "documento_regioes", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "profissionais", "pessoas", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "profissionais", "profissional_funcoes", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "profissional_documento_modelos", "profissionais", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "profissional_especializacao_juncoes", "profissionais", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "profissional_especializacao_juncoes", "profissional_especializacaos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "profissional_financeiro_repasses", "profissionais", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "profissional_notas", "profissionais", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "psicologia_subfuncoes", "psicologia_funcoes", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "reajustes", "acompanhamentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "reajustes", "reajuste_motivos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "recebimentos", "acompanhamentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "recebimentos", "pagamento_modalidades", column: "modalidade_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "recebimentos", "pessoas", column: "pessoa_pagante_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "subtestes", "instrumentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "subtestes", "psicologia_subfuncoes", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "usuarios", "profissionais", on_update: :cascade, on_delete: :cascade
 end

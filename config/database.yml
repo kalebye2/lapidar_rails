@@ -18,8 +18,8 @@ development:
         encoding: utf8
         # descomente o adaptador que for usar
         #adapter: mysql2
-        adapter: postgresql
-        database: lapidar_data
+        # adapter: postgresql
+        database: 'db/lapidar_data.db'
         #username: lapidar
         #password: sua senha aqui
 
