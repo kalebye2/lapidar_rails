@@ -1,10 +1,11 @@
+<% titulo_doc = "Laudo#{ if !@laudo.profissional.profissional_funcao.adjetivo_masc.nil? then ' ' + @laudo.profissional.profissional_funcao.adjetivo_masc end}" %>
 ---
 # Para ser usado com Pandoc
 # convertendo para LaTeX ou PDF
 # Caso queira saber mais visite https://pandoc.org
 #
-title: <%= @laudo.finalidade %>
-author-meta: <%= @laudo.profissional.nome_completo %> <%= @laudo.profissional.documento %>
+title: <%= titulo_doc %>
+author-meta: <%= @laudo.profissional.descricao_completa %>
 date-meta: <%= render_data_brasil @laudo.data_avaliacao %>
 
 # Formatação
@@ -24,6 +25,19 @@ header-includes:
 
     %\parskip=1.5em % alterar o espaço entre parágrafos
     %\renewcommand{\baselinestretch}{1.5} % alterar o espaço entre linhas
+
+    % contar o número total de páginas do documento
+    \usepackage{lastpage}
+
+    % para cabeçalho e rodapé
+    \usepackage{fancyhdr}
+    \fancyhead[R]{<%= titulo_doc %>}
+    \fancyfoot[L]{\footnotesize{
+    E-mail: \href{mailto:<%= @laudo.profissional.email %>}{<%= @laudo.profissional.email %>}\\
+    Fone: \href{tel:<%= @laudo.profissional.pessoa.render_fone_link %>}{<%= @laudo.profissional.pessoa.render_fone_local %>}
+    }}
+    \fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+    \pagestyle{fancy}
     ```
 
 ---
@@ -38,7 +52,7 @@ header-includes:
 
 **Idade**: <%= @laudo.paciente.render_idade %>
 
-**Interessado**: <%= @laudo.interessado %>
+**Interessado**: <%= @laudo.interessado || @laudo.paciente.nome_completo %>
 
 **Sessões**: <%= @laudo.num_sessoes %>
 
@@ -77,12 +91,13 @@ header-includes:
 
 ---
 
-\center
+\begin{center}
 <%= @laudo.profissional.nome_completo %> -
 <%= @laudo.profissional.funcao %>
 <% if !@laudo.profissional.documento_valor.nil? %>
 <%= @laudo.profissional.documento %>
 <% end %>
+\end{center}
 
 <% if !@laudo.referencias.nil? %>
 # Referências

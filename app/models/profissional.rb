@@ -33,6 +33,10 @@ class Profissional < ApplicationRecord
     "#{profissional_funcao.documento_tipo} #{('00' + documento_regiao_id.to_s)[-2..] }/#{documento_valor}"
   end
 
+  def email
+    pessoa.email
+  end
+
   def nome_completo
     pessoa.nome_completo
   end

@@ -21,6 +21,8 @@ class Acompanhamento < ApplicationRecord
   scope :do_profissional_com_id, -> (id) { id.nil? ? all : where(profissional_id: id) }
   scope :do_tipo, -> (tipo) { tipo.nil? ? all : where(acompanhamento_tipo: tipo) }
   scope :do_tipo_com_id, -> (id) { id.nil? ? all : where(acompanhamento_tipo_id: id) }
+  scope :valor_aproximado_mensal, -> { sum("sessoes_atuais * valor_atual") }
+  scope :valor_aproximado_semanal, -> { sum(:valor_atual) }
 
   def render_info_para_profissional
     p = pessoa

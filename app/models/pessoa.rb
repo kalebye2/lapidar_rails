@@ -98,8 +98,15 @@ class Pessoa < ApplicationRecord
       nil
   end
 
+  def render_fone_local
+    tem_telefone? ?
+      fr = "(" + fone_cod_area + ") " + fone_num[..-5] + "-" + fone_num[-4..]
+    :
+      nil
+  end
+
   def render_fone_link
-    tem_telefone? ? "#{fone_cod_area}#{fone_num}" : nil
+    tem_telefone? ? "+#{fone_cod_pais}#{fone_cod_area}#{fone_num}" : nil
   end
 
 
