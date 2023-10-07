@@ -184,7 +184,7 @@ class AtendimentosController < ApplicationController
   end
 
   def atendimento_params
-    params.require(:atendimento).permit(:data, :horario, :modalidade_id, :acompanhamento_id, :presenca, :atendimento_tipo_id, :anotacoes, :remarcado, :atendimento_local_id, :reagendado, atendimento_valor_attributes: [:atendimento_id, :valor, :desconto, :taxa_porcentagem_externa, :taxa_porcentagem_interna, :id])
+    params.require(:atendimento).permit(:data, :horario, :horario_fim, :modalidade_id, :acompanhamento_id, :presenca, :atendimento_tipo_id, :anotacoes, :remarcado, :atendimento_local_id, :reagendado, atendimento_valor_attributes: [:atendimento_id, :valor, :desconto, :taxa_porcentagem_externa, :taxa_porcentagem_interna, :id])
   end
 
   def validar_usuario

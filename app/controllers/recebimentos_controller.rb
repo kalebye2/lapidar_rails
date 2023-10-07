@@ -87,6 +87,9 @@ class RecebimentosController < ApplicationController
     end
     respond_to do |format|
       if @recebimento.update(recebimento_params)
+        if params[:ajax]
+          format.html { render html: "deu certo" }
+        end
         format.html { redirect_to recebimentos_path, notice: "recebimento was successfully updated." }
         format.json { render :index, status: :ok}
       else

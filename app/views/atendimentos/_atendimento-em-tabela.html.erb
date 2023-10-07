@@ -2,17 +2,28 @@
 <% presenca_class = "tr-atendimento-#{atendimento.status.parameterize}" %>
 <tr class="<%= presenca_class %> tr-atendimento" id="<%= id %>">
   <td>
-    <%= atendimento.profissional.nome_abreviado %>
-    <span style="font-size:.7em;"><%= atendimento.profissional.documento %></span>
+    <% if usuario_atual.nil? %>
+      <%= atendimento.profissional.nome_abreviado %>
+      <span style="font-size:.7em;"><%= atendimento.profissional.documento %></span>
+    <% else %>
+      <%= link_to atendimento.profissional do %>
+        <%= atendimento.profissional.nome_abreviado %>
+        <span style="font-size:.7em;"><%= atendimento.profissional.documento %></span>
+      <% end %>
+    <% end %>
   </td>
   <td>
-    <%= atendimento.paciente.nome_abreviado %>
+    <% if usuario_atual.nil? %>
+      <%= atendimento.paciente.nome_abreviado %>
+    <% else %>
+      <%= link_to atendimento.paciente.nome_abreviado, atendimento.paciente %>
+    <% end %>
   </td>
   <td>
     <%= atendimento.tipo %> - <%= atendimento.modalidade %>
   </td>
   <td>
-    <%= render_hora_brasil atendimento.horario %>
+    <%= "#{render_hora_brasil atendimento.horario}#{if !atendimento.horario_fim.nil? then ' até '.concat(render_hora_brasil atendimento.horario_fim) end}" %>
   </td>
   <td><%= atendimento.local %></td>
   <td id="<%= dom_id(atendimento) %>_status">

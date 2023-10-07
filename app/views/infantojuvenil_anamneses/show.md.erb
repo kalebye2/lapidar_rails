@@ -3,7 +3,7 @@
 # convertendo para LaTeX ou PDF
 # Caso queira saber mais visite https://pandoc.org
 #
-title: Anamnese
+title-meta: Anamnese infantojuvenil
 author-meta: <%= @infantojuvenil_anamnese.profissional.descricao_completa %>
 date-meta: <%= render_data_brasil @infantojuvenil_anamnese.atendimento.data %>
 
@@ -11,9 +11,13 @@ date-meta: <%= render_data_brasil @infantojuvenil_anamnese.atendimento.data %>
 # tire o "#" onde quiser mudar valor
 papersize: a4
 fontsize: 12pt
-# mainfont: Arial
-#classoption:
-#  - margin=2cm
+mainfont: Liberation Sans
+#geometry:
+#	- left=2cm
+#	- right=2cm
+#	- top=3cm
+#	- bottom=4cm
+
 header-includes:
 - |
     ```{=latex}
@@ -24,9 +28,29 @@ header-includes:
 
     %\parskip=1.5em % alterar o espaço entre parágrafos
     %\renewcommand{\baselinestretch}{1.5} % alterar o espaço entre linhas
+
+    % contar o número total de páginas do documento
+    \usepackage{lastpage}
+
+    % para cabeçalho e rodapé
+    \usepackage{fancyhdr}
+    \fancyhead[L]{} % coloque aqui cabeçalho à esquerda
+    \fancyhead[R]{Anamnese infantojuvenil}
+    \fancyfoot[L]{\footnotesize{
+    E-mail: \href{mailto:<%= @acompanhamento.profissional.email %>}{<%= @acompanhamento.profissional.email %>}\\
+    Fone: \href{tel:<%= @infantojuvenil_anamnese.profissional.pessoa.render_fone_link %>}{<%= @infantojuvenil_anamnese.profissional.pessoa.render_fone_local %>}
+    }}
+    \fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+    \pagestyle{fancy}
     ```
 
 ---
+
+<!-- para criar o título -->
+\begin{center}
+\huge{\textbf{Anamnese infantojuvenil}}
+\end{center}
+\vspace{3em}
 
 # Identificação
 

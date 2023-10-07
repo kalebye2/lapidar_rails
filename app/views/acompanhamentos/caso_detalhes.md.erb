@@ -1,0 +1,152 @@
+<% titulo_doc = "Prontuário#{if !@acompanhamento.profissional.profissional_funcao.adjetivo_masc.nil? then ' ' + @acompanhamento.profissional.profissional_funcao.adjetivo_masc end}" %>
+---
+# Para ser usado com Pandoc
+# convertendo para LaTeX ou PDF
+# Caso queira saber mais visite https://pandoc.org
+#
+title-meta: <%= titulo_doc %>
+author-meta: <%= @acompanhamento.profissional.descricao_completa %>
+date-meta: <%= render_data_brasil Date.today %>
+
+# Formatação
+# tire o "#" onde quiser mudar valor
+papersize: a4
+fontsize: 12pt
+# mainfont: Liberation Sans
+# geometry:
+#    - left=2cm
+#    - right=2cm
+#    - top=3cm
+#    - bottom=4cm
+header-includes:
+- |
+    ```{=latex}
+    % Tire o símbolo "%" do início das linhas que você quiser usar uma regra
+    %\usepackage{indentfirst} % para indentar o primeiro parágrafo como os seguintes
+
+    %\setlength\parindent{2em} % recuo da primeira linha do parágrafo
+
+    %\parskip=1.5em % alterar o espaço entre parágrafos
+    %\renewcommand{\baselinestretch}{1.5} % alterar o espaço entre linhas
+
+    % contar o número total de páginas do documento
+    \usepackage{lastpage}
+
+    % para cabeçalho e rodapé
+    \usepackage{fancyhdr}
+    \fancyhead[L]{} % coloque aqui cabeçalho à esquerda
+    \fancyhead[R]{<%= titulo_doc %>}
+    \fancyfoot[L]{\footnotesize{
+    E-mail: \href{mailto:<%= @acompanhamento.profissional.email %>}{<%= @acompanhamento.profissional.email %>}\\
+    Fone: \href{tel:<%= @acompanhamento.profissional.pessoa.render_fone_link %>}{<%= @acompanhamento.profissional.pessoa.render_fone_local %>}
+    }}
+    \fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+    \pagestyle{fancy}
+    ```
+
+---
+
+\begin{center}
+\huge{\textbf{<%= titulo_doc %>}}
+\end{center}
+\vspace{3em}
+
+**Nome do paciente**:
+<%= @acompanhamento.paciente.nome_completo.upcase %>
+
+**Data de nascimento**:
+<%= render_data_brasil @acompanhamento.paciente.data_nascimento %>
+
+**Idade**:
+<%= @acompanhamento.paciente.render_idade.upcase %>
+
+**Sexo**:
+<%= @acompanhamento.paciente.render_sexo.upcase %>
+
+**Estado Civil**:
+<%= @acompanhamento.paciente.estado_civil.upcase %>
+
+**Grau de instrução**:
+<%= @acompanhamento.paciente.instrucao_grau.grau %>
+
+**Profissão**:
+<%= @acompanhamento.paciente.profissao.upcase %>
+
+**Fone**:
+[<%= @acompanhamento.paciente.render_fone %>](tel:<%= @acompanhamento.paciente.render_fone_link %>)
+
+**E-mail**:
+<<%= @acompanhamento.paciente.email %>>
+
+**Contato para emergência**:
+INSERIR CONTATO PARA EMERGÊNCIA
+
+**RG**:
+INSERIR RG
+
+**CPF**:
+<%= @acompanhamento.paciente.render_cpf %>
+
+**Endereço**:
+<%= @acompanhamento.paciente.render_endereco %> ---
+<%= @acompanhamento.paciente.cidade %>/<%= @acompanhamento.paciente.estado %>
+
+**Toma medicação**:
+INSERIR SE TOMA MEDICAÇÃO
+
+**Motivo da consulta**:
+<%= @acompanhamento.motivo %>
+
+**Hipótese diagnóstica**:
+INSERIR HIPÓTESE DIAGNÓSTICA
+
+**Objetivo do acompanhamento**:
+INSERIR OBJETIVO
+
+**Início do acompanhamento**:
+<%= render_data_brasil @acompanhamento.data_inicio %>
+
+<% if !@acompanhamento.data_final.nil? %>
+**Término do acompanhamento**:
+<%= render_data_brasil @acompanhamento.data_final %>
+<% else %>
+**Status**:
+Em andamento
+<% end %>
+
+<% if !@acompanhamento.acompanhamento_finalizacao_motivo.nil? %>
+**Desfecho**:
+<%= @acompanhamento.acompanhamento_finalizacao_motivo.motivo %>
+<% end %>
+
+---
+
+**<%= @acompanhamento.profissional.funcao %>**:
+<%= @acompanhamento.profissional.descricao_completa %>
+
+**Assinatura**:
+
+# Registro dos atendimentos
+
+<% @acompanhamento.atendimentos.em_ordem.each_with_index do |atendimento, index| %>
+## Sessão <%= index + 1 %>
+
+**Data**:
+<%= render_data_brasil atendimento.data %>
+
+**Horário**:
+<%= render_hora_brasil atendimento.horario %>
+
+**Status**:
+<%= atendimento.status %>
+
+**Atividade**:
+<%= atendimento.tipo %>
+
+### Anotações
+
+<%= atendimento.anotacoes || "Sem anotações" %>
+
+---
+
+<% end %>

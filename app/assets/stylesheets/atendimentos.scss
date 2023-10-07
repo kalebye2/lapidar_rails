@@ -127,3 +127,36 @@ textarea {
 	font-family: 'linux biolinum o';
 	font-size: 1em;
 }
+
+/* botões */
+
+.btn-a-ocorrer {
+	--btn-text-main-color: var(--atendimento-a-ocorrer-text-color);
+	--btn-text-alt-color: var(--atendimento-a-ocorrer-highlight-color);
+	--btn-bg-color: var(--atendimento-a-ocorrer-text-color);
+	--btn-bg-alt-color: var(--atendimento-a-ocorrer-text-color);
+}
+
+.btn-realizado {
+	--btn-text-main-color: var(--atendimento-realizado-text-color);
+	--btn-text-alt-color: var(--atendimento-realizado-highlight-color);
+	--btn-bg-color: var(--atendimento-realizado-text-color);
+}
+
+.btn-em-breve {
+	--btn-text-main-color: var(--atendimento-em-breve-text-color);
+	--btn-text-alt-color: var(--atendimento-em-breve-highlight-color);
+	--btn-bg-color: var(--atendimento-em-breve-text-color);
+}
+
+.btn-em-andamento {
+	--btn-text-main-color: var(--atendimento-em-andamento-text-color);
+	--btn-text-alt-color: var(--atendimento-em-andamento-highlight-color);
+	--btn-bg-color: var(--atendimento-em-andamento-text-color);
+}
+
+.btn-nao-realizado {
+	--btn-text-main-color: var(--atendimento-nao-realizado-text-color);
+	--btn-text-alt-color: var(--atendimento-nao-realizado-highlight-color);
+	--btn-bg-color: var(--atendimento-nao-realizado-text-color);
+}

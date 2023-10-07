@@ -4,6 +4,9 @@
       Informações do acompanhamento<br />
       <!--span style="font-size:.7em;"><%#= link_to "Baixar", { controller: :acompanhamentos, action: :caso_detalhes, id: acompanhamento.id, format: :pdf }, { target: :blank } %>
     </span>-->
+    <span style="font-size:.7em;">
+      <%= link_to "Baixar prontuário (Markdown)", { controller: :acompanhamentos, action: :caso_detalhes, id: acompanhamento.id, format: :md }, { style: "color:pink;" } %>
+    </span>
     </caption>
     <thead>
       <tr>

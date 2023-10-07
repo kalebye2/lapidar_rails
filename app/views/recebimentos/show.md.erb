@@ -7,10 +7,13 @@ title: Recibo de honorários profissionais
 author-meta: <%= @recebimento.profissional.nome_completo %>
 date-meta: <%= render_data_brasil @recebimento.data %>
 
+geometry:
+  - margin=3cm
+
 # Opções de formatação
 papersize: a4
 fontsize: 12pt
-# mainfont: Linux Biolinum O
+mainfont: Liberation Sans
 
 header-includes:
 - |

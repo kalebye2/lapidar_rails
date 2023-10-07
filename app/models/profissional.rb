@@ -2,8 +2,8 @@ class Profissional < ApplicationRecord
   belongs_to :pessoa
   belongs_to :profissional_funcao
   has_one :usuario
-  has_many :profissional_especializacao_juncoes
-  has_many :especializacao, through: :profissional_especializacao_juncoes
+  has_many :profissional_especializacao_juncoes, foreign_key: :profissional_id
+  has_many :especializacoes, through: :profissional_especializacao_juncoes
 
   has_many :acompanhamentos
   has_many :pacientes, through: :acompanhamentos, source: :pessoa

@@ -24,6 +24,8 @@ class Atendimento < ApplicationRecord
   scope :deste_ano, -> { self.do_ano_atual }
   scope :do_ano_passado, -> { where(data: (Date.today - 1.year).all_year) }
   scope :reagendados, -> { where(reagendado: true) }
+  # ordenados
+  scope :em_ordem, -> (ordem = :asc) { order(data: ordem) }
 
   def consideracoes
     anotacoes
@@ -84,20 +86,27 @@ class Atendimento < ApplicationRecord
 
   def horario_passado
     if !horario.nil?
-      data < Date.today || (data == Date.today && horario.hour < Time.now.hour)
+      data < Date.today || (data == Date.today && horario_final < Time.now)
     end
   end
 
   def em_andamento
     if !horario.nil?
-      data == Date.today && horario.hour == Time.now.hour
+      data == Date.today && horario_inicial < Time.now && horario_final > Time.now
     end
   end
 
+  def horario_final
+    (horario_fim.nil? ? horario + 1.hour : horario_fim).strftime("%H:%M").to_time
+  end
+
+  def horario_inicial
+    horario.strftime("%H:%M").to_time
+  end
 
   def no_futuro
     if !horario.nil?
-      data > Date.today || (data == Date.today && horario.hour > Time.now.hour)
+      data > Date.today || (data == Date.today && horario_final > Time.now.hour)
     end
   end
 

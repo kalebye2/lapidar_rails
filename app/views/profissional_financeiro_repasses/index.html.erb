@@ -1,0 +1,25 @@
+<h1>Repasses aos profissionais</h1>
+
+<%= @repasses.count %>
+
+<!-- tabela -->
+<table class="tabela-valores">
+  <thead>
+    <tr>
+      <th>Profissional</th>
+      <th>Data</th>
+      <th>Valor</th>
+      <th>Modalidade</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @repasses.each do |repasse| %>
+<tr>
+  <td class="text-center"><%= repasse.profissional.descricao_completa %></td>
+  <td class="text-center"><%= render_data_brasil repasse.data %></td>
+  <td class="text-center"><%= render_dinheiro_centavos repasse.valor %></td>
+  <td class="text-center"><%= repasse.pagamento_modalidade.modalidade %></td>
+</tr>
+    <% end %>
+  </tbody>
+</table>

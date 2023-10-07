@@ -1,16 +1,16 @@
 <td>
-  <select>
+  <select name="recebimento[acompanhamento_id]">
     <% Acompanhamento.all.each do |a| %>
-      <option><%= a.render_info_para_profissional %></option>
+      <option value="<%= a.id %>"><%= a.render_info_para_profissional %></option>
     <% end %>
   </select>
 </td>
 
 <td>
-  <select>
-    <option>[Deixe assim se o pagante for o beneficiário]</option>
+  <select name="recebimento[pessoa_pagante_id]">
+    <option value="">[Deixe assim se o pagante for o beneficiário]</option>
     <% Pessoa.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc).each do |p| %>
-      <option>
+      <option value="<%= p.id %>">
       <%= p.nome_completo %> -
       CPF <%= p.render_cpf %>
       </option>
@@ -19,16 +19,16 @@
 </td>
 
 <td>
-  <input type="date" value="<%= Date.today %>">
+  <input type="date" value="<%= Date.today %>" name="recebimento[data]">
 </td>
 
 <td>
   <input type="number">
 </td>
 <td>
-  <select>
+  <select name="recebimento[modalidade_id]">
     <% PagamentoModalidade.all.each do |pag| %>
-      <option>
+      <option value="<%= pag.id %>">
         <%= pag.modalidade %>
       </option>
     <% end %>
@@ -37,11 +37,13 @@
 
 <td>
   Pagamento direto
-  <input type="checkbox">
+  <input type="checkbox" name="recebimento[direto_profissional]">
 </td>
+<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+<input type="hidden" name="ajax" value="1">
 <td>-</td>
 <td>
-  <button>
+  <button hx-post="<%= recebimentos_path(Recebimento.new) %>" hx-include="closest tr">
     Confirmar
   </button>
   <button

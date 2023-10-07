@@ -19,6 +19,11 @@
 	--main-color: darkred;
 	--secondary-color: #aa1111;
 	--main-light-color: white;
+	--main-dark-color: black;
+	--button-light-color: darkred;
+	--button-light-color-2: pink;
+	--button-dark-color: pink;
+	--button-dark-color-2: darkred;
 	/* cores a substituir nos temas */
 	--doc-bg-color: #eee;
 	--doc-text-color: #333;
@@ -97,6 +102,9 @@
 	--doc-text-color: #333;
 	--doc-a-color: #332211;
 
+	--button-bg-color: var(--button-light-color);
+	--button-bg-alt-color: var(--button-light-color-2);
+
 	--table-bg-color: var(--table-light-color);
 	--table-bg-alt-color: var(--table-light-alt-color);
 	--table-text-color: var(--table-dark-color);
@@ -154,6 +162,10 @@
 	--doc-bg-color: #222;
 	--doc-text-color: #eee;
 	--doc-a-color: #ccddee;
+
+	--button-bg-color: var(--button-dark-color);
+	--button-bg-alt-color: var(--button-dark-color-2);
+
 	--table-bg-color: var(--table-dark-color);
 	--table-bg-alt-color: var(--table-dark-alt-color);
 	--table-text-color: var(--table-light-color);
@@ -206,27 +218,6 @@
 	--atendimento-em-breve-text-color: var(--atendimento-em-breve-light-color);
 }
 
-body {
-	background-color: var(--doc-bg-color);
-	color: var(--doc-text-color);
-	font-family: var(--doc-text-font);
-
-	margin: 0;
-}
-
-a {
-	color: var(--doc-a-color);
-
-	/*
-	&:hover {
-		text-decoration: underline;
-	}
-	*/
-}
-
-h1, h2, h3, h4, h5, h6 {
-	font-family: var(--doc-heading-font);
-}
 
 .simple-calendar {
 	display: grid;
@@ -581,3 +572,6 @@ table {
 	}
 }
 
+.text-center {
+	text-align: center;
+}

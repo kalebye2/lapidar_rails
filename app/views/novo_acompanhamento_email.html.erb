@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h1>Registrado acompanhamento para <%= @acompanhamento.paciente.nome_completo %></h1>
+    <p>Olá <%= @acompanhamento.profissional.nome_completo %>,</p>
+    <p>
+    Houve registro de <%= @acompanhamento.tipo.upcase %> para <%= @acompanhamento.paciente.nome_completo %> com início em <%= render_data_brasil @acompanhamento.data_inicio %>.
+    Lembre-se de anotar os dados do paciente e, caso ainda não tenha entrado em contato com ele, entrar em contato para confirmar as informações do acompanhamento.
+    </p>
+  </body>
+</html>

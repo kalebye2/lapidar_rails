@@ -94,4 +94,6 @@ class InfantojuvenilAnamnese < ApplicationRecord
     if infantojuvenil_anamnese_sono.nil? then build_infantojuvenil_anamnese_sono.save! end
   end
 
+
+
 end

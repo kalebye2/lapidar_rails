@@ -88,6 +88,15 @@ class AcompanhamentosController < ApplicationController
     respond_to do |format|
       format.html
 
+      format.md do
+        hoje = Time.now.strftime("%Y-%m-%d")
+        hoje_formatado = Time.now.strftime("%d/%m/%Y")
+        nome_documento = "#{@acompanhamento.pessoa.nome_completo.parameterize}_prontuario_#{hoje}"
+        
+        response.headers['Content-Type'] = 'text/markdown'
+        response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.md"
+      end
+
       format.pdf do
         hoje = Time.now.strftime("%Y-%m-%d")
         hoje_formatado = Time.now.strftime("%d/%m/%Y")
@@ -131,6 +140,7 @@ class AcompanhamentosController < ApplicationController
     avalor = atendimento.build_atendimento_valor
     atendimento.data = au.data + semanas_pra_passar.week
     atendimento.horario = au.horario
+    atendimento.horario_fim = au.horario_fim
     atendimento.modalidade_id = au.modalidade_id
     atendimento.atendimento_local_id = au.atendimento_local_id
     atendimento.atendimento_tipo_id = au.atendimento_tipo_id
