@@ -31,7 +31,7 @@
 
     <div class="field">
       <%= form.label "Data do pagamento" %>
-      <%= form.date_field :data %>
+      <%= form.date_field :data, value: recebimento.data || Date.today %>
     </div>
 
     <div class="field">
