@@ -4,7 +4,7 @@
 # convertendo para LaTeX ou PDF
 # Caso queira saber mais visite https://pandoc.org
 #
-title: <%= titulo_doc %>
+title-meta: <%= titulo_doc %>
 author-meta: <%= @laudo.profissional.descricao_completa %>
 date-meta: <%= render_data_brasil @laudo.data_avaliacao %>
 
@@ -41,6 +41,10 @@ header-includes:
     ```
 
 ---
+
+\begin{center}
+\huge{\bfseries{<%= titulo_doc %>}}
+\end{center}
 
 # Identificação
 
