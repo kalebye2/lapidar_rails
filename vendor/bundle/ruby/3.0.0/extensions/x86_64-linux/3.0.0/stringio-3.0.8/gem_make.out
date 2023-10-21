@@ -1,0 +1,15 @@
+current directory: /home/mateus/Documentos/app/dev/psi/lapidar_rails/vendor/bundle/ruby/3.0.0/gems/stringio-3.0.8/ext/stringio
+/usr/bin/ruby3.0 -I /usr/lib/ruby/vendor_ruby -r ./siteconf20230912-20863-eyhg1h.rb extconf.rb
+creating Makefile
+
+current directory: /home/mateus/Documentos/app/dev/psi/lapidar_rails/vendor/bundle/ruby/3.0.0/gems/stringio-3.0.8/ext/stringio
+make DESTDIR\= clean
+
+current directory: /home/mateus/Documentos/app/dev/psi/lapidar_rails/vendor/bundle/ruby/3.0.0/gems/stringio-3.0.8/ext/stringio
+make DESTDIR\=
+compiling stringio.c
+linking shared-object stringio.so
+
+current directory: /home/mateus/Documentos/app/dev/psi/lapidar_rails/vendor/bundle/ruby/3.0.0/gems/stringio-3.0.8/ext/stringio
+make DESTDIR\= install
+/usr/bin/install -c -m 0755 stringio.so ./.gem.20230912-20863-vrdht8
