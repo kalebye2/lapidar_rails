@@ -39,6 +39,7 @@ Rails.application.routes.draw do
         get 'inline-adicionar', to: :inline_adicionar
       end
     end
+    resources :profissional_financeiro_repasses, path: '/repasses'
   end
 
   resources :profissionais do
@@ -91,12 +92,17 @@ Rails.application.routes.draw do
   resources :continentes
   resources :acompanhamentos do
     post :new_atendimento_proxima_semana, path: 'novo_atendimento_proxima_semana'
+
+    member do
+      get :declaracao
+    end
   end
   resources :atendimentos do
     member do
       post :reagendar_para_proxima_semana
       get :reagendar_para_proxima_semana
       post :create_atendimento_valor
+      get :declaracao_comparecimento
 
       # partials (ajax)
       get :anotacoes
@@ -120,6 +126,7 @@ Rails.application.routes.draw do
   resources :profissional_documento_modelos
 
   root to: "application#index"
+  get '/ajuda', to: "application#ajuda"
   get '/financeiro', to: "financeiro#index"
 
   scope :admin do

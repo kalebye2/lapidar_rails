@@ -1,0 +1,86 @@
+---
+# Para ser usado com Pandoc
+# convertendo para LaTeX ou PDF
+# Caso queira saber mais visite https://pandoc.org
+#
+title: Declaração
+author-meta: <%= @acompanhamento.profissional.descricao_completa %>
+date: <%= render_data_brasil Date.today %>
+
+# Formatação
+# tire o "#" onde quiser mudar valor
+papersize: a4
+fontsize: 12pt
+# mainfont: Liberation Sans
+# geometry:
+#    - left=2cm
+#    - right=2cm
+#    - top=3cm
+#    - bottom=4cm
+
+header-includes:
+- |
+    ```{=latex}
+    % Tire o símbolo "%" do início das linhas que você quiser usar uma regra
+    \usepackage{titlesec}
+    \usepackage{titling}
+
+    % melhora o título
+    \renewcommand{\maketitle}{
+    \begin{center}
+    {\huge\bfseries\thetitle}
+    \vspace{4em}
+    \end{center}
+    }
+
+    %\usepackage{indentfirst} % para indentar o primeiro parágrafo como os seguintes
+
+    %\setlength\parindent{2em} % recuo da primeira linha do parágrafo
+
+    %\parskip=1.5em % alterar o espaço entre parágrafos
+    %\renewcommand{\baselinestretch}{1.5} % alterar o espaço entre linhas
+
+    % contar o número total de páginas do documento
+    \usepackage{lastpage}
+
+    % para cabeçalho e rodapé
+    \usepackage{fancyhdr}
+    \renewcommand{\headrulewidth}{0em}
+    \fancyhead[L]{} % coloque aqui cabeçalho à esquerda
+    \fancyhead[R]{}
+    \fancyfoot[L]{\footnotesize{
+    E-mail: \href{mailto:<%= @acompanhamento.profissional.email %>}{<%= @acompanhamento.profissional.email %>}\\
+    Fone: \href{tel:<%= @acompanhamento.profissional.pessoa.render_fone_link %>}{<%= @acompanhamento.profissional.pessoa.render_fone_local %>}
+    }}
+    %\fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+    \fancyfoot[C]{}
+    \pagestyle{fancy}
+    ```
+---
+
+\vfill
+Declaro para fins de comprovação que
+<%= @acompanhamento.paciente.nome_completo %>
+está sendo submetid<%= @acompanhamento.paciente.no_feminino? ? 'a' : 'o' %> a
+<%= @acompanhamento.tipo %> sob meus cuidados profissionais, desde
+<% primeira_data = @acompanhamento.primeiro_atendimento.data %>
+<%= t('date.month_names')[primeira_data.month].downcase %> de <%= primeira_data.year %>.
+
+\vspace{2em}
+
+\begin{center}
+<%= @acompanhamento.profissional.cidade %>,
+<%= Date.today.day %> de
+<%= t('date.month_names')[Date.today.month].downcase %> de
+<%= Date.today.year %>
+\end{center}
+
+\vspace{3cm}
+
+---
+
+\begin{center}
+<%= @acompanhamento.profissional.descricao_completa %>
+\end{center}
+
+\vfill

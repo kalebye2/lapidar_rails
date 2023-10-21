@@ -1,0 +1,88 @@
+---
+# Para ser usado com Pandoc
+# convertendo para LaTeX ou PDF
+# Caso queira saber mais visite https://pandoc.org
+#
+title: Declaração de comparecimento
+author-meta: <%= @atendimento.profissional.descricao_completa %>
+date: <%= render_data_brasil Date.today %>
+
+# Formatação
+# tire o "#" onde quiser mudar valor
+papersize: a4
+fontsize: 12pt
+# mainfont: Liberation Sans
+# geometry:
+#    - left=2cm
+#    - right=2cm
+#    - top=3cm
+#    - bottom=4cm
+
+header-includes:
+- |
+    ```{=latex}
+    % Tire o símbolo "%" do início das linhas que você quiser usar uma regra
+    \usepackage{titlesec}
+    \usepackage{titling}
+
+    % melhora o título
+    \renewcommand{\maketitle}{
+    \begin{center}
+    {\huge\bfseries\thetitle}
+    \vspace{4em}
+    \end{center}
+    }
+
+    %\usepackage{indentfirst} % para indentar o primeiro parágrafo como os seguintes
+
+    %\setlength\parindent{2em} % recuo da primeira linha do parágrafo
+
+    %\parskip=1.5em % alterar o espaço entre parágrafos
+    %\renewcommand{\baselinestretch}{1.5} % alterar o espaço entre linhas
+
+    % contar o número total de páginas do documento
+    \usepackage{lastpage}
+
+    % para cabeçalho e rodapé
+    \usepackage{fancyhdr}
+    \renewcommand{\headrulewidth}{0em}
+    \fancyhead[L]{} % coloque aqui cabeçalho à esquerda
+    \fancyhead[R]{}
+    \fancyfoot[L]{\footnotesize{
+    E-mail: \href{mailto:<%= @atendimento.acompanhamento.profissional.email %>}{<%= @atendimento.acompanhamento.profissional.email %>}\\
+    Fone: \href{tel:<%= @atendimento.acompanhamento.profissional.pessoa.render_fone_link %>}{<%= @atendimento.acompanhamento.profissional.pessoa.render_fone_local %>}
+    }}
+    %\fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+    \fancyfoot[C]{}
+    \pagestyle{fancy}
+    ```
+---
+
+\vfill
+Declaro para fins de comprovação que
+<%= @atendimento.paciente.nome_completo %>
+esteve presente em atendimento
+em <%= @atendimento.acompanhamento.tipo %> no dia
+<%= render_data_brasil @atendimento.data %>
+das
+<%= render_hora_brasil @atendimento.horario %>
+às <%= render_hora_brasil @atendimento.horario_fim.nil? ? @atendimento.horario + 1.hour : @atendimento.horario_fim %>.
+
+\vspace{2em}
+
+\begin{center}
+<%= @atendimento.profissional.cidade %>,
+<%= Date.today.day %> de
+<%= t('date.month_names')[Date.today.month].downcase %> de
+<%= Date.today.year %>
+\end{center}
+
+\vspace{3cm}
+
+---
+
+\begin{center}
+<%= @atendimento.profissional.descricao_completa %>
+\end{center}
+
+\vfill

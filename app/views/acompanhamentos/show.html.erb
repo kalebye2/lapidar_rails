@@ -29,6 +29,7 @@
   <%= link_to "+ Atendimento", new_atendimento_path, data: { "turbo_frame" => "modal" }%>
   <% if @acompanhamento.em_andamento? %>
     <%= button_to "Adicionar atendimento para próxima semana", acompanhamento_new_atendimento_proxima_semana_path(@acompanhamento) %>
+    <%= link_to "Declaração (markdown)", declaracao_acompanhamento_path(@acompanhamento, format: :md) %>
   <% end %>
 <% end %>
 

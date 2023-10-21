@@ -4,7 +4,7 @@
 # convertendo para LaTeX ou PDF
 # Caso queira saber mais visite https://pandoc.org
 #
-title-meta: <%= titulo_doc %>
+title: <%= titulo_doc %>
 author-meta: <%= @acompanhamento.profissional.descricao_completa %>
 date-meta: <%= render_data_brasil Date.today %>
 
@@ -23,11 +23,21 @@ header-includes:
     ```{=latex}
     % Tire o símbolo "%" do início das linhas que você quiser usar uma regra
     %\usepackage{indentfirst} % para indentar o primeiro parágrafo como os seguintes
+    \usepackage{titlesec}
+    \usepackage{titling}
 
     %\setlength\parindent{2em} % recuo da primeira linha do parágrafo
 
     %\parskip=1.5em % alterar o espaço entre parágrafos
     %\renewcommand{\baselinestretch}{1.5} % alterar o espaço entre linhas
+
+    % melhorar o título
+    \renewcommand{\maketitle}{
+    \begin{center}
+    {\huge\bfseries\thetitle}
+    \vspace{3em}
+    \end{center}
+    }
 
     % contar o número total de páginas do documento
     \usepackage{lastpage}
@@ -45,11 +55,6 @@ header-includes:
     ```
 
 ---
-
-\begin{center}
-\huge{\textbf{<%= titulo_doc %>}}
-\end{center}
-\vspace{3em}
 
 **Nome do paciente**:
 <%= @acompanhamento.paciente.nome_completo.upcase %>
@@ -129,6 +134,9 @@ Em andamento
 # Registro dos atendimentos
 
 <% @acompanhamento.atendimentos.em_ordem.each_with_index do |atendimento, index| %>
+
+---
+
 ## Sessão <%= index + 1 %>
 
 **Data**:
@@ -146,7 +154,5 @@ Em andamento
 ### Anotações
 
 <%= atendimento.anotacoes || "Sem anotações" %>
-
----
 
 <% end %>

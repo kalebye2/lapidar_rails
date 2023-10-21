@@ -43,7 +43,7 @@
 <input type="hidden" name="ajax" value="1">
 <td>-</td>
 <td>
-  <button hx-post="<%= recebimentos_path(Recebimento.new) %>" hx-include="closest tr">
+  <button hx-post="<%= recebimentos_path(Recebimento.new) %>" hx-include="closest tr" hx-target="#tabela-recebimentos" hx-swap="outerHTML">
     Confirmar
   </button>
   <button

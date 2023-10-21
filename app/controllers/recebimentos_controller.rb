@@ -1,10 +1,10 @@
 class RecebimentosController < ApplicationController
   require 'csv'
 
-  before_action :set_recebimento, only: %i[ show update edit delete recibo ]
+  before_action :set_recebimento, only: %i[ show update edit destroy recibo ]
   before_action :validar_usuario#, only: %i[ show update edit delete recibo ]
 
-  def index
+  def recebimentos_por_params
     @ano = params[:ano] || Date.today.year
     @mes = params[:mes] || Date.today.month
     @ano_mes = "#{@ano}-#{@mes.to_s.rjust(2, "0")}"
@@ -18,10 +18,14 @@ class RecebimentosController < ApplicationController
       @atendimento_valores = usuario_atual.profissional.atendimento_valores.joins(:atendimento).where("atendimentos.data" => "#{@ano_mes}-01".."#{@ano_mes}-01".to_date.end_of_month.to_s)
       @recebimentos = usuario_atual.profissional.recebimentos.do_periodo(mes: @mes, ano: @ano)
     end
+  end
+
+  def index
+    recebimentos_por_params
     respond_to do |format|
       format.html
       format.csv do
-        send_data Recebimento.para_csv(@recebimentos), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-recebimentos_#{@ano}-#{ @mes.to_s.rjust(2, "0")}.csv", type: 'text/csv'
+        send_data Recebimento.para_csv(collection: @recebimentos), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-recebimentos_#{@ano}-#{ @mes.to_s.rjust(2, "0")}.csv", type: 'text/csv'
       end
       format.xlsx do
         response.headers['Content-Disposition'] = "attachment; filename=#{Rails.application.class.module_parent_name.to_s}-relatorio-recebimentos_#{@ano}-#{@mes.to_s.rjust(2, "0")}.xlsx"
@@ -69,7 +73,14 @@ class RecebimentosController < ApplicationController
 
     respond_to do |format|
       if @recebimento.save
-        format.html { redirect_to recebimentos_path, notice: "recebimento was successfully created." }
+        format.html do
+          if params[:ajax].present?
+            recebimentos_por_params
+            render partial: "recebimentos/tabela", locals: { recebimentos: @recebimentos, mes: @mes, ano: @ano }
+          else
+          redirect_to recebimentos_path, notice: "recebimento was successfully created."
+          end
+        end
         format.json { render :index, status: :created }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -99,7 +110,20 @@ class RecebimentosController < ApplicationController
     end
   end
 
-  def delete
+  def destroy
+    @recebimento.destroy
+
+    respond_to do |format|
+      format.html do
+        if params[:ajax].present?
+          recebimentos_por_params
+          render partial: "recebimentos/tabela", locals: { recebimentos: @recebimentos, ano: @ano, mes: @mes }
+        else
+          redirect_to recebimentos_url
+        end
+      end
+      format.json {head :no_content }
+    end
   end
 
   def recibo

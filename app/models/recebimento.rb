@@ -1,6 +1,7 @@
 class Recebimento < ApplicationRecord
   require "csv"
 
+  scope :do_mes, -> (mes = Date.today.all_month, ordem: :asc) { where(data: mes).order(data: ordem) }
   scope :do_mes_passado, -> { where(data: (Date.today - 1.month).all_month) }
   scope :do_mes_atual, -> { where(data: Date.today.all_month) }
   scope :deste_mes, -> { do_mes_atual }
@@ -43,7 +44,7 @@ class Recebimento < ApplicationRecord
     "#{pagante.nome_completo},#{pagante.cpf},#{beneficiario.nome_completo},#{beneficiario.cpf},#{data},#{modalidade},#{valor},#{acompanhamento.acompanhamento_tipo.tipo}" + "\n"
   end
 
-  def self.para_csv(collection = all, formato_data: "%Y-%m-%d")
+  def self.para_csv(collection: all, formato_data: "%Y-%m-%d")
     CSV.generate(col_sep: ',') do |csv|
       csv << [
         "DATA",

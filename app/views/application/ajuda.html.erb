@@ -1,0 +1,16 @@
+<% titulo "Ajuda" %>
+<div style="margin-inline:15em;font-size: 1.5em;text-align:justify;">
+  <h1>Ajuda</h1>
+
+  <p>Olá, <%= usuario_atual.profissional.funcao.downcase %> <%= usuario_atual.nome_completo %>!</p>
+  <p>
+  Esta é a página de ajuda para te familiarizar com a
+  aplicação e o que pode ser feito com ela.
+  </p>
+
+  <!-- renderizado de parcial em Markdown -->
+
+  <%#= render "application/ajuda-texto" %>
+
+  <%== Kramdown::Document.new(@texto).to_html %>
+</div>

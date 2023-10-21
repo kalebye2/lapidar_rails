@@ -1,5 +1,5 @@
 <% if acompanhamento != nil %>
-  <table class="tabela">
+  <table class="tabela" id="tabela-caso-resumo">
     <caption>
       Informações do acompanhamento<br />
       <!--span style="font-size:.7em;"><%#= link_to "Baixar", { controller: :acompanhamentos, action: :caso_detalhes, id: acompanhamento.id, format: :pdf }, { target: :blank } %>
@@ -37,7 +37,14 @@
         </td>
         <td><%= render "atendimentos/instrumentos_aplicados_show", atendimento: a %></td>
         <% if usuario_atual.secretaria? || usuario_atual.profissional == a.profissional %>
-          <td><%= link_to "Visualizar", a %></td>
+          <td id="<%= dom_id(a) %>_opcoes" hx-swap-oob="true">
+            <%= link_to "Visualizar", a %><br>
+            <%#= link_to "Excluir", atendimento_path(a), method: :delete, data: {confirm: "Tem certeza?"} %>
+            <a hx-confirm="Tem certeza?" hx-delete="<%= atendimento_path(a, authenticity_token: form_authenticity_token.to_s, ajax: true) %>", hx-target="#caso-resumo">Excluir</a>
+            <% if a.presenca %><br>
+              <%= link_to "Declaração (markdown)", declaracao_comparecimento_atendimento_path(a, format: :md) %>
+            <% end %>
+          </td>
         <% end %>
       </tr>
     <% end %>

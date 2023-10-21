@@ -166,6 +166,14 @@ class Pessoa < ApplicationRecord
   end
 
 
+  def no_feminino?
+    (feminino && !inverter_pronome_tratamento) || (!feminino && inverter_pronome_tratamento)
+  end
+
+  def no_masculino?
+    !no_feminino?
+  end
+
   def render_sexo
     if feminino then "Feminino" else "Masculino" end
   end

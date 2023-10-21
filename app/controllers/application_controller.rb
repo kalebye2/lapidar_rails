@@ -7,6 +7,15 @@ class ApplicationController < ActionController::Base
   def index
   end
 
+  def ajuda
+    if usuario_atual.nil?
+      request.headers["Content-Type"] = "text/markdown ; charset=utf-8"
+      render file: "#{Rails.root}/public/404.html", status: 403
+    else
+      @texto = File.read("#{Rails.root}/public/ajuda.md")
+    end
+  end
+
   def update_tabela_atendimentos_hoje
     render partial: 'application/atendimentos-hoje-tabela', locals: { atendimentos: @atendimentos_hoje }
   end

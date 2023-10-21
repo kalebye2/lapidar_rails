@@ -1,5 +1,5 @@
 class AcompanhamentosController < ApplicationController
-  before_action :set_acompanhamento, only: %i[ show edit update destroy caso_detalhes ]
+  before_action :set_acompanhamento, only: %i[ show edit update destroy caso_detalhes declaracao ]
   before_action :validar_usuario
   before_action :validar_edicao, only: %i[ edit update destroy ]
   include Pagy::Backend
@@ -152,6 +152,20 @@ class AcompanhamentosController < ApplicationController
     avalor.save!
     #atendimento = @acompanhamento.atendimento.create(data: au.data + 7.day, horario: au.horario, modalidade_id: au.modalidade_id, atendimento_local_id: au.atendimento_local_id, atendimento_tipo_id: au.atendimento_tipo_id)
     redirect_to @acompanhamento, notice: "Novo atendimento registrado"
+  end
+
+  def declaracao
+    respond_to do |format|
+      format.html
+      format.md do
+        hoje = Time.now.strftime("%Y-%m-%d")
+        hoje_formatado = Time.now.strftime("%d/%m/%Y")
+        nome_documento = "#{@acompanhamento.pessoa.nome_completo.parameterize}_declaracao"
+
+        response.headers['Content-Type'] = 'text/markdown'
+        response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.md"
+      end
+    end
   end
 
   private

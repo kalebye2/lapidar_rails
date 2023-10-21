@@ -77,39 +77,4 @@
   <% end %>
 </div>
 
-<table class="tabela-recebimentos">
-  <caption>Recebimentos - <%= t('date.month_names')[@mes.to_i] %>/<%= @ano %></caption>
-  <thead>
-    <tr>
-      <th>Beneficiário</th>
-      <th>Pagante</th>
-      <th>Data</th>
-      <th>Valor</th>
-      <th>Modalidade de pgto</th>
-      <th>Profissional</th>
-      <th>Serviço</th>
-      <th>Link</th>
-    </tr>
-    <tr id="recebimento-adicionar" style="font-size:.85em;">
-        <%= render "recebimentos/table-adicionar" %>
-    </tr>
-  </thead>
-  <tbody>
-    <% @recebimentos.each do |recebimento| %>
-      <tr>
-        <td><%= recebimento.beneficiario.nome_abreviado %></td>
-        <td><%= recebimento.pagante.nome_abreviado %></td>
-        <td style="text-align:center;"><%= render_data_brasil recebimento.data %></td>
-        <td class="dinheiro"><%= render_dinheiro_centavos recebimento.valor %></td>
-        <td style="text-align:center;"><%= recebimento.modalidade %></td>
-        <td style="text-align:center;"><%= recebimento.profissional.descricao_completa %></td>
-        <td style="text-align:center;"><%= recebimento.acompanhamento.tipo.upcase %></td>
-        <td style="text-align:center;">
-          <%= link_to "Editar", edit_recebimento_url(recebimento) %>
-          <br />
-          <%= link_to "Markdown", recebimento_path(recebimento, format: 'md'), {target: :blank } %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<%= render 'recebimentos/tabela', recebimentos: @recebimentos, mes: @mes, ano: @ano %>

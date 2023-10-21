@@ -1,0 +1,23 @@
+<table class="tabela-recebimentos" id="tabela-recebimentos">
+  <caption>Recebimentos - <%= t('date.month_names')[mes.to_i] %>/<%= ano %></caption>
+  <thead>
+    <tr>
+      <th>Beneficiário</th>
+      <th>Pagante</th>
+      <th>Data</th>
+      <th>Valor</th>
+      <th>Modalidade de pgto</th>
+      <th>Profissional</th>
+      <th>Serviço</th>
+      <th>Link</th>
+    </tr>
+    <tr id="recebimento-adicionar" style="font-size:.85em;">
+        <%= render "recebimentos/table-adicionar" %>
+    </tr>
+  </thead>
+  <tbody>
+    <% recebimentos.each do |recebimento| %>
+      <%= render 'recebimentos/tabela-item', recebimento: recebimento %>
+    <% end %>
+  </tbody>
+</table>

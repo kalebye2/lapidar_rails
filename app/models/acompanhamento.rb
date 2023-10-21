@@ -10,7 +10,7 @@ class Acompanhamento < ApplicationRecord
   has_many :atendimento_valores, through: :atendimentos
   has_many :instrumento_relatos, through: :atendimentos
   has_many :instrumentos_aplicados, through: :instrumento_relatos, source: :instrumento
-  has_many :recebimento
+  has_many :recebimentos
 
   has_many :laudos
 
@@ -71,6 +71,10 @@ class Acompanhamento < ApplicationRecord
 
   def finalizado?
     !em_andamento?
+  end
+
+  def primeiro_atendimento
+    atendimentos.order(data: :asc, horario: :asc).first
   end
 
   def self.filter(attributes)

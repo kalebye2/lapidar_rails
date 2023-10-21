@@ -1,5 +1,5 @@
 class AtendimentosController < ApplicationController
-  before_action :set_atendimento, only: %i[ show edit update destroy reagendar_para_proxima_semana gerar_atendimento_valor create_atendimento_valor anotacoes_update anotacoes anotacoes_edit data data_update data_edit horario horario_update horario_edit status status_edit status_update ]
+  before_action :set_atendimento, only: %i[ show edit update destroy reagendar_para_proxima_semana gerar_atendimento_valor create_atendimento_valor anotacoes_update anotacoes anotacoes_edit data data_update data_edit horario horario_update horario_edit status status_edit status_update declaracao_comparecimento ]
   before_action :validar_usuario
   before_action :validar_edicao, only: %i[ show edit update destroy reagendar_para_proxima_semana gerar_atendimento_valor ]
 
@@ -173,6 +173,20 @@ class AtendimentosController < ApplicationController
       else
         format.html { render :show, status: :unprocessable_entity }
         format.json { render json: @atendimento.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def declaracao_comparecimento
+    respond_to do |format|
+      format.html
+      format.md do
+        hoje = Time.now.strftime("%Y-%m-%d")
+        hoje_formatado = Time.now.strftime("%d/%m/%Y")
+        nome_documento = "#{@atendimento.pessoa.nome_completo.parameterize}_declaracao_#{hoje}"
+        
+        response.headers['Content-Type'] = 'text/markdown'
+        response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.md"
       end
     end
   end
