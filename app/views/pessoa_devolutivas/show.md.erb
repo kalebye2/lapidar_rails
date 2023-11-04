@@ -1,0 +1,77 @@
+---
+# Para ser usado com Pandoc
+# convertendo para LaTeX ou PDF
+# Caso queira saber mais visite https://pandoc.org
+#
+title: Devolutiva
+author-meta: <%= @pessoa_devolutiva.profissional.descricao_completa %>
+date-meta: <%= render_data_brasil @pessoa_devolutiva.data %>
+
+# Formatação
+# tire o "#" onde quiser mudar valor
+papersize: a4
+fontsize: 12pt
+mainfont: Liberation Sans
+#geometry:
+#	- left=2cm
+#	- right=2cm
+#	- top=3cm
+#	- bottom=4cm
+
+header-includes:
+- |
+    ```{=latex}
+    % Tire o símbolo "%" do início das linhas que você quiser usar uma regra
+    %\usepackage{indentfirst} % para indentar o primeiro parágrafo como os seguintes
+
+    %\setlength\parindent{2em} % recuo da primeira linha do parágrafo
+
+    %\parskip=1.5em % alterar o espaço entre parágrafos
+    %\renewcommand{\baselinestretch}{1.5} % alterar o espaço entre linhas
+
+    % contar o número total de páginas do documento
+    \usepackage{lastpage}
+
+    % para cabeçalho e rodapé
+    \usepackage{fancyhdr}
+    \fancyhead[L]{} % coloque aqui cabeçalho à esquerda
+    \fancyhead[R]{Anamnese infantojuvenil}
+    \fancyfoot[L]{\footnotesize{
+    E-mail: \href{mailto:<%= @pessoa_devolutiva.profissional.email %>}{<%= @pessoa_devolutiva.profissional.email %>}\\
+    Fone: \href{tel:<%= @pessoa_devolutiva.profissional.pessoa.render_fone_link %>}{<%= @pessoa_devolutiva.profissional.pessoa.render_fone_local %>}
+    }}
+    \fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+    \pagestyle{fancy}
+
+    % titulo
+    \usepackage{titling}
+    \renewcommand{\maketitle}{
+    \begin{center}
+    \huge\textbf\thetitle
+    \end{center}
+    }
+    ```
+
+---
+
+# Identificação
+
+Paciente
+: <%= @pessoa_devolutiva.paciente.nome_completo %>
+
+Responsável
+: <%= @pessoa_devolutiva.responsavel.nome_completo %>
+
+Profissional
+: <%= @pessoa_devolutiva.profissional.descricao_completa %>
+
+Data
+: <%= render_data_brasil @pessoa_devolutiva.data %>
+
+# Feedback do Responsável
+
+<%== @pessoa_devolutiva.feedback_responsavel %>
+
+# Orientações do profissional
+
+<%== @pessoa_devolutiva.orientacoes_profissional %>

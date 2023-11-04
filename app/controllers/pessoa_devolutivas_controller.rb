@@ -3,7 +3,7 @@ class PessoaDevolutivasController < ApplicationController
 
   # GET /pessoa_devolutivas or /pessoa_devolutivas.json
   def index
-    @pessoa_devolutivas = PessoaDevolutiva.all
+    @pessoa_devolutivas = PessoaDevolutiva.cronologico
   end
 
   # GET /pessoa_devolutivas/1 or /pessoa_devolutivas/1.json
@@ -38,8 +38,12 @@ class PessoaDevolutivasController < ApplicationController
   def update
     respond_to do |format|
       if @pessoa_devolutiva.update(pessoa_devolutiva_params)
-        format.html { redirect_to devolutiva_url(@pessoa_devolutiva), notice: "pessoa devolutiva was successfully updated." }
-        format.json { render :show, status: :ok, location: @pessoa_devolutiva }
+        if params[:ajax].present?
+          format.html { render :show }
+        else
+          format.html { redirect_to devolutiva_url(@pessoa_devolutiva), notice: "pessoa devolutiva was successfully updated." }
+          format.json { render :show, status: :ok, location: @pessoa_devolutiva }
+        end
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @pessoa_devolutiva.errors, status: :unprocessable_entity }

@@ -1,39 +1,82 @@
+<% cl = "tabela-devolutiva" %>
+<% caminho_edit = edit_pessoa_devolutiva_path(devolutiva) %>
+<% caminho_patch = pessoa_devolutiva_path(devolutiva, ajax: true, authenticity_token: form_authenticity_token.to_s) %>
+<% usuario = usuario_atual == devolutiva.profissional.usuario %>
 <table>
   <caption>Devolutiva</caption>
   <tbody>
     <tr>
-      <th>Paciente</th>
-      <td><%= devolutiva.paciente.nome_completo %></td>
+      <% curr_id = "#{cl}-paciente" %>
+      <th width="20%">Paciente</th>
+      <td id="<%= curr_id %>">
+        <%= devolutiva.paciente.nome_completo %>
+        <button <%== hx_set get: caminho_edit, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>alterar</button>
+      </td>
     </tr>
 
     <tr>
+      <% curr_id = "#{cl}-idade-paciente" %>
       <th>Idade do paciente</th>
-      <td><%= devolutiva.paciente.render_idade(devolutiva.data) %></td>
+      <td id="<%= curr_id %>" <%== hx_set swap_oob: true %>>
+        <%= devolutiva.paciente.render_idade(devolutiva.data) %>
+      </td>
     </tr>
 
     <tr>
+      <% curr_id = "#{cl}-responsavel" %>
       <th>Responsável</th>
-      <td><%= devolutiva.responsavel.nome_completo %></td>
+      <td id="<%= curr_id %>">
+        <%= devolutiva.responsavel.nome_completo %>
+        <button <%== hx_set get: caminho_edit, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>alterar</button>
+      </td>
     </tr>
 
     <tr>
+      <% curr_id = "#{cl}-profissional" %>
       <th>Profissional</th>
-      <td><%= devolutiva.profissional.descricao_completa %></td>
+      <td id="<%= curr_id %>">
+        <%= devolutiva.profissional.descricao_completa %>
+        <button <%== hx_set get: caminho_edit, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>alterar</button>
+      </td>
     </tr>
 
     <tr>
+      <% curr_id = "#{cl}-data-devolutiva" %>
       <th>Data</th>
-      <td><%= render_data_brasil devolutiva.data %></td>
+      <td id="<%= curr_id %>">
+        <% if usuario %>
+          <input type="date" name="pessoa_devolutiva[data]" value="<%= devolutiva.data %>" <%== hx_set patch: caminho_patch, select: "##{curr_id}", target: "##{curr_id}", swap: "outerHTML", trigger: "change delay:500ms" %>>
+        <% else %>
+          <%= render_data_brasil devolutiva.data %>
+        <% end %>
+      </td>
     </tr>
 
     <tr>
+      <% curr_id = "#{cl}-pontos-abordar" %>
+      <th>Pontos a abordar</th>
+      <td id="<%= curr_id %>">
+        <%== markdown_to_html devolutiva.pontos_a_abordar %>
+        <button <%== hx_set get: caminho_edit, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>alterar</button>
+      </td>
+    </tr>
+
+    <tr>
+      <% curr_id = "#{cl}-feedback-responsavel" %>
       <th>Feedback do responsável</th>
-      <td><%== markdown_to_html devolutiva.feedback_responsavel %></td>
+      <td id="<%= curr_id %>">
+        <%== markdown_to_html devolutiva.feedback_responsavel %>
+        <button <%== hx_set get: caminho_edit, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>alterar</button>
+      </td>
     </tr>
 
     <tr>
+      <% curr_id = "#{cl}-orientacoes-profissional" %>
       <th>Orientações</th>
-      <td><%== markdown_to_html devolutiva.orientacoes_profissional %></td>
+      <td id="<%= curr_id %>">
+        <%== markdown_to_html devolutiva.orientacoes_profissional %>
+        <button <%== hx_set get: caminho_edit, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>alterar</button>
+      </td>
     </tr>
   </tbody>
 </table>

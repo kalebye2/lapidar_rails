@@ -1,0 +1,47 @@
+<%= form_with(model: devolutiva, local: true) do |form| %>
+  <% if devolutiva.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(devolutiva.errors.count, "error") %> prohibited this devolutiva from being saved:</h2>
+
+      <ul>
+      <% devolutiva.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :pessoa_id %>
+    <%= form.select :pessoa_id, Pessoa.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc).map { |p| ["#{p.nome_completo} - #{p.render_idade}", p.id] } %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Responsável" %>
+    <%= form.select :pessoa_responsavel_id, Pessoa.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc).map { |p| ["#{p.nome_completo} - #{p.render_idade}", p.id] }  %>
+  </div>
+
+  <div class="field">
+    <%= form.label :profissional_id %>
+    <%= form.select :profissional_id, Profissional.all.map { |p| ["#{p.nome_completo} - #{p.funcao} #{p.documento}", p.id] }  %>
+  </div>
+
+  <div class="field">
+    <%= form.label :data %>
+    <%= form.date_field :data %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Feedback do responsável" %>
+    <%= form.text_area :feedback_responsavel, size: "50x20" %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Orientações do profissional" %>
+    <%= form.text_area :orientacoes_profissional, size: "50x20" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
