@@ -1,0 +1,145 @@
+<% titulo_doc = "Prontuário" %>
+
+---
+# Para ser usado com Pandoc
+# convertendo para LaTeX ou PDF
+# Caso queira saber mais visite https://pandoc.org
+#
+title: <%= titulo_doc %>
+author-meta: <%= usuario_atual.profissional.descricao_completa %>
+date-meta: <%= render_data_brasil Date.today %>
+
+# Formatação
+# tire o "#" onde quiser mudar valor
+papersize: a4
+fontsize: 12pt
+# mainfont: Liberation Sans
+# geometry:
+#    - left=2cm
+#    - right=2cm
+#    - top=3cm
+#    - bottom=4cm
+header-includes:
+- |
+    ```{=latex}
+    % Tire o símbolo "%" do início das linhas que você quiser usar uma regra
+    %\usepackage{indentfirst} % para indentar o primeiro parágrafo como os seguintes
+    \usepackage{titlesec}
+    \usepackage{titling}
+
+    %\setlength\parindent{2em} % recuo da primeira linha do parágrafo
+
+    %\parskip=1.5em % alterar o espaço entre parágrafos
+    %\renewcommand{\baselinestretch}{1.5} % alterar o espaço entre linhas
+
+    % melhorar o título
+    \renewcommand{\maketitle}{
+    \begin{center}
+    {\huge\bfseries\thetitle}
+    \vspace{3em}
+    \end{center}
+    }
+
+    % contar o número total de páginas do documento
+    \usepackage{lastpage}
+
+    % para cabeçalho e rodapé
+    \usepackage{fancyhdr}
+    \fancyhead[L]{} % coloque aqui cabeçalho à esquerda
+    \fancyhead[R]{<%= titulo_doc %>}
+    \fancyfoot[L]{\footnotesize{
+      Clínica
+    }}
+    \fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+    \pagestyle{fancy}
+    ```
+
+---
+
+**Nome do paciente**:
+<%= @pessoa.nome_completo %>
+
+**Data de nascimento**:
+<%= render_data_brasil @pessoa.data_nascimento %>
+
+**Idade**:
+<%= @pessoa.render_idade.upcase %>
+
+**Sexo**:
+<%= @pessoa.render_sexo %>
+
+**Estado Civil**:
+<%= @pessoa.estado_civil.upcase %>
+
+**Grau de instrução**:
+<%= @pessoa.grau_de_instrucao %>
+
+**Profissão**:
+<%= @pessoa.profissao.to_s.upcase %>
+
+**Fone**:
+[<%= @pessoa.render_fone %>](tel:<%= @pessoa.render_fone_link %>)
+
+**E-mail**:
+<<%= @pessoa.email %>>
+
+**Contato para emergência**:
+INSERIR CONTATO PARA EMERGÊNCIA
+
+**RG**:
+INSERIR RG
+
+**CPF**:
+<%= @pessoa.render_cpf %>
+
+**Endereço**:
+<%= @pessoa.render_endereco %> ---
+<%= @pessoa.cidade %>/<%= @pessoa.estado %>
+
+**Início dos atendimentos**:
+<%= render_data_brasil @pessoa.atendimentos.order(data: :asc).first.data %>
+
+**Toma medicação**:
+INSERIR SE TOMA MEDICAÇÃO
+
+**Serviços**:
+<%== @pessoa.acompanhamentos.select(:acompanhamento_tipo_id).distinct.map(&:tipo).map(&:upcase).join(", ") %>
+
+**Acompanhado por**:
+<%== @pessoa.acompanhamentos.select(:profissional_id).distinct.map(&:profissional).map(&:descricao_completa).join(", ") %>
+
+# Registro dos atendimentos
+
+<% @pessoa.atendimentos.order(data: :asc).each_with_index do |atendimento, index| %>
+  
+---
+
+## Sessão <%= index + 1 %> --- <%= atendimento.acompanhamento.tipo.upcase %>
+
+**Data**:
+<%= render_data_brasil atendimento.data %>
+
+**Horário**:
+<%= render_hora_brasil atendimento.horario %>
+
+**Status**:
+<%= atendimento.status %>
+
+**Atividade**:
+<%= atendimento.tipo %>
+
+**Profissional responsável**:
+<%= atendimento.profissional.descricao_completa %>
+
+### Anotações
+
+<%= atendimento.anotacoes || "Sem anotações" %>
+<% if atendimento.avancos %>
+### Avanços
+<%= atendimento.avancos %>
+<% end %>
+<% if atendimento.limitacoes %>
+### Limitações
+<%= atendimento.limitacoes %>
+<% end %>
+<% end %>

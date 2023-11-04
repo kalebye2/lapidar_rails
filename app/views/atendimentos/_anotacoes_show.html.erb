@@ -1,8 +1,52 @@
 <% interno = markdown_to_html atendimento.anotacoes || "<center>-</center>" %>
+<% avancos = markdown_to_html atendimento.avancos, "" %>
+<% limitacoes = markdown_to_html atendimento.limitacoes, "" %>
+<% tem_avancos_ou_limitacoes = !avancos.empty? || !limitacoes.empty? %>
+
 <% if atendimento.profissional == usuario_atual.profissional %>
   <div hx-get="<%= anotacoes_edit_atendimento_path(atendimento) %>" hx-target="#<%= dom_id(atendimento) %>_anotacoes">
-    <%== markdown_to_html atendimento.anotacoes || "<center><button>Anotar</button></center>" %>
+    <%== markdown_to_html atendimento.anotacoes || "<button style=\"width:100%;\">Anotar</button>" %>
   </div>
+
+  <% if 1 == 0 %>
+    <table style="width:100%;">
+      <tr>
+        <th>Avanços</th>
+        <th>Limitações</th>
+      </tr>
+      <tr>
+        <td>
+          <% if avancos.empty? %>
+            <button>Registrar avanços</button>
+          <% else %>
+            <%== avancos %>
+          <% end %>
+        </td>
+        <td>
+          <% if limitacoes.empty? %>
+            <button>Registrar limitações</button>
+          <% else %>
+            <%== limitacoes %>
+          <% end %>
+        </td>
+      </tr>
+    </table>
+    </div>
+  <% end %>
 <% else %>
   <%== interno %>
+  <% if 1 == 0 %>
+    <table>
+      <thead>
+        <tr>
+          <th>Avanços</th>
+          <th>Limitações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <td><%== avancos.empty? ? "<center>-</center>" : avancos %></td>
+        <td><%== limitacoes.empty? ? "<center>-</center>" : limitacoes %></td>
+      </tbody>
+    </table>
+  <% end %>
 <% end %>

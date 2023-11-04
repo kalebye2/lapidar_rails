@@ -17,7 +17,7 @@
         <th>Status</th>
         <th width="30%">Anotações do profissional</th>
         <th>Instrumentos usados</th>
-        <% if @acompanhamento.profissional_id == usuario_atual.profissional_id %>
+        <% if @acompanhamento.profissional_id == usuario_atual.profissional_id || usuario_atual.secretaria? %>
           <th>Opções</th>
         <% end %>
       </tr>
