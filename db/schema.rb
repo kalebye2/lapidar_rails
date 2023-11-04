@@ -90,6 +90,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "atendimento_local_id"
     t.boolean "reagendado", default: false
     t.time "horario_fim"
+    t.text "avancos"
+    t.text "limitacoes"
   end
 
   create_table "biblioteca_autores", force: :cascade do |t|
@@ -263,8 +265,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "antecedentes_doenca_mental", limit: 1000
     t.string "antecedentes_dependencia_quimica", limit: 1000
     t.string "ambiente_familiar_condicoes_economicas", limit: 1000
-    t.integer "ambiente_familiar_usuario_consciente_situacao_economica"
-    t.string "ambiente_familiar_atitude_usuario_situacao_economica", limit: 1000
+    t.integer "ambiente_familiar_pessoa_consciente_situacao_economica"
+    t.string "ambiente_familiar_atitude_pessoa_situacao_economica", limit: 1000
     t.string "ambiente_familiar_residentes_casa", limit: 1000
     t.string "ambiente_familiar_relacionamento_pais", limit: 1000
     t.string "ambiente_familiar_pais_filhos", limit: 1000
@@ -287,8 +289,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "mae_enjoos", limit: 1000
     t.string "mae_vomitos", limit: 1000
     t.integer "mae_diabetes"
-    t.boolean "mae_traumatismo"
-    t.boolean "mae_convulsoes"
+    t.integer "mae_traumatismo"
+    t.integer "mae_convulsoes"
     t.string "mae_medicamentos", limit: 1000
     t.integer "parto_local_id"
     t.integer "parto_tipo_id"
@@ -311,7 +313,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "chupou_dedo"
     t.integer "chupou_dedo_meses"
     t.text "chupou_dedo_relato_retirada"
-    t.integer "roe_unhas"
+    t.integer "roi_unhas"
     t.integer "arranca_cabelos"
     t.text "outros"
     t.text "atitudes_tomadas_responsaveis"
@@ -359,7 +361,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   create_table "infantojuvenil_anamnese_sexualidades", id: false, force: :cascade do |t|
     t.integer "infantojuvenil_anamnese_id", null: false
     t.string "curiosidade_sexual", limit: 1000
-    t.boolean "masturba"
+    t.integer "masturba"
     t.string "atitude_pais", limit: 1000
     t.string "educacao_sexual", limit: 1000
     t.text "outras_consideracoes"
@@ -463,6 +465,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "conclusao"
     t.integer "acompanhamento_id"
     t.text "referencias"
+    t.integer "fechado", default: 0
   end
 
   create_table "neuropsicologico_adulto_anamneses", id: false, force: :cascade do |t|
@@ -512,7 +515,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   end
 
   create_table "parto_tipos", force: :cascade do |t|
-    t.string "descricao", limit: 100, null: false
+    t.string "tipo", limit: 100, null: false
   end
 
   create_table "pessoa_devolutivas", force: :cascade do |t|
@@ -520,6 +523,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "pessoa_responsavel_id"
     t.integer "profissional_id"
     t.date "data"
+    t.text "pontos_a_abordar"
     t.text "feedback_responsavel"
     t.text "orientacoes_profissional"
   end
@@ -697,8 +701,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   end
 
   add_foreign_key "acompanhamentos", "acompanhamento_tipos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "acompanhamentos", "atendimento_plataformas", column: "plataforma_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "acompanhamentos", "atendimento_plataformas", column: "plataforma_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "acompanhamentos", "pessoas", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "acompanhamentos", "plataformas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "acompanhamentos", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimento_locais", "atendimento_local_tipos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimento_locais", "paises", on_update: :cascade, on_delete: :cascade
@@ -751,12 +756,14 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "pessoas", "instrucao_graus", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoas", "paises", column: "nascimento_pais_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoas", "paises", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "profissionais", "documento_regioes", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissionais", "pessoas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissionais", "profissional_funcoes", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "profissionais", "profissional_funcoes", on_update: :cascade, on_delete: :nullify
   add_foreign_key "profissional_documento_modelos", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_especializacao_juncoes", "profissionais", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "profissional_especializacao_juncoes", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_especializacao_juncoes", "profissional_especializacaos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "profissional_especializacao_juncoes", "profissional_especializacoes", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_financeiro_repasses", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_notas", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "psicologia_subfuncoes", "psicologia_funcoes", on_update: :cascade, on_delete: :cascade
