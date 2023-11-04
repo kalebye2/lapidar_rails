@@ -4,13 +4,30 @@ class RecebimentosController < ApplicationController
   before_action :set_recebimento, only: %i[ show update edit destroy recibo ]
   before_action :validar_usuario#, only: %i[ show update edit delete recibo ]
 
+  def recebimento_vars
+    if usuario_atual.financeiro?
+    else
+    end
+  end
+
+  def recebimento_por_periodo_params
+    @de = params[:de] || Date.today
+    @ate = params[:ate]
+    if usuario_atual.financeiro?
+      @recebimentos = Recebimento.do_periodo(de: @de, ate: @ate)
+      @pessoas = Pessoa.joins(:atendimento_valores).distinct.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc)
+      @atendimento_valores = AtendimentoValor.joins(:atendimento).where("atendimentos.data" => @de..@ate)
+    else
+    end
+  end
+
   def recebimentos_por_params
     @ano = params[:ano] || Date.today.year
     @mes = params[:mes] || Date.today.month
     @ano_mes = "#{@ano}-#{@mes.to_s.rjust(2, "0")}"
     #@recebimentos = nil
     if usuario_atual.financeiro?
-      @pessoas = Pessoa.joins(:atendimento_valores).distinct.order(nome: :asc, sobrenome: :asc)
+      @pessoas = Pessoa.joins(:atendimento_valores).distinct.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc)
       @atendimento_valores = AtendimentoValor.joins(:atendimento).where("atendimentos.data" => "#{@ano_mes}-01".."#{@ano_mes}-01".to_date.end_of_month.to_s)
       @recebimentos = Recebimento.do_periodo(mes: @mes, ano: @ano)
     else
@@ -21,7 +38,7 @@ class RecebimentosController < ApplicationController
   end
 
   def index
-    recebimentos_por_params
+    params[:de].nil? ? recebimentos_por_params : recebimento_por_periodo_params
     respond_to do |format|
       format.html
       format.csv do

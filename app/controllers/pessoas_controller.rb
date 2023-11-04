@@ -23,6 +23,7 @@ class PessoasController < ApplicationController
   def show
     respond_to do |format|
       format.html
+      format.md
       format.pdf do
         nome_documento = "Ficha-de-cadastro_#{@pessoa.nome_completo.parameterize}"
         pdf = PessoaPdf.new(@pessoa)
@@ -60,7 +61,9 @@ class PessoasController < ApplicationController
 
   # PATCH/PUT /pessoas/1 or /pessoas/1.json
   def update
-    params["pessoa"]["cpf"] = params["pessoa"]["cpf"].gsub(/\D/, '')[-11..]
+    if !params["pessoa"]["cpf"].nil?
+      params["pessoa"]["cpf"] = params["pessoa"]["cpf"].gsub(/\D/, '')[-11..]
+    end
     respond_to do |format|
       if @pessoa.update(pessoa_params)
         format.html { redirect_to pessoa_url(@pessoa), notice: "Pessoa was successfully updated." }

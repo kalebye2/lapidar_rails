@@ -71,8 +71,14 @@ class AcompanhamentosController < ApplicationController
   def update
     respond_to do |format|
       if @acompanhamento.update(acompanhamento_params)
+        if params[:ajax].present?
+          format.html do
+            render :show
+          end
+        else
         format.html { redirect_to acompanhamento_url(@acompanhamento), notice: "acompanhamento was successfully updated." }
         format.json { render :show, status: :ok, location: @acompanhamento }
+        end
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @acompanhamento.errors, status: :unprocessable_entity }
