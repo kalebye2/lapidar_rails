@@ -1,10 +1,50 @@
 <% cl = 'tabela-infantojuvenil-anamnese-familia-historico' %>
+<% usuario = usuario_atual == familia_historico.infantojuvenil_anamnese.profissional.usuario %>
+<% caminho_ajax = infantojuvenil_anamnese_path(familia_historico.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s) %>
 
 <tr class='<%= cl %>'>
   <th colspan="100%">
     Histórico familiar
   </th>
 </tr>
+
+<% if usuario %>
+
+<% dict_select = {
+  :ambiente_familiar_pessoa_consciente_situacao_economica => "A criança é consciente da sua atual condição econômica?",
+} %>
+<% dict_number = {
+} %>
+<% dict_text = {
+} %>
+<% dict_textarea = {
+  :antecedentes_doenca_mental => "Quais os antecedentes de transtorno mental na família?",
+  :antecedentes_dependencia_quimica => "Há antecedentes de dependência química na família?",
+  :ambiente_familiar_condicoes_economicas => "Quais as condições econômicas da família?",
+  :ambiente_familiar_atitude_usuario_situacao_economica => "Quais as atitudes da criança diante da situação econômica da família?",
+  :ambiente_familiar_residentes_casa => "Quem reside na casa com a criança?",
+  :ambiente_familiar_relacionamento_pais => "Como é o relacionamento dos pais da criança?",
+  :ambiente_familiar_pais_filhos => "Como é o relacionamento dos pais com a criança?",
+  :outras_consideracoes => "Outras considerações",
+} %>
+
+<% dict_select.each do |k,v| %>
+  <%== hx_tr_select patch: caminho_ajax, name: "familia_historico[#{k}]", th: (html_escape v), id: "#{id = "#{cl}-#{k}"}", select: "##{id}", target: "##{id}", swap: "outerHTML", value: familia_historico.attributes[k.to_s] %>
+<% end %>
+
+<% dict_number.each do |k,v| %>
+  <%== hx_tr_number patch: caminho_ajax, name: "familia_historico[#{k}]", th: (h v), value: (html_escape familia_historico.attributes[k]), id: "#{id = "#{cl}-#{k}"}", target: "##{id}", select: "##{id}", swap: "outerHTML" %>
+<% end %>
+
+<% dict_text.each do |k,v| %>
+  <%== hx_tr_text patch: caminho_ajax, name: "familia_historico[#{k}]", th: (h v), value: (html_escape familia_historico.attributes[k]), id: "#{id = "#{cl}-#{k}"}", target: "##{id}", select: "##{id}", swap: "outerHTML", placeholder: "Descreva..." %>
+<% end %>
+
+<% dict_textarea.each do |k,v| %>
+  <%== hx_tr_textarea patch: caminho_ajax, name: "familia_historico[#{k}]", th: (h v), texto: familia_historico.attributes[k.to_s], placeholder: v %>
+<% end %>
+
+<% else %>
 
 <tr class='<%= cl %>'>
   <th>Há algum antecedente de transtorno mental na família?</th>
@@ -29,7 +69,7 @@
 
 <tr class='<%= cl %>'>
   <th>A criança está ciente das condiçẽos econômicas da família?</th>
-  <td><%= sim_ou_nao familia_historico.ambiente_familiar_usuario_consciente_situacao_economica %></td>
+  <td><%= sim_ou_nao familia_historico.ambiente_familiar_pessoa_consciente_situacao_economica %></td>
 </tr>
 
 <tr class='<%= cl %>'>
@@ -56,3 +96,5 @@
   <th>Há outras considerações sobre o histórico ou ambiente familiar da criança?</th>
   <td><%== markdown_to_html familia_historico.outras_consideracoes, "Não" %></td>
 </tr>
+
+<% end %>

@@ -1,4 +1,5 @@
 class InfantojuvenilAnamneseSono < ApplicationRecord
+  belongs_to :infantojuvenil_anamnese
   attribute :dorme_bem
   attribute :pula
   attribute :baba
@@ -12,4 +13,6 @@ class InfantojuvenilAnamneseSono < ApplicationRecord
   attribute :dorme_quarto_separado_pais
   attribute :cama_individual
   attribute :vai_cama_pais
+
+  self.primary_key = :infantojuvenil_anamnese_id
 end

@@ -1,10 +1,47 @@
 <% cl = 'tabela-infantojuvenil-anamnese-escola-historico' %>
+<% usuario = usuario_atual == escola_historico.infantojuvenil_anamnese.profissional.usuario %>
+<% caminho_ajax = infantojuvenil_anamnese_path(escola_historico.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s) %>
 
 <tr class='<%= cl %>'>
   <th colspan="100%">
     Histórico escolar
   </th>
 </tr>
+
+<% if usuario %>
+
+  <% dict_select = {
+  } %>
+
+<% dict_number = {
+  :idade_entrada_anos => "Com quantos anos a criança entrou na escola?",
+} %>
+<% dict_text = {
+  :atividades_extras => "De quais atividades extracurriculares a criança participa?",
+} %>
+<% dict_textarea = {
+} %>
+
+<% dict_select.each do |k,v| %>
+  <%== hx_tr_select patch: caminho_ajax, name: "escola_historico[#{k}]", th: (html_escape v), id: "#{id = "#{cl}-#{k}"}", select: "##{id}", target: "##{id}", swap: "outerHTML", value: escola_historico.attributes[k.to_s] %>
+<% end %>
+
+<%== hx_tr_select patch: caminho_ajax, name: "escola_historico[escola_tipo_id]", th: "A criança estuda em que tipo de escola?", id: "#{id = "#{cl}-escola_historico"}", select: "##{id}", target: "##{id}", swap: "outerHTML", value: escola_historico.escola_tipo_id, options: EscolaTipo.all.map{|tipo| [tipo.tipo,tipo.id]}, value: escola_historico.escola_tipo_id, blank: true %>
+
+<% dict_number.each do |k,v| %>
+  <%== hx_tr_number patch: caminho_ajax, name: "escola_historico[#{k}]", th: (h v), value: (html_escape escola_historico.attributes[k]), id: "#{id = "#{cl}-#{k}"}", target: "##{id}", select: "##{id}", swap: "outerHTML" %>
+<% end %>
+
+<% dict_text.each do |k,v| %>
+  <%== hx_tr_text patch: caminho_ajax, name: "escola_historico[#{k}]", th: (h v), value: (html_escape escola_historico.attributes[k]), id: "#{id = "#{cl}-#{k}"}", target: "##{id}", select: "##{id}", swap: "outerHTML", placeholder: "Descreva..." %>
+<% end %>
+
+<% dict_textarea.each do |k,v| %>
+  <%== hx_tr_textarea patch: caminho_ajax, name: "escola_historico[#{k}]", th: (h v), texto: escola_historico.attributes[k.to_s], placeholder: v %>
+<% end %>
+
+
+<% else %>
 
 <tr class='<%= cl %>'>
   <th>Em qual tipo de escola a criança estuda?</th>
@@ -55,3 +92,4 @@
   <th>Há alguma outra consideração sobre a vida escolar da criança?</th>
   <td><%== markdown_to_html escola_historico.outras_consideracoes, "Não" %></td>
 </tr>
+<% end %>

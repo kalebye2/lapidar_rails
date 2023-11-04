@@ -3,62 +3,180 @@
   <th colspan="100%">Alimentação</th>
 </tr>
 
-<tr class="<%= cl %>">
-  <th>Com quantos meses recebeu alimentação sólida</th>
-  <td><%= deixar_no_plural alimentacao.solida_meses, 'mês', 'meses' %></td>
-</tr>
+<% path = infantojuvenil_anamnese_path(alimentacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s) %>
 
 <tr class="<%= cl %>">
+  <% curr_id = "#{cl}-succao-boa" %>
   <th>Teve sucção boa?</th>
-  <td><%= sim_ou_nao alimentacao.succao_boa %></td>
+  <td id="<%= curr_id %>">
+    <% if @usuario %>
+      <select name="alimentacao[succao_boa]" hx-patch="<%= path %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML">
+        <option <%= if alimentacao.succao_boa.nil? then "selected" end %> value="">Sem informação</option>
+          <option <%= if !alimentacao.succao_boa.nil? && alimentacao.succao_boa != 0 then "selected" end %> value="1">Sim</option>
+            <option <%= if !alimentacao.succao_boa.nil? && alimentacao.succao_boa == 0 then "selected" end %> value="0">Não</option>
+      </select>
+    <% else %>
+      <%= sim_ou_nao alimentacao.succao_boa %>
+    <% end %>
+  </td>
 </tr>
 
 <tr class="<%= cl %>">
+  <% curr_id = "#{cl}-degluticao-boa" %>
   <th>A deglutição foi boa?</th>
-  <td><%= sim_ou_nao alimentacao.degluticao_boa %></td>
+  <td id="<%= curr_id %>">
+    <% if @usuario %>
+      <select name="alimentacao[degluticao_boa]" hx-patch="<%= path %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML">
+        <option <%= if alimentacao.degluticao_boa.nil? then "selected" end %> value="">Sem informação</option>
+          <option <%= if !alimentacao.degluticao_boa.nil? && alimentacao.degluticao_boa != 0 then "selected" end %> value="1">Sim</option>
+            <option <%= if !alimentacao.degluticao_boa.nil? && alimentacao.degluticao_boa == 0 then "selected" end %> value="0">Não</option>
+      </select>
+    <% else %>
+      <%= sim_ou_nao alimentacao.degluticao_boa %>
+    <% end %>
+  </td>
 </tr>
 
 <tr class="<%= cl %>">
+  <% curr_id = "#{cl}-usou-mamadeira" %>
   <th>Usou mamadeira?</th>
-  <td><%= sim_ou_nao alimentacao.usou_mamadeira %></td>
+  <td id="<%= curr_id %>">
+    <% if @usuario %>
+      <select name="alimentacao[usou_mamadeira]" hx-patch="<%= path %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML">
+        <option <%= if alimentacao.usou_mamadeira.nil? then "selected" end %> value="">Sem informação</option>
+          <option <%= if !alimentacao.usou_mamadeira.nil? && alimentacao.usou_mamadeira != 0 then "selected" end %> value="1">Sim</option>
+            <option <%= if !alimentacao.usou_mamadeira.nil? && alimentacao.usou_mamadeira == 0 then "selected" end %> value="0">Não</option>
+      </select>
+    <% else %>
+      <%= sim_ou_nao alimentacao.usou_mamadeira %>
+    <% end %>
+  </td>
 </tr>
 
 <tr class="<%= cl %>">
+  <% curr_id = "#{cl}-comida-sal-introducao-meses" %>
   <th>Com quantos meses foi introduzida comida com sal?</th>
-  <td><%= deixar_no_plural alimentacao.comida_sal_introducao_meses, 'mês', 'meses' %></td>
+  <td id="<%= curr_id %>">
+    <% if @usuario %>
+      <input type="number" placeholder="Insira um número" name="alimentacao[comida_sal_introducao_meses]" value="<%= alimentacao.comida_sal_introducao_meses %>" hx-patch="<%= path %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML">
+    <% else %>
+      <%= deixar_no_plural alimentacao.comida_sal_introducao_meses, 'mês', 'meses' %>
+    <% end %>
+  </td>
 </tr>
 
 <tr class="<%= cl %>">
+  <% curr_id = "#{cl}-desmame-meses" %>
   <th>Com quantos meses ocorreu o desmame?</th>
-  <td><%= deixar_no_plural alimentacao.desmame_meses, 'mês', 'meses' %></td>
+  <td id="<%= curr_id %>">
+    <% if @usuario %>
+      <input type="number" placeholder="Insira um número" name="alimentacao[desmame_meses]" value="<%= alimentacao.desmame_meses %>" hx-patch="<%= path %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML">
+    <% else %>
+      <%= deixar_no_plural alimentacao.desmame_meses, 'mês', 'meses' %>
+    <% end %>
+  </td>
 </tr>
 
 <tr class="<%= cl %>">
+  <% curr_id = "#{cl}-rejeicao" %>
   <th>A criança rejeita comida?</th>
-  <td><%= sim_ou_nao alimentacao.rejeicao %></td>
+  <td id="<%= curr_id %>">
+    <% if @usuario %>
+      <select name="alimentacao[rejeicao]" hx-patch="<%= path %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML">
+        <option <%= if alimentacao.rejeicao.nil? then "selected" end %> value="">Sem informação</option>
+          <option <%= if !alimentacao.rejeicao.nil? && alimentacao.rejeicao != 0 then "selected" end %> value="1">Sim</option>
+            <option <%= if !alimentacao.rejeicao.nil? && alimentacao.rejeicao == 0 then "selected" end %> value="0">Não</option>
+      </select>
+    <% else %>
+      <%= sim_ou_nao alimentacao.rejeicao %>
+    <% end %>
+  </td>
 </tr>
 
 <tr class="<%= cl %>">
+  <% curr_id = "#{cl}-comer-sozinho-inicio-meses" %>
   <th>Com quantos meses a criança começou a comer sozinha?</th>
-  <td><%= deixar_no_plural alimentacao.comer_sozinho_inicio_meses, 'mês', 'meses' %></td>
+  <td id="<%= curr_id %>">
+    <% if @usuario %>
+      <input type="number" placeholder="Insira um número" name="alimentacao[comer_sozinho_inicio_meses]" value="<%= alimentacao.comer_sozinho_inicio_meses %>" hx-patch="<%= path %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML">
+    <% else %>
+      <%= deixar_no_plural alimentacao.comer_sozinho_inicio_meses, 'mês', 'meses' %>
+    <% end %>
+  </td>
 </tr>
 
 <tr class="<%= cl %>">
+  <% curr_id = "#{cl}-comer-sozinho-inicio-alimento" %>
   <th>Qual ou quais alimentos a criança comia sozinha no início?</th>
-  <td><%== markdown_to_html alimentacao.comer_sozinho_inicio_alimento %></td>
+  <td id="<%= curr_id %>">
+    <% if @usuario %>
+      <input name="alimentacao[comer_sozinho_inicio_alimento]" value="<%= alimentacao.comer_sozinho_inicio_alimento %>" placeholder="Descreva..." hx-patch="<%= path %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML">
+    <% else %>
+      <%== markdown_to_html alimentacao.comer_sozinho_inicio_alimento %>
+    <% end %>
+  </td>
 </tr>
 
 <tr class="<%= cl %>">
+  <% curr_id = "#{cl}-comportamento-mesa" %>
   <th>Como é o comportamento da criança à mesa?</th>
-  <td><%== markdown_to_html alimentacao.comportamento_mesa %></td>
+  <td id="<%= curr_id %>">
+    <% if @usuario %>
+      <textarea name="alimentacao[comportamento_mesa]" placeholder="Descreva..." cols="50" rows="10" <%== hx_set patch: path, select: "##{curr_id}", target: "##{curr_id}", swap: "outerHTML" %>><%= alimentacao.comportamento_mesa %></textarea>
+    <% else %>
+      <%== markdown_to_html alimentacao.comportamento_mesa %>
+    <% end %>
+  </td>
 </tr>
 
 <tr class="<%= cl %>">
+  <% curr_id = "#{cl}-precisa_ajuda" %>
   <th>A criança precisa de ajuda para comer?</th>
-  <td><%= sim_ou_nao alimentacao.precisa_ajuda %></td>
+  <td id="<%= curr_id %>">
+    <% if @usuario %>
+      <select name="alimentacao[precisa_ajuda]" hx-patch="<%= path %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML">
+        <option <%= if alimentacao.precisa_ajuda.nil? then "selected" end %> value="">Sem informação</option>
+          <option <%= if !alimentacao.precisa_ajuda.nil? && alimentacao.precisa_ajuda != 0 then "selected" end %> value="1">Sim</option>
+            <option <%= if !alimentacao.precisa_ajuda.nil? && alimentacao.precisa_ajuda == 0 then "selected" end %> value="0">Não</option>
+      </select>
+    <% else %>
+      <%= sim_ou_nao alimentacao.precisa_ajuda %>
+    <% end %>
+  </td>
 </tr>
 
 <tr class="<%= cl %>">
+  <% curr_id = "#{cl}-solida-meses" %>
   <th>Com quantos meses recebeu alimentação sólida</th>
-  <td><%= deixar_no_plural alimentacao.solida_meses, 'mês', 'meses' %></td>
+  <td id="<%= curr_id %>">
+    <% if @usuario %>
+      <input type="number" name="alimentacao[solida_meses]" placeholder="Insira o número" value="<%= alimentacao.solida_meses %>" hx-patch="<%= path %>" hx-select="#<% curr_id %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML">
+    <% else %>
+      <%= deixar_no_plural alimentacao.solida_meses, 'mês', 'meses' %>
+    <% end %>
+  </td>
+</tr>
+
+<tr class="<%= cl %>">
+  <% curr_id = "#{cl}-alimentacao-atual" %>
+  <th>Como é a alimentação atual da criança?</th>
+  <td id="<%= curr_id %>">
+    <% if @usuario %>
+      <textarea name="alimentacao[alimentacao_atual]" placeholder="Descreva..." cols="50" rows="10" <%== hx_set patch: path, target: "##{curr_id}", swap: "outerHTML", select: "##{curr_id}" %>><%= alimentacao.alimentacao_atual %></textarea>
+    <% else %>
+      <%== markdown_to_html alimentacao.alimentacao_atual %>
+    <% end %>
+  </td>
+</tr>
+
+<tr class="<%= cl %>">
+  <% curr_id = "#{cl}-outras-consideracoes" %>
+  <th>Outras considerações</th>
+  <td id="<%= curr_id %>">
+    <% if @usuario %>
+      <textarea name="alimentacao[outras_consideracoes]" placeholder="Descreva..." cols="50" rows="10" <%== hx_set patch: path, select: "##{curr_id}", target: "##{curr_id}", swap: "outerHTML" %>><%= alimentacao.outras_consideracoes %></textarea>
+    <% else %>
+      <%== alimentacao.outras_consideracoes %>
+    <% end %>
+  </td>
 </tr>

@@ -1,4 +1,5 @@
 class InfantojuvenilAnamneseGestacao < ApplicationRecord
+  belongs_to :infantojuvenil_anamnese
   attribute :desejada
   attribute :mae_diabetes
   attribute :mae_traumatismo
@@ -6,6 +7,8 @@ class InfantojuvenilAnamneseGestacao < ApplicationRecord
 
   belongs_to :parto_tipo, optional: true
   belongs_to :parto_local, optional: true
+
+  self.primary_key = :infantojuvenil_anamnese_id
 
   def foi_desejada?
     desejada > 0 ? "Sim" : "Não"
@@ -16,6 +19,6 @@ class InfantojuvenilAnamneseGestacao < ApplicationRecord
   end
 
   def tipo_de_parto
-    parto_tipo.nil? ? "Sem informação" : parto_tipo.descricao
+    parto_tipo.nil? ? "Sem informação" : parto_tipo.tipo
   end
 end

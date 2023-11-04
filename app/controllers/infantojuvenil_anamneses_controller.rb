@@ -1,5 +1,7 @@
 class InfantojuvenilAnamnesesController < ApplicationController
   before_action :set_infantojuvenil_anamnese, only: %i[ show edit update delete ]
+  before_action :validar_usuario
+  before_action :validar_edicao, only: %i[ edit update destroy ]
   def index
     @infantojuvenil_anamneses = InfantojuvenilAnamnese.all
   end
@@ -7,10 +9,11 @@ class InfantojuvenilAnamnesesController < ApplicationController
   def show
     respond_to do |format|
       format.html
-      format.md do
-        response.headers['Content-Type'] = "text/markdown"
-        response.headers['Content-Disposition'] = "attachment; filename=anamnese-infantojuvenil_#{@infantojuvenil_anamnese.pessoa.nome_completo.parameterize}_#{@infantojuvenil_anamnese.atendimento.data}.md"
-      end
+      format.md
+      # format.md do
+      #   response.headers['Content-Type'] = "text/markdown"
+      #   response.headers['Content-Disposition'] = "attachment; filename=anamnese-infantojuvenil_#{@infantojuvenil_anamnese.pessoa.nome_completo.parameterize}_#{@infantojuvenil_anamnese.atendimento.data}.md"
+      # end
     end
   end
 
@@ -23,12 +26,63 @@ class InfantojuvenilAnamnesesController < ApplicationController
   end
 
   def edit
+    respond_to do |format|
+      format.html do
+        if params[:ajax].present?
+          render partial: "infantojuvenil_anamneses/tabela-dados-principais-edit", locals: {infantojuvenil_anamnese: @infantojuvenil_anamnese}
+          return
+        else
+        end
+      end
+    end
   end
 
   def update
-    print infantojuvenil_anamnese_params
-    @infantojuvenil_anamnese.update(infantojuvenil_anamnese_params)
-    redirect_to infantojuvenil_anamneses_path
+    if params[:infantojuvenil_anamnese].present?
+      p infantojuvenil_anamnese_params
+      @infantojuvenil_anamnese.update(infantojuvenil_anamnese_params)
+    end
+    if params[:gestacao].present?
+      @gestacao.update(gestacao_params)
+    end
+    if params[:alimentacao].present?
+      @alimentacao.update(alimentacao_params)
+    end
+    if params[:psicomotricidade].present?
+      @psicomotricidade.update(psicomotricidade_params)
+    end
+    if params[:sono].present?
+      @sono.update(sono_params)
+    end
+    if params[:socioafetividade].present?
+      @socioafetividade.update(socioafetividade_params)
+    end
+    if params[:comunicacao].present?
+      @comunicacao.update(comunicacao_params)
+    end
+    if params[:manipulacao].present?
+      @manipulacao.update(manipulacao_params)
+    end
+    if params[:saude_historico].present?
+      @saude_historico.update(saude_historico_params)
+    end
+    if params[:escola_historico].present?
+      @escola_historico.update(escola_historico_params)
+    end
+    if params[:sexualidade].present?
+      @sexualidade.update(sexualidade_params)
+    end
+    if params[:familia_historico].present?
+      @familia_historico.update(familia_historico_params)
+    end
+
+    if params[:pessoa].present?
+      @infantojuvenil_anamnese.pessoa.update(pessoa_params)
+    end
+    if params[:ajax].present?
+      render :show
+    else
+    end
   end
 
   def delete
@@ -49,16 +103,155 @@ class InfantojuvenilAnamnesesController < ApplicationController
     @familia_historico = @infantojuvenil_anamnese.familia_historico
     @gestacao = @infantojuvenil_anamnese.gestacao
     @manipulacao = @infantojuvenil_anamnese.manipulacao
+
+    # usuario atual é o profissional responsável?
+    @usuario = usuario_atual == @infantojuvenil_anamnese.profissional.usuario
+  end
+
+  def validar_usuario
+    if usuario_atual.nil? || !(usuario_atual.corpo_clinico || usuario_atual.secretaria?)
+      render file: "#{Rails.root}/public/404.html", status: 403
+      return
+    end
+  end
+
+  def validar_edicao
+    if usuario_atual.nil? || !(usuario_atual.secretaria? || usuario_atual.profissional == @infantojuvenil_anamnese.profissional)
+      render file: "#{Rails.root}/public/404.html", status: 403
+      return
+    end
   end
 
   def infantojuvenil_anamnese_params
-    params.require(:infantojuvenil_anamnese).permit(:atendimento_id,
+    params.require(:infantojuvenil_anamnese).permit(
+      :atendimento_id,
       :motivo_consulta,
       :diagnostico_preliminar,
       :plano_tratamento,
       :prognostico,
       infantojuvenil_anamnese_gestacao: [
-        :mae_diabetes
+        :infantojuvenil_anamnese_id,
+        :mae_diabetes,
+        :desejada,
+        :idade_pai,
+        :idade_mae,
+        :irmaos_mais_velhos,
+        :irmaos_mais_novos,
+        :gestacao_anterior_meses,
+        :abortos_anteriores,
+        :mae_saude,
+        :data_pre_natal,
+        :mae_sensacoes,
+        :mae_internacoes,
+        :mae_enjoos,
+        :mae_vomitos,
+        :mae_traumatismo,
+        :mae_convulsoes,
+        :mae_medicamentos,
+        :parto_local_id,
+        :parto_tipo_id,
+        :nascimento_peso_g,
+        :nascimento_comprimento_cm,
+        :gestacao_semanas,
+        :nascimento_crianca_condicoes,
+        :nascimento_reacao_pai,
+        :nascimento_reacao_mae,
+        :nascimento_reacao_irmaos,
+        :desenvolvimento_parto,
+        :outras_consideracoes
       ])
+  end
+
+  def pessoa_params
+    params.require(:pessoa).permit(:data_nascimento, :feminino)
+  end
+
+  def gestacao_params
+    params.require(:gestacao).permit(
+      :infantojuvenil_anamnese_id,
+      :desejada,
+      :mae_diabetes,
+      :idade_pai,
+      :idade_mae,
+      :irmaos_mais_velhos,
+      :irmaos_mais_novos,
+      :gestacao_anterior_meses,
+      :abortos_anteriores,
+      :mae_saude,
+      :data_pre_natal,
+      :mae_sensacoes,
+      :mae_internacoes,
+      :mae_enjoos,
+      :mae_vomitos,
+      :mae_traumatismo,
+      :mae_convulsoes,
+      :mae_medicamentos,
+      :parto_local_id,
+      :parto_tipo_id,
+      :nascimento_peso_g,
+      :nascimento_comprimento_cm,
+      :gestacao_semanas,
+      :nascimento_crianca_condicoes,
+      :nascimento_reacao_pai,
+      :nascimento_reacao_mae,
+      :nascimento_reacao_irmaos,
+      :desenvolvimento_parto,
+      :outras_consideracoes
+    )
+  end
+
+  def alimentacao_params
+    params.require(:alimentacao).permit(
+      :infantojuvenil_anamnese_id,
+      :solida_meses,
+      :succao_boa,
+      :degluticao_boa,
+      :usou_mamadeira,
+      :comida_sal_introducao_meses,
+      :desmame_meses,
+      :rejeicao,
+      :comer_sozinho_inicio_meses,
+      :comer_sozinho_inicio_alimento,
+      :comportamento_mesa,
+      :precisa_ajuda,
+      :alimentacao_atual,
+      :outras_consideracoes
+    )
+  end
+
+  def psicomotricidade_params
+    params.require(:psicomotricidade).permit(InfantojuvenilAnamnesePsicomotricidade.attribute_names.map(&:to_sym))
+  end
+
+  def sono_params
+    params.require(:sono).permit(InfantojuvenilAnamneseSono.attribute_names.map(&:to_sym))
+  end
+
+  def socioafetividade_params
+    params.require(:socioafetividade).permit(InfantojuvenilAnamneseSocioafetividade.attribute_names.map(&:to_sym))
+  end
+
+  def comunicacao_params
+    params.require(:comunicacao).permit(InfantojuvenilAnamneseComunicacao.attribute_names.map(&:to_sym))
+  end
+
+  def manipulacao_params
+    params.require(:manipulacao).permit(InfantojuvenilAnamneseManipulacao.attribute_names.map(&:to_sym))
+  end
+
+  def saude_historico_params
+    params.require(:saude_historico).permit(InfantojuvenilAnamneseSaudeHistorico.attribute_names.map(&:to_sym))
+  end
+
+  def escola_historico_params
+    params.require(:escola_historico).permit(InfantojuvenilAnamneseManipulacao.attribute_names.map(&:to_sym))
+  end
+
+  def sexualidade_params
+    params.require(:sexualidade).permit(InfantojuvenilAnamneseSexualidade.attribute_names.map(&:to_sym))
+  end
+
+  def familia_historico_params
+    params.require(:familia_historico).permit(InfantojuvenilAnamneseFamiliaHistorico.attribute_names.map(&:to_sym))
   end
 end

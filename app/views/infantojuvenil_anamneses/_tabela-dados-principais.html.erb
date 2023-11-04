@@ -1,68 +1,139 @@
-<thead>
+<!-- joga tudo pra HTMX, meu bom -->
+<thead id="tabela-dados-principais">
   <tr>
     <th colspan="100%">Dados principais</th>
   </tr>
 
   <tr>
-    <th width="20%">Paciente</th>
-    <td><%= infantojuvenil_anamnese.pessoa.nome_completo %></td>
-  </tr>
+    <% curr_id = "tabela-dados-principais-atendimento" %>
+    <th width="20%">Atendimento</th>
+    <td id="<%= curr_id %>">
 
-  <tr>
-    <th>Data de nascimento</th>
-    <td><%= render_data_brasil infantojuvenil_anamnese.pessoa.data_nascimento %></td>
-  </tr>
+      <p>Paciente:
+      <strong>
+        <%= infantojuvenil_anamnese.paciente.nome_completo %>
+      </strong>
+      </p>
 
-  <tr>
-    <th>Idade na anamnese</th>
-    <td><%= infantojuvenil_anamnese.pessoa.render_idade(infantojuvenil_anamnese.atendimento.data) %></td>
-  </tr>
+      <p>Responsável legal:
+      <strong>
+        <%= infantojuvenil_anamnese.pessoa_responsavel.nome_completo %>
+      </strong>
+      </p>
 
-  <tr>
-    <th>Sexo</th>
-    <td><%= infantojuvenil_anamnese.pessoa.render_sexo %></td>
-  </tr>
+      <p>Profissional:
+      <strong>
+        <%= infantojuvenil_anamnese.profissional.descricao_completa %>
+      </strong>
+      </p>
 
-  <tr>
-    <th>Responsável legal</th>
-    <td>
-      <%= infantojuvenil_anamnese.pessoa_responsavel.nome_completo %>
-      <%= infantojuvenil_anamnese.pessoa_responsavel.render_sexo_sigla %>
-    </td>
-  </tr>
+      <p>Serviço procurado:
+      <strong>
+        <%= infantojuvenil_anamnese.acompanhamento.tipo.upcase %>
+      </strong>
+      </p>
 
-  <tr>
-    <th>Serviço procurado</th>
-    <td><%= infantojuvenil_anamnese.acompanhamento.tipo.upcase %></td>
-  </tr>
+      <p>Data:
+      <%= render_data_brasil infantojuvenil_anamnese.atendimento.data %> às
+      <%= render_hora_brasil infantojuvenil_anamnese.atendimento.horario %>
+      </p>
 
-  <tr>
-    <th>Profissional</th>
-    <td><%= infantojuvenil_anamnese.profissional.descricao_completa %></td>
-  </tr>
-
-  <tr>
-    <th>Motivo da consulta</th>
-    <td>
-      <%= turbo_frame_tag dom_id(infantojuvenil_anamnese, 'motivo_consulta') do %>
-        <%== markdown_to_html infantojuvenil_anamnese.motivo_consulta %>
+      <%#= link_to "editar", infantojuvenil_anamnese_path(infantojuvenil_anamnese) %>
+      <% if @usuario %>
+        <button hx-get="<%= edit_infantojuvenil_anamnese_path(infantojuvenil_anamnese, ajax: true) %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML" hx-select="#<%= curr_id %>">editar</button>
       <% end %>
     </td>
   </tr>
 
   <tr>
+    <% curr_id = "tabela-dados-principais-data-nascimento" %>
+    <th>Data de nascimento</th>
+    <td id="tabela-dados-principais-data-nascimento">
+      <% if @usuario %>
+             <form hx-patch="<%= infantojuvenil_anamnese_path(infantojuvenil_anamnese, ajax: true) %>" hx-trigger="change delay:500ms" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+          <input type="date" value="<%= infantojuvenil_anamnese.pessoa.data_nascimento %>" name="pessoa[data_nascimento]">
+        </form>
+
+      <% else %>
+        <%= render_data_brasil infantojuvenil_anamnese.pessoa.data_nascimento %>
+      <% end %>
+    </td>
+  </tr>
+
+  <tr>
+  <% curr_id = "tabela-dados-principais-idade" %>
+    <th>Idade na anamnese</th>
+    <td id="<%= curr_id %>" hx-swap-oob="true"><%= infantojuvenil_anamnese.pessoa.render_idade(infantojuvenil_anamnese.atendimento.data) %></td>
+  </tr>
+
+  <tr>
+  <% curr_id = "tabela-dados-principais-sexo" %>
+    <th>Sexo</th>
+    <td id="<%= curr_id %>">
+      <% if @usuario %>
+             <form hx-patch="<%= infantojuvenil_anamnese_path(infantojuvenil_anamnese, ajax: true) %>" hx-trigger="change" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML">
+           <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+           <select name="pessoa[feminino]">
+              <option <%= !infantojuvenil_anamnese.pessoa.feminino? ? "selected='selected'" : "" %> value="false">Masculino</option>
+              <option <%= infantojuvenil_anamnese.pessoa.feminino? ? "selected='selected'" : "" %> value="true">Feminino</option>
+              </select>
+          </form>
+      <% else %>
+        <%= infantojuvenil_anamnese.pessoa.render_sexo %>
+      <% end %>
+    </td>
+  </tr>
+
+  <tr>
+    <th>Motivo para acompanhamento</th>
+    <td>
+      <%= infantojuvenil_anamnese.acompanhamento.motivo %>
+    </td>
+  </tr>
+
+  <tr>
+    <% curr_id = "tabela-dados-principais-motivo" %>
+    <th>Motivo específico da consulta</th>
+    <td id="<%= curr_id %>">
+      <%== markdown_to_html infantojuvenil_anamnese.motivo_consulta %>
+      <% if @usuario %>
+        <button hx-get="<%= edit_infantojuvenil_anamnese_path(infantojuvenil_anamnese, ajax: true) %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" hx-target="#<%= curr_id %>">editar</button>
+      <% end %>
+    </td>
+  </tr>
+
+  <tr>
+    <% curr_id = "tabela-dados-principais-diagnostico-preliminar" %>
     <th>Hipótese diagnóstica</th>
-    <td><%== markdown_to_html infantojuvenil_anamnese.diagnostico_preliminar %></td>
+    <td id="<%= curr_id %>">
+      <%== markdown_to_html infantojuvenil_anamnese.diagnostico_preliminar %>
+      <% if @usuario %>
+        <button hx-get="<%= edit_infantojuvenil_anamnese_path(infantojuvenil_anamnese, ajax: true) %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML" hx-select="#<%= curr_id %>">editar</button>
+      <% end %>
+    </td>
   </tr>
 
   <tr>
+    <% curr_id = "tabela-dados-principais-plano-tratamento" %>
     <th>Plano de tratamento</th>
-    <td><%== markdown_to_html infantojuvenil_anamnese.plano_tratamento %></td>
+    <td id="<%= curr_id %>">
+      <%== markdown_to_html infantojuvenil_anamnese.plano_tratamento %>
+      <% if @usuario %>
+        <button hx-get="<%= edit_infantojuvenil_anamnese_path(infantojuvenil_anamnese, ajax: true) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML">editar</button>
+      <% end %>
+    </td>
   </tr>
 
   <tr>
+    <% curr_id = "tabela-dados-principais-prognostico" %>
     <th>Prognóstico</th>
-    <td><%== markdown_to_html infantojuvenil_anamnese.prognostico %></td>
+    <td id="<%= curr_id %>">
+      <%== markdown_to_html infantojuvenil_anamnese.prognostico %>
+      <% if @usuario %>
+             <button hx-get="<%= edit_infantojuvenil_anamnese_path(infantojuvenil_anamnese, ajax: true) %>" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML" %>editar</button>
+      <% end %>
+    </td>
   </tr>
 
 </thead>

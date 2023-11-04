@@ -1,4 +1,5 @@
 class InfantojuvenilAnamneseSocioafetividade < ApplicationRecord
+  belongs_to :infantojuvenil_anamnese
   attribute :amizade_facil
   attribute :prefere_brincar_com_amigos
   attribute :prefere_brincar_com_criancas_menores
@@ -8,4 +9,6 @@ class InfantojuvenilAnamneseSocioafetividade < ApplicationRecord
   attribute :tendencia_isolamento_inatividade
   attribute :repeticao_gestos_gritos_palavras
   attribute :carinhoso
+
+  self.primary_key = :infantojuvenil_anamnese_id
 end

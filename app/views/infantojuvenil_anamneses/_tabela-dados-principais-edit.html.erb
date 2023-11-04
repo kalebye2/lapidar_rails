@@ -1,0 +1,117 @@
+<!-- joga tudo pra HTMX, meu bom -->
+<thead id="tabela-dados-principais">
+  <tr>
+    <th colspan="100%">Dados principais</th>
+  </tr>
+
+  <tr>
+    <% curr_id = "tabela-dados-principais-atendimento" %>
+    <th width="20%">Atendimento</th>
+    <td id="<%= curr_id %>">
+      <form hx-patch="<%= infantojuvenil_anamnese_path(infantojuvenil_anamnese, ajax: true) %>" hx-select="#tabela-dados-principais-atendimento" hx-target="#tabela-dados-principais-atendimento" hx-swap="outerHTML">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+        <select name="infantojuvenil_anamnese[atendimento_id]">
+          <% Atendimento.where(atendimento_tipo: AtendimentoTipo.find_by(tipo: "anamnese")).em_ordem(:desc).each do |atendimento| %>
+            <option value="<%= atendimento.id %>" <%== atendimento.id == infantojuvenil_anamnese.atendimento.id ? "selected" : "" %>>
+            <%= render_data_brasil atendimento.data %>
+            às
+            <%= render_hora_brasil atendimento.horario %> -
+            <%= atendimento.paciente.nome_abreviado %>
+            </option>
+          <% end %>
+        </select>
+        <button>Confirmar</button>
+        <button hx-get="<%= infantojuvenil_anamnese_path(infantojuvenil_anamnese, ajax: true) %>" hx-target="#tabela-dados-principais-atendimento" hx-swap="outerHTML" hx-select="#tabela-dados-principais-atendimento">Cancelar</button>
+      </form>
+    </td>
+  </tr>
+
+  <tr>
+    <% curr_id = "tabela-dados-principais-data-nascimento" %>
+    <th>Data de nascimento</th>
+    <td id="tabela-dados-principais-data-nascimento">
+      <% if usuario_atual == infantojuvenil_anamnese.profissional.usuario %>
+      <input type="date" value="<%= infantojuvenil_anamnese.pessoa.data_nascimento %>" name="pessoa[data_nascimento]" hx-patch="<%= pessoa_path(infantojuvenil_anamnese.pessoa, authenticity_token: form_authenticity_token.to_s, ajax: true) %>" hx-trigger="change" hx-target="#tabela-dados-principais">
+      <% else %>
+        <%= render_data_brasil infantojuvenil_anamnese.pessoa.data_nascimento %>
+      <% end %>
+    </td>
+  </tr>
+
+  <tr>
+    <th>Idade na anamnese</th>
+    <td><%= infantojuvenil_anamnese.pessoa.render_idade(infantojuvenil_anamnese.atendimento.data) %></td>
+  </tr>
+
+  <tr>
+    <th>Sexo</th>
+    <td>
+      <% if @usuario %>
+        <select name="pessoa[feminino]" hx-put="<%= pessoa_path(infantojuvenil_anamnese.pessoa, ajax: true, authenticity_token: form_authenticity_token.to_s) %>">
+          <option <%= !infantojuvenil_anamnese.pessoa.feminino? ? "selected='selected'" : "" %> value="false">Masculino</option>
+          <option <%= infantojuvenil_anamnese.pessoa.feminino? ? "selected='selected'" : "" %> value="true">Feminino</option>
+        </select>
+      <% else %>
+        <%= infantojuvenil_anamnese.pessoa.render_sexo %>
+      <% end %>
+    </td>
+  </tr>
+
+  <tr>
+    <% curr_id = "tabela-dados-principais-motivo" %>
+    <th>Motivo específico da consulta</th>
+    <td id="tabela-dados-principais-motivo">
+      <form hx-patch="<%= infantojuvenil_anamnese_path(infantojuvenil_anamnese, ajax: true) %>" hx-select="#tabela-dados-principais-motivo" hx-swap="outerHTML" hx-target="#tabela-dados-principais-motivo">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+        <textarea name="infantojuvenil_anamnese[motivo_consulta]" autofocus cols="50" rows="10"><%== infantojuvenil_anamnese.motivo_consulta %></textarea>
+        <br>
+        <button>Confirmar</button>
+        <button hx-get="<%= infantojuvenil_anamnese_path(infantojuvenil_anamnese, ajax: true) %>" hx-select="#tabela-dados-principais-motivo" hx-target="#tabela-dados-principais-motivo" hx-swap="outerHTML">
+          Cancelar
+        </button>
+      </form>
+    </td>
+  </tr>
+
+  <tr>
+    <% curr_id = "tabela-dados-principais-diagnostico-preliminar" %>
+    <th>Hipótese diagnóstica</th>
+    <td id="<%= curr_id %>">
+      <form hx-patch="<%= infantojuvenil_anamnese_path(infantojuvenil_anamnese, ajax: true) %>" hx-swap="outerHTML" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+        <input type="text" name="infantojuvenil_anamnese[diagnostico_preliminar]" value="<%= infantojuvenil_anamnese.diagnostico_preliminar %>" placeholder="Informe o diagnóstico preliminar">
+        <button>Confirmar</button>
+        <button hx-get="<%= infantojuvenil_anamnese_path(infantojuvenil_anamnese, ajax: true) %>" hx-swap="outerHTML" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>">
+          Cancelar
+        </button>
+      </form>
+    </td>
+  </tr>
+
+  <tr>
+    <% curr_id = "tabela-dados-principais-plano-tratamento" %>
+    <th>Plano de tratamento</th>
+    <td id="<%= curr_id %>">
+      <form hx-patch="<%= infantojuvenil_anamnese_path(infantojuvenil_anamnese, ajax: true) %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" hx-target="#<%= curr_id %>">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+        <input type="text" name="infantojuvenil_anamnese[plano_tratamento]" value="<%= infantojuvenil_anamnese.plano_tratamento %>">
+        <button>Confirmar</button>
+        <button hx-get="<%= infantojuvenil_anamnese_path(infantojuvenil_anamnese, ajax: true) %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML" hx-select="#<%= curr_id %>">Cancelar</button>
+      </form>
+    </td>
+  </tr>
+
+  <tr>
+    <% curr_id = "tabela-dados-principais-prognostico" %>
+    <th>Prognóstico</th>
+    <td id="<%= curr_id %>">
+      <form hx-patch="<%= infantojuvenil_anamnese_path(infantojuvenil_anamnese, ajax: true) %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+        <input type="text" name="infantojuvenil_anamnese[prognostico]" value="<%= infantojuvenil_anamnese.prognostico %>">
+        <button>Confirmar</button>
+        <button hx-get="<%= infantojuvenil_anamnese_path(infantojuvenil_anamnese, ajax: true) %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML" hx-select="#<%= curr_id %>">Cancelar</button>
+      </form>
+    </td>
+  </tr>
+
+</thead>

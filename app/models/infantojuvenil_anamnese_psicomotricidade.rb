@@ -1,10 +1,13 @@
 class InfantojuvenilAnamnesePsicomotricidade < ApplicationRecord
+  belongs_to :infantojuvenil_anamnese
   attribute :canhoto
   attribute :precisa_ajuda_banheiro
   attribute :toma_banho_sozinho
   attribute :veste_sozinho
   attribute :caia_muito
   attribute :conhecimento_lateralidade
+
+  self.primary_key = :infantojuvenil_anamnese_id
 
   def canhoto?
     canhoto.nil? ? nil : canhoto > 0

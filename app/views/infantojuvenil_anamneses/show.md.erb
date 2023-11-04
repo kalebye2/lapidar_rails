@@ -3,7 +3,7 @@
 # convertendo para LaTeX ou PDF
 # Caso queira saber mais visite https://pandoc.org
 #
-title-meta: Anamnese infantojuvenil
+title: Anamnese infantojuvenil
 author-meta: <%= @infantojuvenil_anamnese.profissional.descricao_completa %>
 date-meta: <%= render_data_brasil @infantojuvenil_anamnese.atendimento.data %>
 
@@ -37,20 +37,22 @@ header-includes:
     \fancyhead[L]{} % coloque aqui cabeçalho à esquerda
     \fancyhead[R]{Anamnese infantojuvenil}
     \fancyfoot[L]{\footnotesize{
-    E-mail: \href{mailto:<%= @acompanhamento.profissional.email %>}{<%= @acompanhamento.profissional.email %>}\\
+    E-mail: \href{mailto:<%= @infantojuvenil_anamnese.profissional.email %>}{<%= @infantojuvenil_anamnese.profissional.email %>}\\
     Fone: \href{tel:<%= @infantojuvenil_anamnese.profissional.pessoa.render_fone_link %>}{<%= @infantojuvenil_anamnese.profissional.pessoa.render_fone_local %>}
     }}
     \fancyfoot[C]{\thepage\ / \pageref{LastPage}}
     \pagestyle{fancy}
+
+    % titulo
+    \usepackage{titling}
+    \renewcommand{\maketitle}{
+    \begin{center}
+    \huge\textbf\thetitle
+    \end{center}
+    }
     ```
 
 ---
-
-<!-- para criar o título -->
-\begin{center}
-\huge{\textbf{Anamnese infantojuvenil}}
-\end{center}
-\vspace{3em}
 
 # Identificação
 
@@ -77,7 +79,7 @@ Profissional:
 : <%= @infantojuvenil_anamnese.profissional.descricao_completa %>
 
 Motivo da consulta:
-: <%= @infantojuvenil_anamnese.motivo_consulta %>
+: <%= markdown_substituir_paragrafo @infantojuvenil_anamnese.motivo_consulta, "\n\n: " %>
 
 <%= render 'gestacao', gestacao: @infantojuvenil_anamnese.gestacao %>
 
@@ -119,5 +121,6 @@ Prognóstico
 
 ---
 
-<%== @infantojuvenil_anamnese.profissional.descricao_completa %>
+<%== @infantojuvenil_anamnese.profissional.descricao_completa.gsub(/\s+-\s+/, "  \n") %>
+
 <%== render_data_extenso @infantojuvenil_anamnese.atendimento.data %>

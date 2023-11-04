@@ -1,9 +1,46 @@
 <% cl = 'tabela-infantojuvenil-anamnese-comunicacao' %>
+<% usuario = usuario_atual == comunicacao.infantojuvenil_anamnese.profissional.usuario %>
+<% caminho_ajax = infantojuvenil_anamnese_path(comunicacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s) %>
+
 <tr class='<%= cl %>'>
   <th colspan='100%'>
     Comunicação
   </th>
 </tr>
+
+<% if usuario %>
+
+
+<% dict_select = {
+  :uso_eu => "A criança usa o pronome \"eu\" para se dirigir a si mesma?",
+  :entendimento => "A criança demonstra entendimento do que é falado para ela?",
+  :relata_situacoes => "A criança relata situações que ela vive?",
+} %>
+<% dict_text = {
+  :primeiras_silabas => "Quais foram as primeiras sílabas da criança?",
+  :primeiras_palavras => "Quais foram as primeiras palavras da criança?",
+  :primeiras_frases => "Quais foram as primeiras frases da criança?",
+  :atitudes_expressar_desejo => "Quais atitudes a criança toma ao expressar um desejo?",
+  :disturbio_fala => "A criança possui algum distúrbio na fala?",
+  :linguas_ouvidas_casa => "Quais são as línguas ouvidas em casa?",
+} %>
+<% dict_textarea = {
+  :outras_consideracoes => "Outras considerações"
+} %>
+
+<% dict_select.each do |k,v| %>
+  <%== hx_tr_select patch: caminho_ajax, name: "comunicacao[#{k}]", th: (html_escape v), id: "#{id = "#{cl}-#{k}"}", select: "##{id}", target: "##{id}", swap: "outerHTML", value: comunicacao.attributes[k.to_s] %>
+<% end %>
+
+<% dict_text.each do |k,v| %>
+  <%== hx_tr_text patch: caminho_ajax, name: "comunicacao[#{k}]", th: (h v), value: (html_escape comunicacao.attributes[k]), id: "#{id = "#{cl}-#{k}"}", target: "##{id}", select: "##{id}", swap: "outerHTML", placeholder: "Descreva..." %>
+<% end %>
+
+<% dict_textarea.each do |k,v| %>
+  <%== hx_tr_textarea patch: caminho_ajax, name: "comunicacao[#{k}]", th: (h v), texto: comunicacao.attributes[k.to_s], placeholder: v %>
+<% end %>
+
+<% else %>
 
 <tr class='<%= cl %>'>
   <th>Quais foram as primeiras sílabas da criança?</th>
@@ -54,3 +91,4 @@
   <th>Outras considerações em relação à comunicação</th>
   <td><%== markdown_to_html comunicacao.outras_consideracoes, 'Nenhuma' %></td>
 </tr>
+<% end %>
