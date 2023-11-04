@@ -11,6 +11,7 @@ class Pessoa < ApplicationRecord
   scope :homens, -> { do_sexo_masculino }
   scope :profissionais, -> { joins(:profissional) }
   scope :atendidas_hoje, -> { joins(:atendimentos).where("atendimentos.data" => Date.today) }
+  scope :ordem_alfabetica, -> { order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc) }
   
   # has associations
   has_one :usuario
@@ -23,6 +24,7 @@ class Pessoa < ApplicationRecord
   has_many :atendimentos, through: :acompanhamentos
   has_many :instrumento_relatos, through: :atendimentos
   has_many :instrumentos_aplicados, through: :instrumento_relatos, source: :instrumento
+  has_many :infantojuvenil_anamneses, through: :atendimentos
   has_many :profissionais_acompanhando, class_name: "Profissional", through: :acompanhamento, source: :profissional
   has_many :devolutivas, class_name: "PessoaDevolutiva", foreign_key: :pessoa_id
   has_many :laudos, through: :acompanhamentos
@@ -116,6 +118,7 @@ class Pessoa < ApplicationRecord
 
   def render_idade(data = Time.now.to_date)
     if data_nascimento == nil then return "idade não informada" end
+    if data.class.to_s != "Date" then return "" end
     hoje = data
     #hoje = Date.parse '1996-11-07'
 
@@ -241,6 +244,10 @@ class Pessoa < ApplicationRecord
 
   def atendimentos_a_partir_de_hoje
     atendimentos.where(data: Date.today..)
+  end
+
+  def grau_de_instrucao
+    instrucao_grau.nil? ? "" : instrucao_grau.grau
   end
 
   private
