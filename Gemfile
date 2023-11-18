@@ -88,3 +88,6 @@ gem 'axlsx_rails'
 
 # pagination
 gem 'pagy'
+
+# faker
+gem 'faker'

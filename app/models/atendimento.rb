@@ -12,6 +12,7 @@ class Atendimento < ApplicationRecord
   accepts_nested_attributes_for :atendimento_valor
 
   # scopes
+
   scope :realizados, -> { where(presenca: true) }
   scope :nao_realizados, -> { where(presenca: false) }
   scope :futuros, -> { where(data: [Date.today + 1.day..]).or(self.where(data: Date.today, horario: [Time.now.beginning_of_hour - 3.hour..])) }
@@ -92,6 +93,12 @@ class Atendimento < ApplicationRecord
 
   def em_andamento
     if !horario.nil?
+      data == Date.today && horario_inicial < Time.now && horario_final > Time.now && pessoa_presente
+    end
+  end
+
+  def no_horario
+    if !horario.nil?
       data == Date.today && horario_inicial < Time.now && horario_final > Time.now
     end
   end
@@ -111,7 +118,8 @@ class Atendimento < ApplicationRecord
   end
 
   def status
-    pessoa_presente ? "Realizado" : horario_passado ? "Não realizado" : em_andamento ? "Em andamento" : em_breve ? "Em breve" : "A ocorrer"
+    #pessoa_presente ? "Realizado" : horario_passado ? "Não realizado" : em_andamento ? "Em andamento" : em_breve ? "Em breve" : "A ocorrer"
+    horario_passado ? pessoa_presente ? "Realizado" : "Não realizado" : em_breve ? "Em breve" : no_horario ? pessoa_presente ? "Em andamento": "Na hora": "A ocorrer"
   end
 
   def em_breve
@@ -130,5 +138,27 @@ class Atendimento < ApplicationRecord
 
   def instrumentos_aplicados
     instrumentos
+  end
+
+  # como evento de calendário
+  def evento_ics
+    "BEGIN:VEVENT
+SUMMARY:#{tipo.downcase.capitalize} - #{paciente.nome_completo}
+DTSTAMP:#{Time.now.strftime("%Y%m%dT%H%M%SZ")}
+DTSTART:#{data.strftime("%Y%m%d")}T#{horario.strftime("%H%M%S")}Z
+DTEND:#{(data_fim || data).strftime("%Y%m%d")}T#{(horario_fim || horario).strftime("%H%M%S")}Z
+LOCATION:#{local}
+ORGANIZER: #{profissional.descricao_completa}
+STATUS: #{status.upcase}
+UID:#{data.strftime("%Y%m%d")}#{horario.strftime("%H%M%S")}#{tipo.upcase.gsub(/\s/, '')}#{paciente.nome_completo.upcase.gsub(/\s/, '')}#{id}
+END:VEVENT
+"
+  end
+
+  def self.calendario_ics(collection: all)
+    "BEGIN:VCALENDAR
+VERSION:2.0
+#{collection.map(&:evento_ics).join('')}
+END:VCALENDAR"
   end
 end

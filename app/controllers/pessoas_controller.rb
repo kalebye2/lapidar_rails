@@ -6,7 +6,11 @@ class PessoasController < ApplicationController
   # GET /pessoas or /pessoas.json
   def index
     if params[:q].present?
+      if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
       @pessoas = Pessoa.where("LOWER(CONCAT(nome, ' ', COALESCE(nome_do_meio, ''), ' ', sobrenome)) LIKE ?", "%#{params[:q].to_s.downcase}%")
+      else
+        @pessoas = Pessoa.where("LOWER(nome || ' ' || COALESCE(nome_do_meio, '') || sobrenome) LIKE ?", "%#{params[:q].to_s.downcase}%")
+      end
     else
       @pessoas = Pessoa.all.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc)
       @pagy, @pessoas = pagy(@pessoas, items: 9)
@@ -14,6 +18,7 @@ class PessoasController < ApplicationController
 
     if params[:ajax].present?
       @numero_cadastros = params[:q].present? ? "#{@pessoas.count} cadastros encontrados" : nil
+      #@numero_cadastros = 0
       render partial: "pessoas/pessoas-container", locals: { pessoas: @pessoas }
     else
     end

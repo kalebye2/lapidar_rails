@@ -1,3 +1,7 @@
+<% if !profissional.acompanhamentos_em_andamento.empty? %>
+<h4>
+  Em andamento
+</h4>
 <ul>
 <% profissional.acompanhamentos_em_andamento.order(data_inicio: :desc).each do |a| %>
   <%= link_to a, class: "#{a.data_final && !a.acompanhamento_finalizacao_motivo.nil? ? 'acompanhamento-finalizado ' + 'acompanhamento-finalizado-' + a.acompanhamento_finalizacao_motivo.motivo.parameterize : 'acompanhamento-em-andamento'}" do %>
@@ -12,7 +16,10 @@
   <% end %>
 <% end %>
 </ul>
+<% end %>
+
 <% if !profissional.acompanhamentos_finalizados.empty? %>
+  <h4>Finalizados</h4>
   <ul>
     <% profissional.acompanhamentos_finalizados.order(data_final: :desc).each do |a| %>
       <%= link_to a, class: "#{a.data_final && !a.acompanhamento_finalizacao_motivo.nil? ? 'acompanhamento-finalizado ' + 'acompanhamento-finalizado-' + a.acompanhamento_finalizacao_motivo.motivo.parameterize : 'acompanhamento-em-andamento'}" do %>

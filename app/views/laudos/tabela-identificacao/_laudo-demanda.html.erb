@@ -3,5 +3,5 @@
 <% else %>
   <div hx-get="<%= demanda_edit_laudo_path(laudo) %>" hx-target="#laudo-demanda" style="text-align:justify;">
 <% end %>
-<%== markdown_to_html laudo.demanda.to_s.gsub(/{%\s+paciente\s+%}/, laudo.paciente.nome_completo) || "Não definida" %>
+<%== markdown_to_html laudo.demanda.to_s.gsub(/{%\s*paciente\s*%}/, laudo.paciente.nome_completo) || "Não definida" %>
 </div>

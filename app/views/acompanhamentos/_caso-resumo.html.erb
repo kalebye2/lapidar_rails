@@ -1,3 +1,4 @@
+<% usuario = usuario_atual.secretaria? || usuario_atual.profissional == acompanhamento.profissional %>
 <% if acompanhamento != nil %>
   <table class="tabela" id="tabela-caso-resumo">
     <caption>
@@ -15,6 +16,8 @@
         <th>Modalidade de atendimento</th>
         <th>Tipo de atendimento</th>
         <th>Status</th>
+        <th>Local</th>
+        <th>Valor</th>
         <th width="30%">Anotações do profissional</th>
         <th>Instrumentos usados</th>
         <% if @acompanhamento.profissional_id == usuario_atual.profissional_id || usuario_atual.secretaria? %>
@@ -24,26 +27,40 @@
     </thead>
     <tbody>
     <% acompanhamento.atendimentos.order(data: :desc, horario: :desc).each do |a| %>
-      <tr>
+      <% path_ajax = atendimento_path(a, ajax: true, authenticity_token: form_authenticity_token.to_s) %>
+      <tr id="<%= dom_id(a) %>">
         <td id="<%= dom_id(a) %>_data"><%= render "atendimentos/data_show", atendimento: a %></td>
         <td id="<%= dom_id(a) %>_horario"><%= render "atendimentos/horario_show", atendimento: a %></td>
-        <td><%= a.modalidade.upcase %></td>
-        <td><%= a.tipo.upcase %></td>
+        <td>
+          <% if usuario %>
+            <%== hx_select options: AtendimentoModalidade.all.map { |modalidade| [modalidade.modalidade.upcase, modalidade.id]} , value: a.modalidade_id, patch: path_ajax, name: "atendimento[modalidade_id]", target: "##{dom_id(a)}", swap: "outerHTML" %>
+          <% else %>
+            <%= a.modalidade.upcase %>
+          <% end %>
+        </td>
+        <td>
+          <% if usuario %>
+            <%== hx_select options: AtendimentoTipo.all.map { |tipo| [tipo.tipo.upcase, tipo.id]}, value: a.atendimento_tipo_id, patch: path_ajax, name: "atendimento[atendimento_tipo_id]", target: "##{dom_id(a)}", swap: "outerHTML" %>
+          <% else %>
+            <%= a.tipo.upcase %>
+          <% end %>
+        </td>
         <td id="<%= dom_id(a) %>_status">
           <%= render "atendimentos/status_show", atendimento: a %>
+        </td>
+        <td class="text-center">
+          <%= render "atendimentos/local_show", atendimento: a %>
+        </td>
+        <td>
+          <%= render "atendimentos/valor_show", atendimento: a %>
         </td>
         <td id="<%= dom_id(a) %>_anotacoes">
         <%= render "atendimentos/anotacoes_show", atendimento: a %>
         </td>
-        <td><%= render "atendimentos/instrumentos_aplicados_show", atendimento: a %></td>
+        <td><%= render "atendimentos/instrumentos", atendimento: a %></td>
         <% if usuario_atual.secretaria? || usuario_atual.profissional == a.profissional %>
-          <td id="<%= dom_id(a) %>_opcoes" hx-swap-oob="true">
-            <%= link_to "Visualizar", a %><br>
-            <%#= link_to "Excluir", atendimento_path(a), method: :delete, data: {confirm: "Tem certeza?"} %>
-            <a hx-confirm="Tem certeza?" hx-delete="<%= atendimento_path(a, authenticity_token: form_authenticity_token.to_s, ajax: true) %>", hx-target="#caso-resumo">Excluir</a>
-            <% if a.presenca %><br>
-              <%= link_to "Declaração (markdown)", declaracao_comparecimento_atendimento_path(a, format: :md) %>
-            <% end %>
+          <td id="<%= dom_id(a) %>">
+            <%= render "atendimentos/opcoes", atendimento: a %>
           </td>
         <% end %>
       </tr>

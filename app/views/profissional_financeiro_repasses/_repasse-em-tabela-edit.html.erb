@@ -1,0 +1,45 @@
+<tr id="<%= dom_id(repasse) %>">
+  <td class="text-center">
+    <%#== hx_select name: "profissional_financeiro_repasse[profissional_id]", options: Profissional.all.map { |profissional| [profissional.descricao_completa, profissional.id] }, value: repasse.profissional_id %>
+    <select name="profissional_financeiro_repasse[profissional_id]">
+      <% Profissional.all.each do |profissional| %>
+        <option value="<%= profissional.id %>" <%= profissional.id == repasse.profissional_id ? "selected" : "" %>>
+        <%= profissional.descricao_completa %>
+        </option>
+      <% end %>
+    </select>
+  </td>
+
+  <td>
+    <%#== hx_input type:"date", name: "profissional_financeiro_repasse[data]", value: repasse.data %>
+    <input type="date" name="profissional_financeiro_repasse[data]" value="<%= repasse.data || Date.today %>">
+  </td>
+
+  <td>
+    <%#== hx_input type:"number", name: "profissional_financeiro_repasse[valor]", value: repasse.valor %>
+    <input type="number" name="profissional_financeiro_repasse[valor]" value="<%= repasse.valor %>">
+  </td>
+
+  <td class="text-center">
+    <select name="profissional_financeiro_repasse[modalidade_id]">
+      <% PagamentoModalidade.all.each do |modalidade| %>
+        <option value="<%= modalidade.id %>" <%= !repasse.modalidade_id.nil? && modalidade.id == repasse.modalidade_id ? "selected" : "" %>>
+        <%= modalidade.modalidade %>
+        </option>
+      <% end %>
+    </select>
+  </td>
+
+  <td>
+    <%= repasse.id.nil? %>
+    <% if repasse.id.nil? %>
+      <button <%== hx_set post: profissional_financeiro_repasses_path(tabela: true, authenticity_token: form_authenticity_token.to_s), includes: "closest tr", swap: "outerHTML", target: "#tabela-repasses", select: "#tabela-repasses" %>>
+        Criar
+      </button>
+    <% else %>
+      <button <%== hx_set patch: profissional_financeiro_repasse_path(repasse, tabela: true, authenticity_token: form_authenticity_token.to_s), includes: "closest tr", target: "##{dom_id(repasse)}", swap: "outerHTML" %>>Confirmar</button>
+      <br>
+      <button <%== hx_set get: profissional_financeiro_repasse_path(repasse, tabela: true), swap: "outerHTML", target: "##{dom_id(repasse)}" %>>Cancelar</button>
+    <% end %>
+  </td>
+</tr>

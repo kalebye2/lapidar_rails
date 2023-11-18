@@ -17,4 +17,15 @@ class ApplicationRecord < ActiveRecord::Base
   def test
     
   end
+
+  def self.concat(*args)
+    case Rails.configuration.database_configuration[Rails.env]["adapter"].downcase
+    when "mysql"
+      "CONCAT(#{args * ', '})"
+    when "sqlserver"
+      args * ' + '
+    else
+      args * " || "
+    end
+  end
 end

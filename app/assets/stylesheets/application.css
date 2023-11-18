@@ -89,6 +89,10 @@
 	--atendimento-em-breve-medium-color: orange;
 	--atendimento-em-breve-medium-light-color: #ffffcc;
 	--atendimento-em-breve-dark-color: darkorange;
+	--atendimento-na-hora-light-color: yellow;
+	--atendimento-na-hora-medium-color: gray;
+	--atendimento-na-hora-medium-light-color: #ccc;
+	--atendimento-na-hora-dark-color: darkorange;
 
 
 	/* fontes (talvez alterar com temas?) */
@@ -156,6 +160,10 @@
 	--atendimento-em-breve-shade-color: var(--atendimento-em-breve-medium-color);
 	--atendimento-em-breve-highlight-color: var(--atendimento-em-breve-medium-light-color);
 	--atendimento-em-breve-text-color: var(--atendimento-em-breve-dark-color);
+	--atendimento-na-hora-bg-color: var(--atendimento-na-hora-light-color);
+	--atendimento-na-hora-shade-color: var(--atendimento-na-hora-medium-color);
+	--atendimento-na-hora-highlight-color: var(--atendimento-na-hora-medium-light-color);
+	--atendimento-na-hora-text-color: var(--atendimento-na-hora-dark-color);
 }
 
 .dark {
@@ -216,6 +224,10 @@
 	--atendimento-em-breve-shade-color: var(--atendimento-em-breve-dark-color);
 	--atendimento-em-breve-highlight-color: var(--atendimento-em-breve-dark-color);
 	--atendimento-em-breve-text-color: var(--atendimento-em-breve-light-color);
+	--atendimento-na-hora-bg-color: var(--atendimento-na-hora-medium-color);
+	--atendimento-na-hora-shade-color: var(--atendimento-na-hora-dark-color);
+	--atendimento-na-hora-highlight-color: var(--atendimento-na-hora-dark-color);
+	--atendimento-na-hora-text-color: var(--atendimento-na-hora-light-color);
 }
 
 

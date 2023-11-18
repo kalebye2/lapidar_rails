@@ -81,7 +81,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
 
   create_table "atendimentos", force: :cascade do |t|
     t.date "data"
+    t.date "data_fim"
     t.time "horario"
+    t.time "horario_fim"
     t.integer "modalidade_id", null: false
     t.integer "acompanhamento_id", null: false
     t.boolean "presenca"
@@ -89,7 +91,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "anotacoes"
     t.integer "atendimento_local_id"
     t.boolean "reagendado", default: false
-    t.time "horario_fim"
     t.text "avancos"
     t.text "limitacoes"
   end
@@ -674,6 +675,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "valor", default: 0, null: false
     t.date "data", default: -> { "CURRENT_DATE" }, null: false
     t.integer "modalidade_id", default: 1, null: false
+    t.integer "taxa_porcentagem_clinica", default: 0
   end
 
   create_table "subtestes", force: :cascade do |t|

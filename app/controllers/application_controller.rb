@@ -1,10 +1,21 @@
 class ApplicationController < ActionController::Base
-  before_action :set_atendimentos, only: %i[ index update_tabela_atendimentos_hoje update_calendario_atendimentos_semnana ]
+  before_action :set_atendimentos, only: %i[ update_tabela_atendimentos_hoje update_calendario_atendimentos_semnana ]
 
   def init
   end
 
   def index
+    @database_exists = database_exists?
+    if @database_exists
+      set_atendimentos
+    end
+  end
+
+  def configurar
+    case params[:p]
+    when 'tabelas'
+      render html: "<h1>Tabelas</h1>"
+    end
   end
 
   def ajuda
@@ -98,4 +109,15 @@ class ApplicationController < ActionController::Base
     @atendimentos_hoje = Atendimento.de_hoje
   end
 
+  def database_exists?
+    ActiveRecord::Base.connection
+  rescue ActiveRecord::NoDatabaseError
+    false
+  else
+    !database_empty?
+  end
+
+  def database_empty?
+    ActiveRecord::Base.connection.data_sources.empty?
+  end
 end

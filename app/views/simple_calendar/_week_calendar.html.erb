@@ -1,10 +1,13 @@
-<% url_previous = calendar.view_context.url_for(action: :update_calendario_atendimentos_semana, controller: :application, start_date: (calendar.date_range.first - calendar.date_range.count.days).iso8601) %>
-<% url_next = calendar.view_context.url_for(action: :update_calendario_atendimentos_semana, controller: :application, start_date: (calendar.date_range.last + 1.day).iso8601) %>
+<% url_previous = calendar.view_context.url_for(action: :index, controller: :application, start_date: (calendar.date_range.first - calendar.date_range.count.days).iso8601) %>
+<% url_next = calendar.view_context.url_for(action: :index, controller: :application, start_date: (calendar.date_range.last + 1.day).iso8601) %>
 <div class="simple-calendar">
   <div class="calendar-heading">
     <button hx-get="<%= url_previous %>"
             hx-target="#calendario-atendimentos-semana"
-            hx-swap="outerHTML">
+            hx-swap="outerHTML"
+            hx-select="#calendario-atendimentos-semana"
+            hx-replace-url="true"
+            >
             <%= t('simple_calendar.previous', default: 'Anterior') %>
     </button>
     <% if calendar.number_of_weeks == 1 %>
@@ -13,16 +16,31 @@
       <span class="calendar-title"><%= t('simple_calendar.week', default: 'Semana') %> <%= calendar.week_number %> - <%= calendar.end_week %></span>
     <% end %>
     <button hx-get="<%= url_next %>"
-            hx-target="#calendario-atendimentos-semana">
+            hx-target="#calendario-atendimentos-semana"
+            hx-swap="outerHTML"
+            hx-select="#calendario-atendimentos-semana"
+            hx-replace-url="true"
+            >
       <%= t('simple_calendar.next', default: 'Próximo') %>
     </button>
   </div>
+
   <button
-    hx-get="/update_calendario_atendimentos_semana?start_date=<%= calendar.date_range.first.iso8601 %>"
+    hx-get="?start_date=<%= calendar.date_range.first.iso8601 %>"
     hx-target="#calendario-atendimentos-semana"
     hx-swap="outerHTML"
+    hx-select="#calendario-atendimentos-semana"
     class="">
     Recarregar semana
+  </button>
+  
+  <button
+      hx-get="/"
+      hx-target="#calendario-atendimentos-semana"
+      hx-swap="outerHTML"
+      hx-select="#calendario-atendimentos-semana"
+      class="">
+    Semana atual
   </button>
 
   <table class="table table-striped">

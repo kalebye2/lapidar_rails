@@ -24,6 +24,7 @@ class Profissional < ApplicationRecord
   scope :com_atendimentos_futuros, -> { joins(:atendimentos).where("atendimentos.data" => Date.today.. )}
   scope :ordem_alfabetica, -> { joins(:pessoa).order("pessoas.nome" => :asc, "pessoas.nome_do_meio" => :asc, "pessoas.sobrenome" => :asc) }
 
+
   def clientes
     pacientes
   end
@@ -103,4 +104,49 @@ class Profissional < ApplicationRecord
     #atendimentos.where("DATEDIFF(data, CURRENT_DATE) > 0 OR (DATEDIFF(data, CURRENT_DATE) = 0 AND HOUR(horario) > HOUR(CURRENT_TIME))").order(data: :asc, horario: :asc)
     atendimentos.where(data: Date.today..)
   end
+
+  def financeiro_soma_atendimentos de: Date.today.beginning_of_month, ate: Date.today.end_of_month
+    atendimento_valores.joins(:atendimento).where(atendimento: { data: de.to_date..ate.to_date }).sum(:valor)
+  end
+
+  def financeiro_soma_atendimentos_todos
+    atendimento_valores.sum(:valor)
+  end
+
+  def financeiro_soma_liquida_atendimentos_todos
+    atendimento_valores.sum("valor - (valor * taxa_porcentagem_externa / 10000) - (valor * taxa_porcentagem_interna / 10000)")
+  end
+
+  def financeiro_soma_taxa_clinica de: Date.today.beginning_of_month, ate: Date.today.end_of_month
+    atendimento_valores.joins(:atendimento).where(atendimento: {data: de.to_date..ate.to_date}).sum("valor * taxa_porcentagem_interna / 10000")
+  end
+
+  def financeiro_soma_taxa_clinica_todos
+    atendimento_valores.sum("valor * taxa_porcentagem_interna / 10000")
+  end
+
+  def financeiro_soma_taxa_externa de: Date.today.beginning_of_month, ate: Date.today.end_of_month
+    atendimento_valores.joins(:atendimento).where(atendimento: {data: de.to_date..ate.to_date}).sum("valor * taxa_porcentagem_externa / 10000")
+  end
+
+  def financeiro_soma_taxa_externa_todos
+    atendimento_valores.sum("valor * taxa_porcentagem_externa / 10000")
+  end
+
+  def financeiro_soma_liquida_atendimentos de: Date.today.beginning_of_month, ate: Date.today.end_of_month
+    atendimento_valores.joins(:atendimento).where(atendimento: { data: de.to_date..ate.to_date }).sum("valor - (valor * taxa_porcentagem_externa / 10000) - (valor * taxa_porcentagem_interna / 10000)")
+  end
+
+  def financeiro_soma_repasses
+    repasses.sum(:valor)
+  end
+
+  def financeiro_soma_recebimentos
+    recebimentos.sum(:valor)
+  end
+
+  def financeiro_clinica_deve
+    recebimentos.sum("valor - (valor * taxa_porcentagem_clinica / 10000)") - repasses.sum(:valor)
+  end
+
 end

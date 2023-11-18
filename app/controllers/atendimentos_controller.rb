@@ -1,5 +1,6 @@
 class AtendimentosController < ApplicationController
-  before_action :set_atendimento, only: %i[ show edit update destroy reagendar_para_proxima_semana gerar_atendimento_valor create_atendimento_valor anotacoes_update anotacoes anotacoes_edit data data_update data_edit horario horario_update horario_edit status status_edit status_update declaracao_comparecimento ]
+
+  before_action :set_atendimento, only: %i[ show edit update destroy reagendar_para_proxima_semana gerar_atendimento_valor create_atendimento_valor anotacoes_update anotacoes anotacoes_edit data data_update data_edit horario horario_update horario_edit status status_edit status_update declaracao_comparecimento modelo_relato ]
   before_action :validar_usuario
   before_action :validar_edicao, only: %i[ show edit update destroy reagendar_para_proxima_semana gerar_atendimento_valor ]
 
@@ -47,6 +48,10 @@ class AtendimentosController < ApplicationController
       valor.valor = @atendimento.acompanhamento.valor_atual
       valor.save
     end
+
+    if params[:ajax].present?
+      render partial: "atendimentos/atendimento-tabela-form", locals: {atendimento: @atendimento}
+    end
   end
 
   def update
@@ -56,7 +61,7 @@ class AtendimentosController < ApplicationController
           if !params.has_key?(:ajax)
             redirect_to acompanhamento_url(@atendimento.acompanhamento), notice: "Atendimento atualizado com sucesso."
           else
-            render partial: "atendimentos/atendimento-em-tabela", locals: {atendimento: @atendimento}
+            render partial: "atendimentos/atendimento-tabela-form", locals: {atendimento: @atendimento}
           end
         end
         format.json { render :show, status: :ok, location: @atendimento }
@@ -85,7 +90,12 @@ class AtendimentosController < ApplicationController
 
   def status_update
     if @atendimento.update(atendimento_params)
-      status
+      #status
+      if params.has_key?(:main)
+        render partial: "atendimentos/atendimento-em-tabela", locals: {atendimento: @atendimento}
+      else
+      render partial: "atendimentos/atendimento-tabela-form", locals: {atendimento: @atendimento}
+      end
     else
       status
     end
@@ -186,6 +196,18 @@ class AtendimentosController < ApplicationController
         nome_documento = "#{@atendimento.pessoa.nome_completo.parameterize}_declaracao_#{hoje}"
         
         response.headers['Content-Type'] = 'text/markdown'
+        #response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.md"
+      end
+    end
+  end
+
+  def modelo_relato
+    respond_to do |format|
+      format.html
+      format.md do
+        nome_documento = "#{@atendimento.data}_#{@atendimento.horario.strftime("%H%M")}"
+
+        response.headers['Content-Type'] = 'text/markdown'
         response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.md"
       end
     end
@@ -202,7 +224,7 @@ class AtendimentosController < ApplicationController
   end
 
   def validar_usuario
-    if usuario_atual.nil? || !(usuario_atual.corpo_clinico? || usuario_atual.secretaria?)
+    if usuario_atual.nil? || !((usuario_atual.corpo_clinico? && usuario_atual == @atendimento.profissional.usuario) || usuario_atual.secretaria?)
       render file: "#{Rails.root}/public/404.html", status: 403
       return
     end

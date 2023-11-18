@@ -244,7 +244,7 @@ class InfantojuvenilAnamnesesController < ApplicationController
   end
 
   def escola_historico_params
-    params.require(:escola_historico).permit(InfantojuvenilAnamneseManipulacao.attribute_names.map(&:to_sym))
+    params.require(:escola_historico).permit(InfantojuvenilAnamneseEscolaHistorico.attribute_names.map(&:to_sym))
   end
 
   def sexualidade_params

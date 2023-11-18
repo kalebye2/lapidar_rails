@@ -35,19 +35,19 @@
 
 
 <% dict_select.each do |k,v| %>
-  <%== hx_tr_select patch: caminho_ajax, name: "manipulacao[#{k}]", th: (html_escape v), id: "#{id = "#{cl}-#{k}"}", select: "##{id}", target: "##{id}", swap: "outerHTML", value: manipulacao.attributes[k.to_s] %>
+  <%== hx_tr_select patch: caminho_ajax, name: "manipulacao[#{k}]", th: (html_escape v), id: "#{id = "#{cl}-#{k}"}", select: "##{id}", target: "##{id}", swap: "outerHTML", value: manipulacao.attributes[k.to_s], html_class: cl %>
 <% end %>
 
 <% dict_number.each do |k,v| %>
-  <%== hx_tr_number patch: caminho_ajax, name: "manipulacao[#{k}]", th: (h v), value: (html_escape manipulacao.attributes[k]), id: "#{id = "#{cl}-#{k}"}", target: "##{id}", select: "##{id}", swap: "outerHTML" %>
+  <%== hx_tr_number patch: caminho_ajax, name: "manipulacao[#{k}]", th: (h v), value: (html_escape manipulacao.attributes[k]), id: "#{id = "#{cl}-#{k}"}", target: "##{id}", select: "##{id}", swap: "outerHTML", html_class: cl %>
 <% end %>
 
 <% dict_text.each do |k,v| %>
-  <%== hx_tr_text patch: caminho_ajax, name: "manipulacao[#{k}]", th: (h v), value: (html_escape manipulacao.attributes[k]), id: "#{id = "#{cl}-#{k}"}", target: "##{id}", select: "##{id}", swap: "outerHTML", placeholder: "Descreva..." %>
+  <%== hx_tr_text patch: caminho_ajax, name: "manipulacao[#{k}]", th: (h v), value: (html_escape manipulacao.attributes[k]), id: "#{id = "#{cl}-#{k}"}", target: "##{id}", select: "##{id}", swap: "outerHTML", placeholder: "Descreva...", html_class: cl %>
 <% end %>
 
 <% dict_textarea.each do |k,v| %>
-  <%== hx_tr_textarea patch: caminho_ajax, name: "manipulacao[#{k}]", th: (h v), texto: manipulacao.attributes[k.to_s], placeholder: v %>
+  <%== hx_tr_textarea patch: caminho_ajax, name: "manipulacao[#{k}]", th: (h v), texto: manipulacao.attributes[k.to_s], placeholder: v, html_class: cl %>
 <% end %>
 
 <% else %>

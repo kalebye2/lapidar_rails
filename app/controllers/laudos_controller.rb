@@ -43,8 +43,12 @@ class LaudosController < ApplicationController
   def update
     respond_to do |format|
       if @laudo.update(laudo_params)
+        if params[:ajax].present?
+          format.html { render :show }
+        else
         format.html { redirect_to laudo_url(@laudo), notice: "laudo was successfully updated." }
         format.json { render :show, status: :ok, location: @laudo }
+        end
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @laudo.errors, status: :unprocessable_entity }
@@ -149,7 +153,7 @@ class LaudosController < ApplicationController
   end
 
   def laudo_params
-    params.require(:laudo).permit(:acompanhamento_id, :interessado, :data_avaliacao, :finalidade, :demanda, :tecnicas, :analise, :conclusao, :referencias)
+    params.require(:laudo).permit(:acompanhamento_id, :interessado, :data_avaliacao, :finalidade, :demanda, :tecnicas, :analise, :conclusao, :referencias, :fechado)
   end
 
   def validar_usuario

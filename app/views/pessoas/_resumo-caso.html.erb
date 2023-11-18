@@ -8,6 +8,7 @@
       <th>Motivo do acompanhamento</th>
       <th>Status do atendimento</th>
       <th>Anotações do profissional</th>
+      <th>Instrumentos usados</th>
       <th>Ações</th>
     </tr>
   </thead>
@@ -20,8 +21,19 @@
         <td><%= a.acompanhamento.motivo %></td>
         <td><%= a.status %></td>
         <td><%== markdown_to_html a.consideracoes || "Sem anotações" %></td>
+        <td>
+          <% if a.instrumentos.count == 0 %>
+            <center>-</center>
+          <% else %>
+            <ul>
+              <% a.instrumentos.each do |instrumento| %>
+                <li><%= instrumento.nome %></li>
+              <% end %>
+            </ul>
+          <% end %>
+        </td>
         <% if usuario_atual.profissional == a.profissional %>
-          <td><%= link_to "visualizar", a %></td>
+          <td><%= link_to "visualizar", a.acompanhamento %></td>
         <% else %>
           <td></td>
         <% end %>

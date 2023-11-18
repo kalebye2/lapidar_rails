@@ -1,0 +1,28 @@
+<% atendimento_valor = atendimento.atendimento_valor %>
+<% usuario_pode_mudar = usuario_atual.profissional == atendimento.profissional || usuario_atual.financeiro? %>
+<% if atendimento_valor.nil? %>
+       <% if usuario_pode_mudar %>
+              <button <%== hx_set post: create_atendimento_valor_atendimento_path(ajax: true, authenticity_token: form_authenticity_token.to_s), swap: "outerHTML", target: "##{dom_id(atendimento)}" %>>Gerar valor de atendimento</button>
+            <% else %>
+              Não há registro de valor.
+            <% end %>
+<% else %>
+<% if usuario_pode_mudar %>
+  <form <%== hx_set patch: atendimento_path(atendimento, ajax: true, authenticity_token: form_authenticity_token), trigger: "change", swap: "outerHTML", target: "##{dom_id(atendimento)}" %>>
+
+  <label for="atendimento[atendimento_valor_attributes][valor]">Valor</label>
+    <input type="number" value="<%= atendimento_valor.valor %>" name="atendimento[atendimento_valor_attributes][valor]">
+
+  <label for="atendimento[atendimento_valor_attributes][desconto]">Desconto</label>
+    <input type="number" value="<%= atendimento_valor.desconto %>" name="atendimento[atendimento_valor_attributes][desconto]">
+
+    <label for="atendimento[atendimento_valor_attributes][taxa_porcentagem_externa]">Taxa externa (%)</label>
+    <input type="number" value="<%= atendimento_valor.taxa_porcentagem_externa %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_externa]">
+
+  <label for="atendimento[atendimento_valor_attributes][taxa_porcentagem_interna]">Taxa interna (%)</label>
+    <input type="number" value="<%= atendimento_valor.taxa_porcentagem_interna %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_interna %>">
+  </form>
+<% else %>
+  <%= render_dinheiro_centavos atendimento.atendimento_valor.valor %>
+<% end %>
+<% end %>

@@ -10,7 +10,7 @@
   <th>Com quantos meses a criança sorriu?</th>
   <td id="<%= curr_id %>">
     <% if usuario %>
-      <%== hx_number name: "psicomotricidade[sorriu_meses]", number: psicomotricidade.sorriu_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
+      <%== hx_number name: "psicomotricidade[sorriu_meses]", value: psicomotricidade.sorriu_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
     <% else %>
       <%= deixar_no_plural psicomotricidade.sorriu_meses, 'mês', 'meses' %>
     <% end %>
@@ -22,7 +22,7 @@
   <th>Com quantos meses a criança começou a se dirigir aos outros?</th>
   <td id="<%= curr_id %>">
     <% if usuario %>
-      <%== hx_number name: "psicomotricidade[dirigir_ativamente_pessoas_meses]", number: psicomotricidade.dirigir_ativamente_pessoas_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
+      <%== hx_number name: "psicomotricidade[dirigir_ativamente_pessoas_meses]", value: psicomotricidade.dirigir_ativamente_pessoas_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
     <% else %>
       <%= deixar_no_plural psicomotricidade.dirigir_ativamente_pessoas_meses, 'mês', 'meses' %>
     <% end %>
@@ -34,7 +34,7 @@
   <th>Com quantos meses a criança ergueu a cabeça?</th>
   <td id="<%= curr_id %>">
     <% if usuario %>
-      <%== hx_number name: "psicomotricidade[ergueu_cabeca_meses]", number: psicomotricidade.ergueu_cabeca_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
+      <%== hx_number name: "psicomotricidade[ergueu_cabeca_meses]", value: psicomotricidade.ergueu_cabeca_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
     <% else %>
       <%= deixar_no_plural psicomotricidade.ergueu_cabeca_meses, 'mês', 'meses' %>
     <% end %>
@@ -46,7 +46,7 @@
   <th>Com quantos meses a criança sentou?</th>
   <td id="<%= curr_id %>">
     <% if usuario %>
-      <%== hx_number name: "psicomotricidade[sentou_meses]", number: psicomotricidade.sentou_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
+      <%== hx_number name: "psicomotricidade[sentou_meses]", value: psicomotricidade.sentou_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
     <% else %>
       <%= deixar_no_plural psicomotricidade.sentou_meses, 'mês', 'meses' %>
     <% end %>
@@ -58,7 +58,7 @@
   <th>Com quantos meses a criança engatinhou?</th>
   <td id="<%= curr_id %>">
     <% if usuario %>
-      <%== hx_number name: "psicomotricidade[engatinhou_meses]", number: psicomotricidade.engatinhou_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
+      <%== hx_number name: "psicomotricidade[engatinhou_meses]", value: psicomotricidade.engatinhou_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
     <% else %>
       <%= deixar_no_plural psicomotricidade.engatinhou_meses, 'mês', 'meses' %>
     <% end %>
@@ -70,7 +70,7 @@
   <th>Com quantos meses a criança andou?</th>
   <td id="<%= curr_id %>">
     <% if usuario %>
-      <%== hx_number name: "psicomotricidade[andou_meses]", number: psicomotricidade.andou_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
+      <%== hx_number name: "psicomotricidade[andou_meses]", value: psicomotricidade.andou_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
     <% else %>
       <%= deixar_no_plural psicomotricidade.andou_meses, 'mês', 'meses' %>
     <% end %>
@@ -82,7 +82,7 @@
   <th>Com quantos meses apareceu a dentição?</th>
   <td id="<%= curr_id %>">
     <% if usuario %>
-      <%== hx_number name: "psicomotricidade[denticao_meses]", number: psicomotricidade.denticao_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
+      <%== hx_number name: "psicomotricidade[denticao_meses]", value: psicomotricidade.denticao_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
     <% else %>
       <%= deixar_no_plural psicomotricidade.denticao_meses, 'mês', 'meses' %>
     <% end %>
@@ -106,7 +106,7 @@
   <th>Com quantos meses a criança teve controle do esfíncter (cocô) durante o dia?</th>
   <td id="<% curr_id %>">
     <% if usuario %>
-      <%== hx_number name: "psicomotricidade[controle_esfincter_diurno_meses]", number: psicomotricidade.controle_esfincter_diurno_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
+      <%== hx_number name: "psicomotricidade[controle_esfincter_diurno_meses]", value: psicomotricidade.controle_esfincter_diurno_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
     <% else %>
       <%= deixar_no_plural psicomotricidade.controle_esfincter_diurno_meses, 'mês', 'meses' %>
     <% end %>
@@ -118,7 +118,7 @@
   <th>Com quantos meses a criança teve controle do esfíncter (cocô) durante a noite?</th>
   <td id="<% curr_id %>">
     <% if usuario %>
-      <%== hx_number name: "psicomotricidade[controle_esfincter_noturno_meses]", number: psicomotricidade.controle_esfincter_noturno_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
+      <%== hx_number name: "psicomotricidade[controle_esfincter_noturno_meses]", value: psicomotricidade.controle_esfincter_noturno_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
     <% else %>
       <%= deixar_no_plural psicomotricidade.controle_esfincter_noturno_meses, 'mês', 'meses' %>
     <% end %>
@@ -130,7 +130,7 @@
   <th>Com quantos meses a criança teve controle vesical (xixi) durante o dia?</th>
   <td id="<% curr_id %>">
     <% if usuario %>
-      <%== hx_number name: "psicomotricidade[controle_vesical_diurno_meses]", number: psicomotricidade.controle_vesical_diurno_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
+      <%== hx_number name: "psicomotricidade[controle_vesical_diurno_meses]", value: psicomotricidade.controle_vesical_diurno_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
     <% else %>
       <%= deixar_no_plural psicomotricidade.controle_vesical_diurno_meses, 'mês', 'meses' %>
     <% end %>
@@ -142,7 +142,7 @@
   <th>Com quantos meses a criança teve controle vesical (xixi) durante o dia?</th>
   <td id="<% curr_id %>">
     <% if usuario %>
-      <%== hx_number name: "psicomotricidade[controle_vesical_noturno_meses]", number: psicomotricidade.controle_vesical_noturno_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
+      <%== hx_number name: "psicomotricidade[controle_vesical_noturno_meses]", value: psicomotricidade.controle_vesical_noturno_meses, select: "##{curr_id}", target: "##{curr_id}", patch: caminho_ajax, swap: "outerHTML", trigger: "change delay:500ms" %>
     <% else %>
       <%= deixar_no_plural psicomotricidade.controle_vesical_noturno_meses, 'mês', 'meses' %>
     <% end %>

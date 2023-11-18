@@ -78,20 +78,28 @@ module ApplicationHelper
   end
 
   # HTMX
-  def hx_set(get: "", patch: "", put: "", post: "", select: "", target: "", swap: "", swap_oob: "", trigger: "", id: "", class_name: "")
+  def hx_set get: "", patch: "", put: "", post: "", select: "", target: "", swap: "", swap_oob: "", trigger: "", id: "", html_class: "", replace_url: false, confirm: "", delete: "", includes: ""
     {
       "hx-get" => get,
       "hx-patch" => patch,
       "hx-put" => put,
       "hx-post" => post,
+      "hx-delete" => delete,
+      "hx-confirm" => confirm,
       "hx-trigger" => trigger,
       "hx-select" => select,
       "hx-target" => target,
       "hx-swap" => swap,
       "swap-oob" => swap_oob,
       id: id,
-      class: class_name,
+      class: html_class,
+      "hx-replace-url" => replace_url,
+      "hx-include" => includes,
     }.map{ |k,v| v.to_s.blank? ? "" : "#{k}=\"#{v}\"" }.join(' ')
+  end
+
+  def hx_link body = "Link", url = "", html_options = {}, verb: "get", &block
+    "<a hx-#{verb}=\"#{url}\" #{html_options.map { |k,v| "#{k}=\"#{h v}\""}.join(' ')}>#{h body}</a>"
   end
 
   # formularios ajax HTMX
@@ -113,7 +121,7 @@ module ApplicationHelper
     "<textarea #{dict.map{ |k,v| v.to_s.blank? ? "" : "#{k}=\"#{v}\""}.join(" ")}>#{texto}</textarea>"
   end
 
-  def hx_input placeholder: "", get: "", patch: "", put: "", post: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", name: "", value: "", type: "text"
+  def hx_input placeholder: "", get: "", patch: "", put: "", post: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", name: "", value: "", type: "text", label: "", replace_url: false
     dict = {
       "hx-get" => get,
       "hx-patch" => patch,
@@ -125,8 +133,9 @@ module ApplicationHelper
       "hx-swap" => swap,
       "hx-swap-oob" => swap_oob,
       :name => name,
+      "hx-replace-url" => replace_url,
     }
-    "<input type=\"#{type}\" #{dict.map{ |k,v| v.to_s.blank? ? "" : "#{k}=\"#{v}\""}.join(" ")} value=\"#{html_escape value.blank? && !texto.blank? ? texto : value}\">"
+    "#{label.empty? ? '' : "<label for=\"#{name}\">#{label}</label>"}<input type=\"#{type}\" #{dict.map{ |k,v| v.to_s.blank? ? "" : "#{k}=\"#{v}\""}.join(" ")} value=\"#{h value}\">"
   end
 
   def hx_text placeholder: "Descreva...", get: "", patch: "", put: "", post: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", texto: "", name: "", value: ""
@@ -145,7 +154,7 @@ module ApplicationHelper
     "<input type=\"text\" #{dict.map{ |k,v| v.to_s.blank? ? "" : "#{k}=\"#{v}\""}.join(" ")} value=\"#{html_escape value.blank? && !texto.blank? ? texto : value}\">"
   end
 
-  def hx_number placeholder: "Descreva...", get: "", patch: "", put: "", post: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", number: "", name: ""
+  def hx_number placeholder: "Descreva...", get: "", patch: "", put: "", post: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", value: "", name: ""
     dict = {
       "hx-get" => get,
       "hx-patch" => patch,
@@ -158,7 +167,7 @@ module ApplicationHelper
       "hx-swap-oob" => swap_oob,
       :name => name,
     }
-    "<input type=\"number\" #{dict.map{ |k,v| v.to_s.blank? ? "" : "#{k}=\"#{v}\""}.join(" ")} value=\"#{number}\">"
+    "<input type=\"number\" #{dict.map{ |k,v| v.to_s.blank? ? "" : "#{k}=\"#{v}\""}.join(" ")} value=\"#{value}\">"
   end
 
   def hx_select get: "", patch: "", put: "", post: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", options: [["Sem informação", ""], ["Sim", 1], ["Não", 0]], name: "", value: ""
@@ -181,7 +190,7 @@ module ApplicationHelper
   end
 
   ## HTMX para formulários em tabela vertical
-  def hx_tr_select id: "", class_name: "", get: "", patch: "", post: "", put: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", options: [["Sem informação", ""], ["Sim", 1], ["Não", 0]], name: "", value: "", th: "", blank: false, blank_option: "[Escolha]"
+  def hx_tr_select id: "", html_class: "", get: "", patch: "", post: "", put: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", options: [["Sem informação", ""], ["Sim", 1], ["Não", 0]], name: "", value: "", th: "", blank: false, blank_option: "[Escolha]"
     hx_options = {
       "hx-get" => get,
       "hx-patch" => patch,
@@ -195,7 +204,8 @@ module ApplicationHelper
       :name => name,
     }
     options_str = options.map{ |k,v| "<option value=\"#{v}\" #{v.to_s == value.to_s ? "selected" : ""}>#{k}</option>"}.join("\n")
-    "<tr class=\"#{html_escape class_name}\">
+
+    "<tr class=\"#{html_escape html_class}\">
     <th>#{html_escape th}</th>
     <td id=\"#{html_escape id}\">
     <select #{hx_options.map{ |k,v| v.to_s.blank? ? "" : "#{html_escape k}=\"#{html_escape v}\""}.join(' ')}>
@@ -206,7 +216,7 @@ module ApplicationHelper
     </tr>"
   end
   
-  def hx_tr_number id: "", class_name: "", get: "", patch: "", post: "", put: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", number: "", name: "", value: "", th: "", placeholder: ""
+  def hx_tr_number id: "", html_class: "", get: "", patch: "", post: "", put: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", number: "", name: "", value: "", th: "", placeholder: ""
     hx_options = {
       "hx-get" => get,
       "hx-patch" => patch,
@@ -221,7 +231,7 @@ module ApplicationHelper
       :placeholder => placeholder,
     }
 
-    "<tr class=\"#{html_escape class_name}\">
+    "<tr class=\"#{html_escape html_class}\">
     <th>#{html_escape th}</th>
     <td id=\"#{html_escape id}\">
     <input type=\"number\" value=\"#{value.blank? && !number.blank? ? number : value}\" #{hx_options.map{ |k,v| v.to_s.blank? ? "" : "#{html_escape k}=\"#{html_escape v}\""}.join(" ")}>
@@ -229,7 +239,7 @@ module ApplicationHelper
     </tr>"
   end
   
-  def hx_tr_text id: "", class_name: "", get: "", patch: "", post: "", put: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", texto: "", name: "", value: "", th: "", placeholder: ""
+  def hx_tr_text id: "", html_class: "", get: "", patch: "", post: "", put: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", texto: "", name: "", value: "", th: "", placeholder: ""
     hx_options = {
       "hx-get" => get,
       "hx-patch" => patch,
@@ -244,7 +254,7 @@ module ApplicationHelper
       :placeholder => placeholder,
     }
 
-    "<tr class=\"#{html_escape class_name}\">
+    "<tr class=\"#{html_escape html_class}\">
     <th>#{html_escape th}</th>
     <td id=\"#{html_escape id}\">
     <input type=\"text\" value=\"#{value}\" #{hx_options.map{ |k,v| v.to_s.blank? ? "" : "#{html_escape k}=\"#{html_escape v}\""}.join(" ")}>
@@ -252,7 +262,7 @@ module ApplicationHelper
     </tr>"
   end
 
-  def hx_tr_textarea id: "", class_name: "", get: "", patch: "", post: "", put: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", texto: "", name: "", value: "", th: "", placeholder: "", cols: "50", rows: "10"
+  def hx_tr_textarea id: "", html_class: "", get: "", patch: "", post: "", put: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", texto: "", name: "", value: "", th: "", placeholder: "", cols: "50", rows: "10"
     hx_options = {
       "hx-get" => get,
       "hx-patch" => patch,
@@ -269,7 +279,7 @@ module ApplicationHelper
       :rows => rows,
     }
 
-    "<tr class=\"#{html_escape class_name}\">
+    "<tr #{h html_class} class=\"#{h html_class}\">
     <th>#{html_escape th}</th>
     <td id=\"#{html_escape id}\">
     <textarea #{hx_options.map{ |k,v| v.to_s.blank? ? "" : "#{html_escape k}=\"#{html_escape v}\""}.join(' ')}>#{texto}</textarea>

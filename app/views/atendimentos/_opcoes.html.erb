@@ -1,0 +1,16 @@
+<% if !atendimento %>
+  ERRO
+<% else %>
+  <% usuario = usuario_atual.secretaria? || usuario_atual.profissional == atendimento.profissional %>
+
+  <% if usuario %>
+      <%= link_to "Visualizar", atendimento_path(atendimento) %>
+      <%== hx_link "Excluir", atendimento_path(atendimento, ajax: true, authenticity_token: form_authenticity_token.to_s), {"hx-confirm" => "Tem certeza?"}, verb: "delete" %>
+  <% end %>
+
+  <% if atendimento.presenca %>
+    <%= link_to "Declaração (markdown)", declaracao_comparecimento_atendimento_path(atendimento) %>
+    <br>
+    <%= link_to "Modelo de relato (markdown)", modelo_relato_atendimento_path(atendimento, format: :md) %>
+  <% end %>
+<% end %>

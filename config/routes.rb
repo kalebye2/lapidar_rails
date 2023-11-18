@@ -102,7 +102,9 @@ Rails.application.routes.draw do
       post :reagendar_para_proxima_semana
       get :reagendar_para_proxima_semana
       post :create_atendimento_valor
+      post :gerar_atendimento_valor
       get :declaracao_comparecimento
+      get :modelo_relato
 
       # partials (ajax)
       get :anotacoes
@@ -126,6 +128,8 @@ Rails.application.routes.draw do
   resources :profissional_documento_modelos
 
   root to: "application#index"
+  get '/configurar', to: "application#configurar"
+
   get '/ajuda', to: "application#ajuda"
   get '/financeiro', to: "financeiro#index"
 

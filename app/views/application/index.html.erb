@@ -1,6 +1,7 @@
 <% content_for titulo "" %>
 <h1><%= Rails.application.class.module_parent_name %></h1>
 
+<% if @database_exists %>
 <!-- atendimentos de hoje -->
 <%= render "atendimentos-hoje-tabela", atendimentos: @atendimentos_hoje %>
 
@@ -44,9 +45,26 @@
     <%#= form.label :semana_select, "Selecionar semana" %>
     <%#= form.week_field [start_date: @start_date], value: @start_date %>
   <%# end %>
-  <input type="week" hx-post="<%= url_for(action: :update_calendario_atendimentos_semana, controller: :application, authenticity_token: form_authenticity_token.to_s) %>" hx-target="#calendario-atendimentos-semana" hx-swap="outerHTML" name="start_date">
+  <input type="week" hx-post="?start_date=" hx-target="#calendario-atendimentos-semana" hx-swap="outerHTML" hx-replace-url="true" name="start_date">
 
   <%= link_to "+ atendimento", new_atendimento_path %>
 
   <%= render "calendario-atendimentos-semana", events: @atendimentos %>
+<% end %>
+
+<% else %>
+
+  <div id="configurar-aplicacao">
+  <p>
+  Olá!
+  Parece que esta é a primeira vez que o sistema está rodando.
+  Teremos que preparar algumas configurações para podermos continuar.
+  </p>
+  <p>
+  Para continuar clique no botão abaixo.
+  </p>
+  <button <%== hx_set get: configurar_path(p: :tabelas), target: "#configurar-aplicacao" %>>
+    AAAAAAAA
+  </button>
+  </div>
 <% end %>

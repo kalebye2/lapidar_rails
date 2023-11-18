@@ -1,0 +1,9 @@
+<% if atendimento.profissional == usuario_atual.profissional %>
+  <% if AtendimentoLocal.count == 0 %>
+    <%= atendimento.local %>
+  <% else %>
+    <%= hx_select patch: atendimento_path(atendimento, ajax: true, authenticity_token: form_authenticity_token.to_s), options: AtendimentoLocal.all.map { |local| [local.local, local.id] }, blank: true %>
+  <% end %>
+<% else %>
+  <%= atendimento.local %>
+<% end %>

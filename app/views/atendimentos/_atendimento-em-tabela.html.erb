@@ -27,17 +27,16 @@
   </td>
   <td><%= atendimento.local %></td>
   <td id="<%= dom_id(atendimento) %>_status">
-      <% if !usuario_atual.nil? %>
-        <% presente = atendimento.presenca || 0 > 0 ? 1 : 0%>
-        <button class="btn-<%= atendimento.status.parameterize %>"
-                id="btn-<%= dom_id(atendimento) %>"
-                hx-patch="<%= atendimento_path(atendimento, atendimento: {presenca: presente == 0 ? 1 : 0, atendimento_id: atendimento.id}, authenticity_token: form_authenticity_token.to_s, ajax: true) %>"
-                hx-target="#<%= dom_id(atendimento) %>"
-                hx-swap="outerHTML">
-                <%= presente == 0 ? atendimento.status : "Realizado" %>
-        </button>
-      <% else %>
         <%= atendimento.status %>
+      <% if !usuario_atual.nil? %>
+        <% presente = atendimento.presenca || 0 > 0 ? 1 : 0 %>
+        <form id="btn-<%= dom_id(atendimento) %>" <%== hx_set patch: status_update_atendimento_path(atendimento), target: "##{dom_id(atendimento)}", swap: "outerHTML" %>>
+          <input type="hidden" value="<%= form_authenticity_token.to_s %>" name="authenticity_token">
+          <input type="hidden" value="true" name="main">
+          <button name="atendimento[presenca]" value="<%= presente == 0 %>" class="btn-<%= atendimento.status.parameterize %>">
+            <%= atendimento.presenca? ? "Presente" : "Ausente" %>
+          </button>
+        </form>
       <% end %>
   </td>
 
@@ -47,3 +46,4 @@
     </td>
   <% end %>
 </tr>
+

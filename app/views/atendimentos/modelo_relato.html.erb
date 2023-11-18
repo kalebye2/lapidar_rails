@@ -1,0 +1,5 @@
+<% titulo "Modelo de relato" %>
+<h1><%= "0#{@atendimento.data.day}"[-2..] %> de <%= t('date.month_names')[@atendimento.data.month].downcase %> de <%= @atendimento.data.year %> às <%= @atendimento.horario.strftime("%Hh%M") %></h1>
+<%= link_to "markdown", modelo_relato_atendimento_path(@atendimento, format: :md) %>
+
+<%== markdown_to_html @atendimento.anotacoes %>

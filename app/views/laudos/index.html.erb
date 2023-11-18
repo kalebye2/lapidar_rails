@@ -3,12 +3,14 @@
 
 <ul>
   <% @laudos.each do |laudo| %>
-    <li>
+    <li class="<%= laudo.fechado? ? "laudo-fechado" : "laudo-aberto" %>">
       <%= link_to laudo do %>
         <strong><%= laudo.paciente.nome_abreviado %></strong>
         -
         <%= laudo.profissional.nome_abreviado %>
         (<%= render_data_brasil laudo.data_avaliacao %>)
+        -
+        <%= laudo.fechado? ? "fechado" : "para edição" %>
       <% end %>
     </li>
   <% end %>

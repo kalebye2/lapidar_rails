@@ -1,0 +1,1 @@
+# <%= "0#{@atendimento.data.day}"[-2..] %> de <%= t('date.month_names')[@atendimento.data.month].downcase %> de <%= @atendimento.data.year %> às <%= @atendimento.horario.strftime("%Hh%M") %>

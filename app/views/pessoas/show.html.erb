@@ -9,12 +9,17 @@
         <%= if !@pessoa.pessoa_tratamento_pronome.nil? then @pessoa.pronome_tratamento end %>
         <%= @pessoa.nome_completo %> <%= @pessoa.render_sexo_sigla %>
       </h2>
+      <%= link_to 'editar', edit_pessoa_path(@pessoa) %> |
+      <%= link_to 'voltar', pessoas_path %>
     
       <!-- se for profissional -->
       <% if !pro.nil? %>
         <div class="profissional">
           <% profunc = pro.profissional_funcao %>
-          <p><%= profunc.funcao %> <%= pro.documento %></p>
+          <p>
+          <%= profunc.funcao %> <%= pro.documento %>
+          (<%= pro.atendimentos.realizados.count %> atendimentos realizados)
+          </p>
           <%= link_to "Editar", edit_profissional_path, profissional: pro %>
         </div>
       <% end %>
@@ -52,6 +57,7 @@
     <div class="acompanhamentos">
       <!-- se é profissional -->
       <% if pro != nil %>
+        <h3>Acompanhamentos</h3>
         <%= render 'profissionais/acompanhamentos-lista', profissional: pro %>
       <% end %>
 
@@ -104,11 +110,42 @@
       <% end %>
     </div>
 
+    <!-- se tiver anamneses mostrar aqui -->
+    <% if !@pessoa.infantojuvenil_anamneses.empty? %>
+      <div class="pessoa-infantojuvenil-anamneses">
+        <h3>Anamneses infantojuvenis</h3>
+        <ul>
+          <% @pessoa.infantojuvenil_anamneses.each do |anamnese| %>
+            <%= link_to anamnese do %>
+              <li>
+                <%= render_data_brasil anamnese.atendimento.data %> - 
+                <%= anamnese.profissional.descricao_completa %>
+              </li>
+            <% end %>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- se tiver algum laudo -->
+    <% if !@pessoa.laudos.empty? %>
+      <h3>Laudos</h3>
+      <ul>
+        <% @pessoa.laudos.each do |laudo| %>
+          <%= link_to laudo do %>
+            <li>
+              <%= laudo.finalidade %> em
+              <%= render_data_brasil laudo.data_avaliacao %>
+              [<%= laudo.profissional.descricao_completa %>]
+            </li>
+          <% end %>
+        <% end %>
+      </ul>
+    <% end %>
+
     <!-- se for usuário mostrar dados dos atendimentos -->
     <% if !@pessoa.atendimentos.empty? %>
       <%= render "resumo-caso", pessoa: @pessoa %>
     <% end %>
 </div>
 
-<%= link_to 'Edit', edit_pessoa_path(@pessoa) %> |
-<%= link_to 'Back', pessoas_path %>

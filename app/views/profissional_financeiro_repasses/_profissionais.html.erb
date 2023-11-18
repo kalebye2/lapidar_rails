@@ -1,0 +1,21 @@
+<table class="tabela-valores" id="tabela-repasse-profissionais" hx-swap-oob="true">
+  <caption>Valores devidos aos profissionais</caption>
+  <thead>
+    <tr>
+      <th>Profissional</th>
+      <th>Valor devido (se negativo, cobrar)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% profissionais.each do |profissional| %>
+      <tr>
+        <td>
+          <%= profissional.descricao_completa %>
+        </td>
+        <td>
+          <%= render_dinheiro_centavos profissional.financeiro_clinica_deve %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

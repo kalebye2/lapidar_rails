@@ -1,25 +1,23 @@
+<% titulo "Repasses" %>
 <h1>Repasses aos profissionais</h1>
 
-<%= @repasses.count %>
+<%#== hx_input get: profissional_financeiro_repasses_path, label: "Data inicial", type: :date, name: :de, replace_url: true %>
+<%#== hx_input get: profissional_financeiro_repasses_path, label: "Data final", type: :date, name: :ate, replace_url: true %>
 
-<!-- tabela -->
-<table class="tabela-valores">
-  <thead>
-    <tr>
-      <th>Profissional</th>
-      <th>Data</th>
-      <th>Valor</th>
-      <th>Modalidade</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @repasses.each do |repasse| %>
-<tr>
-  <td class="text-center"><%= repasse.profissional.descricao_completa %></td>
-  <td class="text-center"><%= render_data_brasil repasse.data %></td>
-  <td class="text-center"><%= render_dinheiro_centavos repasse.valor %></td>
-  <td class="text-center"><%= repasse.pagamento_modalidade.modalidade %></td>
-</tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="form-g" id="repasses-form">
+  <form <%== hx_set get: profissional_financeiro_repasses_path(), replace_url: true, swap: "outerHTML", target: "#tabela-repasses", select: "#tabela-repasses", trigger: "change" %>>
+    <label for="de">Data inicial</label>
+    <input type="date" name="de" value="<%= params[:de] || Date.today.beginning_of_month %>">
+
+    <label for="para">Data final</label>
+    <input type="date" name="ate" value="<%= params[:ate] || Date.today.end_of_month %>">
+    <button type="submit">Atualizar</button>
+    <button type="reset" <%== hx_set get: profissional_financeiro_repasses_path, replace_url: true %>>Deste mês</button>
+    <button type="button" <%== hx_set get: profissional_financeiro_repasses_path(de: Date.today.beginning_of_month - 1.month, ate: (Date.today.beginning_of_month - 1.month).end_of_month), replace_url: true %>>Do mês passado</button>
+  </form>
+</div>
+
+<%= @repasses.count %>
+<%= link_to "CSV", profissional_financeiro_repasses_path(format: :csv, de: @de, ate: @ate) %>
+
+<%= render "tabela-repasses", repasses: @repasses %>

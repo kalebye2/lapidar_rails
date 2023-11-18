@@ -7,6 +7,7 @@
 <% r = @acompanhamento.pessoa_responsavel %>
 <% pro = @acompanhamento.profissional.pessoa %>
 <%= link_to p, class: "pessoa" do %><h1><%= p.nome_abreviado %> <%= p.render_sexo_sigla %> </h1><% end %>
+<%= p.render_idade %> <%= p.data_nascimento.nil? ? "" : p.idade_anos.to_i < 18 ? "(infantojuvenil)" : "(adulto)" %>
 <% if !r.nil? %>
   <%= link_to r, class: "pessoa" do %>
     <h2><%= r.nome_abreviado %> <%- r.render_sexo_sigla %></h2>
@@ -68,7 +69,9 @@
 <% else %>
 <p><%= @acompanhamento.data_final ? (render_data_brasil @acompanhamento.data_final) : "Em andamento" %><%= @acompanhamento.acompanhamento_finalizacao_motivo ? " (finalização por #{@acompanhamento.acompanhamento_finalizacao_motivo.motivo})" : "" %></p>
 <% end %>
-<p><%= pluralize(@acompanhamento.atendimentos.count, "atendimento", "atendimentos") %></p>
+<p id="atendimentos-contagem">
+<%= pluralize(@acompanhamento.atendimentos.count, "atendimento", "atendimentos") %>
+</p>
 
 <% if usuario_atual.secretaria? || usuario_atual.profissional == @acompanhamento.profissional %>
   <%= link_to "+ Atendimento", new_atendimento_path, data: { "turbo_frame" => "modal" }%>

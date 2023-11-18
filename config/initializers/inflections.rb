@@ -37,4 +37,5 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.irregular 'identificador', 'identificadores'
   inflect.irregular 'autor', 'autores'
   inflect.irregular 'sessao', 'sessoes'
+  inflect.irregular 'repasse', 'repasses'
 end
