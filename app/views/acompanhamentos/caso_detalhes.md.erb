@@ -39,6 +39,13 @@ header-includes:
     \end{center}
     }
 
+    % heading 2
+    \titleformat{\subsection}[display]
+    {}
+    {}
+    {}
+    {}
+
     % contar o número total de páginas do documento
     \usepackage{lastpage}
 
@@ -134,8 +141,6 @@ Em andamento
 # Registro dos atendimentos
 
 <% @acompanhamento.atendimentos.em_ordem.each_with_index do |atendimento, index| %>
-
----
 
 ## Sessão <%= index + 1 %>
 

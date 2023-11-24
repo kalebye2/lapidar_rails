@@ -1,0 +1,7 @@
+<% if !atendimento %>
+<% else %>
+  <% if atendimento.profissional == usuario_atual.profissional %>
+    <%= hx_button %>
+  <% else %>
+  <% end %>
+<% end %>

@@ -12,6 +12,8 @@
 
 <h4><%= @atendimento.acompanhamento.motivo %></h4>
 
+<%= link_to "instrumentos usados", instrumentos_usados_atendimento_path(@atendimento) %>
+
 <br /><br /><br />
 <%= render "form-individual", atendimento: @atendimento %>
 

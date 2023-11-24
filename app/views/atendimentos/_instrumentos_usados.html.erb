@@ -1,0 +1,38 @@
+<% titulo "#{render_data_brasil atendimento.data} | Instrumentos usados em atendimento" %>
+<div id="<%= dom_id(atendimento) %>">
+  <h1>
+    <%= atendimento.pessoa.nome_abreviado %>
+    <br>
+    <%= render_data_brasil atendimento.data %>
+    <br>
+    <%= render_hora_brasil atendimento.horario %>
+    <br>
+    <%= atendimento.profissional.descricao_completa %>
+  </h1>
+
+  <%= link_to "voltar", acompanhamento_path(atendimento.acompanhamento) %>
+
+  <% if instrumento_relatos.empty? %>
+    
+    <p>
+    Não há instrumentos registrados para este atendimento.
+    </p>
+
+
+  <% else %>
+
+    <div class="grid-2">
+      <% instrumento_relatos.each do |instrumento_relato| %>
+        <%= render "instrumento_relatos/instrumento-card", instrumento_relato: instrumento_relato %>
+      <% end %>
+    </div>
+
+  <% end %>
+
+  <div id="<%= dom_id(atendimento) %>_new_instrumento_relato">
+    <button <%== hx_set get: new_instrumento_relato_atendimento_path(atendimento, ajax: true), target: "##{dom_id(atendimento)}_new_instrumento_relato", select: "##{dom_id(atendimento)}_new_instrumento_relato" %>style="width:100%;">
+      Adicionar
+    </button>
+  </div>
+
+</div>
