@@ -93,6 +93,8 @@ Rails.application.routes.draw do
   resources :acompanhamentos do
     post :new_atendimento_proxima_semana, path: 'novo_atendimento_proxima_semana'
 
+    get 'em-andamento', on: :collection, action: :index, em_andamento: true
+
     member do
       get :declaracao
     end
@@ -105,6 +107,12 @@ Rails.application.routes.draw do
       post :gerar_atendimento_valor
       get :declaracao_comparecimento
       get :modelo_relato
+
+      # elementos secundários
+      get :instrumentos_usados
+      post :instrumento_relato
+      get :new_instrumento_relato
+      post :create_instrumento_relato
 
       # partials (ajax)
       get :anotacoes
