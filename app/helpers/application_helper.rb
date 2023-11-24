@@ -98,8 +98,11 @@ module ApplicationHelper
     }.map{ |k,v| v.to_s.blank? ? "" : "#{k}=\"#{v}\"" }.join(' ')
   end
 
-  def hx_link body = "Link", url = "", html_options = {}, verb: "get", &block
-    "<a hx-#{verb}=\"#{url}\" #{html_options.map { |k,v| "#{k}=\"#{h v}\""}.join(' ')}>#{h body}</a>"
+  def hx_link body = "Link", url = "", html_options = {}, verb: :get, confirm: "Tem certeza?", &block
+    if block_given?
+    else
+      "<a hx-#{verb}=\"#{url}\" #{verb.to_s.downcase == "delete" && !confirm.empty? ? "hx-confirm=\"#{h confirm}\"" : ""} #{html_options.map { |k,v| "#{k}=\"#{h v}\""}.join(' ')} href=\"javascript:void(0);\">#{h body}</a>"
+    end
   end
 
   # formularios ajax HTMX
