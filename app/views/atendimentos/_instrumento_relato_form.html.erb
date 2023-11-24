@@ -1,0 +1,24 @@
+<form <%== hx_set post: create_instrumento_relato_atendimento_path(params), target: "##{dom_id(@atendimento)}", swap: "outerHTML" %>>
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+  <select name="instrumento_relato[instrumento_id]">
+    <% Instrumento.em_ordem_alfabetica.each do |instrumento| %>
+      <option value="<%= instrumento.id %>"><%= instrumento.nome %></option>
+    <% end %>
+  </select>
+
+  <label for="<%= dom_id(@atendimento) %>_new_instrumento_relato_relato">Breve relato</label>
+  <textarea id="<%= dom_id(@atendimento) %>_new_instrumento_relato_relato" name="instrumento_relato[relato]"><%= instrumento_relato.relato %></textarea>
+  <br>
+
+  <label for="<%= dom_id(@atendimento) %>_new_instrumento_relato_resultados">Resultados</label>
+  <textarea id="<%= dom_id(@atendimento) %>_new_instrumento_relato_resultados" name="instrumento_relato[resultados]"><%= instrumento_relato.resultados %></textarea>
+  <br>
+  
+  <label for="<%= dom_id(@atendimento) %>_new_instrumento_relato_observacoes">Observações</label>
+  <textarea id="<%= dom_id(@atendimento) %>_new_instrumento_relato_observacoes" name="instrumento_relato[observacoes]"><%= instrumento_relato.observacoes %></textarea>
+  <br>
+
+  <button>Confirmar</button>
+  <button <%== hx_set get: atendimento_path(params), target: "##{dom_id(@atendimento)}", swap: "outerHTML" %>>Não</button>
+
+</form>

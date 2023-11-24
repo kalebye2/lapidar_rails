@@ -1,42 +1,106 @@
-<%= form_with(model: instrumento_relato, local: true) do |form| %>
-  <% if instrumento_relato.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(instrumento_relato.errors.count, "error") %> prohibited this instrumento_relato from being saved:</h2>
+<div id="<%= dom_id(instrumento_relato) %>">
+  <% curr_id = dom_id(instrumento_relato) %>
+  <% if @params.has_key?(:ajax) && @params[:ajax] %>
+    <% if @params.has_key?(:pessoa) && @params[:pessoa].to_i > -1 %>
+      <h2>
+        Editar relato de instrumento aplicado
+        para <%= instrumento_relato.pessoa.nome_abreviado %>
+      em <%= render_data_brasil instrumento_relato.atendimento.data %>
+      </h2>
+    <% end %>
+    <form <%== hx_set patch: instrumento_relato_path(instrumento_relato, card: true), target: "##{dom_id(instrumento_relato)}" %>>
+      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+      <input type="hidden" name="card" value="true">
+      <label for="<%= curr_id %>_instrumento_id">Instrumento usado</label>
+      <select id="<%= curr_id %>_instrumento_id" name="instrumento_relato[instrumento_id]">
+        <% Instrumento.em_ordem_alfabetica.each do |instrumento| %>
+          <option value="<%= instrumento.id %>" <%== instrumento.id == instrumento_relato.instrumento.id ? "selected" : "" %>>
+          <%= instrumento.nome %> [<%= instrumento.tipo.upcase %>]
+          </option>
+        <% end %>
+      </select>
 
-      <ul>
-      <% instrumento_relato.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+        <br>
+        <label for="<%= curr_id %>_relato">
+          Breve relato
+        </label>
+        <textarea name="instrumento_relato[relato]" id="<%= curr_id %>_relato" placeholder="Breve relato da aplicação do instrumento..."><%= instrumento_relato.relato %></textarea>
+
+        <br>
+        <label for="<%= curr_id %>_resultados">
+          Resultados
+        </label>
+        <textarea name="instrumento_relato[resultados]" id="<%= curr_id %>_resultados" placeholder="Descrição dos resultados..."><%= instrumento_relato.resultados %></textarea>
+
+        <br>
+        <label for="<%= curr_id %>_observacoes">
+          Observações
+        </label>
+        <textarea name="instrumento_relato[observacoes]" id="<%= curr_id %>_observacoes" placeholder="Observações..."><%= instrumento_relato.observacoes %></textarea>
+
+        <br>
+        <div class="form buttons">
+        <button type="submit">
+          Atualizar
+        </button>
+        <button <%== hx_set get: instrumento_relato_path(instrumento_relato, card: true), target: "##{dom_id instrumento_relato}", swap: "outerHTML" %>>
+          Voltar
+        </button>
+        </div>
+      </form>
+
+<% else %>
+
+  <%= form_with(model: instrumento_relato, local: true) do |form| %>
+    <% if instrumento_relato.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(instrumento_relato.errors.count, "error") %> prohibited this instrumento_relato from being saved:</h2>
+
+        <ul>
+        <% instrumento_relato.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="field">
+      <%= form.label "Atendimento" %>
+      <%# checar se é ajax ou não %>
+      <% if @params.has_key?(:ajax) && @params[:ajax] %>
+        <% if @params.has_key?(:pessoa) && @params[:pessoa].to_i > -1 %>
+          <%= form.select :atendimento_id, Pessoa.find(@params[:pessoa]).atendimentos.order(data: :desc, horario: :desc).map { |a| [a.informacoes_com_pessoa, a.id] } %>
+        <% end %>
+      <% else %>
+        <%= form.select :atendimento_id, Atendimento.all.order(data: :desc, horario: :desc).map { |a| [a.informacoes_com_pessoa, a.id] } %>
       <% end %>
-      </ul>
+    </div>
+
+    <div class="field">
+      <%= form.label "Instrumento utilizado" %>
+      <%= form.select :instrumento_id, Instrumento.order(nome: :asc).map { |i| ["#{i.nome} [#{i.tipo.upcase}]", i.id ] } %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Breve relato" %>
+      <%= form.text_area :relato, size: "50x10" %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Resultados" %>
+      <%= form.text_area :resultados, size: "50x10" %>
+    </div>
+
+    <div class="field">
+      <%= form.label "Observações" %>
+      <%= form.text_area :observacoes, size: "50x10" %>
+    </div>
+
+    <div class="action">
+      <%= form.submit %>
     </div>
   <% end %>
-
-  <div class="field">
-    <%= form.label "Atendimento" %>
-    <%= form.select :atendimento_id, Atendimento.realizado.order(data: :desc, horario: :desc).map { |a| [a.informacoes_com_pessoa, a.id] } %>
-  </div>
-
-  <div class="field">
-    <%= form.label "Instrumento utilizado" %>
-    <%= form.select :instrumento_id, Instrumento.order(nome: :asc).map { |i| [i.nome, i.id ] } %>
-  </div>
-
-  <div class="field">
-    <%= form.label "Breve relato" %>
-    <%= form.text_area :relato, size: "50x10" %>
-  </div>
-
-  <div class="field">
-    <%= form.label "Resultados" %>
-    <%= form.text_area :resultados, size: "50x10" %>
-  </div>
-
-  <div class="field">
-    <%= form.label "Observações" %>
-    <%= form.text_area :observacoes, size: "50x10" %>
-  </div>
-
-  <div class="action">
-    <%= form.submit %>
-  </div>
 <% end %>
+<%== hx_link "voltar", instrumento_relato_path(instrumento_relato, card: true, pessoa: instrumento_relato.pessoa.id, usuario_atual: usuario_atual.id), {"hx-target" => "##{curr_id}", "hx-swap" => "outerHTML"} %>
+</div>
+

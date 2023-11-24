@@ -1,0 +1,11 @@
+<div id="<%= dom_id(@instrumento_relato.atendimento)%>_new_instrumento_relato">
+  Delício
+  <form>
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+    <textarea name="instrumento_relato[relato]" placeholder="relato">
+      <%= @instrumento_relato.relato %>
+    </textarea>
+    <button>Feshow</button>
+    <button>Desisto</button>
+  </form>
+</div>

@@ -1,0 +1,19 @@
+<div class="instrumento-relato" id="<%= dom_id(instrumento_relato) %>">
+  <h1>
+    <%= instrumento_relato.instrumento.nome %>
+  </h1>
+  <%== hx_link "editar", edit_instrumento_relato_path(instrumento_relato, ajax: true, pessoa: instrumento_relato.pessoa.id, atendimento: instrumento_relato.atendimento.id), {"hx-target" => "##{dom_id(instrumento_relato)}", "hx-select" => "##{dom_id(instrumento_relato)}"} %>
+  <%== hx_link "excluir", instrumento_relato_path(instrumento_relato), verb: :delete %>
+
+<h2>Breve relato</h2>
+
+<%== markdown_to_html instrumento_relato.relato %>
+
+<h2>Resultados</h2>
+
+<%== markdown_to_html instrumento_relato.resultados %>
+
+<h2>Observações</h2>
+
+<%== markdown_to_html instrumento_relato.observacoes %>
+</div>

@@ -1,0 +1,4 @@
+<%= @atendimento.id %>
+<div id="<%= dom_id(@atendimento) %>_new_instrumento_relato">
+  <%= render "atendimentos/instrumento_relato_form", instrumento_relato: @atendimento.instrumento_relatos.new, params: @request.params %>
+</div>
