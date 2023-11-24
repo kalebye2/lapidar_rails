@@ -1,6 +1,6 @@
 class AtendimentosController < ApplicationController
 
-  before_action :set_atendimento, only: %i[ show edit update destroy reagendar_para_proxima_semana gerar_atendimento_valor create_atendimento_valor anotacoes_update anotacoes anotacoes_edit data data_update data_edit horario horario_update horario_edit status status_edit status_update declaracao_comparecimento modelo_relato ]
+  before_action :set_atendimento, only: %i[ show edit update destroy reagendar_para_proxima_semana gerar_atendimento_valor create_atendimento_valor anotacoes_update anotacoes anotacoes_edit data data_update data_edit horario horario_update horario_edit status status_edit status_update declaracao_comparecimento modelo_relato instrumentos_usados new_instrumento_relato create_instrumento_relato ]
   before_action :validar_usuario
   before_action :validar_edicao, only: %i[ show edit update destroy reagendar_para_proxima_semana gerar_atendimento_valor ]
 
@@ -8,6 +8,15 @@ class AtendimentosController < ApplicationController
   end
 
   def show
+    if params.has_key?(:ajax)
+      if params.has_key?(:table) && params[:table] = true
+        render partial: "atendimentos/atendimento-tabela-form", locals: { atendimento: @atendimento }
+      else
+        @instrumento_relatos = @atendimento.instrumento_relatos
+        # redirect_to action: :instrumentos_usados, id: @atendimento.id
+        render partial: "atendimentos/instrumentos_usados", locals: {instrumento_relatos: @instrumento_relatos, atendimento: @atendimento}
+      end
+    end
   end
 
   def new
@@ -54,6 +63,35 @@ class AtendimentosController < ApplicationController
     end
   end
 
+  def create_instrumento_relato
+    if @atendimento.nil? then return end
+    @instrumento_relato = InstrumentoRelato.new(instrumento_relato_params)
+    @instrumento_relato.atendimento = @atendimento
+
+    if @instrumento_relato.save
+      if params.has_key?(:ajax)
+        if params.has_key?(:table) && params[:table] = true
+          render partial: "atendimentos/atendimento-tabela-form", locals: {atendimento: @atendimento}
+        else
+          render partial: "atendimentos/instrumentos_usados", locals: {atendimento: @atendimento, instrumento_relatos: @atendimento.instrumento_relatos}
+        end
+      end
+    else
+      render html: @instrumento_relato.errors.full_messages
+    end
+    # respond_to do |format|
+    #   if @instrumento_relato.save
+    #     format.html do
+    #       if params.has_key?(:ajax)
+    #         render partial: "atendimentos/atendimento-tabela-form", locals: {atendimento: @atendimento}
+    #         return
+    #       end
+    #     end
+    #   else
+    #   end
+    # end
+  end
+
   def update
     respond_to do |format|
       if @atendimento.update(atendimento_params)
@@ -70,6 +108,14 @@ class AtendimentosController < ApplicationController
         format.json { render json: @atendimento.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def instrumentos_usados
+    @instrumento_relatos = @atendimento.instrumento_relatos
+  end
+
+  def new_instrumento_relato
+    @request = request
   end
 
   # ajax
@@ -220,7 +266,15 @@ class AtendimentosController < ApplicationController
   end
 
   def atendimento_params
-    params.require(:atendimento).permit(:data, :horario, :horario_fim, :modalidade_id, :acompanhamento_id, :presenca, :atendimento_tipo_id, :anotacoes, :remarcado, :atendimento_local_id, :reagendado, atendimento_valor_attributes: [:atendimento_id, :valor, :desconto, :taxa_porcentagem_externa, :taxa_porcentagem_interna, :id])
+    params.require(:atendimento).permit(:data, :horario, :horario_fim, :modalidade_id, :acompanhamento_id, :presenca, :atendimento_tipo_id, :anotacoes, :remarcado, :atendimento_local_id, :reagendado, atendimento_valor_attributes: [:atendimento_id, :valor, :desconto, :taxa_porcentagem_externa, :taxa_porcentagem_interna, :id], instrumento_relato_attributes: [:atendimento_id, :instrumento_id, :relato, :resultados, :observacoes])
+  end
+
+  def instrumento_relato_params
+    params.require(:instrumento_relato).permit(:atendimento_id, :instrumento_id, :relato, :resultados, :observacoes)
+  end
+
+  def atendimento_instrumento_relato_params
+    params.require(:atendimento).permit(instrumento_relato_attributes: %i[ atendimento_id instrumento_id relato resultados observacoes ])
   end
 
   def validar_usuario

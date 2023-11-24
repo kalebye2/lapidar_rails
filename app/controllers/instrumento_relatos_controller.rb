@@ -6,10 +6,21 @@ class InstrumentoRelatosController < ApplicationController
   end
 
   def show
+    if params.has_key?(:card) && params[:card]
+      # render partial: "instrumento_relatos/instrumento-card", locals: { instrumento_relato: @instrumento_relato }
+      return
+    end
   end
 
   def new
-    @instrumento_relato = InstrumentoRelato.new
+      @instrumento_relato = InstrumentoRelato.new
+      if params[:atendimento]
+        @instrumento_relato.atendimento = Atendimento.find(params[:atendimento])
+      end
+    if params[:ajax].present?
+      render 'new_ajax'
+      return
+    end
   end
 
   def edit
@@ -18,8 +29,12 @@ class InstrumentoRelatosController < ApplicationController
   def update
     respond_to do |format|
       if @instrumento_relato.update(instrumento_relato_params)
-        format.html { redirect_to instrumento_relato_url(@instrumento_relato), notice: "instrumento_relato was successfully updated." }
-        format.json { render :show, status: :ok, location: @instrumento_relato }
+        if params.has_key?(:card) && params[:card]
+          format.html { render partial: "instrumento_relatos/instrumento-card", locals: {instrumento_relato: @instrumento_relato} }
+        else
+          format.html { redirect_to instrumento_relato_url(@instrumento_relato), notice: "instrumento_relato was successfully updated." }
+          format.json { render :show, status: :ok, location: @instrumento_relato }
+        end
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @instrumento_relato.errors, status: :unprocessable_entity }
@@ -42,8 +57,14 @@ class InstrumentoRelatosController < ApplicationController
   end
 
   private
+
   def set_instrumento_relato
-    @instrumento_relato = InstrumentoRelato.find(params[:id])
+    @params = params
+    if params[:instrumento_relato].present? && params[:instrumento_relato].class.to_s == "Numeric"
+        @instrumento_relato = InstrumentoRelato.find(params[:instrumento_relato])
+    else
+      @instrumento_relato = InstrumentoRelato.find(params[:id])
+    end
   end
 
   def instrumento_relato_params
