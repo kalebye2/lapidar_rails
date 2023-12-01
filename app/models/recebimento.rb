@@ -1,6 +1,17 @@
 class Recebimento < ApplicationRecord
   require "csv"
 
+  belongs_to :acompanhamento
+
+  has_one :pessoa, through: :acompanhamento
+  belongs_to :pessoa_pagante, class_name: "Pessoa", foreign_key: :pessoa_pagante_id, optional: true
+  has_one :profissional, through: :acompanhamento
+  #belongs_to :profissional
+
+  belongs_to :recebimento_modalidade, foreign_key: :modalidade_id, class_name: "PagamentoModalidade"
+
+  default_scope { includes(:acompanhamento, :recebimento_modalidade) }
+
   scope :do_mes, -> (mes = Date.today.all_month, ordem: :asc) { where(data: mes).order(data: ordem) }
   scope :do_mes_passado, -> { where(data: (Date.today - 1.month).all_month) }
   scope :do_mes_atual, -> { where(data: Date.today.all_month) }
@@ -16,15 +27,6 @@ class Recebimento < ApplicationRecord
       ate.nil? ? where(data: de).order(data: ordem) : where(data: [de..ate]).order(data: ordem)
     end
   end
-
-  belongs_to :acompanhamento
-
-  has_one :pessoa, through: :acompanhamento
-  belongs_to :pessoa_pagante, class_name: "Pessoa", foreign_key: :pessoa_pagante_id, optional: true
-  has_one :profissional, through: :acompanhamento
-  #belongs_to :profissional
-
-  belongs_to :recebimento_modalidade, foreign_key: :modalidade_id, class_name: "PagamentoModalidade"
 
   def pagante
     pessoa_pagante || pessoa
@@ -48,6 +50,10 @@ class Recebimento < ApplicationRecord
 
   def para_linha_csv
     "#{pagante.nome_completo},#{pagante.cpf},#{beneficiario.nome_completo},#{beneficiario.cpf},#{data},#{modalidade},#{valor},#{acompanhamento.acompanhamento_tipo.tipo}" + "\n"
+  end
+
+  def html
+    
   end
 
   def self.para_csv(collection: all, formato_data: "%Y-%m-%d")

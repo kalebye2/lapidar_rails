@@ -6,7 +6,7 @@ class Pessoa < ApplicationRecord
   belongs_to :nascimento_pais, class_name: "Pais", optional: true
 
   scope :do_sexo_feminino, -> { where(feminino: true) }
-  scope :do_sexo_masculino, -> { where(feminino: false) }
+  scope :do_sexo_masculino, -> { where(feminino: [false, nil]) }
   scope :mulheres, -> { do_sexo_feminino }
   scope :homens, -> { do_sexo_masculino }
   scope :profissionais, -> { joins(:profissional) }
@@ -18,6 +18,14 @@ class Pessoa < ApplicationRecord
   # quando o cadastro for de um profissional
   has_one :profissional
   has_many :profissional_acompanhamento, through: :profissional, source: :acompanhamento
+
+  # parentes
+  has_many :pessoa_parentesco_juncoes
+  has_many :parente_parentesco_juncoes, class_name: "PessoaParentescoJuncao", foreign_key: :parente_id
+  has_many :parentes_cadastrados, through: :pessoa_parentesco_juncoes, class_name: "Pessoa", source: :parente
+  has_many :parentescos, through: :pessoa_parentesco_juncoes
+  has_many :parente_parentescos, through: :parente_parentesco_juncoes#, foreign_key: :parente_id
+  has_many :parente_de_quais_pessoas, through: :parente_parentesco_juncoes, source: :pessoa
 
   # quando o cadastro for de um paciente
   has_many :acompanhamentos

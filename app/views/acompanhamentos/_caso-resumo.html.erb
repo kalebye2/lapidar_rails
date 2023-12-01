@@ -26,7 +26,7 @@
       </tr>
     </thead>
     <tbody>
-    <% acompanhamento.atendimentos.order(data: :desc, horario: :desc).each do |a| %>
+    <% acompanhamento.atendimentos.includes(:atendimento_valor, :instrumento_relatos).order(data: :desc, horario: :desc).each do |a| %>
       <% path_ajax = atendimento_path(a, ajax: true, authenticity_token: form_authenticity_token.to_s) %>
       <tr id="<%= dom_id(a) %>">
         <td id="<%= dom_id(a) %>_data"><%= render "atendimentos/data_show", atendimento: a %></td>

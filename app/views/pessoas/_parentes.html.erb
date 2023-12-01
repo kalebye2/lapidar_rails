@@ -1,0 +1,15 @@
+<h3>Parentes</h3>
+<% pessoa.pessoa_parentesco_juncoes.each do |parentesco| %>
+  <%= link_to parentesco.parente.nome_completo, parentesco.parente %> - <%= parentesco.parentesco.parentesco.upcase %><br>
+<% end %>
+
+<%#= render "pessoas/form-parente", pessoa: pessoa %>
+<button <%== hx_set get: new_parentesco_pessoa_path(pessoa, ajax: true), target: "#pessoa-parentes" %>>
+  Registrar parente
+</button>
+
+<% pessoa.parente_parentesco_juncoes.each do |parentesco| %>
+  <%= parentesco.parentesco.parentesco.capitalize %>
+  de
+  <%= parentesco.pessoa.nome_completo %><br>
+<% end %>

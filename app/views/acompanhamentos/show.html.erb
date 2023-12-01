@@ -10,7 +10,12 @@
 <%= p.render_idade %> <%= p.data_nascimento.nil? ? "" : p.idade_anos.to_i < 18 ? "(infantojuvenil)" : "(adulto)" %>
 <% if !r.nil? %>
   <%= link_to r, class: "pessoa" do %>
-    <h2><%= r.nome_abreviado %> <%- r.render_sexo_sigla %></h2>
+    <h2
+        ><%= r.nome_abreviado %> <%= r.render_sexo_sigla %>
+      <% if !p.pessoa_parentesco_juncoes.find_by(parente_id: r.id).nil? %>
+        <%= p.pessoa_parentesco_juncoes.find_by(parente_id: r.id).parentesco.parentesco.upcase %>
+      <% end %>
+    </h2>
   <% end %>
 <% end %>
 

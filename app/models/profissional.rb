@@ -21,8 +21,9 @@ class Profissional < ApplicationRecord
   has_many :profissional_especializacao_juncoes
   has_many :profissional_especializacoes, through: :profissional_especializacao_juncoes
 
-  scope :com_atendimentos_futuros, -> { joins(:atendimentos).where("atendimentos.data" => Date.today.. )}
-  scope :ordem_alfabetica, -> { joins(:pessoa).order("pessoas.nome" => :asc, "pessoas.nome_do_meio" => :asc, "pessoas.sobrenome" => :asc) }
+  scope :com_atendimentos_futuros, -> { includes(:atendimentos).where("atendimentos.data" => Date.today.. )}
+  scope :ordem_alfabetica, -> { includes(:pessoa).order("pessoas.nome" => :asc, "pessoas.nome_do_meio" => :asc, "pessoas.sobrenome" => :asc) }
+  default_scope { includes(:pessoa, :usuario, :profissional_funcao) }
 
 
   def clientes

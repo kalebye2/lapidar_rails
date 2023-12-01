@@ -1,7 +1,7 @@
 <td>
   <select name="recebimento[acompanhamento_id]">
-    <% Acompanhamento.all.each do |a| %>
-      <option value="<%= a.id %>"><%= a.render_info_para_profissional %></option>
+    <% Acompanhamento.por_paciente_em_ordem_alfabetica.each do |a| %>
+      <option value="<%= a.id %>"><%= a.render_info_para_profissional_alt %></option>
     <% end %>
   </select>
 </td>

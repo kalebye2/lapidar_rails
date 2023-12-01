@@ -1,5 +1,5 @@
 class PessoasController < ApplicationController
-  before_action :set_pessoa, only: %i[ show edit update destroy devolutivas informacoes_extras informacao_extra_edit informacao_extra_new ]
+  before_action :set_pessoa, only: %i[ show edit update destroy devolutivas informacoes_extras informacao_extra_edit informacao_extra_new create_parentesco new_parentesco show_parentescos ]
   before_action :validar_usuario#, only: %i[ show edit update destroy devolutivas informacoes_extras informacao_extra_edit informacao_extra_new ]
   include Pagy::Backend
 
@@ -143,6 +143,39 @@ class PessoasController < ApplicationController
     end
   end
 
+  # parentescos
+  def show_parentescos
+    if params[:ajax].present?
+      render partial: "pessoas/parentes", locals: { pessoa: @pessoa }
+    end
+  end
+
+  def new_parentesco
+    @pparentesco = PessoaParentescoJuncao.new
+    if params[:ajax].present?
+      render partial: "pessoas/form-parente", locals: { pessoa: @pessoa }
+      return
+    end
+  end
+
+  def create_parentesco
+    @pparentesco = PessoaParentescoJuncao.new(parentesco_params)
+    p parentesco_params.nil?
+    @pparentesco.pessoa = @pessoa
+    if @pparentesco.save!
+    end
+
+    if params[:ajax].present?
+      render partial: "pessoas/parentes", locals: { pessoa: @pessoa }
+    end
+  end
+
+  def destroy_parentesco
+  end
+
+  def update_parentesco
+  end
+
   # pdfs
   
   def pdf_ficha
@@ -163,6 +196,10 @@ class PessoasController < ApplicationController
     # Only allow a list of trusted parameters through.
     def pessoa_params
       params.require(:pessoa).permit(:nome, :nome_do_meio, :sobrenome, :cpf, :fone_cod_pais, :fone_cod_area, :fone_num, :feminino, :civil_estado_id, :instrucao_grau_id, :data_nascimento, :email, :pais_id, :estado, :cidade, :endereco_cep, :endereco_logradouro, :endereco_numero, :endereco_complemento, :profissao, :preferencia_contato, :imagem_perfil, :pessoa_tratamento_pronome_id, :inverter_pronome_tratamento)
+    end
+
+    def parentesco_params
+      params.require(:parentesco).permit(%i[ pessoa_id parente_id parentesco_id ])
     end
 
     def validar_usuario

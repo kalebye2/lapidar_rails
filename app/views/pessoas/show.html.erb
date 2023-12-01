@@ -4,54 +4,58 @@
 <% pro = @pessoa.profissional %>
 
 <div class="info-container">
-    <div class="pessoa-container">
-      <h2>
-        <%= if !@pessoa.pessoa_tratamento_pronome.nil? then @pessoa.pronome_tratamento end %>
+  <div class="pessoa-container">
+    <h2>
+      <%= if !@pessoa.pessoa_tratamento_pronome.nil? then @pessoa.pronome_tratamento end %>
         <%= @pessoa.nome_completo %> <%= @pessoa.render_sexo_sigla %>
-      </h2>
-      <%= link_to 'editar', edit_pessoa_path(@pessoa) %> |
-      <%= link_to 'voltar', pessoas_path %>
-    
-      <!-- se for profissional -->
-      <% if !pro.nil? %>
-        <div class="profissional">
-          <% profunc = pro.profissional_funcao %>
-          <p>
-          <%= profunc.funcao %> <%= pro.documento %>
-          (<%= pro.atendimentos.realizados.count %> atendimentos realizados)
-          </p>
-          <%= link_to "Editar", edit_profissional_path, profissional: pro %>
-        </div>
+    </h2>
+    <%= link_to 'editar', edit_pessoa_path(@pessoa) %> |
+    <%= link_to 'voltar', pessoas_path %>
+
+    <div id="pessoa-parentes" class="pessoa-parentes">
+      <%= render "pessoas/parentes", pessoa: @pessoa %>
+    </div>
+
+    <!-- se for profissional -->
+    <% if !pro.nil? %>
+      <div class="profissional">
+        <% profunc = pro.profissional_funcao %>
+        <p>
+        <%= profunc.funcao %> <%= pro.documento %>
+        (<%= pro.atendimentos.realizados.count %> atendimentos realizados)
+        </p>
+        <%= link_to "Editar", edit_profissional_path, profissional: pro %>
+      </div>
+    <% end %>
+
+    <p>
+    CPF <%= @pessoa.render_cpf %>
+    </p>
+
+    <!-- informações de contato -->
+    <div class="contato">
+      <%= mail_to @pessoa.email %>
+      <% if @pessoa.tem_telefone? %>
+        <%= phone_to @pessoa.fone_cod_pais + @pessoa.render_fone_link, @pessoa.render_fone %>
+        <%= link_to "ZAPZAP", "https://wa.me/#{@pessoa.render_fone_link}", target: :_blank %>
       <% end %>
+    </div>
 
-      <p>
-        CPF <%= @pessoa.render_cpf %>
-      </p>
+    <!-- dados pessoais -->
+    <div class="dados-pessoais">
+      <% if @pessoa.data_nascimento != nil %>
+        <p><%= render_data_brasil @pessoa.data_nascimento %> (<%= @pessoa.render_idade %>)</p>
+      <% end %>
+      <%= @pessoa.instrucao_grau ? @pessoa.instrucao_grau.grau.upcase : "Não informado" %>
+      <%= @pessoa.civil_estado ? @pessoa.civil_estado.estado : "Não informado" %>
+    </div>
 
-      <!-- informações de contato -->
-      <div class="contato">
-        <%= mail_to @pessoa.email %>
-        <% if @pessoa.tem_telefone? %>
-          <%= phone_to @pessoa.fone_cod_pais + @pessoa.render_fone_link, @pessoa.render_fone %>
-          <%= link_to "ZAPZAP", "https://wa.me/#{@pessoa.render_fone_link}", target: :_blank %>
-        <% end %>
-      </div>
-
-      <!-- dados pessoais -->
-      <div class="dados-pessoais">
-        <% if @pessoa.data_nascimento != nil %>
-          <p><%= render_data_brasil @pessoa.data_nascimento %> (<%= @pessoa.render_idade %>)</p>
-        <% end %>
-        <%= @pessoa.instrucao_grau ? @pessoa.instrucao_grau.grau.upcase : "Não informado" %>
-        <%= @pessoa.civil_estado ? @pessoa.civil_estado.estado : "Não informado" %>
-      </div>
-
-      <!-- dados de endereço -->
-      <div class="endereco">
-        <%= @pessoa.render_endereco %>
-        <p><%= @pessoa.render_cidade_estado %></p>
-        <p><%= @pessoa.pais.nome %></p>
-      </div>
+    <!-- dados de endereço -->
+    <div class="endereco">
+      <%= @pessoa.render_endereco %>
+      <p><%= @pessoa.render_cidade_estado %></p>
+      <p><%= @pessoa.pais.nome %></p>
+    </div>
     </div>
 
     <div class="acompanhamentos">

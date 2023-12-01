@@ -1,0 +1,27 @@
+<form <%== hx_set post: create_parentesco_pessoa_path(pessoa, ajax: true), swap: "outerHTML", target: "#pessoa-parentes" %>>
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+  <% if pessoa.nil? %>
+    <label for="pessoa[id]">Pessoa</label>
+    <select name="parentesco[pessoa_id]" id="pessoa[id]">
+    </select>
+  <% else %>
+    <input type="hidden" name="pessoa[id]" value="<%= pessoa.id %>">
+  <% end %>
+  <label for="parentesco[parente_id]">Parente</label>
+  <select name="parentesco[parente_id]" id="parente[id]">
+    <% Pessoa.where.not(id: pessoa.id).ordem_alfabetica.each do |p| %>
+      <option value="<%= p.id %>"><%= p.nome_completo %></option>
+    <% end %>
+  </select>
+  
+  <label for="parentesco[parentesco_id]">Parentesco</label>
+  <select name="parentesco[parentesco_id]" id="parentesco[id]">
+    <% Parentesco.all.each do |parentesco| %>
+      <option value="<%= parentesco.id %>"><%= parentesco.parentesco.upcase %></option>
+    <% end %>
+      <option value="">OUTRO</option>
+  </select>
+
+  <button>Registrar parente</button>
+  <button <%== hx_set get: show_parentescos_pessoa_path(pessoa, ajax: true), target: "#pessoa-parentes", swap: "innerHTML" %>>Cancelar</button>
+</form>

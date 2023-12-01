@@ -1,0 +1,2 @@
+class Parentesco < ApplicationRecord
+end

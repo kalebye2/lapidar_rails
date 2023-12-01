@@ -15,6 +15,7 @@ class Acompanhamento < ApplicationRecord
   has_many :laudos
 
   # scopes
+  default_scope { includes(:pessoa, :pessoa_responsavel, :profissional, :acompanhamento_tipo, :acompanhamento_finalizacao_motivo) }
   scope :em_andamento, -> { where(data_final: nil, acompanhamento_finalizacao_motivo: nil) }
   scope :finalizados, -> { where.not(data_final: nil, acompanhamento_finalizacao_motivo: nil) }
   scope :do_profissional, -> (profissional) { profissional.nil? ? all : where(profissional: profissional) }
@@ -23,11 +24,19 @@ class Acompanhamento < ApplicationRecord
   scope :do_tipo_com_id, -> (id) { id.nil? ? all : where(acompanhamento_tipo_id: id) }
   scope :valor_aproximado_mensal, -> { sum("sessoes_atuais * valor_atual") }
   scope :valor_aproximado_semanal, -> { sum(:valor_atual) }
+  scope :do_periodo, -> (de: Acompanhamento.minimum(:data_inicio), ate: Acompanhamento.maximum(:data_final)) { where(data_inicio: de.., data_final: ..ate) }
+  scope :por_paciente_em_ordem_alfabetica, -> { includes(:pessoa).order("pessoas.nome" => :asc, "pessoas.nome_do_meio" => :asc, "pessoas.sobrenome" => :asc) }
 
   def render_info_para_profissional
     p = pessoa
     r = pessoa_responsavel
     return "#{acompanhamento_tipo.tipo.to_s.upcase} - #{p.nome_abreviado} #{p.render_sexo_sigla} #{if r then '(respondido por ' + r.nome_abreviado + ')' end} com início em #{data_inicio.strftime("%d/%m/%Y")} (#{atendimentos.count} #{atendimentos.count == 1 ? 'sessão' : 'sessões'})"
+  end
+
+  def render_info_para_profissional_alt
+    p = pessoa
+    r = pessoa_responsavel
+    return "#{p.nome_completo} #{p.render_sexo_sigla} #{if r then '[respondido por ' + r.nome_abreviado + ']' end} - #{tipo.upcase} de #{data_inicio.strftime("%d/%m/%Y")}#{data_final && acompanhamento_finalizacao_motivo ? " a #{data_final.strftime("%d/%m/%Y")}" : ""} <#{profissional.descricao_completa}>"
   end
 
   def render_info_para_pessoa

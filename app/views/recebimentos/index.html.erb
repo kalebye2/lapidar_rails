@@ -34,7 +34,7 @@
 </p>
 
 <div class="valores-cobrar-container">
-  <div class="valores-cobrar">
+  <div id="valores-cobrar-mes-passado" class="valores-cobrar">
     <h3>Valores a cobrar até mês passado</h3>
     <% @a_receber = 0 %>
     <% @pessoas.each do |pessoa| %>
@@ -53,7 +53,7 @@
     <p><strong>Total a receber: <%= render_dinheiro_centavos @a_receber %></strong></p>
   </div>
 
-  <div class="valores-cobrar">
+  <div id="valores-cobrar-este-mes" class="valores-cobrar">
     <h3>Valores pendentes este mês</h3>
     <% @a_receber_mes_atual = 0 %>
     <% @pessoas.each do |pessoa| %>
@@ -73,7 +73,6 @@
 
 <div class="valores-pagos">
   <% @recebimentos.each do |recebimento| %>
-
   <% end %>
 </div>
 

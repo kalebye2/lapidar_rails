@@ -12,6 +12,7 @@ class Atendimento < ApplicationRecord
   accepts_nested_attributes_for :atendimento_valor
 
   # scopes
+  default_scope { includes(:acompanhamento, :atendimento_tipo, :atendimento_modalidade, :atendimento_local) }
 
   scope :realizados, -> { where(presenca: true) }
   scope :nao_realizados, -> { where(presenca: false) }
@@ -27,6 +28,9 @@ class Atendimento < ApplicationRecord
   scope :reagendados, -> { where(reagendado: true) }
   # ordenados
   scope :em_ordem, -> (ordem = :asc) { order(data: ordem) }
+
+  # agrupamentos
+  scope :contagem_por_dia, -> (de: Atendimento.minimum(:data), ate: Atendimento.maximum(:data)) { where(data: de..ate).group(:data).count }
 
   def consideracoes
     anotacoes

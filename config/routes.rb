@@ -86,6 +86,9 @@ Rails.application.routes.draw do
     member do
       get :devolutivas, path: 'devolutivas'
       get :responsavel_devolutivas
+      get :show_parentescos, path: "parentescos"
+      get :new_parentesco
+      post :create_parentesco
     end
   end
   resources :paises
