@@ -5,9 +5,13 @@ class AtendimentoValor < ApplicationRecord
 
   has_one :acompanhamento, through: :atendimento
 
+  default_scope { includes(:atendimento) }
+
   scope :de_atendimentos_realizados, -> { joins(:atendimento).where(atendimento: {presenca: true}) }
-  scope :do_mes_atual, -> { joins(:atendimento).where("atendimentos.data" => Date.today.all_month) }
+  scope :do_periodo, -> (periodo = Date.today.all_month) { includes(:atendimento).where("atendimentos.data" => periodo) }
+  scope :do_mes_atual, -> { do_periodo }
   scope :deste_mes, -> { do_mes_atual }
+  scope :do_mes_passado, -> { do_periodo((Date.today - 1.month).all_month) }
 
   scope :soma_liquidos, -> (de: Date.today.beginning_of_month, ate: Date.today.end_of_month) { joins(:atendimento).where(atendimento: { data: de.to_date..ate.to_date}).sum("valor - (valor * taxa_porcentagem_externa / 10000) - (valor * taxa_porcentagem_interna / 10000)") }
   scope :soma_liquidos_externos, -> (de: Date.today.beginning_of_month, ate: Date.today.end_of_month) { joins(:atendimento).where(atendimento: { data: de.to_date..ate.to_date}).sum("valor - (valor * taxa_porcentagem_externa / 10000)") }
