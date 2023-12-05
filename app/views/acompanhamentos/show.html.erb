@@ -8,6 +8,23 @@
 <% pro = @acompanhamento.profissional.pessoa %>
 <%= link_to p, class: "pessoa" do %><h1><%= p.nome_abreviado %> <%= p.render_sexo_sigla %> </h1><% end %>
 <%= p.render_idade %> <%= p.data_nascimento.nil? ? "" : p.idade_anos.to_i < 18 ? "(infantojuvenil)" : "(adulto)" %>
+<% if p.infantojuvenil_anamneses.count > 0 %>
+  <h3>
+    <%= pluralize p.infantojuvenil_anamneses.count, "Anamnese infantojuvenil", "Anamneses infantojuvenis" %>
+  </h3>
+  <ul>
+    <% p.infantojuvenil_anamneses.each do |anamnese| %>
+      <%= link_to anamnese, class: "anamnese-infantojuvenil" do %>
+        <li>
+          <%= render_data_brasil anamnese.atendimento.data %>
+          - por
+          <%= anamnese.profissional.descricao_completa %>
+          (<%= anamnese.acompanhamento.tipo.upcase %>)
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+<% end %>
 <% if !r.nil? %>
   <%= link_to r, class: "pessoa" do %>
     <h2
