@@ -15,8 +15,19 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "motivo", limit: 100
   end
 
+  create_table "acompanhamento_horarios", primary_key: ["acompanhamento_id", "semana_dia_id", "horario", "horario_fim"], force: :cascade do |t|
+    t.integer "acompanhamento_id", null: false
+    t.integer "semana_dia_id", null: false
+    t.time "horario", null: false
+    t.time "horario_fim"
+  end
+
+# Could not dump table "acompanhamento_horarios_temp" because of following StandardError
+#   Unknown type 'NUM' for column 'horario'
+
   create_table "acompanhamento_tipos", force: :cascade do |t|
-    t.string "tipo", limit: 100
+    t.string "tipo", limit: 255
+    t.integer "profissional_funcao_id"
   end
 
   create_table "acompanhamentos", force: :cascade do |t|
@@ -538,6 +549,12 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "etnia", limit: 255
   end
 
+  create_table "pessoa_parentesco_juncoes", primary_key: ["pessoa_id", "parente_id"], force: :cascade do |t|
+    t.integer "pessoa_id", null: false
+    t.integer "parente_id", null: false
+    t.integer "parentesco_id"
+  end
+
   create_table "pessoa_responsaveis", id: false, force: :cascade do |t|
     t.integer "pessoa_dependente_id", null: false
     t.integer "pessoa_responsavel_id", null: false
@@ -634,6 +651,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "servico", limit: 255
     t.string "adjetivo_masc", limit: 255
     t.string "adjetivo_fem", limit: 255
+    t.integer "realiza_atendimentos"
   end
 
   create_table "profissional_notas", force: :cascade do |t|
@@ -678,6 +696,10 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "taxa_porcentagem_clinica", default: 0
   end
 
+  create_table "semana_dias", force: :cascade do |t|
+    t.string "nome", limit: 255, null: false
+  end
+
   create_table "subtestes", force: :cascade do |t|
     t.integer "instrumento_id"
     t.integer "psicologia_subfuncao_id"
@@ -702,6 +724,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "informatica", default: false
   end
 
+  add_foreign_key "acompanhamento_horarios", "acompanhamentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "acompanhamento_horarios", "semana_dias", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "acompanhamento_tipos", "profissional_funcoes"
   add_foreign_key "acompanhamentos", "acompanhamento_tipos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "acompanhamentos", "atendimento_plataformas", column: "plataforma_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "acompanhamentos", "atendimento_plataformas", column: "plataforma_id", on_update: :cascade, on_delete: :cascade
@@ -751,6 +776,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "pessoa_devolutivas", "pessoas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_devolutivas", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_emails", "pessoas", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoa_parentesco_juncoes", "parentescos", on_update: :cascade, on_delete: :nullify
+  add_foreign_key "pessoa_parentesco_juncoes", "pessoas", column: "parente_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoa_parentesco_juncoes", "pessoas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_responsaveis", "pessoas", column: "pessoa_dependente_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_responsaveis", "pessoas", column: "pessoa_responsavel_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_telefones", "pessoas", on_update: :cascade, on_delete: :cascade
