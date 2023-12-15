@@ -1,17 +1,12 @@
 <%= titulo "Valores de atendimentos" %>
-<h1>Valores de atendimentos - <%= t('date.month_names')[@mes.to_i] %>/<%= @ano %></h1>
+<h1>Valores de atendimentos</h1>
 
-<%= form_with url: atendimento_valores_path, local: true, method: :get do |form| %>
-  <%= form.select :mes,
-    [1,2,3,4,5,6,7,8,9,10,11,12].map { |i| [t('date.month_names')[i], i] }, selected: @mes %>
-  <% anos = [] %>
-  <% ano_atual = Date.today.year %>
-  <% while ano_atual != Atendimento.minimum(:data).year - 1 do %>
-    <% anos << ano_atual %>
-    <% ano_atual -=1 %>
-  <% end %>
-  <%= form.select :ano, anos, selected: @ano %>
-  <%= form.submit %>
+<%= form_with url: atendimento_valores_path, local: :true, method: :get do |form| %>
+  <%= form.label :de %>
+  <%= form.date_field :de, value: @de %>
+  <%= form.label :ate, "Até" %>
+  <%= form.date_field :ate, value: @ate %>
+  <%= form.submit "Carregar" %>
 <% end %>
 
 <%= link_to "CSV", { url: atendimento_valores_path, format: :csv, ano: @ano, mes: @mes } %>

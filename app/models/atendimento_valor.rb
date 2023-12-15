@@ -8,7 +8,7 @@ class AtendimentoValor < ApplicationRecord
   default_scope { includes(:atendimento) }
 
   scope :de_atendimentos_realizados, -> { joins(:atendimento).where(atendimento: {presenca: true}) }
-  scope :do_periodo, -> (periodo = Date.today.all_month) { includes(:atendimento).where("atendimentos.data" => periodo) }
+  scope :do_periodo, -> (periodo = Date.today.all_month, ordem: :asc) { includes(:atendimento).where("atendimentos.data" => periodo).order("atendimentos.data" => ordem, "atendimentos.horario" => ordem) }
   scope :do_mes_atual, -> { do_periodo }
   scope :deste_mes, -> { do_mes_atual }
   scope :do_mes_passado, -> { do_periodo((Date.today - 1.month).all_month) }

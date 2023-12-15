@@ -15,8 +15,9 @@ class Atendimento < ApplicationRecord
   default_scope { includes(:acompanhamento, :atendimento_tipo, :atendimento_modalidade, :atendimento_local) }
 
   scope :realizados, -> { where(presenca: true) }
-  scope :nao_realizados, -> { where(presenca: false) }
+  scope :nao_realizados, -> { where(presenca: [false, nil]) }
   scope :futuros, -> { where(data: [Date.today + 1.day..]).or(self.where(data: Date.today, horario: [Time.now.beginning_of_hour - 3.hour..])) }
+  scope :ate_hoje, -> { where(data: ..Date.today) }
   scope :de_hoje, -> (ordem = :asc) { where(data: Date.today).order(horario: ordem) }
   scope :da_semana, -> (semana: Date.today.all_week, ordem_data: :asc, ordem_horario: :asc) { where(data: semana).order(data: ordem_data, horario: ordem_horario) }
   scope :do_mes_atual, -> { where(data: Date.today.all_month) }
@@ -27,7 +28,7 @@ class Atendimento < ApplicationRecord
   scope :do_ano_passado, -> { where(data: (Date.today - 1.year).all_year) }
   scope :reagendados, -> { where(reagendado: true) }
   # ordenados
-  scope :em_ordem, -> (ordem = :asc) { order(data: ordem) }
+  scope :em_ordem, -> (ordem = :asc) { order(data: ordem, horario: ordem) }
 
   # agrupamentos
   scope :contagem_por_dia, -> (de: Atendimento.minimum(:data), ate: Atendimento.maximum(:data)) { where(data: de..ate).group(:data).count }

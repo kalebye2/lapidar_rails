@@ -1,0 +1,62 @@
+<% titulo "Financeiro #{@pessoa.nome_abreviado}" %>
+
+<h1>Financeiro</h1>
+
+<div class="grid-2">
+  <div>
+    <h2>Valores de atendimentos</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Horário</th>
+          <th>Profissional</th>
+          <th>Dados financeiros</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @pessoa.atendimento_valores.order(data: :desc, horario: :desc).first(4).each do |atendimento_valor| %>
+          <tr>
+            <td><%= render_data_brasil atendimento_valor.data %></td>
+            <td><%= render_hora_brasil atendimento_valor.horario %></td>
+            <td><%= atendimento_valor.profissional.descricao_completa %></td>
+            <td>
+              Valor: <%= render_dinheiro_centavos atendimento_valor.valor %>
+              <br />
+              Desconto: <%= render_dinheiro_centavos atendimento_valor.desconto %>
+              <br />
+              Taxa interna (clínica): <%= render_dinheiro_centavos atendimento_valor.valor * atendimento_valor.taxa_porcentagem_interna / 10000 %>
+              <br />
+              Taxa externa (profissional): <%= render_dinheiro_centavos atendimento_valor.valor * atendimento_valor.taxa_porcentagem_externa / 10000 %>
+            <br />
+            Valor líquido: <%= render_dinheiro_centavos atendimento_valor.valor - (atendimento_valor.valor * atendimento_valor.taxa_porcentagem_interna / 10000) - (atendimento_valor.valor * atendimento_valor.taxa_porcentagem_externa / 10000) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <h2>Recebimentos</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Pagante</th>
+          <th>Profissional</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @pessoa.recebimentos.order(data: :desc).first(4).each do |recebimento| %>
+          <tr>
+            <td><%= render_data_brasil recebimento.data %></td>
+            <td><%= recebimento.pagante.nome_completo %> - CPF <%= recebimento.pagante.render_cpf %></td>
+            <td><%= recebimento.profissional.descricao_completa %></td>
+            <td><%= render_dinheiro_centavos recebimento.valor %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

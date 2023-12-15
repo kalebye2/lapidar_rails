@@ -5,23 +5,27 @@ class AtendimentoValoresController < ApplicationController
   before_action :validar_usuario
 
   def index
-    @ano = params[:ano] || Date.today.year
-    @mes = params[:mes] || Date.today.month
+    # @ano = params[:ano] || Date.today.year
+    # @mes = params[:mes] || Date.today.month
+
+    @de = if !params[:de].nil? then params[:de].to_date end || Date.today.beginning_of_month
+    @ate = if !params[:ate].nil? then params[:ate].to_date end || Date.today.end_of_month
 
     @ano_mes = "#{@ano}-#{@mes.to_s.rjust(2, "0")}"
     if usuario_atual.secretaria?
-      @atendimento_valores = AtendimentoValor.joins(:atendimento).order(data: :asc, horario: :asc).where(atendimento: { data: ["#{@ano}-#{@mes}-01".."#{@ano}-#{@mes}-01".to_date.end_of_month.to_s] })
+      @atendimento_valores = AtendimentoValor.do_periodo(@de..@ate, ordem: :desc)
     else
-      @atendimento_valores = usuario_atual.profissional.atendimento_valores.joins(:atendimento).order("atendimentos.data" => :asc, "atendimentos.horario" => :asc).where(atendimento: { data: ["#{@ano}-#{@mes}-01".."#{@ano}-#{@mes}-01".to_date.end_of_month.to_s]})
+      # @atendimento_valores = usuario_atual.profissional.atendimento_valores.joins(:atendimento).order("atendimentos.data" => :asc, "atendimentos.horario" => :asc).where(atendimento: { data: ["#{@ano}-#{@mes}-01".."#{@ano}-#{@mes}-01".to_date.end_of_month.to_s]})
+      @atendimento_valores = usuario_atual.profissional.atendimento_valores.do_periodo
     end
 
     respond_to do |format|
       format.html
       format.csv do
-        send_data AtendimentoValor.para_csv(@atendimento_valores), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@ano}-#{@mes.to_s.rjust(2, "0")}.csv", type: "text/csv"
+        send_data AtendimentoValor.para_csv(@atendimento_valores), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@de}_#{@ate}.csv", type: "text/csv"
       end
       format.xlsx do
-        response.headers['Content-Disposition'] = "attachment; filename=#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@ano}-#{@mes.to_s.rjust(2, "0")}.xlsx"
+        response.headers['Content-Disposition'] = "attachment; filename=#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@de}-#{@ate}.xlsx"
       end
     end
   end

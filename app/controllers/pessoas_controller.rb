@@ -1,5 +1,5 @@
 class PessoasController < ApplicationController
-  before_action :set_pessoa, only: %i[ show edit update destroy devolutivas informacoes_extras informacao_extra_edit informacao_extra_new create_parentesco new_parentesco show_parentescos ]
+  before_action :set_pessoa, only: %i[ show edit update destroy devolutivas informacoes_extras informacao_extra_edit informacao_extra_new create_parentesco new_parentesco show_parentescos recebimentos financeiro ]
   before_action :validar_usuario#, only: %i[ show edit update destroy devolutivas informacoes_extras informacao_extra_edit informacao_extra_new ]
   include Pagy::Backend
 
@@ -185,6 +185,15 @@ class PessoasController < ApplicationController
 
   def pdf_info_extra
     
+  end
+
+  def recebimentos
+  end
+
+  def financeiro
+  end
+
+  def atendimento_valores
   end
 
   private

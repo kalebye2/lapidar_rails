@@ -8,7 +8,7 @@ wb.styles do |style|
 
 	wb.add_worksheet(name: "Valores") do |sheet|
 		# titulo
-		sheet.add_row ["Valores de atendimentos - #{@mes.to_s.rjust(2, "0")}/#{@ano}"], style: project_heading
+		sheet.add_row ["Valores de atendimentos - #{render_data_brasil @de} a #{render_data_brasil @ate}"], style: project_heading
 
 		# informações do documento
 		sheet.add_row ["Baixado em", Time.now.strftime("%d/%m/%Y - %H:%M:%S")]

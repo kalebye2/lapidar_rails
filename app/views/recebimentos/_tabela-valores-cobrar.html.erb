@@ -1,0 +1,56 @@
+<table>
+  <caption>
+    <% ultima_data = defined?(ultima_data) && !ultima_data.nil? ? ultima_data : Date.today %>
+    Cobrança pendente até
+    <%= render_data_brasil ultima_data %>
+    <%= ultima_data.end_of_month == (Date.today - 1.month).end_of_month ? "(mês passado)" : "" %>
+    <%= if ultima_data == Date.today then "(hoje)" end %>
+    </caption>
+    </thead>
+    <tr>
+      <th>Paciente</th>
+      <th>Serviço</th>
+      <th>Profissional</th>
+      <th>Valor</th>
+      <th>Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+      <% total = {
+        atendimentos: 0,
+        recebimentos: 0,
+      }
+      %>
+      <% Acompanhamento.joins(:pessoa).order("pessoas.nome" => :asc, "pessoas.nome_do_meio" => :asc, "pessoas.sobrenome" => :asc).all.each do |acompanhamento| %>
+        <% soma_atendimentos = acompanhamento.atendimento_valores.where(atendimento: { data: ..ultima_data }).sum("valor - desconto") %>
+        <% soma_recebimentos = acompanhamento.recebimentos.sum(:valor) %>
+        <% if soma_atendimentos - soma_recebimentos > 0 %>
+          <tr>
+            <td class="center">
+              <%= acompanhamento.pessoa.nome_abreviado %>
+            </td>
+            <td>
+              <%= acompanhamento.tipo.upcase %>
+            </td>
+            <td>
+              <%= acompanhamento.profissional.descricao_completa %>
+            </td>
+            <td class="dinheiro">
+              <%= render_dinheiro_centavos soma_atendimentos - soma_recebimentos %>
+            </td>
+            <td>
+            </td>
+          </tr>
+          <% total[:atendimentos] += soma_atendimentos %>
+          <% total[:recebimentos] += soma_recebimentos %>
+        <% end %>
+      <% end %>
+      <tr>
+        <td colspan="3" class="resultado">Total</td>
+        <td class="dinheiro resultado">
+          <%= render_dinheiro_centavos total[:atendimentos] - total[:recebimentos] %>
+        </td>
+        <td></td>
+      </tr>
+    </tbody>
+</table>

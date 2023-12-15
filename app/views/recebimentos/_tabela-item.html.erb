@@ -1,6 +1,6 @@
 <tr>
   <td><%= recebimento.beneficiario.nome_abreviado %></td>
-  <td><%= recebimento.pagante.nome_abreviado %></td>
+  <td><%= recebimento.pagante.nome_abreviado %><br>CPF <%= recebimento.pagante.render_cpf %></td>
   <td style="text-align:center;"><%= render_data_brasil recebimento.data %></td>
   <td class="dinheiro"><%= render_dinheiro_centavos recebimento.valor %></td>
   <td style="text-align:center;"><%= recebimento.modalidade %></td>
@@ -9,9 +9,9 @@
   <td style="text-align:center;">
     <%= link_to "Editar", edit_recebimento_url(recebimento) %>
     <br />
-    <%= link_to "Markdown", recebimento_path(recebimento, format: 'md'), {target: :blank } %>
+    <%= link_to "Recibo (Markdown)", recebimento_path(recebimento, format: 'md'), {target: :blank } %>
     <br />
     <%#= link_to "Excluir", recebimento_path(recebimento), method: :delete, data: { confirm: "Tem certeza?" } %>
-    <a hx-confirm="Tem certeza?" rel="nofollow" hx-delete="<%= recebimento_path(recebimento, authenticity_token: form_authenticity_token.to_s, ajax: true) %>" hx-swap="outerHTML" hx-target="#tabela-recebimentos">Excluir</a>
+    <a href="javascript:void(0);" hx-confirm="Tem certeza?" rel="nofollow" hx-delete="<%= recebimento_path(recebimento, authenticity_token: form_authenticity_token.to_s, ajax: true) %>" hx-swap="outerHTML" hx-target="#tabela-recebimentos">Excluir</a>
   </td>
 </tr>

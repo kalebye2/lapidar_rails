@@ -1,0 +1,12 @@
+<ul id="acompanhamento-horarios-lista">
+  <% acompanhamento.acompanhamento_horarios.each do |horario| %>
+    <li class="acompanhamento-horario-item">
+      <%= horario.descricao_resumida %>
+    </li>
+  <% end %>
+</ul>
+
+<div id="acompanhamento-horario-new">
+  <p>Deu ruim, tenta de novo</p>
+  <%= render "acompanhamento_horarios/form", acompanhamento_horario: AcompanhamentoHorario.new(acompanhamento: acompanhamento) %>
+</div>

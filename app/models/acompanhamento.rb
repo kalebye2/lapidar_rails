@@ -14,6 +14,8 @@ class Acompanhamento < ApplicationRecord
 
   has_many :laudos
 
+  has_many :acompanhamento_horarios
+
   # scopes
   default_scope { includes(:pessoa, :pessoa_responsavel, :profissional, :acompanhamento_tipo, :acompanhamento_finalizacao_motivo) }
   scope :em_andamento, -> { where(data_final: nil, acompanhamento_finalizacao_motivo: nil) }

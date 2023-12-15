@@ -9,8 +9,15 @@
       <%= if !@pessoa.pessoa_tratamento_pronome.nil? then @pessoa.pronome_tratamento end %>
         <%= @pessoa.nome_completo %> <%= @pessoa.render_sexo_sigla %>
     </h2>
-    <%= link_to 'editar', edit_pessoa_path(@pessoa) %> |
+    <%= link_to 'editar', edit_pessoa_path(@pessoa) %>
+    |
     <%= link_to 'voltar', pessoas_path %>
+    <% if usuario_atual.financeiro? %>
+    |
+    <%= link_to 'financeiro', financeiro_pessoa_path(@pessoa) %>
+    |
+    <%= link_to 'recebimentos', recebimentos_pessoa_path(@pessoa) %>
+  <% end %>
 
     <div id="pessoa-parentes" class="pessoa-parentes">
       <%= render "pessoas/parentes", pessoa: @pessoa %>

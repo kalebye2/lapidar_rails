@@ -1,5 +1,5 @@
 <table class="tabela-recebimentos" id="tabela-recebimentos">
-  <caption>Recebimentos - <%= t('date.month_names')[mes.to_i] %>/<%= ano %></caption>
+  <caption>Recebimentos - <%= render_data_brasil @de %> a <%= render_data_brasil @ate %></caption>
   <thead>
     <tr>
       <th>Beneficiário</th>
@@ -16,7 +16,7 @@
     </tr>
   </thead>
   <tbody>
-    <% recebimentos.each do |recebimento| %>
+    <% @recebimentos.each do |recebimento| %>
       <%= render 'recebimentos/tabela-item', recebimento: recebimento %>
     <% end %>
   </tbody>

@@ -90,4 +90,8 @@ class Recebimento < ApplicationRecord
       end
     end
   end
+
+  def recibo_markdown
+    RecebimentosController.render partial: 'show', formats: [ :md ], locals: { recebimento: self }
+  end
 end

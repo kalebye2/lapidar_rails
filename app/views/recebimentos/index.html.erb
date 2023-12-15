@@ -1,79 +1,49 @@
-<%= titulo "Recebimentos #{t('date.month_names')[@mes.to_i]} #{@ano}" %>
+<%= titulo "Recebimentos" %>
 
-<h1>Recebimentos - <%= t('date.month_names')[@mes.to_i] %>/<%= @ano %></h1>
+<h1>Recebimentos - <%= render_data_brasil @de %> a <%= render_data_brasil @ate %></h1>
 
 <div class="form-g">
   <%= form_with url: recebimentos_path, method: :get, local: true do |f| %>
-    <%#= f.label :mes, "Selecionar mês" %>
-    <%= f.select :mes, 
-        [1,2,3,4,5,6,7,8,9,10,11,12].map { |i| [t('date.month_names')[i], i] },
-        selected: @mes %>
-    /
-    <%#= f.label :ano, "Selecionar ano" %>
-    <% anos = [] %>
-    <% ano_atual = Date.today.year %>
-    <% while ano_atual != Recebimento.minimum(:data).year - 1 do %>
-      <% anos << ano_atual %>
-      <% ano_atual -= 1 %>
-    <% end %>
-    <%= f.select :ano, anos, selected: @ano %>
-
-    <%= f.submit "Atualizar" %>
+    <%= f.label :de %>
+    <%= f.date_field :de, value: @de %>
+    <%= f.label :ate, "Até" %>
+    <%= f.date_field :ate, value: @ate %>
+    <%= f.submit "Carregar" %>
   <% end %>
 </div>
 
 <p>Baixar relatório
-<%= link_to "CSV", recebimentos_path(format: :csv, ano: @ano, mes: @mes) %>
-<%= link_to "Excel", recebimentos_path(format: :xlsx, ano: @ano, mes: @mes) %>
+<%= link_to "CSV", recebimentos_path(format: :csv, de: @de, ate: @ate) %>
+|
+<%= link_to "Excel", recebimentos_path(format: :xlsx, de: @de, ate: @ate) %>
+|
+<%= link_to "Recibos (markdown)", recebimentos_path(format: :zip, de: @de, ate: @ate) %>
 </p>
+
+<p>Relatório do mês atual
+<%= link_to "CSV", recebimentos_path(format: :csv, de: Date.today.beginning_of_month, ate: Date.today.end_of_month) %>
+|
+<%= link_to "Excel", recebimentos_path(format: :xlsx, de: Date.today.beginning_of_month, ate: Date.today.end_of_month) %>
+|
+<%= link_to "Recibos (markdown)", recebimentos_path(format: :zip, de: Date.today.beginning_of_month, ate: Date.today.end_of_month) %>
+</p>
+
+<p>Relatório do mês passado
+<%= link_to "CSV", recebimentos_path(format: :csv, de: (Date.today - 1.month).beginning_of_month, ate: (Date.today - 1.month).end_of_month) %>
+|
+<%= link_to "Excel", recebimentos_path(format: :xlsx, de: (Date.today - 1.month).beginning_of_month, ate: (Date.today - 1.month).end_of_month) %>
+|
+<%= link_to "Recibos (markdown)", recebimentos_path(format: :zip, de: (Date.today - 1.month).beginning_of_month, ate: (Date.today - 1.month).end_of_month) %>
+</p>
+
 <%= link_to "+ recebimento", new_recebimento_path, { class: "btn-dinheiro" } %>
+
 <p>
-  Recebimentos do mês:
+  Recebimentos do período:
   <% @total_mes = @recebimentos.sum(:valor) %>
   <%= render_dinheiro_centavos @total_mes %>
 </p>
 
-<div class="valores-cobrar-container">
-  <div id="valores-cobrar-mes-passado" class="valores-cobrar">
-    <h3>Valores a cobrar até mês passado</h3>
-    <% @a_receber = 0 %>
-    <% @pessoas.each do |pessoa| %>
-      <% a_receber_ate_mes_passado = pessoa.atendimento_valores.where("atendimentos.data" => [..(Date.today - 1.month).end_of_month]).sum("valor - desconto") %>
-      <% ja_recebidos = pessoa.recebimentos.sum(:valor) %>
-      <% resultado = a_receber_ate_mes_passado - ja_recebidos %>
+<%= render "valores-cobrar-container", pessoas: @pessoas, atendimento_valores: @atendimento_valores %>
 
-      <% if resultado > 0 %>
-        <div class="pessoa-devendo">
-          <%= pessoa.nome_abreviado %>
-          <%= render_dinheiro_centavos resultado %>
-          <% @a_receber += resultado %> 
-        </div>
-      <% end %>
-    <% end %>
-    <p><strong>Total a receber: <%= render_dinheiro_centavos @a_receber %></strong></p>
-  </div>
-
-  <div id="valores-cobrar-este-mes" class="valores-cobrar">
-    <h3>Valores pendentes este mês</h3>
-    <% @a_receber_mes_atual = 0 %>
-    <% @pessoas.each do |pessoa| %>
-      <% ja_recebidos = pessoa.recebimentos.sum(:valor) %>
-      <% resultado = pessoa.atendimento_valores.where(atendimentos: {data: [..Date.today]}).sum("valor - desconto") - ja_recebidos %>
-      <% if resultado > 0 %>
-        <% @a_receber_mes_atual += resultado %>
-        <div class="pessoa-devendo">
-          <%= pessoa.nome_abreviado %>: <%= render_dinheiro_centavos resultado %>
-        </div>
-      <% end %>
-    <% end %>
-    <strong>Total a receber: <%= render_dinheiro_centavos @a_receber_mes_atual %></strong><br />
-    <strong>Valor de atendimentos deste mês: <%= render_dinheiro_centavos @atendimento_valores.sum("valor - desconto") %></strong>
-  </div>
-</div>
-
-<div class="valores-pagos">
-  <% @recebimentos.each do |recebimento| %>
-  <% end %>
-</div>
-
-<%= render 'recebimentos/tabela', recebimentos: @recebimentos, mes: @mes, ano: @ano %>
+<%= render 'recebimentos/tabela', recebimentos: @recebimentos, de: @de, ate: @ate %>

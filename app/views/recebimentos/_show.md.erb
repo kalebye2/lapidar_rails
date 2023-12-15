@@ -1,0 +1,70 @@
+<% if recebimento %>
+<% titulo "Recibo #{recebimento.data} #{recebimento.pagante.nome_completo}" %>
+---
+# Para ser usado com Pandoc convertendo
+# para LaTeX ou PDF
+# Para saber mais visite https://pandoc.org
+title: Recibo de honorários profissionais
+author-meta: <%= recebimento.profissional.nome_completo %>
+date-meta: <%= render_data_brasil recebimento.data %>
+
+geometry:
+  - margin=3cm
+
+# Opções de formatação
+papersize: a4
+fontsize: 12pt
+mainfont: Liberation Sans
+
+header-includes:
+- |
+	```{=latex}
+        % para não ter número de página
+	\pagenumbering{gobble}
+	```
+---
+
+<% responsavel = recebimento.pagante != recebimento.beneficiario %>
+
+Recebi de **<%= recebimento.pagante.nome_completo %>**,
+CPF <%= recebimento.pagante.render_cpf %>,
+a quantia de
+**<%= render_dinheiro_centavos recebimento.valor %>**
+referente ao serviço de
+<%= recebimento.profissional.servico %><%= responsavel ? " para **#{recebimento.beneficiario.nome_completo}**#{recebimento.beneficiario.cpf? ? ", CPF #{recebimento.beneficiario.render_cpf}" : ""}" : "" %>.
+
+\vspace{5em}
+
+\center
+<%= recebimento.profissional.cidade %>, <%= render_data_extenso recebimento.data %>
+\vspace{7em}
+
+---
+
+\center
+**<%= recebimento.profissional.nome_completo %>**  
+<%= recebimento.profissional.render_cpf %>  
+<%= recebimento.profissional.documento %>
+
+\vspace{\fill}
+
+\hrule
+
+\flushleft
+**Anotações <%= recebimento.profissional.funcao %>**
+
+Data: <%= render_data_brasil recebimento.data %>
+
+Pcte: <%= recebimento.beneficiario.nome_completo %>
+
+<%= responsavel ? "Pagante: #{recebimento.pagante.nome_completo}" : "" %>
+
+CPF Pagante: <%= recebimento.pagante.render_cpf %>
+
+Valor: <%= render_dinheiro_centavos recebimento.valor %>
+
+Referente: Serviço de <%= recebimento.profissional.servico %>
+
+\tiny
+Documento gerado em <%= Time.now %>
+<% end %>

@@ -6,6 +6,7 @@ class Profissional < ApplicationRecord
   has_many :especializacoes, through: :profissional_especializacao_juncoes
 
   has_many :acompanhamentos
+  has_many :acompanhamento_horarios, through: :acompanhamentos
   has_many :pacientes, through: :acompanhamentos, source: :pessoa
   has_many :responsaveis_por_pacientes, through: :acompanhamentos, source: :pessoa_responsavel
   has_many :atendimentos, through: :acompanhamentos

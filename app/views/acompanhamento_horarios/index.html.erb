@@ -1,0 +1,12 @@
+<% titulo "Agenda fixa" %>
+<h1>Agenda fixa da clínica</h1>
+
+<% @acompanhamento_horarios.each do |horario| %>
+  <p>
+  <%= horario.semana_dia.sigla.upcase %>
+  <%= render_hora_brasil horario.horario %>
+  <%= render_hora_brasil horario.horario_fim %>
+  <%= horario.pessoa.nome_completo %>
+  <%= horario.profissional.descricao_completa %>
+  </p>
+<% end %>

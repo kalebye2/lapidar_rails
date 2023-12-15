@@ -7,6 +7,8 @@
 <% r = @acompanhamento.pessoa_responsavel %>
 <% pro = @acompanhamento.profissional.pessoa %>
 <%= link_to p, class: "pessoa" do %><h1><%= p.nome_abreviado %> <%= p.render_sexo_sigla %> </h1><% end %>
+<%= render_data_brasil p.data_nascimento %>
+-
 <%= p.render_idade %> <%= p.data_nascimento.nil? ? "" : p.idade_anos.to_i < 18 ? "(infantojuvenil)" : "(adulto)" %>
 <% if p.infantojuvenil_anamneses.count > 0 %>
   <h3>
@@ -22,6 +24,7 @@
           (<%= anamnese.acompanhamento.tipo.upcase %>)
         </li>
       <% end %>
+      [<%= link_to "Markdown", infantojuvenil_anamnese_path(anamnese, format: :md) %>]
     <% end %>
   </ul>
 <% end %>
@@ -44,6 +47,10 @@
     </span>
   </h2>
 <% end %>
+
+<div id="acompanhamento-horarios">
+<%= render "acompanhamento_horarios/resumo_acompanhamento", acompanhamento: @acompanhamento %>
+</div>
 
 <h2>
   <% if usuario %>
@@ -87,7 +94,7 @@
     <% end %>
   </select>
   <label>Data da finalização</label>
-  <input type="date" name="acompanhamento[data_final]" value="<%= @acompanhamento.data_final %>">
+  <input type="date" name="acompanhamento[data_final]" value="<%= @acompanhamento.data_final %>" hx-patch="<%= acompanhamento_path(@acompanhamento, ajax: true, authenticity_token: form_authenticity_token.to_s) %>">
 <% else %>
 <p><%= @acompanhamento.data_final ? (render_data_brasil @acompanhamento.data_final) : "Em andamento" %><%= @acompanhamento.acompanhamento_finalizacao_motivo ? " (finalização por #{@acompanhamento.acompanhamento_finalizacao_motivo.motivo})" : "" %></p>
 <% end %>

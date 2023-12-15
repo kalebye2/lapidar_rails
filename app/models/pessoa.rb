@@ -29,6 +29,7 @@ class Pessoa < ApplicationRecord
 
   # quando o cadastro for de um paciente
   has_many :acompanhamentos
+  has_many :acompanhamento_horarios, through: :acompanhamentos
   has_many :atendimentos, through: :acompanhamentos
   has_many :instrumento_relatos, through: :atendimentos
   has_many :instrumentos_aplicados, through: :instrumento_relatos, source: :instrumento

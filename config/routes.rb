@@ -89,6 +89,8 @@ Rails.application.routes.draw do
       get :show_parentescos, path: "parentescos"
       get :new_parentesco
       post :create_parentesco
+      get :recebimentos
+      get :financeiro
     end
   end
   resources :paises
@@ -135,6 +137,8 @@ Rails.application.routes.draw do
       patch :status_update
     end
   end
+
+  resources :acompanhamento_horarios, path: '/agenda/fixa'
 
   resources :profissional_documento_modelos
 

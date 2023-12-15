@@ -11,8 +11,8 @@ class RecebimentosController < ApplicationController
   end
 
   def recebimento_por_periodo_params
-    @de = params[:de] || Date.today
-    @ate = params[:ate]
+    @de = if !params[:de].nil? then params[:de].to_date end || Date.today.beginning_of_month
+    @ate = if !params[:ate].nil? then params[:ate].to_date end || Date.today.end_of_month
     if usuario_atual.financeiro?
       @recebimentos = Recebimento.do_periodo(de: @de, ate: @ate)
       @pessoas = Pessoa.joins(:atendimento_valores).distinct.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc)
@@ -38,14 +38,29 @@ class RecebimentosController < ApplicationController
   end
 
   def index
-    params[:de].nil? ? recebimentos_por_params : recebimento_por_periodo_params
+    # params[:de].nil? ? recebimentos_por_params : recebimento_por_periodo_params
+    recebimento_por_periodo_params
     respond_to do |format|
-      format.html
+      format.html do
+        if params[:tabela].present? && params[:tabela]
+          render partial: "tabela", locals: { recebimentos: @recebimentos, de: @de, ate: @ate }
+        end
+      end
       format.csv do
-        send_data Recebimento.para_csv(collection: @recebimentos), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-recebimentos_#{@ano}-#{ @mes.to_s.rjust(2, "0")}.csv", type: 'text/csv'
+        send_data Recebimento.para_csv(collection: @recebimentos), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-recebimentos_#{@de}_#{@ate}.csv", type: 'text/csv'
       end
       format.xlsx do
-        response.headers['Content-Disposition'] = "attachment; filename=#{Rails.application.class.module_parent_name.to_s}-relatorio-recebimentos_#{@ano}-#{@mes.to_s.rjust(2, "0")}.xlsx"
+        response.headers['Content-Disposition'] = "attachment; filename=#{Rails.application.class.module_parent_name.to_s}-relatorio-recebimentos_#{@de}_#{@ate}.xlsx"
+      end
+      format.zip do
+        compressed_filestream = Zip::OutputStream.write_buffer do |zos|
+          @recebimentos.each do |recebimento|
+            zos.put_next_entry "recibo_#{recebimento.pessoa.nome_completo.parameterize}_#{recebimento.data}_#{recebimento.id}.md"
+            zos.print recebimento.recibo_markdown
+          end
+        end
+        compressed_filestream.rewind
+        send_data compressed_filestream.read, filename: "recebimentos_#{@de}_#{@ate}.zip"
       end
     end
   end
