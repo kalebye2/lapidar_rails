@@ -7,7 +7,7 @@
       <%= link_to laudo do %>
         <strong><%= laudo.paciente.nome_abreviado %></strong>
         -
-        <%= laudo.profissional.nome_abreviado %>
+        <%= laudo.profissional.descricao_completa %>
         (<%= render_data_brasil laudo.data_avaliacao %>)
         -
         <%= laudo.fechado? ? "fechado" : "para edição" %>
