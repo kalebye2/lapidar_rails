@@ -21,6 +21,7 @@ mainfont: Liberation Sans
 header-includes:
 - |
     ```{=latex}
+    \usepackage{titling}
     % Tire o símbolo "%" do início das linhas que você quiser usar uma regra
     %\usepackage{indentfirst} % para indentar o primeiro parágrafo como os seguintes
 
@@ -35,7 +36,7 @@ header-includes:
     % para cabeçalho e rodapé
     \usepackage{fancyhdr}
     \fancyhead[L]{} % coloque aqui cabeçalho à esquerda
-    \fancyhead[R]{Anamnese infantojuvenil}
+    \fancyhead[R]{\thetitle}
     \fancyfoot[L]{\footnotesize{
     E-mail: \href{mailto:<%= @pessoa_devolutiva.profissional.email %>}{<%= @pessoa_devolutiva.profissional.email %>}\\
     Fone: \href{tel:<%= @pessoa_devolutiva.profissional.pessoa.render_fone_link %>}{<%= @pessoa_devolutiva.profissional.pessoa.render_fone_local %>}

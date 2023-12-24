@@ -1,6 +1,9 @@
 <% titulo "Devolutiva #{@pessoa_devolutiva.paciente.nome_abreviado}" %>
 <p id="notice"><%= notice %></p>
-<%= link_to 'Edit', edit_pessoa_devolutiva_path(@pessoa_devolutiva) %> |
+<%= link_to 'Edit', edit_pessoa_devolutiva_path(@pessoa_devolutiva) %>
+|
 <%= link_to 'Back', pessoa_devolutivas_path %>
+|
+<%= link_to "Markdown", pessoa_devolutiva_path(@pessoa_devolutiva, format: :md) %>
 
 <%= render "tabela-resumo", devolutiva: @pessoa_devolutiva %>
