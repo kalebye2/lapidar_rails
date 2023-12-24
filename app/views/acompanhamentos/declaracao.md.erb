@@ -59,12 +59,56 @@ header-includes:
 ---
 
 \vfill
+
+<% primeira_data = @acompanhamento.primeiro_atendimento.data %>
+
+<% if @acompanhamento.acompanhamento_finalizacao_motivo.nil? %>
+<%# sem responsável e em andamento %>
+<% if @acompanhamento.pessoa_responsavel.nil? %>
 Declaro para fins de comprovação que
 <%= @acompanhamento.paciente.nome_completo %>
 está sendo submetid<%= @acompanhamento.paciente.no_feminino? ? 'a' : 'o' %> a
-<%= @acompanhamento.tipo %> sob meus cuidados profissionais, desde
-<% primeira_data = @acompanhamento.primeiro_atendimento.data %>
+<%= @acompanhamento.tipo.downcase %> sob meus cuidados profissionais desde
 <%= t('date.month_names')[primeira_data.month].downcase %> de <%= primeira_data.year %>.
+<% else %>
+<%# com responsável e em andamento %>
+Declaro para fins de comprovação que
+<%= @acompanhamento.paciente.nome_completo %>
+está sendo submetid<%= @acompanhamento.paciente.no_feminino? ? 'a' : 'o' %> a
+<%= @acompanhamento.tipo.downcase %> sob meus cuidados profissionais desde
+<%= t('date.month_names')[primeira_data.month].downcase %> de <%= primeira_data.year %>
+com autorização de
+<%= @acompanhamento.pessoa_responsavel.nome_completo %>.
+<% end %>
+
+<% else %>
+
+<% if @acompanhamento.pessoa_responsavel.nil? %>
+<% ultima_data = @acompanhamento.ultimo_atendimento.data %>
+<%# sem responsável e finalizado %>
+Declaro para fins de comprovação que
+<%= @acompanhamento.paciente.nome_completo %>
+esteve em acompanhamento em
+<%= @acompanhamento.tipo.downcase %>
+sob meus cuidados profissionais de
+<%= t('date.month_names')[primeira_data.month].downcase %> de <%= primeira_data.year %>
+a
+<%= t('date.month_names')[ultima_data.month].downcase %> de <%= ultima_data.year %>.
+<% else %>
+<%# com responsável e finalizado %>
+Declaro para fins de comprovação que
+<%= @acompanhamento.paciente.nome_completo %>
+esteve em acompanhamento em
+<%= @acompanhamento.tipo.downcase %>
+sob meus cuidados profissionais de
+<%= t('date.month_names')[primeira_data.month].downcase %> de <%= primeira_data.year %>
+a
+<%= t('date.month_names')[ultima_data.month].downcase %> de <%= ultima_data.year %>
+com autorização de
+<%= @acompanhamento.responsavel.nome_completo %>.
+<% end %>
+
+<% end %>
 
 \vspace{2em}
 

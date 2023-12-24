@@ -40,11 +40,11 @@ header-includes:
     }
 
     % heading 2
-    \titleformat{\subsection}[display]
-    {}
-    {}
-    {}
-    {}
+    %\titleformat{\subsection}[display]
+    %{}
+    %{}
+    %{}
+    %{}
 
     % contar o número total de páginas do documento
     \usepackage{lastpage}
@@ -82,7 +82,7 @@ header-includes:
 <%= @acompanhamento.paciente.grau_de_instrucao %>
 
 **Profissão**:
-<%= @acompanhamento.paciente.profissao.upcase %>
+<%= @acompanhamento.paciente.profissao.nil? ? "Não informada" : @acompanhamento.paciente.profissao.upcase %>
 
 **Fone**:
 [<%= @acompanhamento.paciente.render_fone %>](tel:<%= @acompanhamento.paciente.render_fone_link %>)
