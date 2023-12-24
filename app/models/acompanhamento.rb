@@ -88,6 +88,10 @@ class Acompanhamento < ApplicationRecord
     atendimentos.order(data: :asc, horario: :asc).first
   end
 
+  def ultimo_atendimento
+    atendimentos.order(data: :desc, horario: :desc).first
+  end
+
   def self.filter(attributes)
     attributes.select { |k, v| v.present? }.reduce(all) do |scope, (key, value)|
       case key.to_sym
