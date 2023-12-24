@@ -138,7 +138,10 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :acompanhamento_horarios, path: '/agenda/fixa'
+  # horarios de atendimentos
+  get '/agenda/fixa', to: "acompanhamento_horarios#index"
+  get '/agenda/fixa/new', to: "acompanhamento_horarios#new", as: "new_acompanhamento_horario"
+  delete 'agenda/fixa/destruir', to: "acompanhamento_horarios#destroy", as: "destroy_acompanhamento_horario"
 
   resources :profissional_documento_modelos
 
