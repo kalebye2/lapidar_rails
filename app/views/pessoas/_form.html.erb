@@ -53,7 +53,10 @@
 
   <div class="field">
     <%= form.label :civil_estado_id, "Estado Civil" %>
-    <%= form.select :civil_estado_id, CivilEstado.pluck(:estado, :id), include_blank: true %>
+    <%# <%= form.select :civil_estado_id, CivilEstado.pluck(:estado, :id), include_blank: true %1> %>
+    <%= form.select :civil_estado_id, CivilEstado.all.map {
+    | civil_estado | [civil_estado.estado.upcase, civil_estado.id]
+    }, include_blank: true %>
   </div>
 
   <div class="field">

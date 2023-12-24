@@ -1,4 +1,6 @@
 class PessoasController < ApplicationController
+  require 'csv'
+
   before_action :set_pessoa, only: %i[ show edit update destroy devolutivas informacoes_extras informacao_extra_edit informacao_extra_new create_parentesco new_parentesco show_parentescos recebimentos financeiro ]
   before_action :validar_usuario#, only: %i[ show edit update destroy devolutivas informacoes_extras informacao_extra_edit informacao_extra_new ]
   include Pagy::Backend
@@ -188,6 +190,25 @@ class PessoasController < ApplicationController
   end
 
   def recebimentos
+    @de = if !params[:de].nil? then params[:de].to_date end || @pessoa.recebimentos.order(data: :asc).first.data
+    @ate = if !params[:ate].nil? then params[:ate].to_date end || @pessoa.recebimentos.order(data: :desc).first.data
+    @recebimentos = @pessoa.recebimentos.where(data: @de..@para)
+    respond_to do |format|
+      format.html
+      format.csv do
+        send_data Recebimento.para_csv(collection: @recebimentos), type: "text/csv", filename: "#{Rails.application.class.module_parent.to_s}_#{@pessoa.nome_completo.parameterize}_#{@de}_#{@ate}.csv"
+      end
+      format.zip do
+        compressed_filestream = Zip::OutputStream.write_buffer do |zos|
+          @pessoa.recebimentos.each do |recebimento|
+            zos.put_next_entry "recibo_#{@pessoa.nome_completo.parameterize}_#{recebimento.data}_#{recebimento.id}.md"
+            zos.print recebimento.recibo_markdown
+          end
+        end
+        compressed_filestream.rewind
+        send_data compressed_filestream.read, filename: "#{Rails.application.class.module_parent}_recibos-markdown_#{@pessoa.nome_completo.parameterize}_#{Date.today}_#{usuario_atual.hash}.zip"
+      end
+    end
   end
 
   def financeiro

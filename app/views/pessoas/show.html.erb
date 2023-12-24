@@ -36,6 +36,9 @@
     <% end %>
 
     <p>
+    Nacionalidade: <%= @pessoa.nascimento_pais.nil? ? "Sem informação" : @pessoa.nascimento_pais.nome %>
+    </p>
+    <p>
     CPF <%= @pessoa.render_cpf %>
     </p>
 

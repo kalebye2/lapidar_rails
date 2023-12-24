@@ -1,0 +1,20 @@
+<table class="tabela-recebimentos" id="tabela-recebimentos">
+  <caption>
+    Recebimentos
+  </caption>
+  <thead>
+    <tr>
+      <th>Beneficiário</th>
+      <th>Pagante</th>
+      <th>Data</th>
+      <th>Valor</th>
+      <th>Forma de pagamento</th>
+      <th>Profissional</th>
+      <th>Tipo de serviço</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+<% recebimentos.each do |recebimento| %>
+  <%= render "recebimentos/tabela-item", recebimento: recebimento %>
+<% end %>
+</table>
