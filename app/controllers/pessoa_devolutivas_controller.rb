@@ -8,6 +8,13 @@ class PessoaDevolutivasController < ApplicationController
 
   # GET /pessoa_devolutivas/1 or /pessoa_devolutivas/1.json
   def show
+    respond_to do |format|
+      format.html
+      format.md do
+        response.headers["Content-Type"] = "text/markdown"
+        response.headers["Content-Disposition"] = "attachment; filename=devolutiva_#{@pessoa_devolutiva.pessoa.nome_completo.parameterize}_#{@pessoa_devolutiva.data}.md"
+      end
+    end
   end
 
   # GET /pessoa_devolutivas/new
@@ -69,6 +76,6 @@ class PessoaDevolutivasController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def pessoa_devolutiva_params
-      params.require(:pessoa_devolutiva).permit(:pessoa_id, :pessoa_responsavel_id, :profissional_id, :data, :feedback_responsavel, :orientacoes_profissional)
+      params.require(:pessoa_devolutiva).permit(:pessoa_id, :pessoa_responsavel_id, :profissional_id, :data, :feedback_responsavel, :orientacoes_profissional, :pontos_a_abordar)
     end
 end

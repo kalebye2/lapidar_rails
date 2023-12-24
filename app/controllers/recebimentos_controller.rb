@@ -60,7 +60,7 @@ class RecebimentosController < ApplicationController
           end
         end
         compressed_filestream.rewind
-        send_data compressed_filestream.read, filename: "recebimentos_#{@de}_#{@ate}.zip"
+        send_data compressed_filestream.read, filename: "#{Rails.application.class.module_parent.to_s}_recibos-markdown_#{@de}_#{@ate}_#{usuario_atual.hash}.zip"
       end
     end
   end
