@@ -93,10 +93,11 @@
       <th>Feedback do responsável</th>
       <td id="<%= curr_id %>">
         <form <%== hx_set patch: caminho, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>
-          <textarea placeholder="Descreva..." name="pessoa_devolutiva[feedback_responsavel]" cols="50" rows="10"><%= devolutiva.feedback_responsavel %></textarea>
+          <textarea placeholder="Descreva..." name="pessoa_devolutiva[feedback_responsavel]" cols="50" rows="10" id="<%= "#{curr_id}-textarea" %>"><%= devolutiva.feedback_responsavel %></textarea>
           <br>
           <button>Confirmar</button>
           <button <%== hx_set get: caminho_show, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>Cancelar</button>
+          <%== simplemde_gerar "#{curr_id}-textarea" %>
         </form>
       </td>
     </tr>
@@ -106,10 +107,11 @@
       <th>Orientações</th>
       <td id="<%= curr_id %>">
         <form <%== hx_set patch: caminho, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>
-          <textarea placeholder="Descreva..." name="pessoa_devolutiva[orientacoes_profissional]" cols="50" rows="10"><%= devolutiva.orientacoes_profissional %></textarea>
+          <textarea placeholder="Descreva..." id="<%= curr_id %>-textarea" name="pessoa_devolutiva[orientacoes_profissional]" cols="50" rows="10"><%= devolutiva.orientacoes_profissional %></textarea>
           <br>
           <button>Confirmar</button>
           <button <%== hx_set get: caminho_show, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>Cancelar</button>
+          <%== simplemde_gerar "#{curr_id}-textarea" %>
         </form>
       </td>
     </tr>
@@ -118,3 +120,4 @@
 <% else %>
   <%= render "form-antigo", devolutiva: devolutiva %>
 <% end %>
+

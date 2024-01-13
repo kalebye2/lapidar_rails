@@ -9,7 +9,7 @@
       <% curr_id = "#{cl}-paciente" %>
       <th width="20%">Paciente</th>
       <td id="<%= curr_id %>">
-        <%= devolutiva.paciente.nome_completo %>
+        <%= link_to devolutiva.paciente.nome_completo, pessoa_path(devolutiva.paciente) %>
         <button <%== hx_set get: caminho_edit, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>alterar</button>
       </td>
     </tr>
@@ -26,7 +26,10 @@
       <% curr_id = "#{cl}-responsavel" %>
       <th>Responsável</th>
       <td id="<%= curr_id %>">
-        <%= devolutiva.responsavel.nome_completo %>
+        <%= link_to pessoa_path(devolutiva.responsavel) do %>
+          <%= devolutiva.responsavel.nome_completo %>
+          <%= devolutiva.paciente.pessoa_parentesco_juncoes.find_by(parente: devolutiva.responsavel).try { |p| "(#{p.parentesco.parentesco.upcase})" } %>
+        <% end %>
         <button <%== hx_set get: caminho_edit, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>alterar</button>
       </td>
     </tr>
@@ -35,7 +38,7 @@
       <% curr_id = "#{cl}-profissional" %>
       <th>Profissional</th>
       <td id="<%= curr_id %>">
-        <%= devolutiva.profissional.descricao_completa %>
+        <%= link_to devolutiva.profissional.descricao_completa, profissional_path(devolutiva.profissional) %>
         <button <%== hx_set get: caminho_edit, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>alterar</button>
       </td>
     </tr>
@@ -56,7 +59,7 @@
       <% curr_id = "#{cl}-pontos-abordar" %>
       <th>Pontos a abordar</th>
       <td id="<%= curr_id %>">
-        <%== markdown_to_html devolutiva.pontos_a_abordar %>
+        <%== markdown_to_html(devolutiva.pontos_a_abordar).gsub(/{%\s*(paciente|pessoa|cliente)\s*%}/, devolutiva.paciente.nome).gsub(/{%\s*(responsavel|responsável|interessado|entrevistado)\s*%}/, devolutiva.responsavel.nome) %>
         <button <%== hx_set get: caminho_edit, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>alterar</button>
       </td>
     </tr>
@@ -65,18 +68,18 @@
       <% curr_id = "#{cl}-feedback-responsavel" %>
       <th>Feedback do responsável</th>
       <td id="<%= curr_id %>">
-        <%== markdown_to_html devolutiva.feedback_responsavel %>
+        <%== markdown_to_html devolutiva.substituir_template_por_dados(:feedback_responsavel) %>
         <button <%== hx_set get: caminho_edit, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>alterar</button>
       </td>
     </tr>
 
     <tr>
-      <% curr_id = "#{cl}-orientacoes-profissional" %>
-      <th>Orientações</th>
-      <td id="<%= curr_id %>">
-        <%== markdown_to_html devolutiva.orientacoes_profissional %>
-        <button <%== hx_set get: caminho_edit, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>alterar</button>
-      </td>
+    <% curr_id = "#{cl}-orientacoes-profissional" %>
+    <th>Orientações</th>
+    <td id="<%= curr_id %>">
+      <%== markdown_to_html devolutiva.substituir_template_por_dados(:orientacoes_profissional) %>
+    <button <%== hx_set get: caminho_edit, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>alterar</button>
+    </td>
     </tr>
   </tbody>
 </table>

@@ -61,7 +61,7 @@ Paciente
 : <%= @pessoa_devolutiva.paciente.nome_completo %>
 
 Responsável
-: <%= @pessoa_devolutiva.responsavel.nome_completo %>
+: <%= @pessoa_devolutiva.responsavel.nome_completo %><%= @pessoa.devolutiva.paciente.pessoa_parentesco_juncoes.find_by(parente: @pessoa.devolutiva.responsavel).try(:parentesco).try(:parentesco).try(:upcase) %>
 
 Profissional
 : <%= @pessoa_devolutiva.profissional.descricao_completa %>
@@ -71,8 +71,8 @@ Data
 
 # Feedback do Responsável
 
-<%== @pessoa_devolutiva.feedback_responsavel %>
+<%== @pessoa_devolutiva.feedback_responsavel.gsub(/{%\s*paciente\s*%}/, @pessoa_devolutiva.paciente.nome) %>
 
 # Orientações do profissional
 
-<%== @pessoa_devolutiva.orientacoes_profissional %>
+<%== @pessoa_devolutiva.orientacoes_profissional.gsub(/{%\s*paciente\s*%}/, @pessoa_devolutiva.paciente.nome) %>
