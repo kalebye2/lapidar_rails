@@ -1,147 +1,44 @@
 <% titulo "Laudo" %>
 
 <div id="<%= dom_id(@laudo) %>">
-  <form <%== hx_set patch: laudo_path(@laudo, ajax: true), target: "##{dom_id(@laudo)}", swap: "outerHTML", select: "##{dom_id(@laudo)}" %> >
-    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
-    <button name="laudo[fechado]" value="<%= !@laudo.fechado? ? 1 : 0 %>">
-      <%= @laudo.fechado? ? "Permitir edição" : "Fechar edição" %>
-    </button>
-  </form>
+  <div>
+    <form <%== hx_set patch: laudo_path(@laudo, ajax: true), target: "##{dom_id(@laudo)}", swap: "outerHTML", select: "##{dom_id(@laudo)}" %> >
+      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+      <button name="laudo[fechado]" value="<%= !@laudo.fechado? ? 1 : 0 %>">
+        <%= @laudo.fechado? ? "Permitir edição" : "Fechar edição" %>
+      </button>
+    </form>
 
-  <%= link_to "editar", edit_laudo_path(@laudo) %>
-  <%= link_to "download markdown", laudo_path(@laudo, format: :md), { target: :blank } %>
+    <%= link_to "editar", edit_laudo_path(@laudo) %>
+    <%= link_to "download markdown", laudo_path(@laudo, format: :md), { target: :blank } %>
 
-  <p>
-  <% if @laudo.fechado? %>
-    <h1>
-      Laudo - <%= @laudo.acompanhamento.render_info_para_profissional %>
-    </h1>
-  <% else %>
-    <%= form_for(@laudo, html: {'hx-patch' => identificacao_update_laudo_path(@laudo), 'hx-trigger' => "change", 'hx-target' => "#identificacao"}) do |form| %>
-      <%= form.select :acompanhamento_id, Acompanhamento.do_profissional(usuario_atual.profissional).order(:data_inicio).map { |acompanhamento| [acompanhamento.render_info_para_profissional, acompanhamento.id] } %>
-    <% end %>
-  <% end %>
-  </p>
-
-  <% if @laudo.fechado? %>
-    <h2>Identificação</h2>
-    <table>
-      <tr>
-        <th width="15%">
-          Avaliador
-        </th>
-        <td>
-          <%= @laudo.profissional.descricao_completa %>
-        </td>
-      </tr>
-
-      <tr>
-        <th>
-          Paciente
-        </th>
-        <td>
-          <%= @laudo.paciente.nome_completo %>
-        </td>
-      </tr>
-
-      <tr>
-        <th>
-          Sexo
-        </th>
-        <td>
-          <%= @laudo.pessoa.render_sexo %>
-        </td>
-      </tr>
-
-      <tr>
-        <th>
-          Data
-        </th>
-        <td>
-          <%= render_data_brasil @laudo.data_inicial %>
-          a
-          <%= render_data_brasil @laudo.data_final %>
-          (<%= @laudo.dias_de_avaliacao %>)
-        </td>
-      </tr>
-
-      <tr>
-        <th>
-          Idade
-        </th>
-        <td>
-          <%= @laudo.pessoa.render_idade %>
-        </td>
-      </tr>
-
-      <tr>
-        <th>
-          Interessado
-        </th>
-        <td>
-          <%= @laudo.interessado|| @laudo.pessoa.nome_completo %>
-        </td>
-      </tr>
-
-      <tr>
-        <th>
-          Finalidade da avaliação
-        </th>
-        <td>
-          <%= @laudo.finalidade %>
-        </td>
-      </tr>
-
-      <tr>
-        <th>
-          Nº de sessões
-        </th>
-        <td>
-          <%= @laudo.num_sessoes %>
-        </td>
-      </tr>
-    </table>
-
-    <h2>Demanda</h2>
-    <%== markdown_to_html @laudo.demanda.gsub(/{%\s*paciente\s*%}/, @laudo.paciente.nome_completo) || "Não definida" %>
-
-    <h2>Instrumentos usados</h2>
-    <% if @laudo.acompanhamento.instrumentos_aplicados.count == 0 %>
-      <p>Nenhum instrumento aplicado.</p>
+    <p>
+    <% if @laudo.fechado? %>
+      <h1 style="text-align:center;">
+        Laudo - <%= @laudo.render_titulo %>
+      </h1>
     <% else %>
-      <ul>
-        <% @laudo.acompanhamento.instrumentos_aplicados.each do |i| %>
-          <li>
-            <%= i.nome %>
-            (<%= i.instrumento_tipo.tipo.upcase %>)
-          </li>
-        <% end %>
-      </ul>
+      <%= form_for(@laudo, html: {'hx-patch' => identificacao_update_laudo_path(@laudo), 'hx-trigger' => "change", 'hx-target' => "#identificacao"}) do |form| %>
+        <%= form.select :acompanhamento_id, Acompanhamento.do_profissional(usuario_atual.profissional).order(:data_inicio).map { |acompanhamento| [acompanhamento.render_info_para_profissional, acompanhamento.id] } %>
+      <% end %>
     <% end %>
-
-    <h2>Técnicas utilizadas</h2>
-    <%== markdown_to_html @laudo.tecnicas.gsub(/{%\s*paciente\s*%}/, @laudo.paciente.nome_completo) || "Sem informações" %>
-
-    <h2>Análise</h2>
-    <%== markdown_to_html @laudo.analise.gsub(/{%\s*paciente\s*%}/, @laudo.paciente.nome_completo) || "Sem informações" %>
-    <h2>Conclusão</h2>
-    <%== markdown_to_html @laudo.conclusao.gsub(/{%\s*paciente\s*%}/, @laudo.paciente.nome_completo) || "Sem informações" %>
-    <% if @laudo.referencias.nil? %>
-    <% else %>
-      <h2>Referências</h2>
-    <%== markdown_to_html @laudo.referencias.gsub(/{%\s*paciente\s*%}/, @laudo.paciente.nome_completo) || "Sem informações" %>
-    <% end %>
-
-  <% else %>
-
-    <table class="tabela-laudo">
-      <caption><%= @laudo.finalidade %> por <%= @laudo.profissional.nome_abreviado %> - <%= @laudo.profissional.funcao %> <%= @laudo.profissional.documento %></caption>
-      <thead id="identificacao">
-        <%= render 'laudos/tabela-identificacao', laudo: @laudo %>
-      </thead>
-      <tbody id="informacoes">
-        <%= render 'laudos/tabela-informacoes', laudo: @laudo %>
-      </tbody>
-    </table>
-  <% end %>
+    </p>
   </div>
+
+  <div>
+    <% if @laudo.fechado? %>
+      <%= render "laudo_fechado", laudo: @laudo %>
+    <% else %>
+
+      <table class="tabela-laudo">
+        <caption><%= @laudo.finalidade %> por <%= @laudo.profissional.nome_abreviado %> - <%= @laudo.profissional.funcao %> <%= @laudo.profissional.documento %></caption>
+        <thead id="identificacao">
+          <%= render 'laudos/tabela-identificacao', laudo: @laudo %>
+        </thead>
+        <tbody id="informacoes">
+          <%= render 'laudos/tabela-informacoes', laudo: @laudo %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>

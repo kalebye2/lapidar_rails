@@ -1,0 +1,109 @@
+<div class="documento" style="width:45em;margin:auto;">
+  <h2>Identificação</h2>
+  <table>
+    <tr>
+      <th width="15%">
+        Avaliador
+      </th>
+      <td>
+        <%= laudo.profissional.descricao_completa %>
+      </td>
+    </tr>
+
+    <tr>
+      <th>
+        Paciente
+      </th>
+      <td>
+        <%= laudo.paciente.nome_completo %>
+      </td>
+    </tr>
+
+    <tr>
+      <th>
+        Sexo
+      </th>
+      <td>
+        <%= laudo.pessoa.render_sexo %>
+      </td>
+    </tr>
+
+    <tr>
+      <th>
+        Data
+      </th>
+      <td>
+        <%= render_data_brasil laudo.data_inicial %>
+        a
+        <%= render_data_brasil laudo.data_final %>
+        (<%= laudo.dias_de_avaliacao %> dias)
+      </td>
+    </tr>
+
+    <tr>
+      <th>
+        Idade
+      </th>
+      <td>
+        <%= laudo.pessoa.render_idade %>
+      </td>
+    </tr>
+
+    <tr>
+      <th>
+        Interessado
+      </th>
+      <td>
+        <%= laudo.interessado|| laudo.pessoa.nome_completo %>
+      </td>
+    </tr>
+
+    <tr>
+      <th>
+        Finalidade da avaliação
+      </th>
+      <td>
+        <%= laudo.finalidade %>
+      </td>
+    </tr>
+
+    <tr>
+      <th>
+        Nº de sessões
+      </th>
+      <td>
+        <%= laudo.num_sessoes %>
+      </td>
+    </tr>
+  </table>
+
+  <h2>Demanda</h2>
+  <%== markdown_to_html laudo.demanda.gsub(/{%\s*paciente\s*%}/, laudo.paciente.nome_completo) || "Não definida" %>
+
+  <h2>Instrumentos usados</h2>
+  <% if laudo.acompanhamento.instrumentos_aplicados.count == 0 %>
+    <p>Nenhum instrumento aplicado.</p>
+  <% else %>
+    <ul>
+      <% laudo.acompanhamento.instrumentos_aplicados.each do |i| %>
+        <li>
+          <%= i.nome %>
+          (<%= i.instrumento_tipo.tipo.upcase %>)
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <h2>Técnicas utilizadas</h2>
+  <%== markdown_to_html laudo.tecnicas.gsub(/{%\s*paciente\s*%}/, laudo.paciente.nome_completo) || "Sem informações" %>
+
+  <h2>Análise</h2>
+  <%== markdown_to_html laudo.analise.gsub(/{%\s*paciente\s*%}/, laudo.paciente.nome_completo) || "Sem informações" %>
+  <h2>Conclusão</h2>
+  <%== markdown_to_html laudo.conclusao.gsub(/{%\s*paciente\s*%}/, laudo.paciente.nome_completo) || "Sem informações" %>
+  <% if laudo.referencias.nil? %>
+  <% else %>
+    <h2>Referências</h2>
+    <%== markdown_to_html laudo.referencias.gsub(/{%\s*paciente\s*%}/, laudo.paciente.nome_completo) || "Sem informações" %>
+  <% end %>
+</div>

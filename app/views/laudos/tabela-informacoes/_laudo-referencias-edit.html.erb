@@ -1,10 +1,12 @@
+<% curr_id = "tabela-laudo-informacoes-referencias-textarea" %>
 <form id="laudo-referencias-edit"
       hx-target="#informacoes"
       hx-patch="<%= informacoes_update_laudo_path(laudo) %>"
       hx-target="#identificacao">
   <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-  <textarea style="width:90%;height:10em;" name="laudo[referencias]" value="<%= laudo.referencias %>" placeholder="Descreva a referencias detalhadamente"><%= laudo.referencias %></textarea>
+  <textarea id="<%= curr_id %>" style="width:90%;height:10em;" name="laudo[referencias]" value="<%= laudo.referencias %>" placeholder="Descreva a referencias detalhadamente"><%= laudo.referencias %></textarea>
   <br>
   <button>Ok</button>
   <button hx-get="<%= referencias_laudo_path(laudo) %>" hx-target="#laudo-referencias-edit" hx-swap="outerHTML">Cancelar</button>
+  <%== simplemde_gerar curr_id %>
 </form>

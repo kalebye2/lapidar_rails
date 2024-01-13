@@ -22,4 +22,8 @@ class Laudo < ApplicationRecord
   def dias_de_avaliacao
     (data_final - data_inicial).to_i
   end
+
+  def render_titulo
+    acompanhamento.tipo&.upcase
+  end
 end
