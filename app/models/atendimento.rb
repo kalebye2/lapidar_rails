@@ -29,9 +29,13 @@ class Atendimento < ApplicationRecord
   scope :reagendados, -> { where(reagendado: true) }
   # ordenados
   scope :em_ordem, -> (ordem = :asc) { order(data: ordem, horario: ordem) }
+  scope :sem_anotacoes, -> { where(anotacoes: [nil, ""]) }
+  scope :com_anotacoes, -> { where.not(anotacoes: [nil, ""]) }
 
   # agrupamentos
   scope :contagem_por_dia, -> (de: Atendimento.minimum(:data), ate: Atendimento.maximum(:data)) { where(data: de..ate).group(:data).count }
+  scope :contagem_por_mes, -> (de: Atendimento.minimum(:data), ate: Atendimento.maximum(:data)) { where(data: de..ate).group(:data).count }
+  scope :contagem_por_profissional, -> { group(:profissional).count }
 
   def consideracoes
     anotacoes

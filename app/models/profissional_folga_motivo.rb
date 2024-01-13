@@ -1,0 +1,3 @@
+class ProfissionalFolgaMotivo < ApplicationRecord
+
+end

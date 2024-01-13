@@ -49,7 +49,7 @@ class Pessoa < ApplicationRecord
 
   has_many :atendimento_valores, through: :atendimentos
 
-  has_many :pessoa_extra_informacao
+  has_many :pessoa_extra_informacoes
 
 
 
@@ -245,7 +245,7 @@ class Pessoa < ApplicationRecord
   end
 
   def informacoes_extras
-    pessoa_extra_informacao
+    pessoa_extra_informacoes
   end
 
   def atendimentos_futuros
@@ -266,11 +266,11 @@ class Pessoa < ApplicationRecord
   end
 
   def pronome_tratamento
-    pronome_no_feminino = (feminino && !inverter_pronome_tratamento) || (!feminino && inverter_pronome_tratamento)
-    pronome_no_feminino ? pessoa_tratamento_pronome.pronome_feminino : pessoa_tratamento_pronome.pronome_masculino
+    no_feminino? ? pessoa_tratamento_pronome&.pronome_feminino : pessoa_tratamento_pronome&.pronome_masculino
   end
 
   def pronome_tratamento_abreviado
+    no_feminino? ? pessoa_tratamento_pronome.pronome_feminino_abreviado : pessoa_tratamento_pronome.pronome_masculino_abreviado
   end
 
   def atendimentos_a_partir_de_hoje
@@ -278,7 +278,7 @@ class Pessoa < ApplicationRecord
   end
 
   def grau_de_instrucao
-    instrucao_grau.nil? ? "" : instrucao_grau.grau
+    instrucao_grau&.grau
   end
 
   private

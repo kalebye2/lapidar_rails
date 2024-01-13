@@ -4,6 +4,7 @@ class Profissional < ApplicationRecord
   has_one :usuario
   has_many :profissional_especializacao_juncoes, foreign_key: :profissional_id
   has_many :especializacoes, through: :profissional_especializacao_juncoes
+  has_many :profissional_horarios
 
   has_many :acompanhamentos
   has_many :acompanhamento_horarios, through: :acompanhamentos
@@ -16,20 +17,23 @@ class Profissional < ApplicationRecord
   has_many :repasses, class_name: "ProfissionalFinanceiroRepasse"
   has_many :instrumento_relatos, through: :atendimento
   has_many :instrumentos_que_aplicou, through: :instrumento_relatos, source: :instrumento
+  alias instrumentos_aplicados instrumentos_que_aplicou
 
   has_many :profissional_documento_modelos
 
   has_many :profissional_especializacao_juncoes
   has_many :profissional_especializacoes, through: :profissional_especializacao_juncoes
 
+  has_many :profissional_folgas
+
   scope :com_atendimentos_futuros, -> { includes(:atendimentos).where("atendimentos.data" => Date.today.. )}
   scope :ordem_alfabetica, -> { includes(:pessoa).order("pessoas.nome" => :asc, "pessoas.nome_do_meio" => :asc, "pessoas.sobrenome" => :asc) }
   default_scope { includes(:pessoa, :usuario, :profissional_funcao) }
 
 
-  def clientes
-    pacientes
-  end
+  alias clientes pacientes
+  alias folgas profissional_folgas
+  alias horarios_disponiveis profissional_horarios
 
   def documento
     if profissional_funcao.documento_tipo == nil then return "" end
