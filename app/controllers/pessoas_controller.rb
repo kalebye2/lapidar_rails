@@ -73,7 +73,7 @@ class PessoasController < ApplicationController
     end
     respond_to do |format|
       if @pessoa.update(pessoa_params)
-        format.html { redirect_to pessoa_url(@pessoa), notice: "Pessoa was successfully updated." }
+        format.html { redirect_to pessoa_url(@pessoa), notice: "Cadastro atualizado com sucesso!" }
         format.json { render :show, status: :ok, location: @pessoa }
       else
         format.html { render :edit, status: :unprocessable_entity }

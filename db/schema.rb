@@ -82,8 +82,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "tipo", limit: 100
   end
 
-  create_table "atendimento_valores", id: false, force: :cascade do |t|
-    t.integer "atendimento_id", null: false
+  create_table "atendimento_valores", primary_key: "atendimento_id", force: :cascade do |t|
     t.integer "valor"
     t.integer "desconto", default: 0
     t.integer "taxa_porcentagem_externa", default: 0
@@ -104,6 +103,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "reagendado", default: false
     t.text "avancos"
     t.text "limitacoes"
+    t.boolean "solicitar_reagendamento"
   end
 
   create_table "biblioteca_autores", force: :cascade do |t|
@@ -643,6 +643,17 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "modalidade_id", null: false
   end
 
+  create_table "profissional_folga_motivos", force: :cascade do |t|
+    t.string "motivo", limit: 255
+  end
+
+  create_table "profissional_folgas", force: :cascade do |t|
+    t.integer "profissional_id", null: false
+    t.date "data_inicio", null: false
+    t.date "data_final", null: false
+    t.integer "profissional_folga_motivo_id"
+  end
+
   create_table "profissional_funcoes", force: :cascade do |t|
     t.string "funcao", limit: 255, null: false
     t.string "orgao_responsavel", limit: 255
@@ -653,6 +664,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "adjetivo_fem", limit: 255
     t.integer "realiza_atendimentos"
   end
+
+# Could not dump table "profissional_horarios" because of following StandardError
+#   Unknown type '' for column 'semana_dia_id'
 
   create_table "profissional_notas", force: :cascade do |t|
     t.integer "profissional_id", null: false
@@ -795,6 +809,10 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "profissional_especializacao_juncoes", "profissional_especializacaos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_especializacao_juncoes", "profissional_especializacoes", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_financeiro_repasses", "profissionais", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "profissional_folgas", "profissionais", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "profissional_folgas", "profissional_folga_motivos", on_update: :cascade, on_delete: :nullify
+  add_foreign_key "profissional_horarios", "profissionais", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "profissional_horarios", "semana_dias", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_notas", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "psicologia_subfuncoes", "psicologia_funcoes", on_update: :cascade, on_delete: :cascade
   add_foreign_key "reajustes", "acompanhamentos", on_update: :cascade, on_delete: :cascade

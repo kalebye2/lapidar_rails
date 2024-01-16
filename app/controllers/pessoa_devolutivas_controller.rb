@@ -14,6 +14,10 @@ class PessoaDevolutivasController < ApplicationController
         response.headers["Content-Type"] = "text/markdown"
         response.headers["Content-Disposition"] = "attachment; filename=devolutiva_#{@pessoa_devolutiva.pessoa.nome_completo.parameterize}_#{@pessoa_devolutiva.data}.md"
       end
+      format.pdf do
+        pdf = PessoaDevolutivaPdf.new(@pessoa_devolutiva)
+        send_data pdf.render, filename: "devolutiva.pdf", type: "application/pdf", disposition: :inline
+      end
     end
   end
 

@@ -91,3 +91,7 @@ gem 'pagy'
 
 # faker
 gem 'faker'
+
+# for pdf
+gem 'prawn'
+gem 'prawn-markup'

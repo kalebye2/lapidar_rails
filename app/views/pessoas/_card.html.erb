@@ -3,6 +3,9 @@
   <%= link_to p, class: "pessoa-card" + " " + (p.feminino ? "feminino" : "masculino") + " " + "#{pro ? "profissional" : "usuario" }" do%>
     <div>
       <h2><%= p.nome_abreviado %><%#= p.feminino ? "(F)" : "(M)" %></h2>
+      <% if !p.imagem_perfil.nil? %>
+        <img class="pessoa-profile-img" src="<%= p.imagem_perfil %>">
+      <% end %>
 
       <h6>
         <%= if pro != nil then pro.profissional_funcao.funcao.upcase else p.profissao != nil ? p.profissao.upcase : "NA" end %>

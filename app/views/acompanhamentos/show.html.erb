@@ -76,11 +76,16 @@
 </h3>
 
 <p>Início em
+<%
+=begin %>
 <% if usuario %>
   <input type="date" name="acompanhamento[data_inicio]" value="<%= @acompanhamento.data_inicio %>" hx-patch="<%= acompanhamento_path(@acompanhamento, ajax: true, authenticity_token: form_authenticity_token.to_s) %>">
 <% else %>
 <%= render_data_brasil @acompanhamento.data_inicio %>
 <% end %>
+<%
+=end %>
+<%= render_data_brasil @acompanhamento.primeiro_atendimento.data %>
 </p>
 
 <% if usuario %>

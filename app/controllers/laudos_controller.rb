@@ -16,6 +16,13 @@ class LaudosController < ApplicationController
         response.headers['Content-Disposition'] = "attachment; filename=laudo_#{@laudo.paciente.nome_completo.parameterize}_#{@laudo.data_avaliacao}.md"
       end
       format.html
+      format.pdf do
+        info = {
+          Title: "Laudo",
+        }
+        pdf = LaudoPdf.new(@laudo)
+        send_data pdf.render, filename: "laudo.pdf", type: "application/pdf", disposition: :inline
+      end
     end
   end
 

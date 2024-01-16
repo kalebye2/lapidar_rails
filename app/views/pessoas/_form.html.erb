@@ -72,6 +72,11 @@
   </div>
 
   <div class="field">
+    <%= form.label :nascimento_pais_id, "Natural de" %>
+    <%= form.select :nascimento_pais_id, Pais.order(nome: :asc).pluck(:nome, :id), selected: @pessoa.nascimento_pais_id, include_blank: true %>
+  </div>
+
+  <div class="field">
     <%= form.label :email %>
     <%= form.text_field :email %>
   </div>

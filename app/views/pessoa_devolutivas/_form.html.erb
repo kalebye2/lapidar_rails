@@ -80,10 +80,11 @@
       <th>Pontos a abordar</th>
       <td id="<%= curr_id %>">
         <form <%== hx_set patch: caminho, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>
-          <textarea placeholder="Descreva..." name="pessoa_devolutiva[pontos_a_abordar]" cols="50" rows="10"><%= devolutiva.pontos_a_abordar %></textarea>
+          <textarea id="<%= curr_id %>-textarea" placeholder="Descreva..." name="pessoa_devolutiva[pontos_a_abordar]" cols="50" rows="10"><%= devolutiva.pontos_a_abordar %></textarea>
           <br>
           <button>Confirmar</button>
           <button <%== hx_set get: caminho_show, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>Cancelar</button>
+          <%== simplemde_gerar "#{curr_id}-textarea" %>
         </form>
       </td>
     </tr>

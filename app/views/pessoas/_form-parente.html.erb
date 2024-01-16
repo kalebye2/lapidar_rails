@@ -1,4 +1,4 @@
-<form <%== hx_set post: create_parentesco_pessoa_path(pessoa, ajax: true), swap: "outerHTML", target: "#pessoa-parentes" %>>
+<form <%== hx_set post: create_parentesco_pessoa_path(pessoa, ajax: true), swap: "innerHTML", target: "#pessoa-parentes" %>>
   <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
   <% if pessoa.nil? %>
     <label for="pessoa[id]">Pessoa</label>

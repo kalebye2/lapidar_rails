@@ -2,6 +2,7 @@ class Laudo < ApplicationRecord
   belongs_to :acompanhamento
   has_one :pessoa, through: :acompanhamento
   has_one :profissional, through: :acompanhamento
+  has_many :instrumentos_aplicados, through: :acompanhamento
 
   def paciente
     pessoa
@@ -25,5 +26,9 @@ class Laudo < ApplicationRecord
 
   def render_titulo
     acompanhamento.tipo&.upcase
+  end
+
+  def substituir_template_por_dados atributo=""
+    self[atributo]&.to_s&.gsub(/{%\s*(paciente|pessoa|cliente)\s*%}/, pessoa.nome)
   end
 end

@@ -43,6 +43,8 @@
   <% if !usuario_atual.nil? && (usuario_atual.secretaria? || usuario_atual.profissional == atendimento.profissional)%>
     <td>
       <%= link_to "acompanhar", atendimento.acompanhamento %>
+      <%= link_to "registrar atendimento para a próxima semana", acompanhamento_new_atendimento_proxima_semana_path(atendimento.acompanhamento, acompanhamento_id: atendimento.acompanhamento.id), method: :post %>
+      <%# LEMBRE DE IMPLEMENTAR O "SOLICITAR REAGENDAMENTO" %>
     </td>
   <% end %>
 </tr>

@@ -4,11 +4,7 @@ module ApplicationHelper
   def titulo(titulo)
     # nome do site
     site_name = Rails.application.class.module_parent_name.to_s
-    if !titulo.blank?
-      content_for :titulo, titulo + " - " + site_name # nome do app
-    else
-      content_for :titulo, site_name
-    end
+    content_for :titulo, [titulo.presence, site_name].compact.join(" | ")
   end
 
   def render_tempo_meses_resumido(tempo_meses = 0)
@@ -288,5 +284,16 @@ module ApplicationHelper
     <textarea #{hx_options.map{ |k,v| v.to_s.blank? ? "" : "#{html_escape k}=\"#{html_escape v}\""}.join(' ')}>#{texto}</textarea>
     </td>
     </tr>"
+  end
+
+  # SimpleMDE
+  def simplemde_gerar id=""
+    "<script>
+        var simplemde = simplemde || {};
+        simplemde[\"#{id}\"] = new SimpleMDE({ element: document.getElementById(\"#{id}\") });
+        simplemde[\"#{id}\"].codemirror.on(\"change\", function() {
+                      document.getElementById(\"#{id}\").innerHTML = simplemde[\"#{id}\"].value();
+                    });
+      </script>"
   end
 end

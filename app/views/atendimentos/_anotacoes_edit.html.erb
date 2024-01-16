@@ -1,20 +1,22 @@
+<% curr_id = "tabela-atendimentos-anotacoes-textarea" %>
 <form class="edit_atendimento"
       id="edit_<%= dom_id(atendimento) %>"
       hx-patch="<%= anotacoes_update_atendimento_path(atendimento) %>"
       hx-target="#<%= dom_id(atendimento) %>_anotacoes">
 <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>" autocomplete="off">
 <textarea value="<%= atendimento.anotacoes %>"
-          id="<%= dom_id(atendimento) %>[anotacoes]"
+          id="<%= curr_id %>"
           rows="10"
           columns="60"
           name="atendimento[anotacoes]"><%= atendimento.anotacoes %></textarea>
 <br>
-<button
-          hx-get="<%= anotacoes_atendimento_path(atendimento) %>"
-          hx-target="#<%= dom_id(atendimento) %>_anotacoes">
-          Cancelar
-</button>
 <button>
   Confirmar
 </button>
+<button
+    hx-get="<%= anotacoes_atendimento_path(atendimento) %>"
+    hx-target="#<%= dom_id(atendimento) %>_anotacoes">
+    Cancelar
+</button>
+<%== simplemde_gerar curr_id %>
 </form>

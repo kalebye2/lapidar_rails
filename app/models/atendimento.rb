@@ -7,6 +7,7 @@ class Atendimento < ApplicationRecord
   has_one :atendimento_valor, foreign_key: :atendimento_id, primary_key: :id, inverse_of: :atendimento
   has_many :instrumento_relatos
   has_many :instrumentos, through: :instrumento_relatos
+  alias instrumentos_aplicados instrumentos
   has_one :infantojuvenil_anamnese
 
   accepts_nested_attributes_for :atendimento_valor
@@ -17,14 +18,15 @@ class Atendimento < ApplicationRecord
   scope :realizados, -> { where(presenca: true) }
   scope :nao_realizados, -> { where(presenca: [false, nil]) }
   scope :futuros, -> { where(data: [Date.today + 1.day..]).or(self.where(data: Date.today, horario: [Time.now.beginning_of_hour - 3.hour..])) }
+  scope :do_periodo, -> (periodo = Atendimento.minimum(:data)..Atendimento.maximum(:data), ordem = :asc) { where(data: periodo).order(data: ordem, horario: ordem) }
   scope :ate_hoje, -> { where(data: ..Date.today) }
   scope :de_hoje, -> (ordem = :asc) { where(data: Date.today).order(horario: ordem) }
   scope :da_semana, -> (semana: Date.today.all_week, ordem_data: :asc, ordem_horario: :asc) { where(data: semana).order(data: ordem_data, horario: ordem_horario) }
   scope :do_mes_atual, -> { where(data: Date.today.all_month) }
-  scope :deste_mes, -> { self.do_mes_atual }
+  scope :deste_mes, -> { do_mes_atual }
   scope :do_mes_passado, -> { where(data: (Date.today - 1.month).all_month) }
   scope :do_ano_atual, -> { where(data: Date.today.all_year) }
-  scope :deste_ano, -> { self.do_ano_atual }
+  scope :deste_ano, -> { do_ano_atual }
   scope :do_ano_passado, -> { where(data: (Date.today - 1.year).all_year) }
   scope :reagendados, -> { where(reagendado: true) }
   # ordenados
@@ -45,10 +47,7 @@ class Atendimento < ApplicationRecord
   def pessoa
     acompanhamento.pessoa
   end
-
-  def paciente
-    pessoa
-  end
+  alias paciente pessoa
 
   def profissional
     acompanhamento.profissional
@@ -145,29 +144,37 @@ class Atendimento < ApplicationRecord
     atendimento_local.nil? ? "Não definido" : atendimento_local.descricao
   end
 
-  def instrumentos_aplicados
-    instrumentos
-  end
-
   # como evento de calendário
   def evento_ics
-    "BEGIN:VEVENT
-SUMMARY:#{tipo.downcase.capitalize} - #{paciente.nome_completo}
-DTSTAMP:#{Time.now.strftime("%Y%m%dT%H%M%SZ")}
-DTSTART:#{data.strftime("%Y%m%d")}T#{horario.strftime("%H%M%S")}Z
-DTEND:#{(data_fim || data).strftime("%Y%m%d")}T#{(horario_fim || horario).strftime("%H%M%S")}Z
-LOCATION:#{local}
-ORGANIZER: #{profissional.descricao_completa}
-STATUS: #{status.upcase}
-UID:#{data.strftime("%Y%m%d")}#{horario.strftime("%H%M%S")}#{tipo.upcase.gsub(/\s/, '')}#{paciente.nome_completo.upcase.gsub(/\s/, '')}#{id}
-END:VEVENT
-"
+    "BEGIN:VEVENT" \
+      "\n" \
+      "SUMMARY:#{tipo.downcase.capitalize} - #{paciente.nome_completo}" \
+      "\n" \
+      "DTSTAMP:#{Time.now.strftime("%Y%m%dT%H%M%SZ")}" \
+      "\n" \
+      "DTSTART:#{data.strftime("%Y%m%d")}T#{horario.strftime("%H%M%S")}Z" \
+      "\n" \
+      "DTEND:#{(data_fim || data).strftime("%Y%m%d")}T#{(horario_fim || horario).strftime("%H%M%S")}Z" \
+      "\n" \
+      "LOCATION:#{local}" \
+      "\n" \
+      "ORGANIZER: #{profissional.descricao_completa}" \
+      "\n" \
+      "STATUS: #{status.upcase}" \
+      "\n" \
+      "UID:#{data.strftime("%Y%m%d")}#{horario.strftime("%H%M%S")}#{tipo.upcase.gsub(/\s/, '')}#{paciente.nome_completo.upcase.gsub(/\s/, '')}#{id}" \
+      "\n" \
+      "END:VEVENT" \
+      ""
   end
 
   def self.calendario_ics(collection: all)
-    "BEGIN:VCALENDAR
-VERSION:2.0
-#{collection.map(&:evento_ics).join('')}
-END:VCALENDAR"
+    "BEGIN:VCALENDAR" \
+      "\n" \
+      "VERSION:2.0" \
+      "\n" \
+      "#{collection.map(&:evento_ics).join('')}" \
+      "\n" \
+      "END:VCALENDAR"
   end
 end

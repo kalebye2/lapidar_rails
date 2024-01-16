@@ -31,6 +31,66 @@
   <% end %>
 </div>
 
+<div class="profissional-agenda">
+  <h3>Agenda disponibilizada</h3>
+  <% dias_da_semana = SemanaDia.all %>
+  <% @profissional.agenda_disponivel.map(&:semana_dia).uniq.each do |dia| %>
+    <b><%= dia.nome %></b>
+    <% @profissional.profissional_horarios.where(semana_dia: dia).map do |horario| %>
+      <%= render_hora_brasil horario.horario %>
+    <% end %>
+    <br>
+  <% end %>
+  <table>
+    <caption>Agenda</caption>
+    <thead>
+      <tr>
+        <th width="10%"></th>
+        <% dias_da_semana.each do |semana_dia| %>
+          <th><%= semana_dia.nome.upcase %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>Agenda disponível</th>
+        <% dias_da_semana.each do |semana_dia| %>
+          <td>
+              <% @profissional.profissional_horarios.where(semana_dia: semana_dia).map { |profissional_horario| [profissional_horario, @profissional.acompanhamento_horarios.de_acompanhamentos_em_andamento.where(semana_dia: profissional_horario.semana_dia, horario: profissional_horario.horario)] }.each do |profissional_horario| %>
+                <% atendimento_do_horario = [] %>
+                <% @profissional.atendimentos.do_periodo(Date.today..Date.today + 1.week).map do |a| %>
+                  <% if a.data.wday == semana_dia.id && a.horario == profissional_horario.first.horario then atendimento_do_horario.append a end %>
+                <% end %>
+
+                <% proh = profissional_horario[1] %>
+                <% proha = atendimento_do_horario %>
+                <% indisponivel = proh.count > 0 || proha.count > 0 %>
+                <p style="border-radius:1em;padding:1em;text-align:center;color:<%= indisponivel ? "lightyellow" : "lightgreen" %>;background-color:<%= indisponivel ? "darkorange" : "darkgreen"%>;cursor:default;">
+                <u><b><%= render_hora_brasil profissional_horario[0].horario %></b></u>
+                <%= indisponivel ? "Indisponível" : "Disponível" %>
+                <%#= @profissional.acompanhamento_horarios.de_acompanhamentos_em_andamento.where(semana_dia: profissional_horario.semana_dia, horario: profissional_horario.horario).map { |acompanhamento_horario| "#{acompanhamento_horario.pessoa.nome_abreviado }" }.join('') %>
+                <%#= @profissional.acompanhamento_horarios.de_acompanhamentos_em_andamento.where(semana_dia: profissional_horario.semana_dia, horario: profissional_horario.horario).map { |profissional_horario| "#{render_hora_brasil profissional_horario.horario} - #{profissional_horario.acompanhamento.paciente.nome_completo}" }.join('') %>
+                </p>
+              <% end %>
+          </td>
+        <% end %>
+      </tr>
+      <tr>
+        <th>Atendimentos dos próximos dias</th>
+        <% dias_da_semana.each do |semana_dia| %>
+          <td>
+            <ul>
+              <% @profissional.atendimentos.do_periodo(Date.today..Date.today + 1.week).map do |a| %>
+                <%== a.data.wday == semana_dia.id ? "<li>#{render_data_brasil a.data} às #{render_hora_brasil a.horario}</li><hr>" : "" %>
+              <% end %>
+            </ul>
+          </td>
+        <% end %>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <% if !@profissional.atendimentos_futuros.empty? && usuario_atual.profissional == @profissional %>
   <div class="atendimentos-futuros">
     <h3>Atendimentos futuros</h3>
