@@ -141,7 +141,9 @@ Rails.application.routes.draw do
   # horarios de atendimentos
   get '/agenda/fixa', to: "acompanhamento_horarios#index"
   get '/agenda/fixa/new', to: "acompanhamento_horarios#new", as: "new_acompanhamento_horario"
-  delete 'agenda/fixa/destruir', to: "acompanhamento_horarios#destroy", as: "destroy_acompanhamento_horario"
+  get '/agenda/fixa/voltar/:id', to: "acompanhamento_horarios#show_botao_novo_horario", as: "show_botao_novo_horario_acompanhamento_horario"
+  post '/agenda/fixa/:id', to: "acompanhamento_horarios#create", as: "acompanhamento_horarios"
+  delete 'agenda/fixa/destruir/:id', to: "acompanhamento_horarios#destroy", as: "acompanhamento_horario"
 
   resources :profissional_documento_modelos
 

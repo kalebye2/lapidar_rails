@@ -1,20 +1,9 @@
-<form <%== hx_set post: acompanhamento_horarios_path(ajax: true), target: "#acompanhamento-horarios" %>>
+<form <%== hx_set post: acompanhamento_horarios_path(acompanhamento, ajax: true), target: "#acompanhamento-horarios" %>>
   <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
 
-  <% if acompanhamento_horario.acompanhamento.nil? %>
-    <label for="acompanhamento_horario[acompanhamento_id]">Acompanhamento</label>
-    <select id="acompanhamento_horario[acompanhamento_id]" name="acompanhamento_horario[acompanhamento_id]">
-      <% Acompanhamento.por_paciente_em_ordem_alfabetica.each do |acompanhamento| %>
-        <option value="<%= acompanhamento.id %>"<%== if acompanhamento_horario.acompanhamento_id == acompanhamento.id then "selected" end %>><%= acompanhamento.render_info_para_profissional_alt %></option>
-      <% end %>
-    </select>
-    <br>
-  <% else %>
-    <input type="hidden" name="acompanhamento_horario[acompanhamento_id]" value="<%= acompanhamento_horario.acompanhamento_id %>">
-  <% end %>
+  <input type="hidden" name="acompanhamento_horario[acompanhamento_id]" value="<%= acompanhamento.id %>">
 
-
-  <% ultimo_atendimento = acompanhamento_horario.acompanhamento.atendimentos.em_ordem.last %>
+  <% ultimo_atendimento = acompanhamento.atendimentos.em_ordem.last %>
   <label for="acompanhamento_horario[semana_dia_id]">Dia da semana</label>
   <select id="acompanhamento_horario[semana_dia_id]" name="acompanhamento_horario[semana_dia_id]">
     <%= SemanaDia.all.each do |dia| %>
@@ -33,7 +22,7 @@
   <button type="submit">
     Registrar
   </button>
-  <button <%==  hx_set get: "/", target: "#acompanhamento-horario-new"%> type="cancel">
+  <button <%==  hx_set get: show_botao_novo_horario_acompanhamento_horario_path(acompanhamento) , target: "#acompanhamento-horario-new"%> type="cancel">
     Cancelar
   </button>
 </form>

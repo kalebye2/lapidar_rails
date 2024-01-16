@@ -19,8 +19,7 @@ class AcompanhamentoHorario < ApplicationRecord
   end
 
   def destroy
-    print "HAHAHA"
-    ActiveRecord::Base.connection.execute("DELETE FROM acompanhamento_horarios WHERE acompanhamento_id = #{acompanhamento_id} AND semana_dia_id = #{semana_dia_id} AND horario = '#{horario}' AND horario_fim #{horario_fim.nil? ? "IS NULL" : " = '#{horario_fim}'"};")
+    ActiveRecord::Base.connection.execute("DELETE FROM acompanhamento_horarios WHERE acompanhamento_id = #{acompanhamento_id} AND semana_dia_id = #{semana_dia_id} AND horario LIKE '%#{horario.strftime("%H:%M:%S")}%' AND horario_fim #{horario_fim.nil? ? "IS NULL" : " LIKE '%#{horario_fim.strftime("%H:%M:%S")}%'"};")
   end
 
 end

@@ -1,5 +1,5 @@
 class AcompanhamentoHorariosController < ApplicationController
-  before_action :set_acompanhamento, only: %i[ show edit update destroy ]
+  before_action :set_acompanhamento, except: %i[ index ]
 
   def index
     @acompanhamento_horarios = AcompanhamentoHorario.order(semana_dia_id: :asc, horario: :asc)
@@ -10,8 +10,8 @@ class AcompanhamentoHorariosController < ApplicationController
 
   def new
     if params[:ajax].present? && params[:ajax]
-      if params[:acompanhamento].present? && !params[:acompanhamento].nil?
-        render partial: "form_ajax", locals: { acompanhamento_horario: AcompanhamentoHorario.new(acompanhamento: Acompanhamento.find(params[:acompanhamento])) }
+      if params[:id].present? && !params[:id].nil?
+        render partial: "form_ajax", locals: { acompanhamento_horario: AcompanhamentoHorario.new(acompanhamento: Acompanhamento.find(params[:id])), acompanhamento: @acompanhamento }
       else
         render partial: "form_ajax", locals: { acompanhamento_horario: AcompanhamentoHorario.new }
       end
@@ -44,6 +44,13 @@ class AcompanhamentoHorariosController < ApplicationController
   end
 
   def destroy
+    @acompanhamento_horario = AcompanhamentoHorario.find_by(acompanhamento: @acompanhamento, horario: params[:horario], horario_fim: params[:horario_fim], semana_dia_id: params[:semana_dia_id])
+    @acompanhamento_horario.destroy
+    render partial: 'acompanhamento_horarios/resumo_acompanhamento', locals: { acompanhamento: @acompanhamento }
+  end
+
+  def show_botao_novo_horario
+    render partial: 'acompanhamento_horarios/registrar_novo_horario_button', locals: {acompanhamento: @acompanhamento}
   end
 
   private

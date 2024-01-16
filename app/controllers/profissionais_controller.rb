@@ -1,6 +1,7 @@
 class ProfissionaisController < ApplicationController
-  before_action :set_profissional, only: %i[ show edit update delete acompanhamentos ]
-  before_action :validar_usuario, only: %i[ new show edit update delete acompanhamentos ]
+  paginas_que_precisam_de_validacao = %i[ new show edit update delete acompanhamentos new_profissional_horarios create_profissional_horarios update_profissional_horarios destroy_profissional_horarios ]
+  before_action :set_profissional, only: paginas_que_precisam_de_validacao
+  before_action :validar_usuario, only: paginas_que_precisam_de_validacao
 
   include Pagy::Backend
 
@@ -51,6 +52,21 @@ class ProfissionaisController < ApplicationController
 
   def acompanhamentos
     @acompanhamentos = @profissional.acompanhamentos
+  end
+  
+  def new_profissional_horario
+    @profissional_horario = ProfissionalHorario.new(profissional: @profissional)
+  end
+
+  def create_profissional_horario
+    profissional_params[:profissional] = @profissional
+    @profissional_horario = ProfissionalHorario
+  end
+
+  def update_profissional_horario
+  end
+
+  def destroy_profissional_horario
   end
 
   private
