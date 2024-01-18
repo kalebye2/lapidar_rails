@@ -60,8 +60,10 @@ header-includes:
 Paciente
 : <%= @pessoa_devolutiva.paciente.nome_completo %>
 
+<% if @pessoa_devolutiva.responsavel.presence %>
 Responsável
-: <%= @pessoa_devolutiva.responsavel.nome_completo %><%= @pessoa.devolutiva.paciente.pessoa_parentesco_juncoes.find_by(parente: @pessoa.devolutiva.responsavel).try(:parentesco).try(:parentesco).try(:upcase) %>
+: <%= @pessoa_devolutiva.responsavel.nome_completo %><%= @pessoa_devolutiva.paciente.pessoa_parentesco_juncoes.find_by(parente: @pessoa_devolutiva.responsavel).presence&.parentesco&.parentesco&.upcase&.insert(0, " (")&.insert(-1, ")") %>
+<% end %>
 
 Profissional
 : <%= @pessoa_devolutiva.profissional.descricao_completa %>
@@ -69,10 +71,10 @@ Profissional
 Data
 : <%= render_data_brasil @pessoa_devolutiva.data %>
 
-# Feedback do Responsável
+# Feedback<%= @pessoa_devolutiva.responsavel.presence ? " do Responsável" : "" %>
 
-<%== @pessoa_devolutiva.feedback_responsavel.gsub(/{%\s*paciente\s*%}/, @pessoa_devolutiva.paciente.nome) %>
+<%== @pessoa_devolutiva.substituir_template_por_dados :feedback_responsavel %>
 
 # Orientações do profissional
 
-<%== @pessoa_devolutiva.orientacoes_profissional.gsub(/{%\s*paciente\s*%}/, @pessoa_devolutiva.paciente.nome) %>
+<%== @pessoa_devolutiva.substituir_template_por_dados :orientacoes_profissional %>

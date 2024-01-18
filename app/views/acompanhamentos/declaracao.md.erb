@@ -61,6 +61,7 @@ header-includes:
 \vfill
 
 <% primeira_data = @acompanhamento.primeiro_atendimento.data %>
+<% os_meses = t('date.month_names') %>
 
 <% if @acompanhamento.acompanhamento_finalizacao_motivo.nil? %>
 <%# sem responsável e em andamento %>
@@ -69,43 +70,55 @@ Declaro para fins de comprovação que
 <%= @acompanhamento.paciente.nome_completo %>
 está sendo submetid<%= @acompanhamento.paciente.no_feminino? ? 'a' : 'o' %> a
 <%= @acompanhamento.tipo.downcase %> sob meus cuidados profissionais desde
-<%= t('date.month_names')[primeira_data.month].downcase %> de <%= primeira_data.year %>.
+<%= os_meses[primeira_data.month].downcase %> de <%= primeira_data.year %>.
 <% else %>
+
 <%# com responsável e em andamento %>
 Declaro para fins de comprovação que
 <%= @acompanhamento.paciente.nome_completo %>
 está sendo submetid<%= @acompanhamento.paciente.no_feminino? ? 'a' : 'o' %> a
 <%= @acompanhamento.tipo.downcase %> sob meus cuidados profissionais desde
-<%= t('date.month_names')[primeira_data.month].downcase %> de <%= primeira_data.year %>
+<%= os_meses[primeira_data.month].downcase %> de <%= primeira_data.year %>
 com autorização de
 <%= @acompanhamento.pessoa_responsavel.nome_completo %>.
 <% end %>
 
 <% else %>
 
-<% if @acompanhamento.pessoa_responsavel.nil? %>
 <% ultima_data = @acompanhamento.ultimo_atendimento.data %>
+<% ultima_igual_primeira = ultima_data.month == primeira_data.month && ultima_data.year == primeira_data.year %>
+
+<% if @acompanhamento.pessoa_responsavel.nil? %>
 <%# sem responsável e finalizado %>
 Declaro para fins de comprovação que
 <%= @acompanhamento.paciente.nome_completo %>
 esteve em acompanhamento em
 <%= @acompanhamento.tipo.downcase %>
-sob meus cuidados profissionais de
-<%= t('date.month_names')[primeira_data.month].downcase %> de <%= primeira_data.year %>
-a
-<%= t('date.month_names')[ultima_data.month].downcase %> de <%= ultima_data.year %>.
+sob meus cuidados profissionais
+<% if ultima_igual_primeira %>
+em <%= os_meses[primeira_data.month].downcase %> de <%= primeira_data.year %>.
 <% else %>
+de <%= os_meses[primeira_data.month].downcase %> de <%= primeira_data.year %>
+a
+<%= os_meses[ultima_data.month].downcase %> de <%= ultima_data.year %>.
+<% end %>
+<% else %>
+
 <%# com responsável e finalizado %>
 Declaro para fins de comprovação que
 <%= @acompanhamento.paciente.nome_completo %>
 esteve em acompanhamento em
 <%= @acompanhamento.tipo.downcase %>
-sob meus cuidados profissionais de
-<%= t('date.month_names')[primeira_data.month].downcase %> de <%= primeira_data.year %>
+sob meus cuidados profissionais
+<% if ultima_igual_primeira %>
+em <%= os_meses[primeira_data.month].downcase %> de <%= primeira_data.year %>.
+<% else %>
+de <%= os_meses[primeira_data.month].downcase %> de <%= primeira_data.year %>
 a
-<%= t('date.month_names')[ultima_data.month].downcase %> de <%= ultima_data.year %>
+<%= os_meses[ultima_data.month].downcase %> de <%= ultima_data.year %>
+<% end %>
 com autorização de
-<%= @acompanhamento.responsavel.nome_completo %>.
+<%= @acompanhamento.pessoa_responsavel.nome_completo %>.
 <% end %>
 
 <% end %>
@@ -115,7 +128,7 @@ com autorização de
 \begin{center}
 <%= @acompanhamento.profissional.cidade %>,
 <%= Date.today.day %> de
-<%= t('date.month_names')[Date.today.month].downcase %> de
+<%= os_meses[Date.today.month].downcase %> de
 <%= Date.today.year %>
 \end{center}
 
@@ -124,7 +137,8 @@ com autorização de
 ---
 
 \begin{center}
-<%= @acompanhamento.profissional.descricao_completa %>
+<%= @acompanhamento.profissional.nome_completo %>\\ 
+<%= @acompanhamento.profissional.descricao_profissional %>
 \end{center}
 
 \vfill

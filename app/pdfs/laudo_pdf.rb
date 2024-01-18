@@ -6,8 +6,7 @@ class LaudoPdf < BasePdf
     title
     move_down 7
     body
-    move_down 100
-    signature
+    local_assinatura @laudo.profissional.descricao_completa
     footer
   end
 
@@ -45,13 +44,15 @@ class LaudoPdf < BasePdf
   end
 
   def body
-    markup_atributo_textual "Técnicas utilizadas", :tecnicas
+    # markup_atributo_textual "Técnicas utilizadas", :tecnicas
     #
     # COLOQUE AS INFORMAÇÕES BÁSICAS AQUI
 
-    markup_atributo_textual "Demanda", :demanda
-    markup_atributo_textual "Análise", :analise
-    markup_atributo_textual "Conclusão", :conclusao
+    # markup_atributo_textual "Demanda", :demanda
+    # markup_atributo_textual "Análise", :analise
+    # markup_atributo_textual "Conclusão", :conclusao
+
+    markup(markdown_to_html(@laudo.texto_completo), text: {align: :justify, leading: 5})
   end
 
   def signature

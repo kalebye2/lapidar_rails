@@ -21,7 +21,8 @@ class LaudosController < ApplicationController
           Title: "Laudo",
         }
         pdf = LaudoPdf.new(@laudo)
-        send_data pdf.render, filename: "laudo.pdf", type: "application/pdf", disposition: :inline
+        filename = "#{@laudo.profissional.nome_completo.parameterize}_laudo_#{@laudo.profissional.profissional_funcao.adjetivo_masc}_#{@laudo.pessoa.nome_completo.parameterize}_#{@laudo.data_avaliacao}.pdf"
+        send_data pdf.render, filename: filename, type: "application/pdf", disposition: :inline
       end
     end
   end

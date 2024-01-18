@@ -86,6 +86,10 @@ class Profissional < ApplicationRecord
     pessoa.render_cpf
   end
 
+  def descricao_profissional
+    funcao + ' ' + documento
+  end
+
   def descricao_completa
     nome_completo + ' - ' + funcao + ' ' + documento
   end

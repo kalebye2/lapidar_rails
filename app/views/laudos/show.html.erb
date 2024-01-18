@@ -11,6 +11,7 @@
 
     <%= link_to "editar", edit_laudo_path(@laudo) %>
     <%= link_to "download markdown", laudo_path(@laudo, format: :md), { target: :blank } %>
+    <%= link_to "PDF", laudo_path(@laudo, format: :pdf), { target: :blank} %>
 
     <p>
     <% if @laudo.fechado? %>

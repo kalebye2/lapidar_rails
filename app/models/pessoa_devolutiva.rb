@@ -1,8 +1,10 @@
 class PessoaDevolutiva < ApplicationRecord
   belongs_to :pessoa
   alias paciente pessoa
+  alias cliente pessoa
   belongs_to :profissional
-  belongs_to :responsavel, class_name: "Pessoa", foreign_key: :pessoa_responsavel_id
+  belongs_to :pessoa_responsavel, class_name: "Pessoa", foreign_key: :pessoa_responsavel_id
+  alias responsavel pessoa_responsavel
 
   scope :cronologico, -> (ordem: :asc) { order(data: ordem) }
 

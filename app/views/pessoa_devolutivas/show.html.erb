@@ -4,6 +4,9 @@
 |
 <%= link_to 'Back', pessoa_devolutivas_path %>
 |
+<a href="javascript:void(0)" class="dropdown">Baixar
 <%= link_to "Markdown", pessoa_devolutiva_path(@pessoa_devolutiva, format: :md) %>
+<%= link_to "PDF", pessoa_devolutiva_path(@pessoa_devolutiva, format: :pdf), target: :blank %>
+</a>
 
 <%= render "tabela-resumo", devolutiva: @pessoa_devolutiva %>

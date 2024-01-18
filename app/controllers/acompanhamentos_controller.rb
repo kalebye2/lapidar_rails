@@ -161,15 +161,19 @@ class AcompanhamentosController < ApplicationController
   end
 
   def declaracao
+    hoje = Time.now.strftime("%Y-%m-%d")
+    hoje_formatado = Time.now.strftime("%d/%m/%Y")
+    nome_documento = "declaracao_#{@acompanhamento.tipo}_#{hoje}_#{@acompanhamento.pessoa.nome_completo.parameterize}"
+
     respond_to do |format|
       format.html
       format.md do
-        hoje = Time.now.strftime("%Y-%m-%d")
-        hoje_formatado = Time.now.strftime("%d/%m/%Y")
-        nome_documento = "#{@acompanhamento.pessoa.nome_completo.parameterize}_declaracao"
-
         response.headers['Content-Type'] = 'text/markdown'
         response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.md"
+      end
+      format.pdf do
+        pdf = AcompanhamentoDeclaracaoPdf.new(@acompanhamento)
+        send_data pdf.render, filename: "#{nome_documento}.pdf", type: "application/pdf", disposition: :inline
       end
     end
   end
