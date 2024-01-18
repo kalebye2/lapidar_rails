@@ -26,7 +26,7 @@ class BasePdf < Prawn::Document
   def local_assinatura quem_assina = ''
     # text "#{@laudo.profissional.cidade}, #{@laudo.data_avaliacao.day} de #{} de #{@laudo.data_avaliacao.year}", align: :center
     last_cursor = cursor
-    if last_cursor < 0
+    if last_cursor < 200
     start_new_page
     move_down bounds.height / 2
     else

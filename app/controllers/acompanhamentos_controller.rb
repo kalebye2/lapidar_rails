@@ -115,11 +115,13 @@ class AcompanhamentosController < ApplicationController
         pdf.stroke_horizontal_rule
         pdf.move_down 20
         # atendimentos
-        @acompanhamento.atendimentos.where.not(consideracoes: nil).each do |at|
+        @acompanhamento.atendimentos.where.not(anotacoes: nil).each do |at|
           pdf.text (dados_atendimento_pdf at)
           pdf.stroke_horizontal_rule
           pdf.move_down 10
         end
+
+        pdf = AcompanhamentoDetalhesPdf.new(@acompanhamento)
 
         send_data(pdf.render,
                   filename: "#{nome_documento}.pdf",
