@@ -44,7 +44,11 @@ module ApplicationHelper
   end
 
   def sim_ou_nao valor=false
-    !valor.nil? ? valor.to_i > 0 ? "Sim" : "Não" : "Sem informação"
+    if valor.class.name == "TrueClass"
+      valor ? "Sim" : "Não"
+    else
+      !valor.nil? ? valor.to_i > 0 ? "Sim" : "Não" : "Sem informação"
+    end
   end
 
   def markdown_to_html valor, default = "Sem informação"
