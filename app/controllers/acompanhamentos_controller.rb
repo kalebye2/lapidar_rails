@@ -108,19 +108,6 @@ class AcompanhamentosController < ApplicationController
         hoje_formatado = Time.now.strftime("%d/%m/%Y")
         nome_documento = "#{@acompanhamento.pessoa.nome_completo}_caso-detalhes_#{hoje}"
 
-        pdf = Prawn::Document.new
-        pdf.text "#{@acompanhamento.pessoa.nome_completo} - Detalhes do caso"
-        pdf.text "Documento gerado em " + (hoje_formatado)
-
-        pdf.stroke_horizontal_rule
-        pdf.move_down 20
-        # atendimentos
-        @acompanhamento.atendimentos.where.not(anotacoes: nil).each do |at|
-          pdf.text (dados_atendimento_pdf at)
-          pdf.stroke_horizontal_rule
-          pdf.move_down 10
-        end
-
         pdf = AcompanhamentoDetalhesPdf.new(@acompanhamento)
 
         send_data(pdf.render,
