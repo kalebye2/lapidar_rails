@@ -10,7 +10,8 @@ class Atendimento < ApplicationRecord
   alias instrumentos_aplicados instrumentos
   has_one :infantojuvenil_anamnese
 
-  accepts_nested_attributes_for :atendimento_valor
+  accepts_nested_attributes_for :atendimento_valor, update_only: true
+  accepts_nested_attributes_for :instrumento_relatos, update_only: true
 
   # scopes
   default_scope { includes(:acompanhamento, :atendimento_tipo, :atendimento_modalidade, :atendimento_local) }

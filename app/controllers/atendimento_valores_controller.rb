@@ -63,7 +63,13 @@ class AtendimentoValoresController < ApplicationController
   def update
     respond_to do |format|
       if @atendimento_valor.update(atendimento_valor_params)
-        format.html { redirect_to atendimento_valor_url(@atendimento_valor), notice: "pessoa devolutiva was successfully updated." }
+        format.html do
+          if params[:ajax].presence
+            render partial: "atendimento/atendimento-tabela-form", locals: {atendimento: @atendimento_valor.atendimento }
+          else
+            redirect_to atendimento_valor_url(@atendimento_valor), notice: "pessoa devolutiva was successfully updated."
+          end
+        end
         format.json { render :show, status: :ok, location: @atendimento_valor }
       else
         format.html { render :edit, status: :unprocessable_entity }
