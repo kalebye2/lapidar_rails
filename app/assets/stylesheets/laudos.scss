@@ -1,3 +1,5 @@
+@import "icomoon-variables";
+
 table.tabela-laudo {
 	background-color: red;
 
@@ -14,3 +16,74 @@ table.tabela-laudo {
 // li {
 // 	text-align: justify;
 // }
+
+.laudo-card {
+	--displace-v: -.5em;
+	--shade-color: var(--doc-shade-color);
+	--bg-color: black;
+	--text-color: white;
+
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	margin: 1em;
+	padding-left: 1.2em;
+	padding-right: 1.2em;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	border-radius: 1em;
+	text-decoration: none;
+	z-index: 0;
+
+	transition: transform 250ms ease-out,
+		box-shadow 300ms ease-out;
+
+	h2, h3, h4, h5, h6, p {
+		text-align: left;
+	}
+
+	&:hover {
+		transform: translate(0, var(--displace-v));
+		box-shadow: 0px calc(-1 * var(--displace-v)) var(--shade-color);
+		z-index: 1;
+	}
+}
+
+.laudo-fechado, .laudo-aberto {
+	position: relative;
+
+	&::before {
+		font-family: '#{$icomoon-font-family}' !important;
+		speak: never;
+		font-style: normal;
+		font-weight: normal;
+		font-variant: normal;
+		text-transform: none;
+		line-height: 1;
+		font-size: 3em;
+
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smothing: grayscale;
+
+		position: absolute;
+		right: 1rem;
+		top: -.5em;
+	}
+}
+
+.laudo-fechado {
+	--bg-color: var(--acompanhamento-finalizado-alta-bg-color);
+	--text-color: var(--acompanhamento-finalizado-alta-text-color);
+
+	&::before {
+		content: $icon-lock;
+	}
+}
+
+.laudo-aberto {
+	--bg-color: var(--acompanhamento-em-andamento-bg-color);
+	--text-color: var(--acompanhamento-em-andamento-text-color);
+
+	&::before {
+		content: $icon-unlocked;
+	}
+}

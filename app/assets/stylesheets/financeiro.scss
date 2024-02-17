@@ -7,9 +7,9 @@
 	--header-padding: .3em;
 	--data-padding: .2em;
 	--data-size: .8em;
-	--row-odd-bg: white;
-	--row-even-bg: #ddffdd;
-	--highlight-bg: lightgreen;
+	--row-odd-bg: var(--financeiro-row-odd-bg);
+	--row-even-bg: var(--financeiro-row-even-bg);
+	--highlight-bg: var(--financeiro-highlight-bg);
 }
 
 .financeiro-tabelas {

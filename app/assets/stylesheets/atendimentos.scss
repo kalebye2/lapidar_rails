@@ -18,6 +18,7 @@
 	--border-bottom-size: .3em;
 	--border-sides-size: 0em;
 	--border-color: black;
+	position: relative;
 	display: block;
 	background-color: var(--bg-color);
 	color: var(--text-color);
@@ -78,6 +79,19 @@
 	--shade-color: var(--atendimento-na-hora-shade-color);
 	--highlight-color: var(--atendimento-na-hora-highlight-color);
 	--text-color: var(--atendimento-na-hora-text-color);
+}
+
+.atendimento-reagendado {
+	&::after {
+		position: absolute;
+		background-color: var(--main-color);
+		color: white;
+		font-size: .7em;
+		padding: .3em;
+		bottom: -.2em;
+		right: 0em;
+		content: "REAGENDADO";
+	}
 }
 
 .tabela-atendimentos {

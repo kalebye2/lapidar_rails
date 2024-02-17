@@ -2,6 +2,8 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+@import "icomoon-variables";
+
 a {
 	text-decoration: none;
 }
@@ -20,6 +22,7 @@ a {
 	margin: 1em;
 	padding: 1em;
 	border-radius: 1em;
+	position: relative;
 
 	transition: transform 178ms ease-out,
 		box-shadow 178ms ease-out;
@@ -28,16 +31,52 @@ a {
 		transform: translate(0, -.5em);
 		box-shadow: 0 .5em var(--shade-color);
 	}
+
+	&::before {
+		font-family: '#{$icomoon-font-family}' !important;
+		speak: never;
+		font-style: normal;
+		font-weight: normal;
+		font-variant: normal;
+		text-transform: none;
+		line-height: 1;
+		font-size: 3em;
+
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smothing: grayscale;
+
+		position: absolute;
+		right: 1rem;
+		top: -.5em;
+	}
 }
 
 .acompanhamento-em-andamento {
 	--bg-color: var(--acompanhamento-em-andamento-bg-color);
 	--text-color: var(--acompanhamento-em-andamento-text-color);
 	--shade-color: var(--acompanhamento-em-andamento-text-color);
+
+	&::before {
+		content: $icon-play2;
+	}
+}
+
+.acompanhamento-suspenso {
+	--bg-color: var(--acompanhamento-finalizado-questoes-financeiras-bg-color);
+	--text-color: var(--acompanhamento-em-andamento-text-color);
+	--shade-color: var(--acompanhamento-finalizado-desistencia-bg-color);
+
+	&::before {
+		content: $icon-pause;
+	}
 }
 
 .acompanhamento-finalizado {
 	opacity: var(--acompanhamento-finalizado-opacity);
+
+	&::before {
+		content: $icon-stop;
+	}
 }
 .acompanhamento-finalizado-questoes-financeiras {
 	--bg-color: var(--acompanhamento-finalizado-questoes-financeiras-bg-color);
@@ -87,5 +126,35 @@ a {
 		&:hover {
 			transform: translate(0, -.1em);
 		}
+	}
+}
+
+.reajuste-card {
+	--displace-v: -.5em;
+	--shade-color: var(--doc-shade-color);
+	background-color: var(--main-color);
+	color: white;
+	margin: 1em;
+	padding-left: 1.2em;
+	padding-right: 1.2em;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	border-radius: 1em;
+	text-decoration: none;
+	z-index: 0;
+	transition: transform 250ms ease-out, box-shadow 300ms ease-out;
+
+	& .navbar {
+		background-color: transparent;
+		& ul {
+			background-color: transparent;
+		}
+	}
+
+	&:hover {
+		background-color: var(--secondary-color);
+		transform: translate(0, var(--displace-v));
+		box-shadow: 0px calc(-1 * var(--displace-v)) var(--shade-color);
+		z-index: 1;
 	}
 }
