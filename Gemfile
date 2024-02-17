@@ -65,10 +65,6 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'racc'
 
-gem 'devise'
-gem 'prawn'
-gem 'prawn-table'
-
 gem "simple_calendar"
 
 gem 'kramdown'
@@ -95,3 +91,6 @@ gem 'faker'
 # for pdf
 gem 'prawn'
 gem 'prawn-markup'
+
+# for charts
+gem 'chartkick'

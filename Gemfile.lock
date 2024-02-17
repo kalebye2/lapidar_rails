@@ -92,6 +92,7 @@ GEM
     caxlsx_rails (0.6.3)
       actionpack (>= 3.1)
       caxlsx (>= 3.0)
+    chartkick (5.0.5)
     chromedriver-helper (2.1.1)
       archive-zip (~> 0.10)
       nokogiri (~> 1.8)
@@ -145,6 +146,7 @@ GEM
       net-imap
       net-pop
       net-smtp
+    mapkick-rb (0.1.5)
     marcel (1.0.2)
     matrix (0.4.2)
     method_source (1.0.0)
@@ -294,6 +296,7 @@ DEPENDENCIES
   capybara (>= 2.15)
   caxlsx
   caxlsx_rails
+  chartkick
   chromedriver-helper
   coffee-rails
   debug
@@ -302,11 +305,11 @@ DEPENDENCIES
   jbuilder
   kramdown
   listen
+  mapkick-rb
   mini_magick
   pagy
   prawn
   prawn-markup
-  prawn-table
   puma
   racc
   rails
