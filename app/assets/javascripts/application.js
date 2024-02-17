@@ -17,3 +17,7 @@
 //
 
 //import "@hotwired/turbo-rails";
+
+
+//= require chartkick
+//= require Chart.bundle
