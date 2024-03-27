@@ -1,0 +1,52 @@
+<% titulo "Contrato para acompanhamento" %>
+<h1>Contrato para acompanhamento de <%= @acompanhamento.pessoa.nome_abreviado %></h1>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Acompanhamento", @acompanhamento, class: "icon-previous" %>
+    </li>
+    <li>
+      <%= link_to "Modelos de contratos", contrato_modelos_profissional_path(@acompanhamento.profissional), class: "icon-file-empty" %>
+    </li>
+  </ul>
+</nav>
+
+<div class="grid-2">
+  <form action="<%= contrato_acompanhamento_path(@acompanhamento) %>">
+    <label for="contrato_modelo">Modelo a ser usado</label>
+    <select id="contrato_modelo" name="contrato_modelo">
+      <% ProfissionalContratoModelo.where(profissional: @acompanhamento.profissional).each_with_index do |modelo, index| %>
+        <option value="<%= modelo.id %>" <%== hx_set get: contrato_acompanhamento_path(@acompanhamento, contrato_modelo: modelo.id, ajax: true), target: "#documento-container", trigger: ["click", index == 0 ? "load" : ""].delete_if {|a| a.empty? }.join(',') %>>
+        <%= modelo.titulo %>
+        <%= modelo.descricao&.insert(0, "(")&.insert(-1, ")") %>
+        </option>
+      <% end %>
+    </select>
+    <br>
+
+    <label for="tamanho_papel">Tamanho do papel</label>
+    <select id="tamanho_papel" name="tamanho_papel">
+      <option value="a4">A4</option>
+      <option value="a3">A3</option>
+    </select>
+    <br>
+
+    <label for="assinatura_profissional">Incluir espaço de assinatura do profissional</label>
+    <input type="checkbox" id="assinatura_profissional" name="assinatura_profissional">
+    <br>
+
+    <label for="assinatura_paciente">Incluir espaço de assinatura do paciente</label>
+    <input type="checkbox" id="assinatura_paciente" name="assinatura_paciente">
+    <br>
+
+    <label for="assinatura_responsavel">Incluir espaço de assinatura do responsável</label>
+    <input type="checkbox" id="assinatura_responsavel" name="assinatura_responsavel">
+    <br>
+
+    <button>Confirmar</button>
+  </form>
+
+  <div id="documento-container">
+  </div>
+</div>

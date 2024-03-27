@@ -1,0 +1,13 @@
+<div class="acompanhamento-reajuste">
+  <h2><%= acompanhamento_reajuste.acompanhamento.render_info_para_profissional %></h2>
+  <p>
+  Negociado reajuste em
+  <%= render_data_brasil acompanhamento_reajuste.data_negociacao %>
+  para
+  <b>
+  <%= render_dinheiro_centavos acompanhamento_reajuste.valor_novo %>
+  </b>
+  a partir de
+  <%= render_data_brasil acompanhamento_reajuste.data_ajuste %>
+  </p>
+</div>

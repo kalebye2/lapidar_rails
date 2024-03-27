@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Profissional horarios</h1>
+
+<div id="profissional_horarios">
+  <% @profissional_horarios.each do |profissional_horario| %>
+    <%= render profissional_horario %>
+    <p>
+      <%= link_to "Show this profissional horario", profissional_horario %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New profissional horario", new_profissional_horario_path %>

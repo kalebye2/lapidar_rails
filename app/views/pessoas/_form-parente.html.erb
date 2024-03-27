@@ -1,4 +1,14 @@
-<form <%== hx_set post: create_parentesco_pessoa_path(pessoa, ajax: true), swap: "innerHTML", target: "#pessoa-parentes" %>>
+<% parente = parente || nil %>
+<% parentesco = parentesco || nil %>
+<% status = status || nil %>
+<% notice = notice || nil %>
+<% formpath = parente&.id.nil? ? create_parentesco_pessoa_path(pessoa) : update_parentesco_pessoa_path(pessoa, parente) %>
+<% verb = parente&.id.nil? ? :post : :patch %>
+<form <%= hx_set verb => formpath, swap: "innerHTML", target: "#pessoa-parentes" %>>
+  <p class="notice">
+    <%= notice %>
+  </p>
+  <p class="status"><%= status %></p>
   <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
   <% if pessoa.nil? %>
     <label for="pessoa[id]">Pessoa</label>
@@ -10,18 +20,18 @@
   <label for="parentesco[parente_id]">Parente</label>
   <select name="parentesco[parente_id]" id="parente[id]">
     <% Pessoa.where.not(id: pessoa.id).ordem_alfabetica.each do |p| %>
-      <option value="<%= p.id %>"><%= p.nome_completo %></option>
+      <option value="<%= p.id %>" <%= "selected" unless p.id != parente&.id %>><%= p.nome_completo %></option>
     <% end %>
   </select>
   
   <label for="parentesco[parentesco_id]">Parentesco</label>
   <select name="parentesco[parentesco_id]" id="parentesco[id]">
-    <% Parentesco.all.each do |parentesco| %>
-      <option value="<%= parentesco.id %>"><%= parentesco.parentesco.upcase %></option>
+    <% Parentesco.all.each do |p| %>
+      <option value="<%= p.id %>" <%= "selected" unless p.id != parentesco&.parentesco_id %>><%= p.parentesco.upcase %></option>
     <% end %>
       <option value="">OUTRO</option>
   </select>
 
   <button>Registrar parente</button>
-  <button <%== hx_set get: show_parentescos_pessoa_path(pessoa, ajax: true), target: "#pessoa-parentes", swap: "innerHTML" %>>Cancelar</button>
+  <button <%== hx_set get: show_parentescos_pessoa_path(pessoa), target: "#pessoa-parentes", swap: "innerHTML" %>>Cancelar</button>
 </form>

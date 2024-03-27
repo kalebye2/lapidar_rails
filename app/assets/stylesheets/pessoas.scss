@@ -2,6 +2,8 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+@import "icomoon-variables";
+
 .usuario-acompanhamentos {
 	li {
 		--padding-v: .3em;
@@ -28,12 +30,33 @@
 	border-radius: 1em;
 	text-decoration: none;
 	z-index: 0;
+	position: relative;
+	overflow: hidden;
 
 	transition: transform 250ms ease-out,
-		box-shadow 300ms ease-out;
+	box-shadow 300ms ease-out;
 
 	h2, h3, h4, h5, h6, p {
 		text-align: left;
+	}
+
+	&::before {
+		font-family: '#{$icomoon-font-family}' !important;
+		speak: never;
+		font-style: normal;
+		font-weight: normal;
+		font-variant: normal;
+		text-transform: none;
+		line-height: 1;
+		font-size: 10em;
+
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smothing: grayscale;
+
+		position: absolute;
+		right: 10%;
+		bottom: 10%;
+		opacity: .25;
 	}
 
 	&:hover {
@@ -52,11 +75,17 @@
 	background-color: var(--male-bg-color);
 	color: var(--male-text-color);
 	--shade-color: var(--male-shade-color);
+	&::before {
+		content: $icon-male;
+	}
 }
 .feminino {
 	background-color: var(--female-bg-color);
 	color: var(--female-text-color);
 	--shade-color: var(--female-shade-color);
+	&::before {
+		content: $icon-female;
+	}
 }
 
 .profissional {

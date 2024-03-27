@@ -1,3 +1,11 @@
 <button hx-get="<%= horario_edit_atendimento_path(atendimento) %>" hx-target="#<%= dom_id(atendimento) %>_horario" >
-  <%= "#{render_hora_brasil atendimento.horario}#{if !atendimento.horario_fim.nil? then ' até '.concat(render_hora_brasil atendimento.horario_fim) end}" %>
+  <% if atendimento.horario_periodo_verdadeiro == atendimento.horario_periodo %>
+    <%= atendimento.horario_periodo_verdadeiro %>
+  <% else %>
+    <del>
+      <%= atendimento.horario_periodo %>
+    </del>
+    <br>
+    <%= atendimento.horario_periodo_verdadeiro %>
+  <% end %>
 </button>

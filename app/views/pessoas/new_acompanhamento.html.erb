@@ -1,0 +1,4 @@
+<% titulo "#{@pessoa.nome_abreviado} - Novo acompanhamento" %>
+
+<h1><%= @pessoa.nome_abreviado %> - novo acompanhamento</h1>
+<%= render "acompanhamentos/form", acompanhamento: Acompanhamento.new %>

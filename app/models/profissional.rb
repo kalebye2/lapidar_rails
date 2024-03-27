@@ -3,31 +3,64 @@ class Profissional < ApplicationRecord
   belongs_to :profissional_funcao
   has_one :usuario
   has_many :profissional_especializacao_juncoes, foreign_key: :profissional_id
-  has_many :especializacoes, through: :profissional_especializacao_juncoes
+  has_many :profissional_especializacoes, through: :profissional_especializacao_juncoes
+  alias especializacoes profissional_especializacoes
   has_many :profissional_horarios
+  accepts_nested_attributes_for :profissional_horarios
 
   has_many :acompanhamentos
   has_many :acompanhamento_horarios, through: :acompanhamentos
+  has_many :acompanhamento_reajustes, through: :acompanhamentos
   has_many :pacientes, through: :acompanhamentos, source: :pessoa
   has_many :responsaveis_por_pacientes, through: :acompanhamentos, source: :pessoa_responsavel
   has_many :atendimentos, through: :acompanhamentos
   has_many :recebimentos, through: :acompanhamentos
   has_many :laudos, through: :acompanhamentos
   has_many :atendimento_valores, through: :atendimentos
+  has_many :atendimento_locais, through: :atendimentos
   has_many :repasses, class_name: "ProfissionalFinanceiroRepasse"
+  alias profissional_financeiro_repasses repasses
   has_many :instrumento_relatos, through: :atendimento
   has_many :instrumentos_que_aplicou, through: :instrumento_relatos, source: :instrumento
   alias instrumentos_aplicados instrumentos_que_aplicou
+  has_many :pessoa_devolutivas
 
   has_many :profissional_documento_modelos
+  has_many :profissional_contrato_modelos
+  alias contrato_modelos profissional_contrato_modelos
+  alias modelos_de_contrato profissional_contrato_modelos
 
   has_many :profissional_especializacao_juncoes
   has_many :profissional_especializacoes, through: :profissional_especializacao_juncoes
 
   has_many :profissional_folgas
 
-  scope :com_atendimentos_futuros, -> { includes(:atendimentos).where("atendimentos.data" => Date.today.. )}
   scope :ordem_alfabetica, -> { includes(:pessoa).order("pessoas.nome" => :asc, "pessoas.nome_do_meio" => :asc, "pessoas.sobrenome" => :asc) }
+  scope :com_atendimentos_futuros, -> { includes(:atendimentos).where("atendimentos.data" => Date.today.. )}
+
+  scope :contagem_de_acompanhamentos, -> (profissionais=all) { group(:acompanhamento).count }
+
+  scope :query_like_nome, -> (like) do
+    query = "LOWER(nome || ' ' || COALESCE(nome_do_meio, '') || ' '|| sobrenome) LIKE ?", "%#{like.downcase}%"
+    if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
+      query = "LOWER(CONCAT(nome, ' ', COALESCE(nome_do_meio, ''), ' ', sobrenome)) LIKE ?", "%#{like.downcase}%"
+    end
+
+    joins(:pessoa).where(query)
+  end
+
+  scope :no_local_de_atendimento, -> (atendimento_locais) do
+    joins(:atendimento_locais).where(atendimento_locais: atendimento_locais)
+  end
+  scope :no_local_de_atendimento_por_id, -> (atendimento_locais_id) do
+    joins(:atendimento_locais).where(atendimento_locais: {id: atendimento_locais_id})
+  end
+
+  scope :do_sexo_feminino, -> { joins(:pessoa).where(pessoa: {feminino: true}) }
+  scope :mulheres, -> { do_sexo_feminino }
+  scope :do_sexo_masculino, -> { joins(:pessoa).where(pessoa: {feminino: [false, nil]}) }
+  scope :homens, -> { do_sexo_masculino }
+
   default_scope { includes(:pessoa, :usuario, :profissional_funcao) }
 
 
@@ -78,9 +111,15 @@ class Profissional < ApplicationRecord
     profissional_funcao.servico
   end
 
-  def cidade
-    pessoa.cidade
+  def endereco_cidade
+    pessoa.endereco_cidade
   end
+  alias cidade endereco_cidade
+
+  def endereco_estado
+    pessoa.endereco_estado
+  end
+  alias estado endereco_estado
 
   def render_cpf
     pessoa.render_cpf
@@ -165,6 +204,14 @@ class Profissional < ApplicationRecord
 
   def render_fone_link
     pessoa.render_fone_link
+  end
+
+  def usa_whatsapp?
+    pessoa.usa_whatsapp?
+  end
+
+  def usa_telegram?
+    pessoa.usa_telegram?
   end
 
   def horarios_preenchidos_registrados

@@ -19,8 +19,37 @@ class InfantojuvenilAnamnese < ApplicationRecord
 
   accepts_nested_attributes_for :infantojuvenil_anamnese_gestacao
   accepts_nested_attributes_for :pessoa
+  accepts_nested_attributes_for :acompanhamento
 
   belongs_to :atendimento
+
+  scope :do_periodo, -> (periodo) { joins(:atendimento).where(atendimento: {data: periodo}) }
+
+  scope :do_profissional, -> (profissional) { joins(:profissional).where(profissional: { id: profissional.id }) }
+  scope :do_profissional_com_id, -> (id) { joins(:profissional).where(profissional: {id: id}) }
+  scope :da_pessoa, -> (pessoa) { joins(:pessoa).where(pessoa: {id: pessoa.id}) }
+  scope :da_pessoa_com_id, -> (id) { joins(:pessoa).where(pessoa: {id: id}) }
+  scope :do_responsavel, -> (responsavel) { joins(:pessoa_responsavel).where(pessoa_responsavel: {id: responsavel.id}) }
+  scope :do_responsavel_com_id, -> (id) { joins(:pessoa_responsavel).where(pessoa_responavel: {id: id}) }
+
+  scope :query_pessoa_like_nome, -> (like = "") do
+    like = like.to_s
+    query = "LOWER(pessoas.nome || ' ' || COALESCE(pessoas.nome_do_meio, '') || ' '|| pessoas.sobrenome) LIKE ?", "%#{like}%"
+    if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
+      query = "LOWER(CONCAT(pessoas.nome, ' ', COALESCE(pessoas.nome_do_meio, ''), ' ', pessoas.sobrenome)) LIKE ?", "%#{like}%"
+    end
+    joins(:pessoa).where(query)
+  end
+  scope :query_responsavel_like_nome, -> (like = "") do
+    like = like.to_s
+    query = "LOWER(pessoas.nome || ' ' || COALESCE(pessoas.nome_do_meio, '') || ' '|| pessoas.sobrenome) LIKE ?", "%#{like}%"
+    if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
+      query = "LOWER(CONCAT(pessoas.nome, ' ', COALESCE(pessoas.nome_do_meio, ''), ' ', pessoas.sobrenome)) LIKE ?", "%#{like}%"
+    end
+    joins(:pessoa_responsavel).where(query)
+  end
+
+  after_create -> (anamnese) { anamnese.criar_anamnese_completa }
 
   def acompanhamento
     atendimento.acompanhamento
@@ -40,6 +69,10 @@ class InfantojuvenilAnamnese < ApplicationRecord
 
   def pessoa_responsavel
     acompanhamento.pessoa_responsavel
+  end
+
+  def data
+    atendimento.data
   end
 
   #
@@ -100,7 +133,4 @@ class InfantojuvenilAnamnese < ApplicationRecord
     if infantojuvenil_anamnese_socioafetividade.nil? then build_infantojuvenil_anamnese_socioafetividade.save! end
     if infantojuvenil_anamnese_sono.nil? then build_infantojuvenil_anamnese_sono.save! end
   end
-
-
-
 end

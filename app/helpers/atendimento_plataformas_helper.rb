@@ -1,0 +1,2 @@
+module AtendimentoPlataformasHelper
+end

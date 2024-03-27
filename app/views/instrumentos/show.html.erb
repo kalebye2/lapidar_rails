@@ -1,0 +1,19 @@
+<p style="color: green"><%= notice %></p>
+
+<div id="instrumento-show">
+  <nav class="navbar navcenter">
+    <ul>
+      <li>
+        <%= link_to "Instrumentos", instrumentos_path, class: "icon-previous" %>
+      </li>
+      <li>
+        <%= link_to "editar", edit_instrumento_path(@instrumento), class: 'icon-pencil' %>
+      </li>
+
+      <%# <li> %>
+      <%#   <%= link_to "excluir", @instrumento, confirm: "Tem certeza?", class: 'icon-bin', method: :delete %1> %>
+      <%# </li> %>
+    </ul>
+  </nav>
+  <%= render @instrumento %>
+</div>

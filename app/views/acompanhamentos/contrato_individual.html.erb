@@ -1,0 +1,56 @@
+<% titulo @profissional_contrato_modelo.titulo %>
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Voltar", contrato_acompanhamento_path, class: "icon-previous" %>
+    </li>
+    <li>
+      <%= link_to "Acompanhamento", @acompanhamento, class: "icon-previous" %>
+    </li>
+    <li>
+      <%= link_to "Modelos de contratos", contrato_modelos_profissional_path(@acompanhamento.profissional), class: "icon-file-empty" %>
+    </li>
+    <li>
+      <%= link_to "Markdown", contrato_acompanhamento_path(@acompanhamento, format: :md, contrato_modelo: @profissional_contrato_modelo.id, tamanho_papel: params[:tamanho_papel], assinatura_profissional: params[:assinatura_profissional].presence, assinatura_paciente: params[:assinatura_paciente].presence, assinatura_responsavel: params[:assinatura_responsavel].presence), class: "icon-file-empty" %>
+    </li>
+    <li>
+      <%= link_to "PDF", contrato_acompanhamento_path(@acompanhamento, format: :pdf, contrato_modelo: @profissional_contrato_modelo.id, tamanho_papel: params[:tamanho_papel]), class: "icon-file-pdf" %>
+    </li>
+  </ul>
+</nav>
+<div class="documento">
+  <h1><%= @profissional_contrato_modelo.titulo %></h1>
+  <%== markdown_to_html @profissional_contrato_modelo.conteudo_para_acompanhamento @acompanhamento %>
+  <%== "<br>" * 2 %>
+  <p style="text-align:center;">
+  <%= @acompanhamento.profissional.cidade %>,
+  <%= data_por_extenso @acompanhamento.data_inicio %>
+  <p>
+
+  <% if params[:assinatura_paciente].presence %>
+    <%== "<br>" * 4 %>
+    <hr>
+    <p style="text-align:center;">
+    <%= @acompanhamento.paciente.nome_completo %>
+    </p>
+  <% end %>
+
+  <% if params[:assinatura_responsavel].presence %>
+    <%== "<br>" * 4 %>
+    <hr>
+    <p style="text-align:center;">
+    <%= @acompanhamento.pessoa_responsavel.nome_completo %>
+    </p>
+  <% end %>
+
+  <% if params[:assinatura_profissional].presence %>
+    <%== "<br>" * 4 %>
+    <hr>
+    <p style="text-align:center;">
+    <%= @acompanhamento.profissional.nome_completo %>
+    <br>
+    <%= @acompanhamento.profissional.funcao %>
+    <%= @acompanhamento.profissional.documento %>
+    </p>
+  <% end %>
+</div>

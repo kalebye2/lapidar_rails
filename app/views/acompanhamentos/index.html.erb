@@ -1,18 +1,54 @@
 <% titulo "Acompanhamentos" %>
 <h1>Acompanhamentos</h1>
-<%= link_to "+ acompanhamento", new_acompanhamento_path, class: "btn-novo", data: {
-  turbo_frame: :modal
-} %>
 
-<nav>
-  <% AcompanhamentoTipo.all.each do |t| %>
-    <button
-      hx-get="<%= url_for(controller: :acompanhamentos, action: :index, tipo: t.id, em_andamento: params[:em_andamento], ajax: true) %>"
-      hx-target="#acompanhamentos-container"
-      hx-swap="outerHTML">
-    <%= t.tipo.titlecase %>
-    </button>
-  <% end %>
-  
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "adicionar", new_acompanhamento_path, class: "icon-plus" %>
+    </li>
+  </ul>
 </nav>
+
+<nav class="navbar" style="padding:.5em;">
+  <p>Filtrar</p>
+  <form <%= hx_set get: acompanhamentos_path, target: "#acompanhamentos-container", select: "#acompanhamentos-container", replace_url: true, trigger: "change" %> style="display:flex;flex-wrap:wrap;">
+    <div>
+      <label for="tipo">Tipo</label>
+      <select name="tipo" id="tipo">
+        <option value="">TODOS</option>
+        <% AcompanhamentoTipo.all.each do |tipo| %>
+          <option value="<%= tipo.id %>" <%= "selected" unless params[:tipo] != tipo.id %>><%= tipo.tipo.upcase %></option>
+        <% end %>
+      </select>
+    </div>
+
+    <div>
+      <label for="status">Status</label>
+      <select name="status" id="status">
+        <option value="">TODOS</option>
+        <option value="em_andamento" <%= "selected" unless params[:status]&.to_sym != :em_andamento %>>EM ANDAMENTO</option>
+        <option value="finalizado" <%= "selected" unless params[:status]&.to_sym != :finalizado %>>FINALIZADOS</option>
+        <option value="suspenso" <%= "selected" unless params[:status]&.to_sym != :suspenso %>>SUSPENSOS</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="profissional">Profissional</label>
+      <select name="profissional" id="profissional">
+        <option value="">TODOS</option>
+        <% Profissional.all.each do |profissional| %>
+          <option value="<%= profissional.id %>" <%= "selected" unless profissional.id != params[:profissional] %>><%= profissional.descricao_completa %></option>
+        <% end %>
+      </select>
+    </div>
+
+    <div>
+      <label for="paciente">Paciente</label>
+      <input type="text" name="paciente" id="paciente" value="<%= params[:paciente] %>" style="margin:0;">
+    </div>
+  </form>
+</nav>
+
+<br>
+
 <%= render "acompanhamentos-container", acompanhamentos: @acompanhamentos %>

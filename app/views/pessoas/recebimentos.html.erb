@@ -1,9 +1,21 @@
 <% titulo "Recebimentos de #{@pessoa.nome_abreviado}" %>
 
-<%= link_to "Voltar", @pessoa %>
 <h1>Recebimentos de <%= @pessoa.nome_completo %></h1>
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Cadastro", @pessoa, class: 'icon-previous' %>
+    </li>
+    <li>
+      <%= link_to "Financeiro", financeiro_pessoa_path(@pessoa), class: 'icon-coin-dollar' %>
+    </li>
+    <li>
+      <%= link_to "Adicionar", new_recebimento_pessoa_path(@pessoa), class: 'icon-plus' %>
+    </li>
+  </ul>
+</nav>
 <p>
-<%= @recebimentos.count %> recebimentos no período.
+<%= deixar_no_plural @recebimentos.count, 'recebimento', 'recebimentos' %> no período.
 </p>
 
 <form action="<%= recebimentos_pessoa_path(@pessoa) %>" method="get">
@@ -14,9 +26,17 @@
   <button>Atualizar</button>
 </form>
 
-<%= link_to "CSV", recebimentos_pessoa_path(@pessoa, de: @de, ate: @ate, format: :csv) %>
-|
-<%= link_to "Recibos (markdown)", recebimentos_pessoa_path(@pessoa, de: @de, ate: @ate, format: :zip) %>
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "CSV", recebimentos_pessoa_path(@pessoa, de: @de, ate: @ate, format: :csv), class: 'icon-table2' %>
+    </li>
+    <li>
+      <%= link_to "Recibos (markdown)", recebimentos_pessoa_path(@pessoa, de: @de, ate: @ate, format: :zip), class: 'icon-file-zip' %>
+    </li>
+  </ul>
+</nav>
+<br><br>
 
 <table>
   <caption>Informações do cadastro</caption>
@@ -58,14 +78,10 @@
     <tr>
       <th>Endereço</th>
       <td>
-        <%= @pessoa.render_endereco %>
-        |
-        <%= @pessoa.estado %>,
-        <%= @pessoa.pais.nome %>
+        <%= @pessoa.endereco_completo %>
       </td>
     </tr>
   </thead>
 </table>
 
 <%= render "recebimentos-tabela", recebimentos: @recebimentos %>
-

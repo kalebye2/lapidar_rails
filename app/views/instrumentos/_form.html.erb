@@ -1,0 +1,77 @@
+<%= form_with(model: instrumento) do |form| %>
+  <% if instrumento.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(instrumento.errors.count, "error") %> prohibited this instrumento from being saved:</h2>
+
+      <ul>
+        <% instrumento.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :nome, style: "display: block" %>
+    <%= form.text_field :nome %>
+  </div>
+
+  <div>
+    <%= form.label :instrumento_tipo_id, style: "display: block" %>
+    <%= form.text_field :instrumento_tipo_id %>
+  </div>
+
+  <div>
+    <%= form.label :exclusivo_psicologo, style: "display: block" %>
+    <%= form.check_box :exclusivo_psicologo %>
+  </div>
+
+  <div>
+    <%= form.label :faixa_etaria_meses_inicio, style: "display: block" %>
+    <%= form.number_field :faixa_etaria_meses_inicio %>
+  </div>
+
+  <div>
+    <%= form.label :faixa_etaria_meses_final, style: "display: block" %>
+    <%= form.number_field :faixa_etaria_meses_final %>
+  </div>
+
+  <div>
+    <%= form.label :objetivo, style: "display: block" %>
+    <%= form.text_field :objetivo %>
+  </div>
+
+  <div>
+    <%= form.label :cronometrado, style: "display: block" %>
+    <%= form.check_box :cronometrado %>
+  </div>
+
+  <div>
+    <%= form.label :material, style: "display: block" %>
+    <%= form.text_area :material %>
+  </div>
+
+  <div>
+    <%= form.label :aplicacao, style: "display: block" %>
+    <%= form.text_area :aplicacao %>
+  </div>
+
+  <div>
+    <%= form.label :indicacao, style: "display: block" %>
+    <%= form.text_area :indicacao %>
+  </div>
+
+  <div>
+    <%= form.label :particularidades, style: "display: block" %>
+    <%= form.text_area :particularidades %>
+  </div>
+
+  <div>
+    <%= form.label :tem_na_clinica, style: "display: block" %>
+    <%= form.check_box :tem_na_clinica %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

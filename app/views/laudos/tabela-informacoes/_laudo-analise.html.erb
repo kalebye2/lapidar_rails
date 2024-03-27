@@ -1,7 +1,7 @@
 <% if usuario_atual != laudo.profissional.usuario %>
   <%== markdown_to_html laudo.analise.to_s.gsub(/{%\s+paciente\s+%}/, laudo.paciente.nome_completo) %>
 <% else %>
-  <div 
+  <div style="cursor:pointer;"
        hx-swap="outerHTML"
        hx-get="<%= analise_edit_laudo_path(laudo) %>">
     <%== markdown_to_html (laudo.analise || 'Clique para editar').to_s.gsub(/{%\s+paciente\s+%}/, laudo.paciente.nome_completo) %> </div>

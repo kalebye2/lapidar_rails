@@ -1,6 +1,6 @@
 <% if atendimento %>
-  <%= link_to atendimento.acompanhamento, class: "atendimento-link" do %>
-    <div class="atendimento-card atendimento-<%= atendimento.status.parameterize %>">
+  <%= link_to acompanhamento_path(atendimento.acompanhamento, anchor: dom_id(atendimento)), class: "atendimento-link" do %>
+    <div class="atendimento-card atendimento-<%= atendimento.status.parameterize %> <%= if atendimento.reagendado? then "atendimento-reagendado" end %>">
       <p>
         <strong><%= atendimento.acompanhamento.pessoa.nome_e_sobrenome %></strong>
       <br />

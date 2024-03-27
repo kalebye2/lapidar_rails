@@ -1,49 +1,115 @@
-<%= titulo "Recebimentos" %>
+<% titulo "Recebimentos" %>
 
-<h1>Recebimentos - <%= render_data_brasil @de %> a <%= render_data_brasil @ate %></h1>
+<h1 id="recebimentos-titulo">Recebimentos - <%= render_data_brasil @de %> a <%= render_data_brasil @ate %></h1>
 
-<div class="form-g">
-  <%= form_with url: recebimentos_path, method: :get, local: true do |f| %>
-    <%= f.label :de %>
-    <%= f.date_field :de, value: @de %>
-    <%= f.label :ate, "Até" %>
-    <%= f.date_field :ate, value: @ate %>
-    <%= f.submit "Carregar" %>
-  <% end %>
-</div>
+<%# <div class="form-g"> %>
+<%#   <%= form_with url: recebimentos_path, method: :get, local: true do |f| %1> %>
+<%#     <%= f.label :de %1> %>
+<%#     <%= f.date_field :de, value: @de %1> %>
+<%#     <%= f.label :ate, "Até" %1> %>
+<%#     <%= f.date_field :ate, value: @ate %1> %>
+<%#     <%= f.submit "Carregar" %1> %>
+<%#   <% end %1> %>
+<%# </div> %>
 
-<p>Baixar relatório
-<%= link_to "CSV", recebimentos_path(format: :csv, de: @de, ate: @ate) %>
-|
-<%= link_to "Excel", recebimentos_path(format: :xlsx, de: @de, ate: @ate) %>
-|
-<%= link_to "Recibos (markdown)", recebimentos_path(format: :zip, de: @de, ate: @ate) %>
-</p>
+<form <%= hx_set get: recebimentos_path, target: "#recebimentos-info", swap: "outerHTML", replace_url: true, trigger: :change %>>
+  <label for="de">De</label>
+  <input type="date" name="de" id="de" value="<%= @de %>">
+  <label for="ate">Até</label>
+  <input type="date" name="ate" id="ate" value="<%= @ate %>">
 
-<p>Relatório do mês atual
-<%= link_to "CSV", recebimentos_path(format: :csv, de: Date.today.beginning_of_month, ate: Date.today.end_of_month) %>
-|
-<%= link_to "Excel", recebimentos_path(format: :xlsx, de: Date.today.beginning_of_month, ate: Date.today.end_of_month) %>
-|
-<%= link_to "Recibos (markdown)", recebimentos_path(format: :zip, de: Date.today.beginning_of_month, ate: Date.today.end_of_month) %>
-</p>
+  <div class="field">
+    <label for="profissional">Profissional</label>
+    <select id="profissional" name="profissional">
+      <option value="">TODOS</option>
+      <% Profissional.all.each do |profissional| %>
+        <option value="<%= profissional.id %>" <%= "selected" unless profissional.id != params[:profissional] %>><%= profissional.descricao_completa %></option>
+      <% end %>
+    </select>
+  </div>
 
-<p>Relatório do mês passado
-<%= link_to "CSV", recebimentos_path(format: :csv, de: (Date.today - 1.month).beginning_of_month, ate: (Date.today - 1.month).end_of_month) %>
-|
-<%= link_to "Excel", recebimentos_path(format: :xlsx, de: (Date.today - 1.month).beginning_of_month, ate: (Date.today - 1.month).end_of_month) %>
-|
-<%= link_to "Recibos (markdown)", recebimentos_path(format: :zip, de: (Date.today - 1.month).beginning_of_month, ate: (Date.today - 1.month).end_of_month) %>
-</p>
+  <div class="field">
+    <label for="pessoa">Paciente</label>
+    <input type="text" name="pessoa" id="pessoa" value="<%= params[:pessoa] %>">
+  </div>
 
-<%= link_to "+ recebimento", new_recebimento_path, { class: "btn-dinheiro" } %>
+  <div class="field">
+    <label for="pagante">Pagante</label>
+    <input type="text" name="pagante" id="pagante" value="<%= params[:pagante] %>">
+  </div>
 
-<p>
+  <div class="field">
+    <label for="modalidade">Tipo de pagamento</label>
+    <select name="modalidade" id="modalidade">
+      <option value="">TODOS</option>
+      <% PagamentoModalidade.all.each do |pagamento_modalidade| %>
+        <option value="<%= pagamento_modalidade.id %>" <%= "selected" unless pagamento_modalidade.id != params[:modalidade] %>><%= pagamento_modalidade.modalidade %></option>
+      <% end %>
+    </select>
+  </div>
+</form>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Baixar relatório", "javascript:void(0);", class: 'icon-download3' %>
+      <ul>
+        <li>
+          <%= link_to "CSV", recebimentos_path(format: :csv, de: @de, ate: @ate), class: 'icon-table2' %>
+        </li>
+        <li>
+          <%= link_to "Excel", recebimentos_path(format: :xlsx, de: @de, ate: @ate), class: 'icon-file-excel' %>
+        </li>
+        <li>
+          <%= link_to "Recibos (markdown)", recebimentos_path(format: :zip, de: @de, ate: @ate), class: 'icon-file-zip' %>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <%= link_to "Relatório do mês atual", "javascript:void(0);", class: 'icon-download3' %>
+      <ul>
+        <li>
+          <%= link_to "CSV", recebimentos_path(format: :csv, de: Date.today.beginning_of_month, ate: Date.today.end_of_month), class: 'icon-table2' %>
+        </li>
+        <li>
+          <%= link_to "Excel", recebimentos_path(format: :xlsx, de: Date.today.beginning_of_month, ate: Date.today.end_of_month), class: 'icon-file-excel' %>
+        </li>
+        <li>
+          <%= link_to "Recibos (markdown)", recebimentos_path(format: :zip, de: Date.today.beginning_of_month, ate: Date.today.end_of_month), class: 'icon-file-zip' %>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <%= link_to "Relatório do mês passado", "javascript:void(0);", class: 'icon-download3' %>
+      <ul>
+        <li>
+          <%= link_to "CSV", recebimentos_path(format: :csv, de: (Date.today - 1.month).beginning_of_month, ate: (Date.today - 1.month).end_of_month), class: 'icon-table2' %>
+        </li>
+        <li>
+          <%= link_to "Excel", recebimentos_path(format: :xlsx, de: (Date.today - 1.month).beginning_of_month, ate: (Date.today - 1.month).end_of_month), class: 'icon-file-excel' %>
+        </li>
+        <li>
+          <%= link_to "Recibos (markdown)", recebimentos_path(format: :zip, de: (Date.today - 1.month).beginning_of_month, ate: (Date.today - 1.month).end_of_month), class: 'icon-file-zip' %>
+        </li>
+      </ul>
+    </li>
+
+    <% if usuario_atual.financeiro? %>
+      <li>
+        <%= link_to "adicionar", new_recebimento_path, { class: "btn-dinheiro icon-plus" } %>
+      </li>
+    <% end %>
+  </ul>
+</nav>
+
+<br>
+
+<p style="text-align:center;" id="recebimentos-do-periodo">
   Recebimentos do período:
   <% @total_mes = @recebimentos.sum(:valor) %>
   <%= render_dinheiro_centavos @total_mes %>
 </p>
 
-<%= render "valores-cobrar-container", pessoas: @pessoas, atendimento_valores: @atendimento_valores %>
-
-<%= render 'recebimentos/tabela', recebimentos: @recebimentos, de: @de, ate: @ate %>
+<%= render 'recebimentos-info', recebimentos: @recebimentos, pessoas: @pessoas, de: @de, ate: @ate, atendimento_valores: @atendimento_valores %>

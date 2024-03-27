@@ -7,6 +7,10 @@ class PessoaDevolutiva < ApplicationRecord
   alias responsavel pessoa_responsavel
 
   scope :cronologico, -> (ordem: :asc) { order(data: ordem) }
+  scope :da_pessoa, -> (pessoa) { where(pessoa: pessoa) }
+  scope :da_pessoa_com_id, -> (id) { where(pessoa_id: id) }
+  scope :do_responsavel, -> (responsavel) { where(pessoa_responsavel: responsavel) }
+  scope :do_responsavel_com_id, -> (id) { where(pessoa_responsavel_id: id) }
 
   def informacoes_abreviadas
     p_responsavel =  (responsavel || pessoa).nome_abreviado
@@ -21,5 +25,4 @@ class PessoaDevolutiva < ApplicationRecord
   def substituir_template_por_dados atributo=""
     self[atributo]&.to_s&.gsub(/{%\s*(paciente|pessoa|cliente)\s*%}/, pessoa.nome)&.gsub(/{%\s*(responsavel|responsável|interessado|entrevistado)\s*%}/, responsavel.nome)
   end
-
 end

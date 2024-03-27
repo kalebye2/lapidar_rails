@@ -1,4 +1,6 @@
 class Usuario < ApplicationRecord
+  self.primary_key = :profissional_id
+
   has_secure_password
   has_one :profissional
 

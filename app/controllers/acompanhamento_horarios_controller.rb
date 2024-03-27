@@ -9,7 +9,7 @@ class AcompanhamentoHorariosController < ApplicationController
   end
 
   def new
-    if params[:ajax].present? && params[:ajax]
+    if hx_request?
       if params[:id].present? && !params[:id].nil?
         render partial: "form_ajax", locals: { acompanhamento_horario: AcompanhamentoHorario.new(acompanhamento: Acompanhamento.find(params[:id])), acompanhamento: @acompanhamento }
       else
@@ -23,13 +23,13 @@ class AcompanhamentoHorariosController < ApplicationController
     respond_to do |format|
       if @acompanhamento_horario.save
         format.html do
-          if params[:ajax].present? && params[:ajax]
+          if hx_request?
             render partial: "resumo_acompanhamento", locals: { acompanhamento: @acompanhamento_horario.acompanhamento }
           end
         end
       else
         format.html do
-          if params[:ajax].present? && params[:ajax]
+          if hx_request?
             render partial: "resumo_acompanhamento_form", locals: { acompanhamento: @acompanhamento_horario.acompanhamento }
           end
         end
@@ -54,6 +54,12 @@ class AcompanhamentoHorariosController < ApplicationController
   end
 
   private
+
+  def validar_usuario
+    if usuario_atual.nil? || !usuario_atual.secretaria? || usuario_atual.profissional != @acompanhamento_horario&.profissional
+      erro403
+    end
+  end
 
   def set_acompanhamento
     @acompanhamento = Acompanhamento.find(params[:id])

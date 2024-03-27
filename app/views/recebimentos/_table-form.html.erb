@@ -1,13 +1,16 @@
 <td>
-  <select name="recebimento[acompanhamento_id]">
-    <% Acompanhamento.por_paciente_em_ordem_alfabetica.each do |a| %>
-      <option value="<%= a.id %>"><%= a.render_info_para_profissional_alt %></option>
+  <select name="acompanhamentos_de" style="max-width:10em;min-width:15em;font-size:.9em;" <%= hx_set get: select_acompanhamento_recebimentos_path(table: true), target: "#select_acompanhamento", swap: "outerHTML" %>>
+    <option value="">[Escolha]</option>
+    <% Pessoa.em_ordem_alfabetica.each do |pessoa| %>
+      <option value="<%= pessoa.id %>"><%= pessoa.nome_completo %> (<%= pessoa.render_idade %>)</option>
     <% end %>
+  </select>
+  <select id="select_acompanhamento" style="max-width:10em;min-width:10em;font-size:.9em;" name="recebimento[acompanhamento_id]">
   </select>
 </td>
 
 <td>
-  <select name="recebimento[pessoa_pagante_id]">
+  <select name="recebimento[pessoa_pagante_id]" style="max-width:15em;min-width:15em;font-size:.85em;">
     <option value="">[Deixe assim se o pagante for o beneficiário]</option>
     <% Pessoa.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc).each do |p| %>
       <option value="<%= p.id %>">
@@ -43,7 +46,7 @@
 <input type="hidden" name="ajax" value="1">
 <td>-</td>
 <td>
-  <button hx-post="<%= recebimentos_path(Recebimento.new) %>" hx-include="closest tr" hx-target="#tabela-recebimentos" hx-swap="outerHTML">
+  <button hx-post="<%= recebimentos_path %>" hx-include="closest tr" hx-target="#recebimentos-info" hx-swap="outerHTML">
     Confirmar
   </button>
   <button

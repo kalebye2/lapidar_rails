@@ -1,9 +1,27 @@
 class PessoaDevolutivasController < ApplicationController
   before_action :set_pessoa_devolutiva, only: %i[ show edit update destroy ]
+  before_action :validar_usuario
+  include Pagy::Backend
 
   # GET /pessoa_devolutivas or /pessoa_devolutivas.json
   def index
-    @pessoa_devolutivas = PessoaDevolutiva.cronologico
+    if usuario_atual.secretaria?
+      @pessoa_devolutivas = PessoaDevolutiva.cronologico
+    else
+      @pessoa_devolutivas = usuario_atual.profissional.pessoa_devolutivas.cronologico
+    end
+
+    if params[:pessoa].present?
+      @pessoa_devolutivas = @pessoa_devolutivas.da_pessoa_com_id(params[:pessoa])
+    end
+
+    @contagem = @pessoa_devolutivas.count
+    @pagy, @pessoa_devolutivas = pagy(@pessoa_devolutivas, items: 3)
+    @params = params.permit(:pessoa, :de, :ate, :responsavel)
+
+    if hx_request?
+      render partial: "pessoa_devolutivas-container", locals: {pessoa_devolutivas: @pessoa_devolutivas}
+    end
   end
 
   # GET /pessoa_devolutivas/1 or /pessoa_devolutivas/1.json
@@ -28,6 +46,7 @@ class PessoaDevolutivasController < ApplicationController
 
   # GET /pessoa_devolutivas/1/edit
   def edit
+    redirect_to :devolutiva
   end
 
   # POST /pessoa_devolutivas or /pessoa_devolutivas.json
@@ -49,7 +68,7 @@ class PessoaDevolutivasController < ApplicationController
   def update
     respond_to do |format|
       if @pessoa_devolutiva.update(pessoa_devolutiva_params)
-        if params[:ajax].present?
+        if hx_request?
           format.html { render :show }
         else
           format.html { redirect_to devolutiva_url(@pessoa_devolutiva), notice: "pessoa devolutiva was successfully updated." }
@@ -74,6 +93,14 @@ class PessoaDevolutivasController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+
+  def validar_usuario
+    if usuario_atual.nil? || !(usuario_atual.secretaria? || usuario_atual.corpo_clinico?)
+      erro403
+      return
+    end
+  end
+
     def set_pessoa_devolutiva
       @pessoa_devolutiva = PessoaDevolutiva.find(params[:id])
     end

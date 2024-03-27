@@ -1,0 +1,85 @@
+<dt><h1>Gestação</h1></dt>
+
+<dt>A gestação foi desejada?</dt>
+<dd><%= sim_ou_nao gestacao.desejada %></dd>
+
+<dt>Idade da mãe:</dt>
+<dd><%= deixar_no_plural gestacao.idade_mae, 'ano', 'anos' %></dd>
+
+<dt>Idade do pai:</dt>
+<dd><%= deixar_no_plural gestacao.idade_pai, 'ano', 'anos' %></dd>
+
+<dt>Irmãos mais velhos:</dt>
+<dd><%= gestacao.irmaos_mais_velhos %></dd>
+
+<dt>Irmãos mais novos:</dt>
+<dd><%= gestacao.irmaos_mais_novos %></dd>
+
+<dt>Quanto tempo depois da última gestação a criança foi concebida?</dt>
+<dd><%= render_tempo_meses_resumido gestacao.gestacao_anterior_meses %></dd>
+
+<dt>Abortos anteriores (espontâneos e/ou intencionais):</dt>
+<dd><%= gestacao.abortos_anteriores %></dd>
+
+<dt>Data do pré-natal:</dt>
+<dd><%= render_data_brasil gestacao.data_pre_natal %></dd>
+
+<dt>Como era a saúde da mãe durante a gestação?</dt>
+<dd><%= gestacao.mae_saude || "Sem informações" %></dd>
+
+<dt>Sensações da mãe durante a gravidez:</dt>
+<dd><%= gestacao.mae_sensacoes || "Sem informações" %></dd>
+
+<dt>Houve internações da mãe durante a gravidez?</dt>
+<dd><%= markdown_to_html gestacao.mae_internacoes %></dd>
+
+<dt>A mãe sentiu enjoos?</dt>
+<dd><%= markdown_to_html gestacao.mae_enjoos %></dd>
+
+<dt>A mãe vomitou durante a gravidez?</dt>
+<dd><%= markdown_to_html gestacao.mae_vomitos %></dd>
+
+<dt>A mãe teve diabetes durante a gravidez?</dt>
+<dd><%= sim_ou_nao gestacao.mae_diabetes || "Sem informações" %></dd>
+
+<dt>A mãe sofreu traumatismos durante a gravidez?</dt>
+<dd><%= sim_ou_nao gestacao.mae_traumatismo || "Sem informações" %></dd>
+
+<dt>A mãe teve convulsões durante a gravidez?</dt>
+<dd><%= sim_ou_nao gestacao.mae_convulsoes || "Sem informações" %></dd>
+
+<dt>A mãe chegou a tomar medicamentos durante a gravidez?</dt>
+<dd><%= gestacao.mae_medicamentos || "Sem informações" %></dd>
+
+<dt>Local do parto</dt>
+<dd><%= gestacao.local_do_parto %></dd>
+
+<dt>Tipo de parto</dt>
+<dd><%= gestacao.tipo_de_parto %></dd>
+
+<dt>Peso da criança ao nascer:</dt>
+<dd><%= numero_com_medida gestacao.nascimento_peso_g %></dd>
+
+<dt>Comprimento da criança ao nascer:</dt>
+<dd><%= numero_com_medida(gestacao.nascimento_comprimento_cm, "cm") %></dd>
+
+<dt>Duração da gestação (semanas):</dt>
+<dd><%= numero_com_medida(gestacao.gestacao_semanas, " semanas") %></dd>
+
+<dt>Condições da criança ao nascer:</dt>
+<dd><%= markdown_to_html gestacao.nascimento_crianca_condicoes %></dd>
+
+<dt>Reação da mãe ao nascimento da criança:</dt>
+<dd><%= markdown_to_html gestacao.nascimento_reacao_mae %></dd>
+
+<dt>Reação do pai ao nascimento da criança:</dt>
+<dd><%= markdown_to_html gestacao.nascimento_reacao_pai %></dd>
+
+<dt>Reação do(s) irmão(s) ao nascimento da criança:</dt>
+<dd><%= markdown_to_html gestacao.nascimento_reacao_irmaos %></dd>
+
+<dt>Desenvolvimento do parto</dt>
+<dd><%= markdown_to_html gestacao.desenvolvimento_parto %></dd>
+
+<dt>Outras considerações</dt>
+<dd><%= markdown_to_html gestacao.outras_consideracoes %></dd>

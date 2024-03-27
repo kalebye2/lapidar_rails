@@ -1,66 +1,108 @@
-<nav class="navbar">
+<nav class="navbar navbar-main">
   <ul class="navbar-ul">
     <li>
-      <%= link_to "Home", root_path %>
+      <%= link_to "", root_path, class: "icon-home" %>
     </li>
 
     <% if !usuario_atual.nil? && (usuario_atual.corpo_clinico? || usuario_atual.secretaria?)%>
       <li>
-        <%= link_to "Cadastros", pessoas_path %>
+        <%= link_to "Cadastros", pessoas_path, class: "icon-user" %>
       </li>
     <% end %>
 
     <li>
-      <%= link_to "Profissionais", profissionais_path %>
+      <%= link_to "Clínica", clinica_path, class: "icon-office" %>
+      <ul>
+        <li>
+          <%= link_to "Profissionais", profissionais_path, class: "icon-user-tie" %>
+        </li>
+
+        <li>
+          <%= link_to "Locais de atendimento", atendimento_locais_path, class: "icon-location" %>
+        </li>
+
+        <% if !usuario_atual.nil? && (usuario_atual.corpo_clinico? || usuario_atual.secretaria?) %>
+          <li>
+            <%= link_to "Instrumentos", instrumentos_path, class: 'icon-file-empty' %>
+          </li>
+        <% end %>
+      </ul>
     </li>
 
     <% if !usuario_atual.nil? %>
       <% if usuario_atual.corpo_clinico? || usuario_atual.secretaria? %>
         <li>
-          <%= link_to "Acompanhamentos", acompanhamentos_path %>
+          <%= link_to "Acompanhamentos", acompanhamentos_path, class: "icon-profile" %>
         </li>
       <% end %>
 
       <% if usuario_atual.corpo_clinico? || usuario_atual.financeiro? %>
         <li>
-          <%= link_to "Financeiro", financeiro_path %>
+          <%= link_to "Financeiro", financeiro_path, class: "icon-coin-dollar" %>
+          <ul class="subnav">
+            <li><%= link_to "Atendimentos", atendimento_valores_path %></li>
+            <li><%= link_to "Recebimentos", recebimentos_path %></li>
+            <li><%= link_to "Repasses", profissional_financeiro_repasses_path %></li>
+            <li><%= link_to "Reajustes", acompanhamento_reajustes_path %></li>
+          </ul>
         </li>
       <% end %>
 
       <% if usuario_atual.corpo_clinico? || usuario_atual.secretaria? %>
         <!-- todos estes são de documentos. Melhorar depois! -->
         <li>
-          <%= link_to "Laudos", laudos_path %>
-        </li>
-        <li>
-          <%= link_to "Devolutivas", devolutivas_path %>
-        </li>
-        <li>
-          <%= link_to "Anamneses", infantojuvenil_anamneses_path %>
-        </li>
-        <li>
-          <%= link_to "modelos docs", profissional_documento_modelos_path %>
+          <%= link_to "Documentos", documentos_path, class: "icon-folder" %>
+          <ul class="subnav">
+            <li>
+              <%= link_to "Laudos", laudos_path %>
+            </li>
+            <li>
+              <%= link_to "Devolutivas", devolutivas_path %>
+            </li>
+            <li>
+              <%= link_to "Anamneses infantojuvenis", infantojuvenil_anamneses_path %>
+            </li>
+            <li>
+              <%= link_to "Anamneses adultas", adulto_anamneses_path %>
+            </li>
+            <li>
+              <%# <%= link_to "modelos docs", profissional_documento_modelos_path %1> %>
+              <%= link_to "Contratos (modelos)", profissional_contrato_modelos_path %>
+            </li>
+            <li>
+              <%= link_to "Gerar documento avulso", gerar_documento_path %>
+            </li>
+          </ul>
         </li>
       <% end %>
 
       <% if usuario_atual.informatica? %>
         <li>
-          <%= link_to "Admin", admin_path %>
+          <%= link_to "Admin", admin_path, class: "icon-cog" %>
         </li>
       <% end %>
     <% end %>
+    <% if BibliotecaObra.count > 1 || usuario_atual.secretaria? %>
+      <li>
+        <%= link_to "Biblioteca", biblioteca_path, class: "icon-books" %>
+      </li>
+    <% end %>
+    <% if !usuario_atual.nil? %>
+      <li>
+        <%= link_to "Ajuda", ajuda_path, class: 'icon-question' %>
+      </li>
+    <% end %>
     <li>
-      <%= link_to "Biblioteca", biblioteca_path %>
     </li>
     <!-- link do usuário -->
     <!-- se não estiver logado -->
     <% if usuario_atual.nil? %>
       <li class="navbar-li" style="float:right;color:white;">
-        <%= link_to "Entrar", entrar_path, { class: "navbar-link" } %>
+        <%= link_to "Entrar", entrar_path, { class: "navbar-link icon-enter" } %>
       </li>
     <% else %>
       <li class="navbar-li" style="float:right;color:white;">
-        <%= link_to "Sair", sair_path %>
+        <%= link_to "Sair", sair_path, class: "icon-exit" %>
       </li>
       <li class="navbar-li" style="float:right;color:white;">
         <%= link_to usuario_atual.profissional do %>
@@ -73,3 +115,9 @@
     <% end %>
   </ul>
 </nav>
+
+<% if true %>
+  <div style="position:fixed;bottom:3em;right:3em;background:black;opacity:.7;color:white;padding:.5em;z-index:100000;">
+    <%= params %>
+  </div>
+<% end %>

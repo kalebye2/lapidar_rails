@@ -1,0 +1,52 @@
+<% titulo "Declaração - #{@atendimento.tipo.downcase} #{@atendimento.pessoa.nome_abreviado} #{render_data_brasil @atendimento.data_inicio_verdadeira}" %>
+<div class="documento">
+  <nav class="navbar navcenter">
+    <ul>
+      <li>
+        <%= link_to "Voltar ao acompanhamento", acompanhamento_path(@atendimento.acompanhamento, anchor: dom_id(@atendimento)), class: "icon-previous" %>
+      </li>
+      <li>
+        <%= link_to "Baixar", "javascript:void(0);", class: "icon-download3" %>
+        <ul>
+          <li>
+            <%= link_to "Markdown", declaracao_comparecimento_atendimento_path(@atendimento, format: :md) %>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <h1 id="main-title">Declaração de comparecimento</h1>
+
+  <p>
+  Declaro para fins de comprovação que
+  <%= @atendimento.paciente.nome_completo %>
+  esteve presente em atendimento
+  em <%= @atendimento.acompanhamento.tipo.downcase %> no dia
+  <%= render_data_brasil @atendimento.data_inicio_verdadeira %>
+  das
+  <%= render_hora_brasil @atendimento.horario_inicio_verdadeiro %>
+  às <%= render_hora_brasil @atendimento.horario_fim_verdadeiro %>.
+  </p>
+
+  <%== "<br>" * 4 %>
+
+  <p style="text-align:center;">
+  <%= @atendimento.profissional.cidade %>,
+  <%= Date.today.day %> de
+  <%= t('date.month_names')[Date.today.month].downcase %> de
+  <%= Date.today.year %>.
+  </p>
+
+  <%== "<br>" * 4 %>
+
+  <div class="assinatura">
+    <hr>
+
+    <p>
+    <%= @atendimento.profissional.nome_completo %>
+    <br>
+    <%= @atendimento.profissional.funcao %> <%= @atendimento.profissional.documento %>
+    </p>
+  </div>
+</div>

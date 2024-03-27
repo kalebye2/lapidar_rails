@@ -1,0 +1,27 @@
+<%= form_with(model: atendimento_tipo) do |form| %>
+  <% if atendimento_tipo.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(atendimento_tipo.errors.count, "error") %> prohibited this atendimento_tipo from being saved:</h2>
+
+      <ul>
+        <% atendimento_tipo.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :tipo, style: "display: block" %>
+    <%= form.text_field :tipo %>
+  </div>
+
+  <div>
+    <%= form.label :profissional_funcao_id, style: "display: block" %>
+    <%= form.select :profissional_funcao_id, ProfissionalFuncao.all.map { |pf| [pf.funcao, pf.id] }, include_blank: true %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

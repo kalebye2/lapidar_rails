@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
   before_action :set_atendimentos, only: %i[ update_tabela_atendimentos_hoje update_calendario_atendimentos_semnana ]
 
+  before_action :usuario_logado, only: %i[ create update destroy ]
+
   def init
   end
 
@@ -8,6 +10,7 @@ class ApplicationController < ActionController::Base
     @database_exists = database_exists?
     if @database_exists
       set_atendimentos
+      set_ajustes_futuros_usuario
     end
   end
 
@@ -20,7 +23,7 @@ class ApplicationController < ActionController::Base
 
   def ajuda
     if usuario_atual.nil?
-      request.headers["Content-Type"] = "text/markdown ; charset=utf-8"
+      # request.headers["Content-Type"] = "text/markdown ; charset=utf-8"
       render file: "#{Rails.root}/public/404.html", status: 403
     else
       @texto = File.read("#{Rails.root}/public/ajuda.md")
@@ -72,7 +75,6 @@ class ApplicationController < ActionController::Base
               filename: "preview.pdf",
              type: "application/pdf",
              disposition: "inline")
-
   end
 
 
@@ -86,10 +88,30 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # 403 que parece 404
+  def erro403
+    render file: "#{Rails.root}/public/404.html", status: 403
+  end
+
   private
+
+  def usuario_logado
+    !usuario_atual.nil?
+  end
   
-  def autorizar_usuario
-    #TODO
+  def checar *condicoes
+    condicoes.each do |condicao|
+      if condicao then return true end
+      end
+    return false
+  end
+
+  def nao_checar *condicoes
+    !checar condicoes
+  end
+
+  def hx_request?
+    request.headers["HX-Request"].presence
   end
 
   def abreviar
@@ -102,11 +124,12 @@ class ApplicationController < ActionController::Base
     if usuario_atual.nil?
       @atendimentos = nil
     elsif usuario_atual.secretaria?
-      @atendimentos = Atendimento.da_semana(semana: @start_date.to_date.all_week)
+      @atendimentos = Atendimento.da_semana(semana: @start_date.to_date.all_week).or(Atendimento.reagendados_da_semana(semana: @start_date.to_date.all_week))
     else
       @atendimentos = usuario_atual.profissional.atendimentos.da_semana(semana: @start_date.to_date.all_week)
     end
-    @atendimentos_hoje = Atendimento.de_hoje
+    @atendimentos_hoje = Atendimento.de_hoje.or(Atendimento.where(data_reagendamento: Date.today))
+    # @atendimentos_reagendados_hoje = Atendimento.reagendados_de_hoje
   end
 
   def database_exists?
@@ -119,5 +142,9 @@ class ApplicationController < ActionController::Base
 
   def database_empty?
     ActiveRecord::Base.connection.data_sources.empty?
+  end
+
+  def set_ajustes_futuros_usuario
+    @reajustes_futuros = usuario_atual&.profissional&.acompanhamento_reajustes&.ajustes_futuros&.nao_aplicados&.order(data_ajuste: :desc)
   end
 end

@@ -1,0 +1,68 @@
+<% id = dom_id(atendimento) %>
+<% presenca_class = "tr-atendimento-#{atendimento.status.parameterize}" %>
+<tr class="<%= presenca_class %> tr-atendimento tr-atendimento-reagendado" id="<%= id %>">
+  <td>
+    <% if usuario_atual.nil? %>
+      <%= atendimento.profissional.nome_abreviado %>
+      <span style="font-size:.7em;"><%= atendimento.profissional.documento %></span>
+    <% else %>
+      <%= link_to atendimento.profissional do %>
+        <%= atendimento.profissional.nome_abreviado %>
+        <span style="font-size:.7em;"><%= atendimento.profissional.documento %></span>
+      <% end %>
+    <% end %>
+  </td>
+
+  <td>
+    <% if usuario_atual.nil? %>
+      <%= atendimento.paciente.nome_abreviado %>
+    <% else %>
+      <%= link_to atendimento.paciente.nome_abreviado, atendimento.paciente %>
+    <% end %>
+  </td>
+
+  <td>
+    <%= atendimento.tipo %> - <%= atendimento.modalidade %>
+  </td>
+
+  <td>
+    <%= "#{render_hora_brasil atendimento.horario_reagendamento}#{if !atendimento.horario_reagendamento_fim.nil? then ' até '.concat(render_hora_brasil atendimento.horario_reagendamento_fim) end}" %>
+  </td>
+
+  <td><%= atendimento.local %></td>
+
+  <td id="<%= dom_id(atendimento) %>_status">
+    <%= atendimento.status %>
+    <% if !usuario_atual.nil? %>
+      <% presente = atendimento.presenca || 0 > 0 ? 1 : 0 %>
+      <form id="btn-<%= dom_id(atendimento) %>" <%== hx_set patch: status_update_atendimento_path(atendimento), target: "##{dom_id(atendimento)}", swap: "outerHTML" %>>
+        <input type="hidden" value="<%= form_authenticity_token.to_s %>" name="authenticity_token">
+        <input type="hidden" value="true" name="main">
+        <button name="atendimento[presenca]" value="<%= presente == 0 %>" class="btn-<%= atendimento.status.parameterize %>">
+          <%= atendimento.presenca? ? "Presente" : "Ausente" %>
+        </button>
+      </form>
+    <% end %>
+  </td>
+
+  <% if !usuario_atual.nil? && (usuario_atual.secretaria? || usuario_atual.profissional == atendimento.profissional)%>
+    <td>
+      <ul style="list-style:none;">
+        <li>
+          <%= link_to " Acompanhar", acompanhamento_path(atendimento.acompanhamento, anchor: dom_id(atendimento)), class: "icon-compass2" %>
+        </li>
+        <% if usuario_atual.profissional == atendimento.profissional %>
+          <li>
+            <% ultimo_atendimento = atendimento.acompanhamento.atendimentos.realizados.em_ordem.last %>
+            <%= ultimo_atendimento.presence ? link_to("Modelo de relato Markdown (último atendimento)", modelo_relato_atendimento_path(ultimo_atendimento, format: :md)) : "" %>
+          </li>
+        <% end %>
+        <li>
+          <%= link_to "registrar atendimento para a próxima semana", acompanhamento_new_atendimento_proxima_semana_path(atendimento.acompanhamento, acompanhamento_id: atendimento.acompanhamento.id), method: :post %>
+        </li>
+        <%# LEMBRE DE IMPLEMENTAR O "SOLICITAR REAGENDAMENTO" %>
+      </ul>
+    </td>
+  <% end %>
+</tr>
+

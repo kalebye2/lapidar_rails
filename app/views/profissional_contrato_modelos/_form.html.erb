@@ -1,0 +1,29 @@
+<% if profissional_contrato_modelo.presence %>
+  <%= form_for profissional_contrato_modelo, local: true do |form| %>
+    <div class="field">
+    <%= form.label :titulo, "Título" %>
+    <%= form.text_field :titulo, size: 100 %>
+    </div>
+
+    <%# <% if params[:controller] == "profissionais" || @profissional.presence %1> %>
+      <% if @profissional.presence %>
+      <%= form.hidden_field :profissional_id %>
+    <% else %>
+    <% end %>
+
+    <div class="field">
+    <%= form.label :descricao, "Descrição" %>
+    <%= form.text_field :descricao, size: 100 %>
+    </div>
+
+    <div class="field">
+    <%= form.label :conteudo, "Conteúdo" %>
+    <%= form.text_area :conteudo %>
+    <%== simplemde_gerar "profissional_contrato_modelo_conteudo" %>
+    </div>
+
+    <div class="action">
+      <%= form.submit "Salvar" %>
+    </div>
+  <% end %>
+<% end %>

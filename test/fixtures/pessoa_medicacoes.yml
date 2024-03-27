@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  pessoa: one
+  medicacao: MyString
+  dose: MyString
+  motivo: MyString
+  data_inicio: 2024-03-05
+  data_final: 2024-03-05
+
+two:
+  pessoa: two
+  medicacao: MyString
+  dose: MyString
+  motivo: MyString
+  data_inicio: 2024-03-05
+  data_final: 2024-03-05

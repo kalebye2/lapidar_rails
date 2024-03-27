@@ -1,138 +1,128 @@
-<%= titulo "#{@profissional.funcao} #{@profissional.nome_abreviado}" %>
-<h1>
-  <%= @profissional.nome_completo %> - <%= @profissional.funcao %>
-  <% if usuario_atual.secretaria? %>
-    <%= link_to edit_pessoa_path(@profissional.pessoa) do %>
-      <span style="font-size:.7em">
-        Editar cadastro
-      </span>
-    <% end %>
-  <% end %>
+<% titulo "#{@profissional.funcao} #{@profissional.nome_abreviado}" %>
+<h1 class="text-center">
+  <%= @profissional.nome_completo %><br>
 </h1>
+<h2 class="text-center">
+  <%= @profissional.funcao %> <%= @profissional.documento %>
+</h2>
 
-<%# para editar o usuário. TODO: não permitir edição de quem seria o profissional para o usuário %>
-<% if usuario_atual.informatica? %>
-  <% if @profissional.usuario.nil? %>
-      <%= link_to "Criar usuário", new_usuario_path %>
-    <% else %>
-      <%= link_to "Editar usuário", edit_usuario_path %>
-  <% end %>
-<% end %>
-<h2><%= @profissional.documento %></h2>
-<% if usuario_atual.secretaria? %>
-  <%= link_to "editar profissional", edit_profissional_path(@profissional) %>
-<% end %>
-
-<div class="profissional-bio">
-  <% if !@profissional.bio.nil? %>
-    <%== markdown_to_html @profissional.bio %>
-  <% else %>
-    <p>Biografia não disponível.</p>
-  <% end %>
-</div>
-
-<div class="profissional-agenda">
-  <h3>Agenda disponibilizada</h3>
-  <% dias_da_semana = SemanaDia.all %>
-
-  <div id="profissional-agenda-horarios-disponiveis">
-    <% if usuario_atual.secretaria? || usuario_atual.profissional == @profissional %>
-      <form>
-        <label for="profissional_horario[semana_dia_id]">
-          Dia da semana
-        </label>
-        <select name="profissional_horario[semana_dia_id]">
-          <% SemanaDia.all.each do |semana_dia| %>
-            <option value="<%= semana_dia.id %>"><%= semana_dia.nome %></option>
-          <% end %>
-        </select>
-        <label for="profissional_horario[horario]">
-          Horário
-        </label>
-        <input type="time" name="profissional_horario[horario]">
-        <button>
-          Registrar horário
-        </button>
-      </form>
-      <hr>
-    <% end %>
-    <% @profissional.agenda_disponivel.map(&:semana_dia).uniq.each do |dia| %>
-      <b><%= dia.nome %></b>
-      <% @profissional.profissional_horarios.where(semana_dia: dia).map do |horario| %>
-        <%= render_hora_brasil horario.horario %>
-      <% end %>
-      <br>
-    <% end %>
-  </div>
-
-  <table>
-    <caption>Agenda</caption>
-    <thead>
-      <tr>
-        <th width="10%"></th>
-        <% dias_da_semana.each do |semana_dia| %>
-          <th><%= semana_dia.nome.upcase %></th>
-        <% end %>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th>Agenda disponível</th>
-        <% dias_da_semana.each do |semana_dia| %>
-          <td>
-            <% @profissional.profissional_horarios.where(semana_dia: semana_dia).map { |profissional_horario| [profissional_horario, @profissional.acompanhamento_horarios.de_acompanhamentos_em_andamento.where(semana_dia: profissional_horario.semana_dia, horario: profissional_horario.horario)] }.each do |profissional_horario| %>
-              <% atendimento_do_horario = [] %>
-              <% @profissional.atendimentos.do_periodo(Date.today..Date.today + 1.week).map do |a| %>
-                <% if a.data.wday == semana_dia.id && a.horario == profissional_horario.first.horario then atendimento_do_horario.append a end %>
-                <% end %>
-
-                <% proh = profissional_horario[1] %>
-                <% proha = atendimento_do_horario %>
-                <% indisponivel = proh.count > 0 || proha.count > 0 %>
-                <p style="border-radius:1em;padding:1em;text-align:center;color:<%= indisponivel ? "lightyellow" : "lightgreen" %>;background-color:<%= indisponivel ? "darkorange" : "darkgreen"%>;cursor:default;">
-                <u><b><%= render_hora_brasil profissional_horario[0].horario %></b></u>
-                <%= indisponivel ? "Indisponível" : "Disponível" %>
-                <%#= @profissional.acompanhamento_horarios.de_acompanhamentos_em_andamento.where(semana_dia: profissional_horario.semana_dia, horario: profissional_horario.horario).map { |acompanhamento_horario| "#{acompanhamento_horario.pessoa.nome_abreviado }" }.join('') %>
-                <%#= @profissional.acompanhamento_horarios.de_acompanhamentos_em_andamento.where(semana_dia: profissional_horario.semana_dia, horario: profissional_horario.horario).map { |profissional_horario| "#{render_hora_brasil profissional_horario.horario} - #{profissional_horario.acompanhamento.paciente.nome_completo}" }.join('') %>
-                </p>
-              <% end %>
-          </td>
-        <% end %>
-      </tr>
-      <tr>
-        <th>Atendimentos dos próximos dias</th>
-        <% dias_da_semana.each do |semana_dia| %>
-          <td>
-            <ul>
-              <% @profissional.atendimentos.do_periodo(Date.today..Date.today + 1.week).map do |a| %>
-                <%== a.data.wday == semana_dia.id ? "<li>#{render_data_brasil a.data} às #{render_hora_brasil a.horario}</li><hr>" : "" %>
-              <% end %>
-            </ul>
-          </td>
-        <% end %>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<% if !@profissional.atendimentos_futuros.empty? && usuario_atual.profissional == @profissional %>
-  <div class="atendimentos-futuros">
-    <h3>Atendimentos futuros</h3>
+<% if !usuario_atual.nil? %>
+  <nav class="navbar navcenter">
     <ul>
-      <% @profissional.atendimentos_futuros.each do |af| %>
+      <%# para editar o usuário. TODO: não permitir edição de quem seria o profissional para o usuário %>
+      <% if usuario_atual.informatica? %>
+        <% if @profissional.usuario.nil? %>
+          <li>
+            <%= link_to "Criar usuário", new_usuario_path, class: 'icon-plus' %>
+          </li>
+          <%= link_to "Editar usuário", edit_usuario_path, class: 'icon-pencil' %>
+        <% end %>
+      <% end %>
+
+      <% if usuario_atual.secretaria? || usuario_atual.profissional == @profissional %>
         <li>
-          <%= link_to af.informacoes_com_pessoa, af %>
+          <%= link_to "Editar cadastro", "javascript:void(0);", class: 'icon-pencil' %>
+          <ul>
+            <% if usuario_atual.secretaria? || usuario_atual == @profissional.usuario %>
+              <li>
+                <%= link_to "Pessoal", edit_pessoa_path(@profissional.pessoa), class: 'icon-user' %>
+              </li>
+              <li>
+                <%= link_to "Profissional", edit_profissional_path(@profissional), class: 'icon-user-tie' %>
+              </li>
+            <% end %>
+            <% if (usuario_atual.informatica? || usuario_atual == @profissional.usuario) && !@profissional.usuario.nil? %>
+              <li>
+                <%= link_to "Usuário", edit_usuario_path(@profissional.usuario), class: 'icon-keyboard' %>
+              </li>
+            <% end %>
+          </ul>
         </li>
       <% end %>
+
+      <li>
+        <%= link_to "Acompanhamentos", acompanhamentos_profissional_path(@profissional), class: 'icon-address-book' %>
+      </li>
+      <li>
+        <%= link_to "Modelos de contrato", contrato_modelos_profissional_path(@profissional), class: 'icon-drawer' %>
+      </li>
+
+      <li>
+        <%= link_to "Agenda", agenda_profissional_path(@profissional), class: 'icon-calendar' %>
+      </li>
     </ul>
-  </div>
+  </nav>
 <% end %>
-<div class="profissional-acompanhamentos">
-  <h3>Casos</h3>
-  <p>
-  <%= pluralize(@profissional.acompanhamentos.count, 'caso', plural: 'casos') %>,
-  <%= @profissional.acompanhamentos_em_andamento.count %> em andamento.
-  <%= link_to "Ver mais", acompanhamentos_profissional_path %>
-  </p>
-  <%= render 'acompanhamentos-resumo', profissional: @profissional %>
+
+<div class="grid-2">
+  <div class="profissional-bio documento">
+    <div class="profissional-info" style="border-style:solid;border-color:var(--main-color);border-width:.1em;border-radius:.5em;padding:.3em;">
+      <p>
+      <%= phone_to @profissional.render_fone_link, @profissional.render_fone, class: "icon-phone" %>
+      <%= link_to "", @profissional.pessoa.render_whatsapp_link, class: "icon-whatsapp" unless !@profissional.pessoa.usa_whatsapp? %>
+      <%= link_to "", @profissional.pessoa.render_telegram_link, class: "icon-telegram" unless !@profissional.pessoa.usa_telegram? %>
+      </p>
+      <p class="text-center">
+      <%= mail_to @profissional.email, class: "icon-mail" %>
+      </p>
+    </div>
+    <% if @profissional.bio %>
+      <h2>Sobre o profissional</h2>
+      <%== markdown_to_html @profissional.bio %>
+    <% else %>
+      <p>Biografia não disponível.</p>
+    <% end %>
+
+    <hr>
+
+    <% if @profissional.pessoa.bio %>
+      <%== markdown_to_html @profissional.pessoa.bio %>
+    <% end %>
+  </div>
+
+  <%= render 'tabela-agenda', profissional: @profissional %>
 </div>
+
+<% if usuario_atual&.secretaria? || usuario_atual&.profissional == @profissional %>
+  <div class="profissional-agenda">
+    <h3>Atualizar agenda</h3>
+    <% dias_da_semana = SemanaDia.all %>
+
+    <div id="profissional-agenda-horarios-disponiveis">
+      <form action="<%= profissional_horarios_path %>" method="post">
+        <input type="hidden" value="<%= form_authenticity_token.to_s %>" name="authenticity_token">
+        <input type="hidden" value="<%= @profissional.id %>" name="profissional_horario[profissional_id]">
+
+        <div class="field">
+          <label for="profissional_horario[semana_dia_id]">
+            Dia da semana
+          </label>
+          <select name="profissional_horario[semana_dia_id]">
+            <% SemanaDia.all.each do |semana_dia| %>
+              <option value="<%= semana_dia.id %>"><%= semana_dia.nome %></option>
+            <% end %>
+          </select>
+
+          <label for="profissional_horario[horario]">
+            Horário
+          </label>
+          <input type="time" name="profissional_horario[horario]">
+        </div>
+
+        <input type="submit" value="Registrar horário">
+      </form>
+      <hr>
+    </div>
+
+    <div class="profissional-acompanhamentos">
+      <h3>Casos</h3>
+      <p>
+      <%= pluralize(@profissional.acompanhamentos.count, 'caso', plural: 'casos') %>,
+      <%= @profissional.acompanhamentos.em_andamento.count %> em andamento.
+      <%= link_to "Ver mais", acompanhamentos_profissional_path %>
+      </p>
+      <%= render 'acompanhamentos-resumo', profissional: @profissional %>
+    </div>
+  <% end %>
+
+  </div>

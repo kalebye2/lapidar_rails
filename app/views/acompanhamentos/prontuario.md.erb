@@ -1,0 +1,170 @@
+<% titulo_doc = "Prontuário#{if !@acompanhamento.profissional.profissional_funcao.adjetivo_masc.nil? then ' ' + @acompanhamento.profissional.profissional_funcao.adjetivo_masc end}" %>
+---
+# Para ser usado com Pandoc
+# convertendo para LaTeX ou PDF
+# Caso queira saber mais visite https://pandoc.org
+#
+title: <%= titulo_doc %>
+author-meta: <%= @acompanhamento.profissional.descricao_completa %>
+date-meta: <%= render_data_brasil Date.today %>
+
+# Formatação
+# tire o "#" onde quiser mudar valor
+papersize: a4
+fontsize: 12pt
+# mainfont: Liberation Sans
+# geometry:
+#    - left=2cm
+#    - right=2cm
+#    - top=3cm
+#    - bottom=4cm
+header-includes:
+- |
+    ```{=latex}
+    % Tire o símbolo "%" do início das linhas que você quiser usar uma regra
+    %\usepackage{indentfirst} % para indentar o primeiro parágrafo como os seguintes
+    \usepackage{titling}
+
+    %\setlength\parindent{2em} % recuo da primeira linha do parágrafo
+
+    %\parskip=1.5em % alterar o espaço entre parágrafos
+    %\renewcommand{\baselinestretch}{1.5} % alterar o espaço entre linhas
+
+    % melhorar o título
+    \renewcommand{\maketitle}{
+    \begin{center}
+    {\huge\bfseries\thetitle}
+    \vspace{3em}
+    \end{center}
+    }
+
+    % contar o número total de páginas do documento
+    \usepackage{lastpage}
+
+    % para cabeçalho e rodapé
+    \usepackage{fancyhdr}
+    \fancyhead[L]{} % coloque aqui cabeçalho à esquerda
+    \fancyhead[R]{<%= titulo_doc %>}
+    \fancyfoot[L]{\footnotesize{
+    E-mail: \href{mailto:<%= @acompanhamento.profissional.email %>}{<%= @acompanhamento.profissional.email %>}\\
+    Fone: \href{tel:<%= @acompanhamento.profissional.pessoa.render_fone_link %>}{<%= @acompanhamento.profissional.pessoa.render_fone_local %>}
+    }}
+    \fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+    \pagestyle{fancy}
+    ```
+
+---
+
+**Nome do paciente**:
+<%= @acompanhamento.paciente.nome_completo.upcase %>
+
+**Data de nascimento**:
+<%= render_data_brasil @acompanhamento.paciente.data_nascimento %>
+
+**Idade**:
+<%= @acompanhamento.paciente.render_idade.upcase %>
+
+**Sexo**:
+<%= @acompanhamento.paciente.render_sexo.upcase %>
+
+**Estado Civil**:
+<%= @acompanhamento.paciente.estado_civil.upcase %>
+
+**Grau de instrução**:
+<%= @acompanhamento.paciente.grau_de_instrucao %>
+
+**Profissão**:
+<%= @acompanhamento.paciente.profissao.nil? ? "Não informada" : @acompanhamento.paciente.profissao.upcase %>
+
+**Fone**:
+[<%= @acompanhamento.paciente.render_fone %>](tel:<%= @acompanhamento.paciente.render_fone_link %>)
+<% if @acompanhamento.paciente.usa_whatsapp %>
+[![whatsapp](https://imagepng.org/wp-content/uploads/2017/08/whatsapp-icone-6.png){width=1em}](https://wa.me/<%= @acompanhamento.paciente.render_fone_link %>)
+<% end %>
+<% if @acompanhamento.paciente.usa_telegram %>
+[![telegram](https://imagepng.org/wp-content/uploads/2017/11/telegram-icone-icon-5.png){width=1em}](https://t.me/<%= @acompanhamento.paciente.render_fone_link[1..] %>)
+<% end %>
+
+**E-mail**:
+<<%= @acompanhamento.paciente.email %>>
+
+**Contato para emergência**:
+<% if @acompanhamento.paciente.parentescos.count == 0 %>
+INSERIR CONTATO PARA EMERGÊNCIA
+<% else %>
+  <% contatos = @acompanhamento.pessoa.parentescos_registrados.parentes.map { |parente| "#{parente.parente.nome_completo.upcase}: [#{parente.parente.render_fone}](#{'tel:' + parente.parente.render_fone_link})" unless parente.parente.render_fone.empty? } %>
+<%= contatos.join(" | ") %>
+<% end %>
+
+**RG**:
+<%= @acompanhamento.paciente.render_rg %>
+
+**CPF**:
+<%= @acompanhamento.paciente.render_cpf %>
+
+**Endereço**:
+<%= @acompanhamento.paciente.endereco_completo_com_cep.upcase %>
+
+**Toma medicação**:
+<%= @acompanhamento.pessoa.pessoa_medicacoes.map(&:medicacao).to_sentence(last_word_connector: ' e ').upcase %>
+
+**Motivo da consulta**:
+<%= @acompanhamento.motivo.upcase %>
+
+**Hipótese diagnóstica**:
+<%= (@acompanhamento.hipotese_diagnostica || "Não definida").upcase %>
+
+**Objetivo do acompanhamento**:
+<%= (@acompanhamento.objetivo || "Não definido").upcase %>
+
+**Início do acompanhamento**:
+<%= render_data_brasil @acompanhamento.data_inicio %>
+
+<% if !@acompanhamento.data_final.nil? %>
+**Término do acompanhamento**:
+<%= render_data_brasil @acompanhamento.data_final %>
+<% else %>
+**Status**:
+EM ANDAMENTO
+<% end %>
+
+<% if !@acompanhamento.acompanhamento_finalizacao_motivo.nil? %>
+**Desfecho**:
+<%= @acompanhamento.acompanhamento_finalizacao_motivo.motivo %>
+<% end %>
+
+---
+
+**<%= @acompanhamento.profissional.funcao %>**:
+<%= @acompanhamento.profissional.descricao_completa %>
+
+**Assinatura**:
+
+# Registro dos atendimentos
+
+<% @acompanhamento.atendimentos.em_ordem.each_with_index do |atendimento, index| %>
+
+## Atendimento <%= index + 1 %>
+
+**Data**:
+<%= render_data_brasil atendimento.data %>
+
+**Horário**:
+<%= render_hora_brasil atendimento.horario %>
+
+**Status**:
+<%= atendimento.status %>
+
+**Atividade**:
+<%= atendimento.tipo %>
+
+<% if atendimento.instrumentos_aplicados.count > 0 %>
+**Instrumento(s) aplicado(s)**:
+<%= atendimento.instrumentos_aplicados.map(&:nome).to_sentence(last_word_connector: ' e ') %>
+<% end %>
+
+### Anotações
+
+<%= atendimento.anotacoes || "Sem anotações" %>
+
+<% end %>

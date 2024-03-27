@@ -1,0 +1,11 @@
+<h1>Criar anamnese</h1>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Voltar às anamneses", adulto_anamneses_path, class: "icon-previous" %>
+    </li>
+  </ul>
+</nav>
+
+<%= render "form", adulto_anamnese: @adulto_anamnese %>

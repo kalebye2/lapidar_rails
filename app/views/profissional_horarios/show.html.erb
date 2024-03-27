@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @profissional_horario %>
+
+<div>
+  <%= link_to "Edit this profissional horario", edit_profissional_horario_path(@profissional_horario) %> |
+  <%= link_to "Back to profissional horarios", profissional_horarios_path %>
+
+  <%= button_to "Destroy this profissional horario", @profissional_horario, method: :delete %>
+</div>

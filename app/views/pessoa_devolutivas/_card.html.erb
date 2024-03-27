@@ -1,0 +1,8 @@
+<%= link_to devolutiva do %>
+  <div class="card devolutiva-card" id="<%= dom_id(devolutiva) %>_card">
+    <h4 class="icon-calendar"><%= render_data_brasil devolutiva.data %></h4>
+    <h2 class="icon-user"><%= devolutiva.pessoa.nome_abreviado %></h2>
+    <h3 class="icon-eye"><%= devolutiva.pessoa_responsavel.nome_abreviado %></h3>
+    <h4 class="icon-user-tie"><%= devolutiva.profissional.descricao_completa %></h4>
+  </div>
+<% end %>

@@ -8,9 +8,11 @@ class Recebimento < ApplicationRecord
   has_one :profissional, through: :acompanhamento
   #belongs_to :profissional
 
-  belongs_to :recebimento_modalidade, foreign_key: :modalidade_id, class_name: "PagamentoModalidade"
+  # belongs_to :recebimento_modalidade, foreign_key: :modalidade_id, class_name: "PagamentoModalidade"
+  belongs_to :pagamento_modalidade
+  alias recebimento_modalidade pagamento_modalidade
 
-  default_scope { includes(:acompanhamento, :recebimento_modalidade) }
+  default_scope { includes(:acompanhamento, :pagamento_modalidade) }
 
   scope :do_mes, -> (mes = Date.today.all_month, ordem: :asc) { where(data: mes).order(data: ordem) }
   scope :do_mes_passado, -> { where(data: (Date.today - 1.month).all_month) }
@@ -20,12 +22,36 @@ class Recebimento < ApplicationRecord
   scope :deste_ano, -> { do_ano_atual }
   scope :do_ano_passado, -> { where(data: (Date.today - 1.year).all_year) }
 
-  scope :do_periodo, -> (mes: Date.today.month, ano: Date.today.year, ordem: :desc, de: nil, ate: nil) do
+  scope :do_periodo_alt, -> (mes: Date.today.month, ano: Date.today.year, ordem: :desc, de: nil, ate: nil) do
     if de.nil?
       where(data: ["01-#{mes}-#{ano}".to_date.."01-#{mes}-#{ano}".to_date.end_of_month]).order(data: ordem)
     else
       ate.nil? ? where(data: de).order(data: ordem) : where(data: [de..ate]).order(data: ordem)
     end
+  end
+  scope :do_periodo, -> (periodo) { where(data: periodo) }
+
+  scope :do_profissional, -> (profissional) { joins(:profissional).where(profissional: profissional) }
+  scope :do_profissional_com_id, -> (id) { joins(:profissional).where(profissional: {id: id}) }
+
+  scope :da_modalidade, -> (modalidade) { where(pagamento_modalidade: modalidade) }
+  scope :da_modalidade_com_id, -> (id) { where(pagamento_modalidade_id: id) }
+
+  scope :query_pessoa_like_nome, -> (like = "") do
+    like = like.to_s
+    query = "LOWER(pessoas.nome || ' ' || COALESCE(pessoas.nome_do_meio, '') || ' '|| pessoas.sobrenome) LIKE ?", "%#{like}%"
+    if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
+      query = "LOWER(CONCAT(pessoas.nome, ' ', COALESCE(pessoas.nome_do_meio, ''), ' ', pessoas.sobrenome)) LIKE ?", "%#{like}%"
+    end
+    joins(:pessoa).where(query)
+  end
+  scope :query_pagante_like_nome, -> (like = "") do
+    like = like.to_s
+    query = "LOWER(pessoas.nome || ' ' || COALESCE(pessoas.nome_do_meio, '') || ' '|| pessoas.sobrenome) LIKE ?", "%#{like}%"
+    if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
+      query = "LOWER(CONCAT(pessoas.nome, ' ', COALESCE(pessoas.nome_do_meio, ''), ' ', pessoas.sobrenome)) LIKE ?", "%#{like}%"
+    end
+    joins(:pessoa_pagante).where(query)
   end
 
   def pagante
@@ -51,6 +77,7 @@ class Recebimento < ApplicationRecord
   def para_linha_csv
     "#{pagante.nome_completo},#{pagante.cpf},#{beneficiario.nome_completo},#{beneficiario.cpf},#{data},#{modalidade},#{valor},#{acompanhamento.acompanhamento_tipo.tipo}" + "\n"
   end
+  alias para_csv para_linha_csv
 
   def html
     
@@ -83,7 +110,7 @@ class Recebimento < ApplicationRecord
           r.profissional.nome_completo,
           r.profissional.documento,
           r.profissional.pessoa.cpf,
-          r.profissional.pessoa.cidade,
+          r.profissional.pessoa.endereco_cidade,
           r.servico_prestado,
           r.modalidade
         ]

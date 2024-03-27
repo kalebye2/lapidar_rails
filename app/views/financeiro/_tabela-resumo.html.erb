@@ -19,12 +19,12 @@
   <tbody>
     <% mes_passado = [(Date.today - 1.month).beginning_of_month..(Date.today - 1.month).end_of_month] %>
     <% mes_atual = [Date.today.beginning_of_month..Date.today.end_of_month] %>
-    <% @profissionais.each do |profissional| %>
+    <% profissionais.each do |profissional| %>
       <tr>
         <td><%= profissional.funcao %></td>
         <td><%= profissional.nome_abreviado %> - <%= profissional.documento %></td>
-        <td style="text-align:right;"><%= profissional.acompanhamentos_em_andamento.count %></td>
-        <td class="dinheiro"><%= render_dinheiro_centavos profissional.acompanhamentos_em_andamento.sum("valor_atual * sessoes_atuais") %></td>
+        <td style="text-align:right;"><%= profissional.acompanhamentos.em_andamento.count %></td>
+        <td class="dinheiro"><%= render_dinheiro_centavos profissional.acompanhamentos.em_andamento.sum("valor_sessao * num_sessoes") %></td>
         <td class="dinheiro"><%= render_dinheiro_centavos profissional.atendimento_valores.where("atendimentos.data" => mes_passado).sum(:valor) %></td>
         <td class="dinheiro"><%= render_dinheiro_centavos profissional.atendimento_valores.where("atendimentos.data" => mes_atual).sum(:valor) %></td>
         <td class="dinheiro"><%= render_dinheiro_centavos profissional.recebimentos.where(data: mes_passado).sum(:valor) %></td>
@@ -38,8 +38,8 @@
         <% total_recebimentos_mes_passado = Recebimento.where(data: mes_passado).sum(:valor) %>
         <% total_recebimentos_mes_atual = Recebimento.where(data: mes_atual).sum(:valor) %>
         <td colspan="2" class="resultado">Total</td>
-        <td class="resultado"><%= @acompanhamentos.count %></td>
-        <td class="resultado"><%= render_dinheiro_centavos @acompanhamentos.sum("valor_atual * sessoes_atuais") %></td>
+        <td class="resultado"><%= acompanhamentos.count %></td>
+        <td class="resultado"><%= render_dinheiro_centavos acompanhamentos.sum("valor_sessao * num_sessoes") %></td>
         <td class="resultado"><%= render_dinheiro_centavos total_mes_passado %></td>
         <td class="resultado"><%= render_dinheiro_centavos total_mes_atual %></td>
         <td class="resultado"><%= render_dinheiro_centavos total_recebimentos_mes_passado %></td>
@@ -48,4 +48,3 @@
     <% end %>
   </tbody>
 </table>
-

@@ -1,4 +1,31 @@
 Rails.application.routes.draw do
+  resources :pessoa_medicacoes
+  scope :estatisticas do
+    get '/', to: 'estatisticas#index', as: "estatisticas"
+    get 'estatisticas/acompanhamentos'
+    get 'estatisticas/atendimentos'
+    get 'estatisticas/profissionais'
+    get 'estatisticas/pacientes'
+    get 'estatisticas/instrumentos'
+    get 'estatisticas/financeiro'
+  end
+
+  resources :adulto_anamneses
+
+  get 'clinica/index'
+
+  resources :biblioteca_obras
+  resources :acompanhamento_finalizacao_motivos
+  resources :acompanhamento_reajuste_motivos
+  resources :acompanhamneto_finalizacao_motivos
+  resources :atendimento_tipos
+  resources :profissional_funcoes
+  resources :civil_estados
+  resources :atendimento_plataformas
+  resources :atendimento_modalidades
+  resources :atendimento_local_tipos
+  resources :acompanhamento_tipos
+
   get 'financeiro/index'
   get 'financeiro/atendimento_valor'
   get 'financeiro/recebimento_pessoa'
@@ -14,9 +41,6 @@ Rails.application.routes.draw do
   # instrumentos
   resources :instrumentos
   resources :instrumento_relatos
-
-  # anamneses
-  resources :infantojuvenil_anamneses
 
   # biblioteca
   scope :biblioteca do
@@ -37,48 +61,83 @@ Rails.application.routes.draw do
       collection do
         get 'inline-new', to: :inline_new
         get 'inline-adicionar', to: :inline_adicionar
+        get 'select-acompanhamento', to: :select_acompanhamento
       end
     end
     resources :profissional_financeiro_repasses, path: '/repasses'
-  end
-
-  resources :profissionais do
-    member do
-      get :acompanhamentos
+    resources :acompanhamento_reajustes do
+      member do
+        post :aplicar_ajuste
+      end
     end
   end
-  resources :pessoa_devolutivas, path: '/devolutivas', as: "devolutivas"
-  resources :pessoa_devolutivas
-  resources :laudos do
-    member do
-      # ajax much
-      patch :identificacao_update
-      patch :informacoes_update
-      get :data_final
-      get :data_final_edit
 
-      get :finalidade
-      get :finalidade_edit
+  scope :clinica do
+    get '/', to: "clinica#index", as: 'clinica'
 
-      get :interessado
-      get :interessado_edit
+    resources :profissionais do
+      member do
+        get :acompanhamentos
+        get :contrato_modelos
+        get :novo_contrato_modelo
+        get :agenda
+      end
+    end
 
-      get :demanda
-      get :demanda_edit
+    resources :profissional_horarios
 
-      get :tecnicas
-      get :tecnicas_edit
-
-      get :analise
-      get :analise_edit
-
-      get :conclusao
-      get :conclusao_edit
-
-      get :referencias
-      get :referencias_edit
+    resources :atendimento_locais do
+      member do
+        get :atendimentos
+      end
     end
   end
+
+  # Documentos
+  scope :documentos do
+    get '/', to: "documentos#index", as: :documentos
+    # anamneses
+    resources :infantojuvenil_anamneses
+    # devolutivas
+    resources :pessoa_devolutivas, path: '/devolutivas', as: "devolutivas"
+    resources :pessoa_devolutivas
+    # laudos
+    resources :laudos do
+      member do
+        # ajax much
+        patch :identificacao_update
+        patch :informacoes_update
+        get :data_final
+        get :data_final_edit
+
+        get :finalidade
+        get :finalidade_edit
+
+        get :interessado
+        get :interessado_edit
+
+        get :demanda
+        get :demanda_edit
+
+        get :tecnicas
+        get :tecnicas_edit
+
+        get :analise
+        get :analise_edit
+
+        get :conclusao
+        get :conclusao_edit
+
+        get :referencias
+        get :referencias_edit
+      end
+    end
+    # modelos de contrato
+    resources :profissional_contrato_modelos, path: :contratos
+
+    get :gerar, to: "documentos#gerar", as: :gerar_documento
+  end
+
   resources :crp_regioes
   resources :profissional_notas
   #resources :pessoas
@@ -89,19 +148,50 @@ Rails.application.routes.draw do
       get :show_parentescos, path: "parentescos"
       get :new_parentesco
       post :create_parentesco
-      get :recebimentos
+      get :edit_parentesco, path: "parentescos/:parente_id"
+      patch :update_parentesco, path: "parentescos/:parente_id/update"
+      delete :destroy_parentesco, path: "parentescos/:parente_id/destroy"
+      scope :recebimentos do
+        get "/", to: "pessoas#recebimentos", as: "recebimentos"
+        get 'new', to: "pessoas#new_recebimento", as: "new_recebimento"
+        post :recebimentos, to: "pessoas#create_recebimento"
+      end
+      get :atendimento_valores
       get :financeiro
+      get :prontuario
+      get :acompanhamento_reajustes
+      scope :acompanhamentos do
+        get "/", to: "pessoas#acompanhamentos", as: "acompanhamentos"
+        get 'new', to: "pessoas#new_acompanhamento", as: "new_acompanhamento"
+        post :acompanhamentos, to: "pessoas#create_acompanhamento"
+      end
+      get :show_medicacoes, path: "medicacao"
+      get :new_medicacao
+      post :create_medicacao
+      get :edit_medicacao, path: "medicacao/:med_id/edit"
+      patch :update_medicacao, path: "medicacao/:med_id/edit"
+      delete :destroy_medicacao, path: "medicacao/:med_id/destroy"
     end
   end
   resources :paises
   resources :continentes
+
   resources :acompanhamentos do
-    post :new_atendimento_proxima_semana, path: 'novo_atendimento_proxima_semana'
 
     get 'em-andamento', on: :collection, action: :index, em_andamento: true
 
     member do
+      post :new_atendimento_proxima_semana, path: 'novo_atendimento_proxima_semana'
       get :declaracao
+      get :prontuario
+      get :contrato
+      get :financeiro
+      get :acompanhamento_reajustes do
+      end
+      get :atendimento_valores
+      get :new_atendimento
+      get :recebimentos
+      get :new_recebimento
     end
   end
   resources :atendimentos do
@@ -174,7 +264,5 @@ Rails.application.routes.draw do
   # get pdf
   get "/pdf_download", to: "application#pdf_download"
   get "/pdf_preview", to: "application#pdf_preview"
-
-
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

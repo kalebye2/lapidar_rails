@@ -1,0 +1,30 @@
+<% titulo @profissional_contrato_modelo.titulo %>
+<%= link_to "Modelos do profissional", contrato_modelos_profissional_path(@profissional_contrato_modelo.profissional) %>
+<%= link_to "Ir para modelos de contratos", profissional_contrato_modelos_path %>
+<div class="documento-modelo-wrapper">
+  <div class="documento-modelo-descricao">
+    <h1>Documento: <%= @profissional_contrato_modelo.titulo %></h1>
+    <h2><%= @profissional_contrato_modelo.descricao %></h2>
+    <h2>Por <%= @profissional_contrato_modelo.profissional.nome_abreviado %> (<%= @profissional_contrato_modelo.profissional.funcao %>)</h2>
+    <h2>
+    <%= link_to "Editar", edit_profissional_contrato_modelo_path(@profissional_contrato_modelo), {class: "documento-modelo-edit-btn", style: "color:white;"} %>
+    </h2>
+  </div>
+
+
+  <div class="documento">
+    <%= markdown_to_html @profissional_contrato_modelo.conteudo %>
+    <br>
+    <p style="text-align:center;">
+    <%= @profissional_contrato_modelo.profissional.cidade %>,
+    <%= data_por_extenso %>.
+    </p>
+    <%== "<br>" * 4 %>
+    <hr>
+    <p style="text-align:center;">
+    <%= @profissional_contrato_modelo.profissional.nome_completo %>
+    <br>
+    <%= @profissional_contrato_modelo.profissional.documento %>
+    </p>
+  </div>
+</div>

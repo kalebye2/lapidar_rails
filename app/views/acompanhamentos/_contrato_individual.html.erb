@@ -1,0 +1,18 @@
+<% titulo profissional_contrato_modelo.titulo %>
+<div class="documento">
+  <h1><%= profissional_contrato_modelo.titulo %></h1>
+  <%== markdown_to_html profissional_contrato_modelo.conteudo_para_acompanhamento acompanhamento %>
+  <%== "<br>" * 2 %>
+  <p style="text-align:center;">
+  <%= acompanhamento.profissional.cidade %>,
+  <%= data_por_extenso acompanhamento.data_inicio %>
+  <%== "<br>" * 4 %>
+  <hr>
+  <p style="text-align:center;">
+  <%= acompanhamento.profissional.nome_completo %>
+  <br>
+  <%= acompanhamento.profissional.funcao %>
+  <%= acompanhamento.profissional.documento %>
+  </p>
+  </p>
+</div>

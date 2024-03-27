@@ -1,83 +1,56 @@
-<%= titulo "Valores de atendimentos" %>
+<% titulo "Valores de atendimentos" %>
 <h1>Valores de atendimentos</h1>
 
-<%= form_with url: atendimento_valores_path, local: :true, method: :get do |form| %>
-  <%= form.label :de %>
-  <%= form.date_field :de, value: @de %>
-  <%= form.label :ate, "Até" %>
-  <%= form.date_field :ate, value: @ate %>
-  <%= form.submit "Carregar" %>
-<% end %>
+<%# <%= form_with url: atendimento_valores_path, local: :true, method: :get do |form| %1> %>
+<%#   <%= form.label :de %1> %>
+<%#   <%= form.date_field :de, value: @de %1> %>
+<%#   <%= form.label :ate, "Até" %1> %>
+<%#   <%= form.date_field :ate, value: @ate %1> %>
+<%#   <%= form.submit "Carregar" %1> %>
+<%# <% end %1> %>
 
-<%= link_to "CSV", { url: atendimento_valores_path, format: :csv, ano: @ano, mes: @mes } %>
-<%= link_to "Excel", atendimento_valores_path(format: :xlsx, ano: @ano, mes: @mes) %>
+<form <%= hx_set get: atendimento_valores_path, target: "#tabela-valores", replace_url: true, trigger: "change" %>>
+  <label for="de">De</label>
+  <input type="date" name="de" id="de" value="<%= @de %>">
+  <label for="ate">Até</label>
+  <input type="date" name="ate" id="ate" value="<%= @ate %>">
 
-<table class="tabela-valores">
-  <thead>
-    <tr>
-      <th rowspan=2>Paciente</th>
-      <th colspan=2>Atendimento</th>
-      <th colspan=3>Dados</th>
-      <th colspan=3>Taxas</th>
-      <th rowspan=2>Total líquido</th>
-    </tr>
-    <tr>
-      <th>Data</th>
-      <th>Tipo de atendimento</th>
-      <th>Valor</th>
-      <th>Desconto</th>
-      <th>Valor com desconto</th>
-      <th>Externa</th>
-      <th>Clínica</th>
-      <th>Total</th>
-    </tr>
-  </thead>
-  <% soma_valores = {
-    bruto: 0,
-    desconto: 0,
-    bruto_com_desconto: 0,
-    taxa_externa: 0,
-    taxa_interna: 0,
-    taxa_total: 0,
-    liquido: 0,
-  } %>
-<% @atendimento_valores.each do |atendimento_valor| %>
-  <tr>
-    <% valor_bruto_com_desconto = atendimento_valor.valor - atendimento_valor.desconto %>
-    <% valor_taxa_total = (atendimento_valor.valor * atendimento_valor.taxa_porcentagem_externa / 10000) + (atendimento_valor.valor * atendimento_valor.taxa_porcentagem_interna / 10000) %>
-    <td><%= atendimento_valor.pessoa.nome_completo %></td>
-    <td><%= render_data_brasil atendimento_valor.data %></td>
-    <td><%= atendimento_valor.atendimento_tipo %></td>
+  <div class="field">
+    <label for="profissional">Profissional</label>
+    <select id="profissional" name="profissional">
+      <option value="">TODOS</option>
+      <% Profissional.all.each do |profissional| %>
+        <option value="<%= profissional.id %>" <%= "selected" unless profissional.id != params[:profissional] %>><%= profissional.descricao_completa %></option>
+      <% end %>
+    </select>
+  </div>
 
-    <td class="dinheiro"><%= render_dinheiro_centavos atendimento_valor.valor %></td>
-    <% soma_valores[:bruto] += atendimento_valor.valor %>
+  <div class="field">
+    <label for="pessoa">Paciente</label>
+    <input type="text" value="<%= params[:pessoa] %>" name="pessoa" id="pessoa">
+  </div>
 
-    <td class="dinheiro"><%= render_dinheiro_centavos atendimento_valor.desconto %></td>
-    <% soma_valores[:desconto] += atendimento_valor.desconto %>
+  <div class="field">
+    <label for="responsavel">Responsável</label>
+    <input type="text" value="<%= params[:pessoa_responavel] %>" name="responsavel" id="responsavel">
+  </div>
 
-    <td class="dinheiro resultado"><%= render_dinheiro_centavos atendimento_valor.valor - atendimento_valor.desconto %></td>
-    <% soma_valores[:bruto_com_desconto] += atendimento_valor.valor - atendimento_valor.desconto %>
+  <%# <label for="atendimento_tipo">Tipo de atendimento</label> %>
+  <%# <select id="atendimento_tipo" name="atendimento_tipo"> %>
+  <%#   <option value="">TODOS</option> %>
+  <%#   <% AtendimentoTipo.all.each do |atendimento_tipo| %1> %>
+  <%#     <option value="<%= atendimento_tipo.id %1>" <%= "selected" unless atendimento_tipo.id != params[:atendimento_tipo] %1>><%= atendimento_tipo.tipo.upcase %1></option> %>
+  <%#   <% end %1> %>
+  <%# </select> %>
 
-    <td class="dinheiro"><%= render_dinheiro_centavos(atendimento_valor.valor * atendimento_valor.taxa_porcentagem_externa / 10000) %></td>
-    <% soma_valores[:taxa_externa] += atendimento_valor.valor * atendimento_valor.taxa_porcentagem_externa / 10000 %>
+  <%# <label for="realizado">Status</label> %>
+  <%# <select id="realizado" name="realizado"> %>
+  <%#   <option value="">TODOS</option> %>
+  <%#   <option value="true" <%= "selected" if params[:realizado] %1>>REALIZADOS</option> %>
+  <%#   <option value="false" <%= "selected" if params[:realizado].present? && !params[:realizado] %1>>NÃO REALIZADOS</option> %>
+  <%# </select> %>
+</form>
 
-    <td class="dinheiro"><%= render_dinheiro_centavos(atendimento_valor.valor * atendimento_valor.taxa_porcentagem_interna / 10000) %></td>
-    <% soma_valores[:taxa_interna] += atendimento_valor.valor * atendimento_valor.taxa_porcentagem_interna / 10000 %>
-
-    <td class="dinheiro"><%= render_dinheiro_centavos valor_taxa_total %></td>
-    <% soma_valores[:taxa_total] += valor_taxa_total %>
-
-    <td class="dinheiro resultado"><%= render_dinheiro_centavos valor_bruto_com_desconto - valor_taxa_total %></td>
-    <% soma_valores[:liquido] += valor_bruto_com_desconto - valor_taxa_total %>
-
-  </tr>
-<% end %>
-  <th colspan=3 class="resultado">Total</th>
-  <td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:bruto] %></td>
-  <td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:desconto] %></td>
-  <td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:bruto_com_desconto] %></td>
-  <td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:taxa_externa] %></td>
-  <td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:taxa_interna] %></td>
-  <td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:taxa_total] %></td>
-  <td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:liquido] %></td>
-</table>
+<div id="tabela-valores">
+<%= render "tabela", atendimento_valores: @atendimento_valores %>
+</div>

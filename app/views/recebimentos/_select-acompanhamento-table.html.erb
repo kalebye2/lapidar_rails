@@ -1,0 +1,5 @@
+<select name="recebimento[acompanhamento_id]" style="max-width:10em;min-width:10em;font-size:.9em;" id="select_acompanhamento">
+  <% pessoa.acompanhamentos.each do |acompanhamento| %>
+    <option value="<%= acompanhamento.id %>"><%= acompanhamento.tipo.upcase %> por <%= acompanhamento.profissional.descricao_completa %> com início em <%= render_data_brasil acompanhamento.data_inicio %></option>
+  <% end %>
+</select>

@@ -2,6 +2,7 @@
   <% path_ajax = atendimento_path(atendimento, ajax: true, authenticity_token: form_authenticity_token.to_s) %>
   <% usuario = usuario_atual.secretaria? || usuario_atual.profissional == atendimento.profissional %>
   <% id = dom_id(atendimento) %>
+  <% @authenticity_token = form_authenticity_token.to_s %>
 
   <% if usuario %>
 
@@ -9,30 +10,32 @@
       <td id="<%= dom_id(atendimento) %>_data">
         <%= render "atendimentos/data_show", atendimento: atendimento %>
       </td>
+
       <td id="<%= dom_id(atendimento) %>_horario">
         <%= render "atendimentos/horario_show", atendimento: atendimento %>
       </td>
+
       <td>
-        <%== hx_select options: AtendimentoModalidade.all.map { |modalidade| [modalidade.modalidade, modalidade.id]}, target: "##{dom_id(atendimento)}", patch: path_ajax, name: "atendimento[modalidade_id]", swap: "outerHTML", value: atendimento.modalidade_id %>
-      </td>
-      <td>
-        <%== hx_select options: AtendimentoTipo.all.map { |tipo| [tipo.tipo.upcase, tipo.id]}, value: atendimento.atendimento_tipo_id, name: "atendimento[atendimento_tipo_id]", patch: path_ajax, swap: "outerHTML", target: "##{dom_id(atendimento)}" %>
-      </td>
-      <td id="<%= dom_id(atendimento) %>_status">
+        <%= render "atendimentos/modalidade_show", atendimento: atendimento %>
+        <%= render "atendimentos/tipo_show", atendimento: atendimento, profissional_funcao: atendimento.profissional.profissional_funcao %>
+        <hr>
         <%= render "atendimentos/status_show", atendimento: atendimento %>
-      </td>
-      <td class="text-center">
+        <hr>
         <%= render "atendimentos/local_show", atendimento: atendimento %>
       </td>
+
       <td>
         <%= render "atendimentos/valor_show", atendimento: atendimento %>
       </td>
+
       <td id="<%= dom_id(atendimento) %>_anotacoes">
         <%= render "atendimentos/anotacoes_show", atendimento: atendimento %>
       </td>
+
       <td>
-  <%= render "atendimentos/instrumentos", atendimento: atendimento %>
+        <%= render "atendimentos/instrumentos", atendimento: atendimento %>
       </td>
+
       <td>
         <%= render "atendimentos/opcoes", atendimento: atendimento %>
       </td>

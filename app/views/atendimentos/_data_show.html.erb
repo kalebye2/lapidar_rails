@@ -1,7 +1,7 @@
-<% interno = render_data_brasil atendimento.data %>
+<% interno = atendimento.data_inicio_verdadeira == atendimento.data ? render_data_brasil(atendimento.data) : "<del>#{render_data_brasil atendimento.data}</del><br>#{render_data_brasil atendimento.data_inicio_verdadeira}" %>
 <% if usuario_atual.secretaria? || usuario_atual.profissional == atendimento.profissional %>
   <button hx-get="<%= data_edit_atendimento_path(atendimento) %>" hx-target="#<%= dom_id(atendimento) %>_data">
-    <%= interno %>
+    <%== interno %>
   </button>
 
 <% else %>

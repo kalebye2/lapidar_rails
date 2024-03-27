@@ -1,0 +1,38 @@
+<h1>Funções profissionais</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Função (no masculino)</th>
+      <th>Órgão responsável</th>
+      <th>Tipo de documento</th>
+      <th>Flexão no feminino</th>
+      <th>Serviço prestado (no geral)</th>
+      <th>Adjetivo masculino</th>
+      <th>Adjetivo feminino</th>
+      <th>Realiza atendimentos na clínica</th>
+    </tr>
+    <tr>
+      <td colspan="100%" style="text-align:center;">
+        <button>+ Função</button>
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <% @profissional_funcoes.each do |profissional_funcao| %>
+      <tr id="<%= dom_id(profissional_funcao) %>">
+        <td><%= profissional_funcao.id %></td>
+        <td><%= profissional_funcao.funcao %></td>
+        <td><%= profissional_funcao.orgao_responsavel %></td>
+        <td><%= profissional_funcao.documento_tipo %></td>
+        <td><%= profissional_funcao.flexao_feminino %></td>
+        <td><%= profissional_funcao.servico %></td>
+        <td><%= profissional_funcao.adjetivo_masc %></td>
+        <td><%= profissional_funcao.adjetivo_fem %></td>
+        <td><%= sim_ou_nao profissional_funcao.realiza_atendimentos %></td>
+      </tr>
+      <%# <%= render "form-tabela", profissional_funcao: profissional_funcao %1> %>
+    <% end %>
+  </tbody>
+</table>

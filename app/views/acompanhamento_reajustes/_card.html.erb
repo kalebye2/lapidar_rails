@@ -1,0 +1,33 @@
+<div class="reajuste-card">
+
+  <div>
+    <h2 class="icon-user"><%= acompanhamento_reajuste.pessoa.nome_abreviado %></h2>
+    <h3 class="icon-user-tie"><%= acompanhamento_reajuste.profissional.descricao_completa %></h3>
+    <h4 class="icon-profile"><%= acompanhamento_reajuste.acompanhamento.tipo.upcase %></h4>
+    <h4 class="icon-coin-dollar"><%= render_dinheiro_centavos acompanhamento_reajuste.valor_novo %></h4>
+    <h4 class="icon-calendar">
+      <%= render_data_brasil acompanhamento_reajuste.data_ajuste %>
+      <% tempo = calcular_tempo Date.today, acompanhamento_reajuste.data_ajuste %>
+      <% temporal = tempo[0] == '-' ? "Há" : "Em" %>
+      <% tempo = tempo.gsub('-', '') %>
+      <%= "(#{temporal.downcase} #{tempo})" %>
+    </h4>
+    <h5 class="icon-bubbles"><%= acompanhamento_reajuste.motivo || "ND" %></h5>
+    <nav class="navbar navcenter">
+      <ul>
+        <li>
+          <%= link_to "Editar", edit_acompanhamento_reajuste_path(acompanhamento_reajuste), class: 'icon-pencil' %>
+        </li>
+        <li>
+          <%= link_to "Ver", acompanhamento_reajuste, class: 'icon-eye' %>
+        </li>
+        <% if acompanhamento_reajuste.data_ajuste >= Date.today %>
+          <li>
+            <%= button_to "Aplicar", aplicar_ajuste_acompanhamento_reajuste_path(acompanhamento_reajuste), class: 'icon-drawer', style: 'width:10%;' %>
+          </li>
+        <% end %>
+      </ul>
+    </nav>
+  </div>
+
+</div>

@@ -1,0 +1,42 @@
+<% titulo @atendimento_local.descricao %>
+<p style="color: green"><%= notice %></p>
+
+<%# <%= render @atendimento_local %1> %>
+
+<h1><%= @atendimento_local.descricao %></h1>
+
+<% if usuario_atual&.secretaria? %>
+  <nav class="navbar navcenter">
+    <ul>
+      <li>
+        <%= link_to "Voltar", atendimento_locais_path, class: 'icon-previous' %>
+      </li>
+      <li>
+        <%= link_to "Editar", edit_atendimento_local_path(@atendimento_local), class: 'icon-pencil' %>
+      </li>
+    </ul>
+  </nav>
+<% end %>
+
+<table>
+  <tbody>
+    <tr>
+      <th>Endereço</th>
+      <td>
+        <%= link_to @atendimento_local.endereco_completo_com_cep, @atendimento_local.geolink_por_coordenadas || "https://openstreetmap.org/search?query=#{sanitize @atendimento_local.endereco_completo}", class: 'icon-location2', target: :blank %>
+      </td>
+    </tr>
+    <tr>
+      <th>Tipo</th>
+      <td><%= @atendimento_local.tipo %></td>
+    </tr>
+    <tr>
+      <th>Quantidade de atendimentos</th>
+      <td><%= @atendimento_local.atendimentos.count %></td>
+    </tr>
+  </tbody>
+</table>
+
+<div>
+  <%# <%= button_to "Destroy this atendimento local", @atendimento_local, method: :delete %1> %>
+</div>

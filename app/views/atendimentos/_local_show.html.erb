@@ -1,9 +1,12 @@
-<% if atendimento.profissional == usuario_atual.profissional %>
+<% if atendimento.profissional == usuario_atual.profissional || usuario_atual.secretaria? %>
   <% if AtendimentoLocal.count == 0 %>
-    <%= atendimento.local %>
+    <span class="icon-location"><%= atendimento.local %></span>
   <% else %>
-    <%= hx_select patch: atendimento_path(atendimento, ajax: true, authenticity_token: form_authenticity_token.to_s), options: AtendimentoLocal.all.map { |local| [local.local, local.id] }, blank: true %>
+    <div class="field">
+      <label for="atendimento[atendimento_local_id]">Local</label>
+      <%== hx_select patch: atendimento_path(atendimento,  authenticity_token: form_authenticity_token.to_s, no_redirect: true), options: AtendimentoLocal.all.map { |local| ["#{local.descricao} (#{local.tipo})", local.id] }, blank: true, name: "atendimento[atendimento_local_id]", value: atendimento.atendimento_local_id %>
+    </div>
   <% end %>
 <% else %>
-  <%= atendimento.local %>
+  <span class="icon-location"><%= atendimento.local %></span>
 <% end %>

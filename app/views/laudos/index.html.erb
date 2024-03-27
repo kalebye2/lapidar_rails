@@ -1,17 +1,47 @@
+<% titulo "Laudos" %>
 <h1>Laudos</h1>
 <p>Selecione o laudo para visualizar</p>
 
-<ul>
-  <% @laudos.each do |laudo| %>
-    <li class="<%= laudo.fechado? ? "laudo-fechado" : "laudo-aberto" %>">
-      <%= link_to laudo do %>
-        <strong><%= laudo.paciente.nome_abreviado %></strong>
-        -
-        <%= laudo.profissional.descricao_completa %>
-        (<%= render_data_brasil laudo.data_avaliacao %>)
-        -
-        <%= laudo.fechado? ? "fechado" : "para edição" %>
-      <% end %>
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "adicionar", new_laudo_path, class: 'icon-plus' %>
     </li>
+  </ul>
+</nav>
+
+<nav class="navbar navcenter">
+  <%= hx_form get: laudos_path, target: "#laudos-container", swap: "outerHTML", replace_url: true, select: "#laudos-container", trigger: "change" do %>
+    <label for="periodo_avaliacao">Período de avaliação</label>
+    <input type="date" value="<%= params[:de]&.to_date %>" name="de">
+    a
+    <input type="date" value="<%= params[:ate]&.to_date %>" name="ate">
+
+    <div>
+      <label for="status">Status</label>
+      <select name="status" id="status">
+        <option value="">Todos</option>
+        <option value="fechado">Fechado</option>
+        <option value="aberto">Aberto</option>
+      </select>
+    </div>
   <% end %>
-</ul>
+</nav>
+
+<br>
+
+<div id="laudos-container">
+<div class="grid-3">
+  <% @laudos.each do |laudo| %>
+    <%= render "card", laudo: laudo %>
+  <% end %>
+</div>
+
+<div id="replace">
+  <% if @pagy && @pagy.page < @pagy.pages %>
+    <button <%= hx_set get: laudos_path(@params.merge(page: @pagy.page + 1)), swap: "outerHTML", target: "#replace", select: "#laudos-container" %>>
+      Carregar mais
+    </button>
+  <% end %>
+</div>
+</div>

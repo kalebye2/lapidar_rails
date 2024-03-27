@@ -1,3 +1,3 @@
-class InfantojuvenilAnamneseAlimentacoes < ApplicationController
+class InfantojuvenilAnamneseAlimentacoesController < ApplicationController
   private
 end

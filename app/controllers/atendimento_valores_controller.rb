@@ -5,27 +5,57 @@ class AtendimentoValoresController < ApplicationController
   before_action :validar_usuario
 
   def index
-    # @ano = params[:ano] || Date.today.year
-    # @mes = params[:mes] || Date.today.month
+    # @de = if !params[:de].nil? then params[:de].to_date end || Date.today.beginning_of_month
+    # @ate = if !params[:ate].nil? then params[:ate].to_date end || Date.today.end_of_month
+    @de = params[:de]&.to_date || Date.today.beginning_of_month
+    @ate = params[:ate]&.to_date || Date.today.end_of_month
 
-    @de = if !params[:de].nil? then params[:de].to_date end || Date.today.beginning_of_month
-    @ate = if !params[:ate].nil? then params[:ate].to_date end || Date.today.end_of_month
-
-    @ano_mes = "#{@ano}-#{@mes.to_s.rjust(2, "0")}"
-    if usuario_atual.secretaria?
+    if usuario_atual.financeiro?
       @atendimento_valores = AtendimentoValor.do_periodo(@de..@ate, ordem: :desc)
     else
-      # @atendimento_valores = usuario_atual.profissional.atendimento_valores.joins(:atendimento).order("atendimentos.data" => :asc, "atendimentos.horario" => :asc).where(atendimento: { data: ["#{@ano}-#{@mes}-01".."#{@ano}-#{@mes}-01".to_date.end_of_month.to_s]})
       @atendimento_valores = usuario_atual.profissional.atendimento_valores.do_periodo
     end
 
+    if params[:profissional].present?
+      @profissional = Profissional.find(params[:profissional])
+      @atendimento_valores = @atendimento_valores.do_profissional(@profissional)
+    end
+
+    if params[:pessoa].present?
+      @pessoa = params[:pessoa]
+      @atendimento_valores = @atendimento_valores.query_pessoa_like_nome(@pessoa)
+    end
+
+    if params[:responsavel].present?
+      @responsavel = params[:responsavel]
+      @atendimento_valores = @atendimento_valores.query_responsavel_like_nome(@responsavel)
+    end
+
+    if params[:atendimento_tipo].present?
+      @atendimento_valores = @atendimento_valores.do_tipo_de_atendimento_com_id(params[:atendimento_tipo])
+    end
+
+    if params[:realizado].present?
+      if params[:realizado]
+        @atendimento_valores = @atendimento_valores.de_atendimentos_realizados
+      else
+        @atendimento_valores = @atendimento_valores.de_atendimentos_nao_realizados
+      end
+    end
+
+    @params = params.permit(:de, :ate, :profissional, :atendimento_tipo, :realizado)
+
     respond_to do |format|
-      format.html
+      format.html do
+        if hx_request?
+          render partial: "atendimento_valores/tabela", locals: {atendimento_valores: @atendimento_valores}
+        end
+      end
       format.csv do
-        send_data AtendimentoValor.para_csv(@atendimento_valores), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@de}_#{@ate}.csv", type: "text/csv"
+        send_data AtendimentoValor.para_csv(@atendimento_valores), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@de}_#{@ate}#{@profissional&.nome_completo&.parameterize&.insert(0, "_")}#{@pessoa&.parameterize&.insert(0, "_")}#{@responsavel&.parameterize&.insert(0, "_")}.csv", type: "text/csv"
       end
       format.xlsx do
-        response.headers['Content-Disposition'] = "attachment; filename=#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@de}-#{@ate}.xlsx"
+        response.headers['Content-Disposition'] = "attachment; filename=#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@de}-#{@ate}#{@profissional&.nome_completo&.parameterize&.insert(0, "_")}#{@pessoa&.parameterize&.insert(0, "_")}#{@responsavel&.parameterize&.insert(0, "_")}.xlsx"
       end
     end
   end
@@ -62,9 +92,9 @@ class AtendimentoValoresController < ApplicationController
 
   def update
     respond_to do |format|
-      if @atendimento_valor.update(atendimento_valor_params)
+      if @atendimento_valor.update(validar_params)
         format.html do
-          if params[:ajax].presence
+          if hx_request?
             render partial: "atendimento/atendimento-tabela-form", locals: {atendimento: @atendimento_valor.atendimento }
           else
             redirect_to atendimento_valor_url(@atendimento_valor), notice: "pessoa devolutiva was successfully updated."
@@ -89,6 +119,10 @@ class AtendimentoValoresController < ApplicationController
 
   def atendimento_valor_params
     params.require(:atendimento_valor).permit(:atendimento_id, :valor, :desconto, :taxa_porcentagem_interna, :taxa_porcentagem_externa)
+  end
+
+  def validar_params
+    atendimento_valor_params.map { |k,v| {k => v&.to_s&.gsub(/\D/, "")&.to_i } }
   end
 
   def validar_usuario

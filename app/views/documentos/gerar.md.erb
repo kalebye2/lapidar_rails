@@ -1,0 +1,88 @@
+---
+# Para ser usado com Pandoc
+# convertendo para LaTeX ou PDF
+# Caso queira saber mais visite https://pandoc.org
+#
+title: <%= @titulo %>
+author-meta: <%= usuario_atual.profissional.descricao_completa %>
+date-meta: <%= render_data_brasil Date.today %>
+#
+# Formatação
+# tire o "#" onde quiser mudar valor
+papersize: <%= @papersize %>
+fontsize: <%= @fontsize %>
+# mainfont: Liberation Sans
+# geometry:
+#    - left=2cm
+#    - right=2cm
+#    - top=3cm
+#    - bottom=4cm
+header-includes:
+- |
+    ```{=latex}
+    % Tire o símbolo "%" do início das linhas que você quiser usar uma regra
+    <%= "%" unless @parindent_trigger %>\usepackage{indentfirst} % para indentar o primeiro parágrafo como os seguintes
+    \usepackage{titling}
+
+    <%= "%" unless @parindent_trigger %>\setlength\parindent{<%= @parindent %><%= @parindent_unit.gsub(/\\\"/, '') %>} % recuo da primeira linha do parágrafo
+
+    <%= "%" unless @parskip_trigger %>\parskip=<%= @parskip %><%= @parskip_unit.gsub(/\\\"/, '') %> % alterar o espaço entre parágrafos
+    <%= "%" unless @baselinestretch_trigger %>\renewcommand{\baselinestretch}{<%= @baselinestretch %>} % alterar o espaço entre linhas
+
+    % melhorar o título
+    \renewcommand{\maketitle}{
+    \begin{center}
+    {\huge\bfseries\thetitle}
+    \vspace{3em}
+    \end{center}
+    }
+
+    % contar o número total de páginas do documento
+    <%= "%" unless @lastpage %>\usepackage{lastpage}
+
+    % para cabeçalho e rodapé
+    \usepackage{fancyhdr}
+    <%= "%" unless @header %>\fancyhead[L]{} % coloque aqui cabeçalho à esquerda
+    <%= "%" unless @header %>\fancyhead[R]{<%= @titulo %>}
+    <%= "%" unless @footer %>\fancyfoot[L]{\footnotesize{
+    <%= "%" unless @footer %>E-mail: \href{mailto:<%= usuario_atual.profissional.email %>}{<%= usuario_atual.profissional.email %>}\\
+    <%= "%" unless @footer %>Fone: \href{tel:<%= usuario_atual.profissional.pessoa.render_fone_link %>}{<%= usuario_atual.profissional.pessoa.render_fone_local %>}
+    <%= "%" unless @footer %>}}
+    <% if @pageshow %>
+    <% if @lastpage %>
+      \fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+    <% else %>
+      \fancyfoot[C]{\thepage}
+    <% end %>
+    <% else %>
+    \fancyfoot[C]{}
+    <% end %>
+    \pagestyle{fancy}
+    ```
+---
+
+<%= @conteudo.html_safe %>
+
+<% if @data_atual %>
+\vspace{2em}
+\begin{center}
+<%= usuario_atual.profissional.endereco_cidade %>,
+<%# <%= Date.today.day %1> de %>
+<%# <%= os_meses[Date.today.month].downcase %1> de %>
+<%# <%= Date.today.year %1> %>
+<%= render_data_extenso Date.today %>
+\end{center}
+<% end %>
+
+<% if @assinatura_profissional %>
+\vspace{3cm}
+
+---
+
+\begin{center}
+<%= usuario_atual.profissional.nome_completo %>\\ 
+<%= usuario_atual.profissional.descricao_profissional %>
+\end{center}
+
+\vfill
+<% end %>

@@ -1,0 +1,97 @@
+---
+# Para ser usado com Pandoc
+# convertendo para LaTeX ou PDF
+# Caso queira saber mais visite https://pandoc.org
+#
+title: <%= @profissional_contrato_modelo.titulo %>
+author-meta: <%= @acompanhamento.profissional.descricao_completa %>
+date-meta: <%= render_data_brasil Date.today %>
+
+# Formatação
+# tire o "#" onde quiser mudar valor
+numbersections: true
+papersize: a4
+fontsize: 12pt
+# mainfont: Liberation Sans
+geometry:
+#    - left=3cm
+#    - right=3cm
+#    - top=3cm
+#    - bottom=4cm
+header-includes:
+- |
+    ```{=latex}
+    % Tire o símbolo "%" do início das linhas que você quiser usar uma regra
+    %\usepackage{indentfirst} % para indentar o primeiro parágrafo como os seguintes
+    \usepackage{titling}
+
+    %\setlength\parindent{2em} % recuo da primeira linha do parágrafo
+
+    %\parskip=1.5em % alterar o espaço entre parágrafos
+    %\renewcommand{\baselinestretch}{1.5} % alterar o espaço entre linhas
+
+    % melhorar o título
+    \renewcommand{\maketitle}{
+    \begin{center}
+    {\huge\bfseries\thetitle}
+    \vspace{3em}
+    \end{center}
+    }
+
+    % contar o número total de páginas do documento
+    \usepackage{lastpage}
+
+    % para cabeçalho e rodapé
+    \usepackage{fancyhdr}
+    \fancyhead[L]{} % coloque aqui cabeçalho à esquerda
+    \fancyhead[R]{<%= @profissional_contrato_modelo.titulo %>}
+    \fancyfoot[L]{\footnotesize{
+    E-mail: \href{mailto:<%= @acompanhamento.profissional.email %>}{<%= @acompanhamento.profissional.email %>}\\
+    Fone: \href{tel:<%= @acompanhamento.profissional.pessoa.render_fone_link %>}{<%= @acompanhamento.profissional.pessoa.render_fone_local %>}
+    }}
+    \fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+    \pagestyle{fancy}
+    ```
+
+---
+
+<%= @profissional_contrato_modelo.conteudo_para_acompanhamento @acompanhamento %>
+
+\vspace{3em}
+
+\begin{center}
+<%= @acompanhamento.profissional.cidade %>,
+<%= @acompanhamento.data_inicio.day %> de
+<%= t('date.month_names')[@acompanhamento.data_inicio.month].downcase %> de
+<%= @acompanhamento.data_inicio.year %>
+\end{center}
+
+<% if params[:assinatura_paciente].presence %>
+\vspace{3cm}
+
+---
+
+\begin{center}
+<%= @acompanhamento.paciente.nome_completo %>
+\end{center}
+<% end %>
+
+<% if params[:assinatura_responsavel].presence %>
+\vspace{3cm}
+
+---
+
+\begin{center}
+<%= @acompanhamento.responsavel_legal.nome_completo %>
+\end{center}
+<% end %>
+
+<% if params[:assinatura_profissional].presence %>
+\vspace{3cm}
+
+---
+
+\begin{center}
+<%= @profissional_contrato_modelo.profissional.descricao_completa %>
+\end{center}
+<% end %>

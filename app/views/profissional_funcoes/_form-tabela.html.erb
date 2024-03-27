@@ -1,0 +1,29 @@
+<% if profissional_funcao.presence %>
+  <tr id="<%= dom_id(profissional_funcao) %>">
+    <td><%= profissional_funcao.id %></td>
+    <td>
+      <input type="text" name="profissional_funcao[funcao]" value="<%= profissional_funcao.funcao %>">
+    </td>
+    <td>
+      <input type="text" name="profissional_funcao[orgao_responsavel]" value="<%= profissional_funcao.orgao_responsavel %>">
+    </td>
+    <td>
+      <input type="text" name="profissional_funcao[documento_tipo]" value="<%= profissional_funcao.documento_tipo %>">
+    </td>
+    <td>
+      <input type="text" name="profissional_funcao[flexao_feminino]" value="<%= profissional_funcao.flexao_feminino %>" placeholder="<%= profissional_funcao.funcao[..-2] + 'a' %>">
+    </td>
+    <td>
+      <input type="text" name="profissional_funcao[servico]" value="<%= profissional_funcao.servico %>">
+    </td>
+    <td>
+      <input type="text" name="profissional_funcao[adjetivo_masc]" value="<%= profissional_funcao.adjetivo_masc %>">
+    </td>
+    <td>
+      <input type="text" name="profissional_funcao[adjetivo_fem]" value="<%= profissional_funcao.adjetivo_fem %>">
+    </td>
+    <td>
+      <input type="checkbox" name="profissional_funcao[realiza_atendimentos]" value="<%= profissional_funcao.realiza_atendimentos %>" checked="<%= profissional_funcao.realiza_atendimentos %>">
+    </td>
+  </tr>
+<% end %>

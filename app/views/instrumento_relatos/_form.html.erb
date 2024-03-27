@@ -1,6 +1,6 @@
 <div id="<%= dom_id(instrumento_relato) %>">
   <% curr_id = dom_id(instrumento_relato) %>
-  <% if @params.has_key?(:ajax) && @params[:ajax] %>
+  <% if hx_request? %>
     <% if @params.has_key?(:pessoa) && @params[:pessoa].to_i > -1 %>
       <h2>
         Editar relato de instrumento aplicado
@@ -67,7 +67,7 @@
     <div class="field">
       <%= form.label "Atendimento" %>
       <%# checar se é ajax ou não %>
-      <% if @params.has_key?(:ajax) && @params[:ajax] %>
+      <% if hx_request? %>
         <% if @params.has_key?(:pessoa) && @params[:pessoa].to_i > -1 %>
           <%= form.select :atendimento_id, Pessoa.find(@params[:pessoa]).atendimentos.order(data: :desc, horario: :desc).map { |a| [a.informacoes_com_pessoa, a.id] } %>
         <% end %>

@@ -1,0 +1,1 @@
+json.partial! "acompanhamento_finalizacao_motivos/acompanhamento_finalizacao_motivo", acompanhamento_finalizacao_motivo: @acompanhamento_finalizacao_motivo

@@ -16,8 +16,12 @@
   </td>
 
   <td class="text-center">
+    <% if usuario_atual.financeiro? %>
     <a href="javascript:void(0);" <%== hx_set get: edit_profissional_financeiro_repasse_path(repasse, ajax: true, de: @de, ate: @ate), target: "##{dom_id(repasse)}", swap: "outerHTML" %>>Editar</a>
     <br>
     <a href="javascript:void(0);" <%== hx_set delete: profissional_financeiro_repasse_path(repasse, authenticity_token: form_authenticity_token.to_s), confirm: "Tem certeza?", target: "#tabela-repasses", select: "#tabela-repasses", swap: "outerHTML" %>>Excluir</a>
+  <% else %>
+    -
+  <% end %>
   </td>
 </tr>

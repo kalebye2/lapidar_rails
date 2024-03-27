@@ -1,0 +1,2 @@
+module ProfissionalContratoModelosHelper
+end

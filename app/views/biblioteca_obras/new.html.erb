@@ -1,2 +1,9 @@
-<h1>BibliotecaObras#new</h1>
-<p>Find me in app/views/biblioteca_obras/new.html.erb</p>
+<h1>New biblioteca obra</h1>
+
+<%= render "form", biblioteca_obra: @biblioteca_obra %>
+
+<br>
+
+<div>
+  <%= link_to "Back to biblioteca obras", biblioteca_obras_path %>
+</div>

@@ -1,0 +1,14 @@
+<div id="<%= dom_id(pessoa) %>-medicacao" class="pessoa-medicacao" style="text-align:justify;">
+  <p id="notice"><%= notice %></p>
+  <h3>Medicações (<%= deixar_no_plural pessoa.pessoa_medicacoes.count, "registro", "registros" %>)</h3>
+  <ul>
+  <% pessoa.pessoa_medicacoes.each do |pessoa_medicacao| %>
+    <li>
+      <%= pessoa_medicacao.medicacao %>: <%= pessoa_medicacao.dose || "dose não informada" %><%= render_data_brasil(pessoa_medicacao.data_fim)&.insert(0, " com uso até ") %><%= pessoa_medicacao.motivo&.insert(0, " (")&.insert(-1, ")") %>
+      <%= hx_link "", edit_medicacao_pessoa_path(pessoa, pessoa_medicacao), target: "##{dom_id(pessoa)}-medicacao", swap: "innerHTML", class: "icon-pencil" %>
+      <%= hx_link "", destroy_medicacao_pessoa_path(pessoa, pessoa_medicacao, authenticity_token: form_authenticity_token.to_s), verb: :delete, target: "##{dom_id(pessoa)}-medicacao", swap: "innerHTML", class: "icon-bin", confirm: "Tem certeza que deseja excluir o registro de uso de #{pessoa_medicacao.medicacao} para #{pessoa.nome}?" %>
+    </li>
+  <% end %>
+  </ul>
+  <button <%= hx_set get: new_medicacao_pessoa_path(@pessoa), swap: "innerHTML", target: "##{dom_id(pessoa)}-medicacao" %>>Registrar medicação</button>
+</div>

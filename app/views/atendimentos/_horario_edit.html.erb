@@ -1,10 +1,18 @@
 <form hx-patch="<%= horario_update_atendimento_path(atendimento) %>" hx-target="#<%= dom_id(atendimento) %>_horario" id="edit_<%= dom_id(atendimento) %>">
   <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+
   <label>De</label>
   <input type="time" name="atendimento[horario]" value="<%= atendimento.horario.strftime("%H:%M:%S") %>">
   <br />
   <label>Até</label>
   <input type="time" name="atendimento[horario_fim]" value="<%= if atendimento.horario_fim.nil? then nil else atendimento.horario_fim.strftime("%H:%M:%S") end %>">
+
+    <p><strong>Para reagendamento</strong></p>
+    <label>De</label>
+    <input type="time" name="atendimento[horario_reagendamento]" value="<%= atendimento.horario_reagendamento&.strftime("%H:%M:%S") %>">
+    <label>Até</label>
+    <input type="time" name="atendimento[horario_reagendamento_fim]" value="<%= atendimento.horario_reagendamento_fim&.strftime("%H:%M:%S") %>">
+
   <button>
     Ok
   </button>

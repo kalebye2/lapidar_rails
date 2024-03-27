@@ -1,0 +1,20 @@
+<% if atendimento %>
+  <%= link_to atendimento.acompanhamento, class: "atendimento-link" do %>
+    <div class="atendimento-card atendimento-<%= atendimento.status.parameterize %> atendimento-reagendado">
+      <p>
+        <strong><%= atendimento.acompanhamento.pessoa.nome_e_sobrenome %></strong>
+      <br />
+      <span style="font-size: .9em;"><%= render_hora_brasil atendimento.horario %></span>
+      <br />
+      <span style="font-size: .8em;">
+        <%= atendimento.profissional.profissional_funcao.abreviado %>
+        <%= atendimento.profissional.nome_e_sobrenome %>
+      </span>
+      <br />
+      <span style="font-size:.7em;">(<%= atendimento.atendimento_tipo.tipo.upcase %>)</span>
+      </p>
+    </div>
+  <% end %>
+
+  <%#= render "atendimentos/atendimento-card-edit", atendimento: atendimento %>
+<% end %>

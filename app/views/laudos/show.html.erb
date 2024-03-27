@@ -9,20 +9,24 @@
       </button>
     </form>
 
-    <%= link_to "editar", edit_laudo_path(@laudo) %>
-    <%= link_to "download markdown", laudo_path(@laudo, format: :md), { target: :blank } %>
-    <%= link_to "PDF", laudo_path(@laudo, format: :pdf), { target: :blank} %>
+    <nav class="navbar">
+      <ul>
+        <li>
+          <%= link_to "Laudos", laudos_path, class: 'icon-previous' %>
+        </li>
+      </ul>
+    </nav>
 
     <p>
     <% if @laudo.fechado? %>
       <h1 style="text-align:center;">
         Laudo - <%= @laudo.render_titulo %>
-      </h1>
-    <% else %>
-      <%= form_for(@laudo, html: {'hx-patch' => identificacao_update_laudo_path(@laudo), 'hx-trigger' => "change", 'hx-target' => "#identificacao"}) do |form| %>
-        <%= form.select :acompanhamento_id, Acompanhamento.do_profissional(usuario_atual.profissional).order(:data_inicio).map { |acompanhamento| [acompanhamento.render_info_para_profissional, acompanhamento.id] } %>
-      <% end %>
+    </h1>
+  <% else %>
+    <%= form_for(@laudo, html: {'hx-patch' => identificacao_update_laudo_path(@laudo), 'hx-trigger' => "change", 'hx-target' => "#identificacao"}) do |form| %>
+      <%= form.select :acompanhamento_id, Acompanhamento.do_profissional(usuario_atual.profissional).order(:data_inicio).map { |acompanhamento| [acompanhamento.render_info_para_profissional, acompanhamento.id] } %>
     <% end %>
+  <% end %>
     </p>
   </div>
 

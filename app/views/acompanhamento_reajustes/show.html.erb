@@ -1,0 +1,42 @@
+<h1>Reajuste - <%= @acompanhamento_reajuste.pessoa.nome_abreviado %></h1>
+<h2>Em <%= @acompanhamento_reajuste.acompanhamento.tipo.upcase %>
+por <%= @acompanhamento_reajuste.profissional.descricao_completa %></h2>
+<p style="color: green"><%= notice %></p>
+
+<%# <%= render @acompanhamento_reajuste %1> %>
+
+<p style="font-size: 1.5em;">
+Negociado em
+<%= render_data_brasil @acompanhamento_reajuste.data_negociacao %>
+para começar em
+<%= render_data_brasil @acompanhamento_reajuste.data_ajuste %>
+a cobrança de
+<b>
+  <%= render_dinheiro_centavos @acompanhamento_reajuste.valor_novo %>
+</b>
+por atendimento.
+</p>
+
+<%= link_to 'Voltar', acompanhamento_reajustes_path %>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to 'Editar', edit_acompanhamento_reajuste_path(@acompanhamento_reajuste), class: 'icon-pencil'%>
+    </li>
+
+    <li>
+      <%= link_to "Baixar declaração", "javascript:void(0);", class: 'icon-download3' %>
+      <ul>
+        <li>
+          <%= link_to "Markdown", acompanhamento_reajuste_path(@acompanhamento_reajuste, format: :md) %>
+          <%= link_to "PDF", acompanhamento_reajuste_path(@acompanhamento_reajuste) %>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <%= link_to "Excluir", @acompanhamento_reajuste, method: :delete, class: 'icon-bin' %>
+    </li>
+  </ul>
+</nav>

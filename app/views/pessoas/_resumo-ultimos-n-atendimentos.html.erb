@@ -1,0 +1,47 @@
+<table class="tabela" id="tabela-resumo-caso">
+  <% n = n || 5 %>
+  <caption>
+    <% desc = n > 1 ? "dos #{n} últimos atendimentos" : "do último atendimento" %>
+    Resumo <%= desc %>
+  </caption>
+  <thead>
+    <tr>
+      <th>Profissional</th>
+      <th>Data do atendimento</th>
+      <th>Tipo de acompanhamento</th>
+      <th>Motivo do acompanhamento</th>
+      <th>Status do atendimento</th>
+      <th>Anotações do profissional</th>
+      <th>Instrumentos usados</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% pessoa.atendimentos.order(data: :desc, horario: :desc).first(n).each do |a| %>
+      <tr>
+        <td><%= a.profissional.nome_abreviado %></td>
+        <td><%= render_data_brasil a.data %></td>
+        <td><%= a.acompanhamento.tipo.upcase %></td>
+        <td><%= a.acompanhamento.motivo %></td>
+        <td><%= a.status %></td>
+        <td><%== markdown_to_html a.consideracoes || "Sem anotações" %></td>
+        <td>
+          <% if a.instrumentos.count == 0 %>
+            <center>-</center>
+          <% else %>
+            <ul>
+              <% a.instrumentos.each do |instrumento| %>
+                <li><%= instrumento.nome %></li>
+              <% end %>
+            </ul>
+          <% end %>
+        </td>
+        <% if usuario_atual.profissional == a.profissional %>
+          <td><%= link_to "visualizar", a.acompanhamento %></td>
+        <% else %>
+          <td></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

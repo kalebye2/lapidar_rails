@@ -25,6 +25,18 @@ ActiveRecord::Schema[7.0].define(version: 0) do
 # Could not dump table "acompanhamento_horarios_temp" because of following StandardError
 #   Unknown type 'NUM' for column 'horario'
 
+  create_table "acompanhamento_reajuste_motivos", force: :cascade do |t|
+    t.string "motivo", limit: 100, null: false
+  end
+
+  create_table "acompanhamento_reajustes", force: :cascade do |t|
+    t.integer "acompanhamento_id", null: false
+    t.date "data_ajuste", null: false
+    t.integer "valor_novo"
+    t.date "data_negociacao"
+    t.integer "acompanhamento_reajuste_motivo_id"
+  end
+
   create_table "acompanhamento_tipos", force: :cascade do |t|
     t.string "tipo", limit: 255
     t.integer "profissional_funcao_id"
@@ -38,28 +50,58 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.date "data_inicio", null: false
     t.date "data_final"
     t.integer "finalizacao_motivo_id"
-    t.integer "valor_contrato"
-    t.integer "sessoes_contrato", null: false
-    t.integer "valor_atual"
-    t.integer "sessoes_atuais"
+    t.integer "valor_sessao_contrato"
+    t.integer "num_sessoes_contrato", null: false
+    t.integer "valor_sessao"
+    t.integer "num_sessoes"
     t.integer "acompanhamento_tipo_id"
     t.boolean "menor_de_idade", default: false
     t.integer "pessoa_responsavel_id"
     t.integer "sessoes_previstas"
+    t.integer "suspenso"
+    t.text "hipotese_diagnostica"
+    t.text "objetivo"
+    t.text "prognostico"
+  end
+
+  create_table "adulto_anamneses", id: false, force: :cascade do |t|
+    t.integer "atendimento_id", null: false
+    t.integer "escolaridade_anos"
+    t.text "historico_profissional"
+    t.text "aspectos_psicoemocionais"
+    t.text "historico_ocupacional"
+    t.text "historico_medico"
+    t.text "aspectos_psicossociais"
+    t.text "antecedentes_familiares"
+    t.text "comorbidades"
+    t.text "desenvolvimento_neuropsicomotor"
+    t.text "medicacoes_em_uso"
+    t.text "uso_drogas_ilicitas"
+    t.text "autonomia_atividades"
+    t.text "alimentacao"
+    t.text "sono"
+    t.text "habilidades_afetadas"
+    t.string "quem_encaminhou"
+    t.text "motivo_encaminhamento"
+    t.string "diagnostico_preliminar", limit: 1000
+    t.string "plano_tratamento", limit: 1000
+    t.string "prognostico", limit: 1000
   end
 
   create_table "atendimento_locais", force: :cascade do |t|
     t.integer "atendimento_local_tipo_id", null: false
-    t.string "descricao", null: false
+    t.string "descricao", limit: 255, null: false
     t.integer "pais_id"
-    t.string "estado"
-    t.string "cidade"
+    t.string "endereco_estado", limit: 255
+    t.string "endereco_cidade", limit: 255
+    t.string "endereco_bairro", limit: 255
     t.integer "endereco_cep"
-    t.string "endereco_logradouro"
+    t.string "endereco_logradouro", limit: 255
     t.integer "endereco_numero"
-    t.string "endereco_complemento"
+    t.string "endereco_complemento", limit: 255
     t.decimal "latitude"
     t.decimal "longitude"
+    t.boolean "publico", null: false
   end
 
   create_table "atendimento_local_tipos", force: :cascade do |t|
@@ -78,8 +120,16 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.decimal "taxa_atendimento"
   end
 
+  create_table "atendimento_reagendamentos", primary_key: "atendimento_id", force: :cascade do |t|
+    t.date "data", null: false
+    t.time "horario"
+    t.time "horario_fim"
+    t.boolean "presenca"
+  end
+
   create_table "atendimento_tipos", force: :cascade do |t|
     t.string "tipo", limit: 100
+    t.integer "profissional_funcao_id"
   end
 
   create_table "atendimento_valores", primary_key: "atendimento_id", force: :cascade do |t|
@@ -100,10 +150,13 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "atendimento_tipo_id"
     t.text "anotacoes"
     t.integer "atendimento_local_id"
-    t.boolean "reagendado", default: false
     t.text "avancos"
     t.text "limitacoes"
     t.boolean "solicitar_reagendamento"
+    t.date "data_reagendamento"
+    t.date "data_reagendamento_fim"
+    t.time "horario_reagendamento"
+    t.time "horario_reagendamento_fim"
   end
 
   create_table "biblioteca_autores", force: :cascade do |t|
@@ -480,30 +533,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "fechado", default: 0
   end
 
-  create_table "neuropsicologico_adulto_anamneses", id: false, force: :cascade do |t|
-    t.integer "atendimento_id", null: false
-    t.integer "escolaridade_anos"
-    t.text "historico_profissional"
-    t.text "aspectos_psicoemocionais"
-    t.text "historico_ocupacional"
-    t.text "historico_medico"
-    t.text "aspectos_psicossociais"
-    t.text "antecedentes_familiares"
-    t.text "comorbidades"
-    t.text "desenvolvimento_neuropsicomotor"
-    t.text "medicacoes_em_uso"
-    t.text "uso_drogas_ilicitas"
-    t.text "autonomia_atividades"
-    t.text "alimentacao"
-    t.text "sono"
-    t.text "habilidades_afetadas"
-    t.string "quem_encaminhou"
-    t.text "motivo_encaminhamento"
-    t.string "diagnostico_preliminar", limit: 1000
-    t.string "plano_tratamento", limit: 1000
-    t.string "prognostico", limit: 1000
-  end
-
   create_table "pagamento_modalidades", force: :cascade do |t|
     t.string "modalidade", limit: 50
   end
@@ -540,13 +569,45 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "orientacoes_profissional"
   end
 
-  create_table "pessoa_emails", id: false, force: :cascade do |t|
+  create_table "pessoa_emails", primary_key: ["pessoa_id", "email"], force: :cascade do |t|
     t.integer "pessoa_id", null: false
     t.string "email", limit: 255, null: false
   end
 
   create_table "pessoa_etnias", force: :cascade do |t|
     t.string "etnia", limit: 255
+  end
+
+  create_table "pessoa_exames", force: :cascade do |t|
+    t.integer "pessoa_id", null: false
+    t.string "exame_documento_url", limit: 255, null: false
+    t.string "exame_descricao", limit: 255
+  end
+
+  create_table "pessoa_fones", primary_key: ["pessoa_id", "cod_pais", "cod_area", "num"], force: :cascade do |t|
+    t.integer "pessoa_id", null: false
+    t.string "cod_pais", limit: 7, null: false
+    t.string "cod_area", limit: 7, null: false
+    t.string "num", limit: 100, null: false
+    t.string "descricao", limit: 255
+  end
+
+  create_table "pessoa_fones_temp", id: false, force: :cascade do |t|
+    t.integer "pessoa_id"
+    t.text "cod_area"
+    t.text "num"
+    t.text "cod_pais"
+    t.text "descricao"
+  end
+
+  create_table "pessoa_medicacoes", force: :cascade do |t|
+    t.integer "pessoa_id", null: false
+    t.string "medicacao", limit: 255, null: false
+    t.string "dose", limit: 255
+    t.string "motivo", limit: 255
+    t.date "data_inicio"
+    t.date "data_fim"
+    t.text "efeitos"
   end
 
   create_table "pessoa_parentesco_juncoes", primary_key: ["pessoa_id", "parente_id"], force: :cascade do |t|
@@ -561,14 +622,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "parentesco_id"
   end
 
-  create_table "pessoa_telefones", id: false, force: :cascade do |t|
-    t.integer "pessoa_id", null: false
-    t.string "cod_area", limit: 2, null: false
-    t.string "num", limit: 100, null: false
-    t.string "cod_pais", limit: 6, null: false
-    t.string "descricao", limit: 255
-  end
-
   create_table "pessoa_tratamento_pronomes", force: :cascade do |t|
     t.string "pronome_masculino", limit: 255, null: false
     t.string "pronome_feminino", limit: 255
@@ -581,6 +634,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "nome_do_meio", limit: 255
     t.string "sobrenome", limit: 500
     t.string "cpf", limit: 11
+    t.string "rg", limit: 100
     t.string "fone_cod_pais", limit: 7
     t.string "fone_cod_area", limit: 7
     t.string "fone_num", limit: 15
@@ -590,8 +644,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.date "data_nascimento"
     t.string "email", limit: 500, default: "nao@informado.com", null: false
     t.integer "pais_id"
-    t.string "estado", limit: 255
-    t.string "cidade", limit: 500
+    t.string "endereco_estado", limit: 255
+    t.string "endereco_cidade", limit: 500
+    t.string "endereco_bairro", limit: 255
     t.integer "endereco_cep"
     t.string "endereco_logradouro", limit: 255
     t.integer "endereco_numero"
@@ -603,7 +658,12 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "inverter_pronome_tratamento"
     t.string "orientacao_sexual", limit: 255
     t.integer "nascimento_pais_id"
+    t.string "nascimento_estado", limit: 255
+    t.string "nascimento_cidade", limit: 255
     t.string "nome_preferido", limit: 255
+    t.integer "usa_whatsapp"
+    t.integer "usa_telegram"
+    t.text "bio"
   end
 
   create_table "profissionais", force: :cascade do |t|
@@ -618,6 +678,13 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "ativo", default: true
   end
 
+  create_table "profissional_contrato_modelos", force: :cascade do |t|
+    t.integer "profissional_id", null: false
+    t.string "titulo", limit: 255, null: false
+    t.string "descricao", limit: 255, null: false
+    t.text "conteudo"
+  end
+
   create_table "profissional_documento_modelos", force: :cascade do |t|
     t.integer "profissional_id", null: false
     t.string "titulo", limit: 255, null: false
@@ -627,9 +694,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "tamanho_papel", limit: 255
   end
 
-  create_table "profissional_especializacao_juncoes", primary_key: ["profissional_id", "profissional_especializacao_id"], force: :cascade do |t|
-    t.integer "profissional_id", null: false
-    t.integer "profissional_especializacao_id", null: false
+  create_table "profissional_especializacao_juncoes", force: :cascade do |t|
+    t.integer "profissional_id"
+    t.integer "profissional_especializacao_id"
   end
 
   create_table "profissional_especializacoes", force: :cascade do |t|
@@ -665,8 +732,11 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "realiza_atendimentos"
   end
 
-# Could not dump table "profissional_horarios" because of following StandardError
-#   Unknown type '' for column 'semana_dia_id'
+  create_table "profissional_horarios", force: :cascade do |t|
+    t.integer "profissional_id", null: false
+    t.integer "semana_dia_id", null: false
+    t.time "horario", null: false
+  end
 
   create_table "profissional_notas", force: :cascade do |t|
     t.integer "profissional_id", null: false
@@ -689,24 +759,12 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "descricao", limit: 1000
   end
 
-  create_table "reajuste_motivos", force: :cascade do |t|
-    t.string "motivo", limit: 100, null: false
-  end
-
-  create_table "reajustes", force: :cascade do |t|
-    t.integer "acompanhamento_id", null: false
-    t.date "data_ajuste", null: false
-    t.integer "valor_novo"
-    t.date "data_negociacao"
-    t.integer "reajuste_motivo_id"
-  end
-
   create_table "recebimentos", force: :cascade do |t|
     t.integer "pessoa_pagante_id"
     t.integer "acompanhamento_id", null: false
     t.integer "valor", default: 0, null: false
     t.date "data", default: -> { "CURRENT_DATE" }, null: false
-    t.integer "modalidade_id", default: 1, null: false
+    t.integer "pagamento_modalidade_id", default: 1, null: false
     t.integer "taxa_porcentagem_clinica", default: 0
   end
 
@@ -727,8 +785,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "sigla", limit: 2, null: false
   end
 
-  create_table "usuarios", force: :cascade do |t|
-    t.integer "profissional_id", null: false
+  create_table "usuarios", primary_key: "profissional_id", force: :cascade do |t|
     t.string "username", limit: 255, null: false
     t.string "password_digest", limit: 255, null: false
     t.boolean "admin", default: false
@@ -740,14 +797,21 @@ ActiveRecord::Schema[7.0].define(version: 0) do
 
   add_foreign_key "acompanhamento_horarios", "acompanhamentos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "acompanhamento_horarios", "semana_dias", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "acompanhamento_reajustes", "acompanhamento_reajuste_motivos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "acompanhamento_reajustes", "acompanhamento_reajuste_motivos", on_update: :cascade, on_delete: :nullify
+  add_foreign_key "acompanhamento_reajustes", "acompanhamentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "acompanhamento_reajustes", "acompanhamentos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "acompanhamento_tipos", "profissional_funcoes"
   add_foreign_key "acompanhamentos", "acompanhamento_tipos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "acompanhamentos", "atendimento_plataformas", column: "plataforma_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "acompanhamentos", "atendimento_plataformas", column: "plataforma_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "acompanhamentos", "pessoas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "acompanhamentos", "profissionais", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "adulto_anamneses", "atendimentos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimento_locais", "atendimento_local_tipos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimento_locais", "paises", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "atendimento_reagendamentos", "atendimentos"
+  add_foreign_key "atendimento_tipos", "profissional_funcoes", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimento_valores", "atendimentos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimentos", "acompanhamentos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimentos", "acompanhamentos", on_update: :cascade, on_delete: :cascade
@@ -785,17 +849,18 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "instrumento_subfuncao_juncoes", "psicologia_subfuncoes", on_update: :cascade, on_delete: :cascade
   add_foreign_key "instrumentos", "instrumento_tipos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "laudos", "acompanhamentos", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "neuropsicologico_adulto_anamneses", "atendimentos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_devolutivas", "pessoas", column: "pessoa_responsavel_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_devolutivas", "pessoas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_devolutivas", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_emails", "pessoas", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoa_exames", "pessoas", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoa_fones", "pessoas", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoa_medicacoes", "pessoas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_parentesco_juncoes", "parentescos", on_update: :cascade, on_delete: :nullify
   add_foreign_key "pessoa_parentesco_juncoes", "pessoas", column: "parente_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_parentesco_juncoes", "pessoas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_responsaveis", "pessoas", column: "pessoa_dependente_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_responsaveis", "pessoas", column: "pessoa_responsavel_id", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "pessoa_telefones", "pessoas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoas", "civil_estados", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoas", "instrucao_graus", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoas", "paises", column: "nascimento_pais_id", on_update: :cascade, on_delete: :cascade
@@ -803,10 +868,11 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "profissionais", "pessoas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissionais", "profissional_funcoes", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissionais", "profissional_funcoes", on_update: :cascade, on_delete: :nullify
+  add_foreign_key "profissional_contrato_modelos", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_documento_modelos", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_especializacao_juncoes", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_especializacao_juncoes", "profissionais", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "profissional_especializacao_juncoes", "profissional_especializacaos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "profissional_especializacao_juncoes", "profissional_especializacoes", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_especializacao_juncoes", "profissional_especializacoes", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_financeiro_repasses", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_folgas", "profissionais", on_update: :cascade, on_delete: :cascade
@@ -815,10 +881,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "profissional_horarios", "semana_dias", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_notas", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "psicologia_subfuncoes", "psicologia_funcoes", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "reajustes", "acompanhamentos", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "reajustes", "reajuste_motivos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "recebimentos", "acompanhamentos", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "recebimentos", "pagamento_modalidades", column: "modalidade_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "recebimentos", "pagamento_modalidades", on_update: :cascade, on_delete: :cascade
   add_foreign_key "recebimentos", "pessoas", column: "pessoa_pagante_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "subtestes", "instrumentos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "subtestes", "psicologia_subfuncoes", on_update: :cascade, on_delete: :cascade

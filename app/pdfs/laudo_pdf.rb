@@ -6,7 +6,7 @@ class LaudoPdf < BasePdf
     title
     move_down 7
     body
-    local_assinatura @laudo.profissional.descricao_completa
+    local_assinatura @laudo.profissional.descricao_completa.gsub(" - ", "\n")
     footer
   end
 
@@ -20,11 +20,9 @@ class LaudoPdf < BasePdf
 
     markup "<b>Profissional</b>: #{@laudo.profissional.descricao_completa}"
     markup "<b>E-mail</b>: <a href=\"mailto:#{@laudo.profissional.email}\">#{@laudo.profissional.email}</a>"
-    markup "<b>Telefone para contato</b>: <a href=\"tel:#{@laudo.profissional.render_fone_link}\">#{@laudo.profissional.render_fone}</a>"
-    markup \
-      "<a href=\"https://wa.me/#{@laudo.profissional.render_fone_link.gsub("+", "")}\">Whatsapp</a>" \
-      " | " \
-      "<a href=\"https://t.me/#{@laudo.profissional.render_fone_link}\">Telegram</a>"
+    markup "<b>Telefone para contato</b>: <a href=\"tel:#{@laudo.profissional.render_fone_link}\">#{@laudo.profissional.render_fone}</a>" \
+      "#{" | <a href=\"https://wa.me/#{@laudo.profissional.render_fone_link.gsub("+", "")}\">Whatsapp</a>" unless !@laudo.profissional.usa_whatsapp?}" \
+      "#{" | <a href=\"https://t.me/#{@laudo.profissional.render_fone_link}\">Telegram</a>" unless !@laudo.profissional.usa_telegram?}"
 
     move_down 14
 
@@ -37,7 +35,7 @@ class LaudoPdf < BasePdf
       ["Idade na avaliação", @laudo.pessoa.render_idade(@laudo.data_avaliacao)],
       ["Interessado", @laudo.interessado || @laudo.pessoa.nome_completo],
       ["Tempo de avaliação", "#{@laudo.dias_de_avaliacao} dias"],
-      ["Nº de sessões", @laudo.num_sessoes],
+      ["Nº de sessões", @laudo.numero_de_sessoes],
     ]
     markup_tabela_lado_a_lado dados
     # text @laudo.instrumentos_aplicados.to_a.to_s

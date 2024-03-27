@@ -1,4 +1,4 @@
-module GenerateCSV
+module GenerateCsv
   extend ActiveSupport::Concern
   require "csv"
 

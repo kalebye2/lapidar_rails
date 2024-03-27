@@ -6,17 +6,14 @@
       <!--span style="font-size:.7em;"><%#= link_to "Baixar", { controller: :acompanhamentos, action: :caso_detalhes, id: acompanhamento.id, format: :pdf }, { target: :blank } %>
     </span>-->
     <span style="font-size:.7em;">
-      <%= link_to "Baixar prontuário (Markdown)", { controller: :acompanhamentos, action: :caso_detalhes, id: acompanhamento.id, format: :md }, { style: "color:pink;" } %>
+      <%= link_to "Baixar prontuário (Markdown)", { controller: :acompanhamentos, action: :prontuario, id: acompanhamento.id, format: :md }, { style: "color:pink;" } %>
     </span>
     </caption>
     <thead>
       <tr>
         <th>Data do atendimento</th>
         <th>Horário do atendimento</th>
-        <th>Modalidade de atendimento</th>
-        <th>Tipo de atendimento</th>
-        <th>Status</th>
-        <th>Local</th>
+        <th>Modalidade, tipo, local e status</th>
         <th>Valor</th>
         <th width="30%">Anotações do profissional</th>
         <th>Instrumentos usados</th>
@@ -27,43 +24,7 @@
     </thead>
     <tbody>
     <% acompanhamento.atendimentos.includes(:atendimento_valor, :instrumento_relatos).order(data: :desc, horario: :desc).each do |a| %>
-      <% path_ajax = atendimento_path(a, ajax: true, authenticity_token: form_authenticity_token.to_s) %>
-      <tr id="<%= dom_id(a) %>">
-        <td id="<%= dom_id(a) %>_data"><%= render "atendimentos/data_show", atendimento: a %></td>
-        <td id="<%= dom_id(a) %>_horario"><%= render "atendimentos/horario_show", atendimento: a %></td>
-        <td>
-          <% if usuario %>
-            <%== hx_select options: AtendimentoModalidade.all.map { |modalidade| [modalidade.modalidade.upcase, modalidade.id]} , value: a.modalidade_id, patch: path_ajax, name: "atendimento[modalidade_id]", target: "##{dom_id(a)}", swap: "outerHTML" %>
-          <% else %>
-            <%= a.modalidade.upcase %>
-          <% end %>
-        </td>
-        <td>
-          <% if usuario %>
-            <%== hx_select options: AtendimentoTipo.all.map { |tipo| [tipo.tipo.upcase, tipo.id]}, value: a.atendimento_tipo_id, patch: path_ajax, name: "atendimento[atendimento_tipo_id]", target: "##{dom_id(a)}", swap: "outerHTML" %>
-          <% else %>
-            <%= a.tipo.upcase %>
-          <% end %>
-        </td>
-        <td id="<%= dom_id(a) %>_status">
-          <%= render "atendimentos/status_show", atendimento: a %>
-        </td>
-        <td class="text-center">
-          <%= render "atendimentos/local_show", atendimento: a %>
-        </td>
-        <td>
-          <%= render "atendimentos/valor_show", atendimento: a %>
-        </td>
-        <td id="<%= dom_id(a) %>_anotacoes">
-        <%= render "atendimentos/anotacoes_show", atendimento: a %>
-        </td>
-        <td><%= render "atendimentos/instrumentos", atendimento: a %></td>
-        <% if usuario_atual.secretaria? || usuario_atual.profissional == a.profissional %>
-          <td id="<%= dom_id(a) %>">
-            <%= render "atendimentos/opcoes", atendimento: a %>
-          </td>
-        <% end %>
-      </tr>
+      <%= render 'atendimentos/atendimento-tabela-form', atendimento: a %>
     <% end %>
     </tbody>
   </table>

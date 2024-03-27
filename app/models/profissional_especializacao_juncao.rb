@@ -1,4 +1,4 @@
 class ProfissionalEspecializacaoJuncao < ApplicationRecord
-  has_many :profissionais
-  has_many :profissional_especializacoes
+  belongs_to :profissional
+  belongs_to :profissional_especializacao
 end

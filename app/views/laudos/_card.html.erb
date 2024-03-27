@@ -1,0 +1,14 @@
+<%= link_to laudo do %>
+  <div class="laudo-card <%= laudo.fechado? ? "laudo-fechado" : "laudo-aberto" %>">
+    <h2 class="icon-user"><%= laudo.paciente.nome_abreviado %></h2>
+
+    <p>
+    Solicitado por
+    <%= laudo.interessado || laudo.paciente.nome_completo %>
+    </p>
+
+    <h3 class="icon-user-tie"><%= laudo.profissional.descricao_completa %></h3>
+
+    <h4 class="icon-calendar"><%= render_data_brasil laudo.data_avaliacao %></h4>
+  </div>
+<% end %>

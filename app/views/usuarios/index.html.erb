@@ -2,6 +2,14 @@
 
 <h1>Usuarios</h1>
 
+<nav class="navbar">
+  <ul>
+    <li>
+      <%= link_to 'adicionar', new_usuario_path, class: 'icon-plus' %>
+    </li>
+  </ul>
+</nav>
+
 <div class="pessoas-container">
   <% @usuarios.each do |usuario| %>
     <%= render "card", usuario: usuario %>
@@ -9,5 +17,3 @@
 </div>
 
 <br>
-
-<%= link_to 'New Usuario', new_usuario_path %>

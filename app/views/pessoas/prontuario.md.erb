@@ -1,0 +1,152 @@
+<% titulo_doc = "Prontuário multiprofissional" %>
+---
+# Para ser usado com Pandoc
+# convertendo para LaTeX ou PDF
+# Caso queira saber mais visite https://pandoc.org
+#
+title: <%= titulo_doc %>
+author-meta: <%= usuario_atual.profissional.descricao_completa %>
+date-meta: <%= render_data_brasil Date.today %>
+
+# Formatação
+# tire o "#" onde quiser mudar valor
+papersize: a4
+fontsize: 12pt
+# mainfont: Liberation Sans
+# geometry:
+#    - left=2cm
+#    - right=2cm
+#    - top=3cm
+#    - bottom=4cm
+header-includes:
+- |
+    ```{=latex}
+    % Tire o símbolo "%" do início das linhas que você quiser usar uma regra
+    %\usepackage{indentfirst} % para indentar o primeiro parágrafo como os seguintes
+    %\usepackage{titlesec}
+    \usepackage{titling}
+
+    %\setlength\parindent{2em} % recuo da primeira linha do parágrafo
+
+    %\parskip=1.5em % alterar o espaço entre parágrafos
+    %\renewcommand{\baselinestretch}{1.5} % alterar o espaço entre linhas
+
+    % melhorar o título
+    \renewcommand{\maketitle}{
+    \begin{center}
+    {\huge\bfseries\thetitle}
+    \vspace{3em}
+    \end{center}
+    }
+
+    % heading 2
+    %\titleformat{\subsection}[display]
+    %{}
+    %{}
+    %{}
+    %{}
+
+    % contar o número total de páginas do documento
+    \usepackage{lastpage}
+
+    % para cabeçalho e rodapé
+    \usepackage{fancyhdr}
+    \fancyhead[L]{} % coloque aqui cabeçalho à esquerda
+    \fancyhead[R]{<%= titulo_doc %>}
+    \fancyfoot[C]{<%= titulo_da_aplicacao %>}
+    %\fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+    \pagestyle{fancy}
+    ```
+
+---
+
+**Nome do paciente**:
+<%= @pessoa.nome_completo.upcase %>
+
+**Data de nascimento**:
+<%= render_data_brasil @pessoa.data_nascimento %>
+
+**Idade**:
+<%= @pessoa.render_idade.upcase %>
+
+**Sexo**:
+<%= @pessoa.render_sexo.upcase %>
+
+**Estado Civil**:
+<%= @pessoa.estado_civil.upcase %>
+
+**Grau de instrução**:
+<%= @pessoa.grau_de_instrucao %>
+
+**Profissão**:
+<%= @pessoa.profissao.nil? ? "Não informada" : @pessoa.profissao.upcase %>
+
+**Fone**:
+[<%= @pessoa.render_fone %>](tel:<%= @pessoa.render_fone_link %>)
+<% if @pessoa.usa_whatsapp %>
+[![whatsapp](https://imagepng.org/wp-content/uploads/2017/08/whatsapp-icone-6.png){width=1em}](https://wa.me/<%= @pessoa.render_fone_link %>)
+<% end %>
+<% if @pessoa.usa_telegram %>
+[![telegram](https://imagepng.org/wp-content/uploads/2017/11/telegram-icone-icon-5.png){width=1em}](https://t.me/<%= @pessoa.render_fone_link[1..] %>)
+<% end %>
+
+**E-mail**:
+<<%= @pessoa.email %>>
+
+**Contato para emergência**:
+<% if @pessoa.parentescos.count == 0 %>
+INSERIR CONTATO PARA EMERGÊNCIA
+<% else %>
+<% contatos = @pessoa.pessoa_parentesco_juncoes.map { |p| "#{p.parente.render_fone.blank? ? "" : "#{p.parente.render_fone} - #{p.parente.nome_completo.upcase} (#{p.parentesco.parentesco.upcase})"}"} %>
+<%= contatos.join(", ") %>
+<% end %>
+
+**RG**:
+<%= @pessoa.render_rg %>
+
+**CPF**:
+<%= @pessoa.render_cpf %>
+
+**Endereço**:
+<%= @pessoa.endereco_completo_com_cep %>
+
+**Toma medicação**:
+<%= @pessoa.pessoa_medicacoes.map { |medicacao| "#{medicacao.medicacao}#{medicacao.dose&.insert(0, " (")&.insert(-1, ")")}" }.join(", ") %>
+
+---
+
+<% if @pessoa.atendimentos.count > 0 %>
+
+<% @pessoa.atendimentos.em_ordem.each_with_index do |atendimento, index| %>
+
+\newpage
+# Atendimento <%= index + 1 %>
+
+**Profissional responsável**:
+<%= atendimento.profissional.descricao_completa %>
+
+**Data**:
+<%= render_data_brasil atendimento.data %>
+
+**Horário**:
+<%= render_hora_brasil atendimento.horario %>
+
+**Status**:
+<%= atendimento.status %>
+
+**Atividade**:
+<%= atendimento.tipo %>
+
+<% if atendimento.instrumentos.count > 0 %>
+**Instrumentos usados**:
+<%= atendimento.instrumentos.map(&:nome).join(", ") %>
+<% end %>
+
+<% if atendimento.anotacoes %>
+## Anotações
+
+<%= atendimento.anotacoes || "Sem anotações" %>
+<% end %>
+
+<% end %>
+<% end %>

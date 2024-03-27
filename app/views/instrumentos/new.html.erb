@@ -1,2 +1,9 @@
-<h1>Instrumentos#new</h1>
-<p>Find me in app/views/instrumentos/new.html.erb</p>
+<h1>New instrumento</h1>
+
+<%= render "form", instrumento: @instrumento %>
+
+<br>
+
+<div>
+  <%= link_to "Back to instrumentos", instrumentos_path %>
+</div>

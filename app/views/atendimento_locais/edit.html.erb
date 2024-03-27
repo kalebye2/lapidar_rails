@@ -1,0 +1,17 @@
+<h1>Editar local de atendimento</h1>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Voltar à visualização", @atendimento_local, class: "icon-previous" %>
+    </li>
+    <li>
+      <%= link_to "Ver todos os locais de atendimento", atendimento_locais_path, class: "icon-office" %>
+    </li>
+    <li>
+      <%= hx_link "Excluir", delete: @atendimento_local, confirm: "Tem certeza que deseja excluir #{@atendimento_local.descricao}?", class: "icon-bin" %>
+    </li>
+  </ul>
+</nav>
+
+<%= render "form", atendimento_local: @atendimento_local %>

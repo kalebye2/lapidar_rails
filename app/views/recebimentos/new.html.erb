@@ -1,4 +1,12 @@
-<%= titulo "Novo recebimento" %>
+<% titulo "Novo recebimento" %>
 <h1>Registrar recebimento</h1>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Recebimentos", recebimentos_path, class: "icon-previous" %>
+    </li>
+  </ul>
+</nav>
 
 <%= render 'form', recebimento: @recebimento %>

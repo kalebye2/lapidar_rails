@@ -1,0 +1,40 @@
+<h1>Alimentação</h1>
+
+<dt>Com quantos meses a criança recebeu alimento sólido?</dt>
+<dt><dd><%= deixar_no_plural alimentacao.solida_meses, 'mês', 'meses' %></dd></dt>
+
+<dt>A criança teve boa sucção?</dt>
+<dt><dd><%= sim_ou_nao alimentacao.succao_boa %></dd></dt>
+
+<dt>A criança teve boa deglutição?</dt>
+<dt><dd><%= sim_ou_nao alimentacao.degluticao_boa %></dd></dt>
+
+<dt>A criança usou mamadeira?</dt>
+<dt><dd><%= sim_ou_nao alimentacao.usou_mamadeira %></dd></dt>
+
+<dt>Com quantos meses a criança foi introduzida à comida de sal?</dt>
+<dt><dd><%= deixar_no_plural alimentacao.comida_sal_introducao_meses, 'mês', 'meses' %></dd></dt>
+
+<dt>Com quantos meses ocorreu o desmame?</dt>
+<dt><dd><%= deixar_no_plural alimentacao.desmame_meses, 'mês', 'meses' %></dd></dt>
+
+<dt>A criança rejeitou alimentos?</dt>
+<dt><dd><%= sim_ou_nao alimentacao.rejeicao %></dd></dt>
+
+<dt>Com quantos meses a criança começou a comer sozinha?</dt>
+<dt><dd><%= deixar_no_plural alimentacao.comer_sozinho_inicio_meses, 'mês', 'meses' %></dd></dt>
+
+<dt>Como foi o início da alimentação da criança quando ela começou a comer sozinha?</dt>
+<dt><dd><%= markdown_to_html alimentacao.comer_sozinho_inicio_alimento %></dd></dt>
+
+<dt>Quais os comportamentos da criança à mesa?</dt>
+<dt><dd><%= markdown_to_html alimentacao.comportamento_mesa %></dd></dt>
+
+<dt>A criança precisa de ajuda para se alimentar?</dt>
+<dt><dd><%= sim_ou_nao alimentacao.precisa_ajuda %></dd></dt>
+
+<dt>Como é a alimentação atual da criança?</dt>
+<dt><dd><%= markdown_to_html alimentacao.alimentacao_atual %></dd></dt>
+
+<dt>Outras considerações que acha importa te sobre a alimentação da criança</dt>
+<dt><dd><%= alimentacao.outras_consideracoes %></dd></dt>

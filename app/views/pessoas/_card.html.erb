@@ -7,16 +7,14 @@
         <img class="pessoa-profile-img" src="<%= p.imagem_perfil %>">
       <% end %>
 
-      <h6>
+      <h6 class="icon-user-tie">
         <%= if pro != nil then pro.profissional_funcao.funcao.upcase else p.profissao != nil ? p.profissao.upcase : "NA" end %>
-      </h6>
-      <!-- informações -->
-      <p><%= p.data_nascimento ? p.render_data_nascimento : "Data Nasc. não informada" %> (<%= p.render_idade %>)</p>
-      <% if p.cpf then %>
-        <p><%= p.render_cpf %></p>
-      <% end %>
-        <p><%= p.email ? p.email : "Não definido" %></p>
-        <p><%= (p.fone_cod_pais || p.fone_cod_area || p.fone_num) ? p.render_fone : "Não definido" %></p>
+        </h6>
+        <!-- informações -->
+        <p class="icon-cake"><%= p.data_nascimento ? p.render_data_nascimento : "Data Nasc. não informada" %> (<%= p.render_idade %>)</p>
+        <p class="icon-profile"><b>CPF:</b> <%= p.render_cpf %></p>
+        <p class="icon-mail"><%= p.email ? p.email : "Não definido" %></p>
+        <p class="icon-phone"><%= (p.fone_cod_pais || p.fone_cod_area || p.fone_num) ? p.render_fone : "Não definido" %></p>
     </div>
   <% end %>
 <% end %>

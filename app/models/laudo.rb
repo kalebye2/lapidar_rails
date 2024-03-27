@@ -4,6 +4,9 @@ class Laudo < ApplicationRecord
   has_one :profissional, through: :acompanhamento
   has_many :instrumentos_aplicados, through: :acompanhamento
 
+  scope :fechados, -> { where(fechado: true) }
+  scope :abertos, -> { where(fechado: [false, nil]) }
+
   def paciente
     pessoa
   end
@@ -16,8 +19,8 @@ class Laudo < ApplicationRecord
     data_final_avaliacao || data_avaliacao
   end
 
-  def num_sessoes
-    acompanhamento.num_sessoes(inicio: data_inicial, final: data_final)
+  def numero_de_sessoes
+    acompanhamento.numero_de_sessoes(inicio: data_inicial, final: data_final)
   end
 
   def dias_de_avaliacao

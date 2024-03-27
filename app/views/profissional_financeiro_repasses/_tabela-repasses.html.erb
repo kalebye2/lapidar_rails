@@ -1,26 +1,34 @@
 <div class="grid-2">
-<%= render "profissionais", profissionais: Profissional.all %>
-<!-- tabela -->
+  <%= render "profissionais", profissionais: Profissional.all %>
+  <!-- tabela -->
 
-<table class="tabela-valores" id="tabela-repasses">
-  <thead>
-    <tr>
-      <th>Profissional</th>
-      <th>Data</th>
-      <th>Valor</th>
-      <th>Modalidade</th>
-      <th>Opções</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr id="novo-repasse">
-      <td colspan="100%" style="text-align:center;">
-        <button <%== hx_set get: new_profissional_financeiro_repasse_path(tabela: true), swap: "outerHTML", target: "#novo-repasse" %>>Adicionar</button>
-      </td>
-    </tr>
-    <% @repasses.each do |repasse| %>
-      <%= render "repasse-em-tabela", repasse: repasse %>
-    <% end %>
-  </tbody>
-</table>
+  <table class="tabela-valores" id="tabela-repasses">
+    <thead>
+      <tr>
+        <th>Profissional</th>
+        <th>Data</th>
+        <th>Valor</th>
+        <th>Modalidade</th>
+        <th>Opções</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if usuario_atual.financeiro? %>
+        <tr id="novo-repasse">
+          <td colspan="100%" style="text-align:center;">
+            <button <%== hx_set get: new_profissional_financeiro_repasse_path(tabela: true), swap: "outerHTML", target: "#novo-repasse" %>>Adicionar</button>
+          </td>
+        </tr>
+      <% end %>
+      <% @repasses.each do |repasse| %>
+        <%= render "repasse-em-tabela", repasse: repasse %>
+      <% end %>
+    </tbody>
+  </table>
 </div>
+
+<% if hx_request? %>
+  <p style="text-align:center;" id="numero-repasses" hx-swap-oob="true">
+  <b><%= deixar_no_plural @repasses.count, "repasse", "repasses" %></b> no período.
+  </p>
+<% end %>

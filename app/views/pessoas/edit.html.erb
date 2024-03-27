@@ -1,6 +1,11 @@
-<h1>Editing Pessoa</h1>
+<% titulo "Editar cadastro - #{@pessoa.nome_abreviado}" %>
+<h1>Editar cadastro</h1>
+
+<%= link_to 'Cadastros', pessoas_path, class: 'icon-previous button' %>
+<%= link_to 'Mostrar', @pessoa, class: 'icon-eye button' %>
+
+<br>
+<br>
+<hr>
 
 <%= render 'form', pessoa: @pessoa %>
-
-<%= link_to 'Show', @pessoa %> |
-<%= link_to 'Back', pessoas_path %>

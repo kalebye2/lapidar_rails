@@ -1,0 +1,2 @@
+class AcompanhamentoReajusteMotivo < ApplicationRecord
+end

@@ -11,48 +11,59 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :nome %>
-    <%= form.text_field :nome %>
+  <div class="grid-3 pessoa-nome">
+    <div class="field">
+      <%= form.label :nome %>
+      <%= form.text_field :nome %>
+    </div>
+
+    <div class="field">
+      <%= form.label :nome_do_meio %>
+      <%= form.text_field :nome_do_meio %>
+    </div>
+
+    <div class="field">
+      <%= form.label :sobrenome %>
+      <%= form.text_field :sobrenome %>
+    </div>
+  </div>
+
+  <div class="grid-2 pessoa-documentos">
+    <div class="field">
+      <%= form.label :cpf, class: 'icon-profile' %>
+      <%= form.text_field :cpf %>
+    </div>
+
+    <div class="field">
+      <%= form.label :rg, class: 'icon-profile' %>
+      <%= form.text_field :rg %>
+    </div>
+  </div>
+
+  <div class="grid-3 pessoa-telefone">
+    <div class="field">
+      <%= form.label :fone_cod_pais, class: 'icon-phone' %>
+      <%= form.text_field :fone_cod_pais %>
+    </div>
+
+    <div class="field">
+      <%= form.label :fone_cod_area, class: 'icon-phone' %>
+      <%= form.text_field :fone_cod_area %>
+    </div>
+
+    <div class="field">
+      <%= form.label :fone_num, class: 'icon-phone' %>
+      <%= form.phone_field :fone_num %>
+    </div>
   </div>
 
   <div class="field">
-    <%= form.label :nome_do_meio %>
-    <%= form.text_field :nome_do_meio %>
-  </div>
-
-  <div class="field">
-    <%= form.label :sobrenome %>
-    <%= form.text_field :sobrenome %>
-  </div>
-
-  <div class="field">
-    <%= form.label :cpf %>
-    <%= form.text_field :cpf %>
-  </div>
-
-  <div class="field">
-    <%= form.label :fone_cod_pais %>
-    <%= form.text_field :fone_cod_pais %>
-  </div>
-
-  <div class="field">
-    <%= form.label :fone_cod_area %>
-    <%= form.text_field :fone_cod_area %>
-  </div>
-
-  <div class="field">
-    <%= form.label :fone_num %>
-    <%= form.text_field :fone_num %>
-  </div>
-
-  <div class="field">
-    <%= form.label :feminino, "Sexo" %>
+    <%= form.label :feminino, "Sexo", class: 'icon-man-woman' %>
     <%= form.select :feminino, [["Masculino", false], ["Feminino", true]] %>
   </div>
 
   <div class="field">
-    <%= form.label :civil_estado_id, "Estado Civil" %>
+    <%= form.label :civil_estado_id, "Estado Civil", class: 'icon-heart' %>
     <%# <%= form.select :civil_estado_id, CivilEstado.pluck(:estado, :id), include_blank: true %1> %>
     <%= form.select :civil_estado_id, CivilEstado.all.map {
     | civil_estado | [civil_estado.estado.upcase, civil_estado.id]
@@ -60,69 +71,88 @@
   </div>
 
   <div class="field">
-    <%= form.label :instrucao_grau_id, "Grau de instrução" %>
+    <%= form.label :instrucao_grau_id, "Grau de instrução", class: 'icon-library'%>
     <%= form.select :instrucao_grau_id, InstrucaoGrau.all.map {
       |instrucao_grau| [instrucao_grau.grau, instrucao_grau.id]
     } , include_blank: true %>
   </div>
 
-  <div class="field">
-    <%= form.label :data_nascimento %>
-    <%= form.date_field :data_nascimento %>
+  <div class="grid-3 pessoa-nascimento">
+    <div class="field">
+      <%= form.label :data_nascimento, class: 'icon-cake' %>
+      <%= form.date_field :data_nascimento %>
+    </div>
+
+    <div class="field">
+      <%= form.label :nascimento_cidade, "Cidade natal" %>
+      <%= form.text_field :nascimento_cidade %>
+    </div>
+
+    <div class="field">
+      <%= form.label :nascimento_estado, "Estado natal" %>
+      <%= form.text_field :nascimento_estado %>
+    </div>
+
+    <div class="field">
+      <%= form.label :nascimento_pais_id, "País natal" %>
+      <%= form.select :nascimento_pais_id, Pais.order(nome: :asc).pluck(:nome, :id), selected: @pessoa.nascimento_pais_id, include_blank: true %>
+    </div>
   </div>
 
   <div class="field">
-    <%= form.label :nascimento_pais_id, "Natural de" %>
-    <%= form.select :nascimento_pais_id, Pais.order(nome: :asc).pluck(:nome, :id), selected: @pessoa.nascimento_pais_id, include_blank: true %>
+    <%= form.label :email, class: 'icon-mail' %>
+    <%= form.email_field :email %>
+  </div>
+
+  <div class="grid-3 pessoa-endereco">
+    <div class="field">
+      <%= form.label :pais_id, "País", class: 'icon-location' %>
+      <%= form.select :pais_id, Pais.order(nome: :asc).pluck(:nome, :id), selected: @pessoa.pais_id || Pais.find_by(nome: "Brasil").id %>
+    </div>
+
+    <div class="field">
+      <%= form.label :endereco_estado, "Estado" %>
+      <%= form.text_field :endereco_estado %>
+    </div>
+
+    <div class="field">
+      <%= form.label :endereco_cidade, "Cidade" %>
+      <%= form.text_field :endereco_cidade %>
+    </div>
+
+    <div class="field">
+      <%= form.label :endereco_bairro, "Bairro" %>
+      <%= form.text_field :endereco_bairro %>
+    </div>
+
+    <div class="field">
+      <%= form.label :endereco_cep %>
+      <%= form.text_field :endereco_cep %>
+    </div>
+
+    <div class="field">
+      <%= form.label :endereco_logradouro %>
+      <%= form.text_field :endereco_logradouro %>
+    </div>
+
+    <div class="field">
+      <%= form.label :endereco_numero %>
+      <%= form.number_field :endereco_numero %>
+    </div>
+
+    <div class="field">
+      <%= form.label :endereco_complemento %>
+      <%= form.text_field :endereco_complemento %>
+    </div>
   </div>
 
   <div class="field">
-    <%= form.label :email %>
-    <%= form.text_field :email %>
-  </div>
-
-  <div class="field">
-    <%= form.label :pais_id, "País" %>
-    <%= form.select :pais_id, Pais.order(nome: :asc).pluck(:nome, :id), selected: @pessoa.pais_id || Pais.find_by(nome: "Brasil").id %>
-  </div>
-
-  <div class="field">
-    <%= form.label :estado %>
-    <%= form.text_field :estado %>
-  </div>
-
-  <div class="field">
-    <%= form.label :cidade %>
-    <%= form.text_field :cidade %>
-  </div>
-
-  <div class="field">
-    <%= form.label :endereco_cep %>
-    <%= form.number_field :endereco_cep %>
-  </div>
-
-  <div class="field">
-    <%= form.label :endereco_logradouro %>
-    <%= form.text_field :endereco_logradouro %>
-  </div>
-
-  <div class="field">
-    <%= form.label :endereco_numero %>
-    <%= form.number_field :endereco_numero %>
-  </div>
-
-  <div class="field">
-    <%= form.label :endereco_complemento %>
-    <%= form.text_field :endereco_complemento %>
-  </div>
-
-  <div class="field">
-    <%= form.label "Profissão" %>
+    <%= form.label "Profissão", class: 'icon-user-tie' %>
     <%= form.text_field :profissao %>
   </div>
 
   <div class="field">
-    <%= form.label "Preferência de contato" %>
+    <%= form.label "Preferência de contato", class: 'icon-address-book' %>
     <%= form.text_field :preferencia_contato %>
   </div>
 
@@ -136,7 +166,18 @@
     <%= form.check_box :inverter_pronome_tratamento %>
   </div>
 
+  <%= form.check_box :usa_whatsapp %>
+  <%= form.label :usa_whatsapp %>
+  <%= form.check_box :usa_telegram %>
+  <%= form.label :usa_telegram %>
+
+  <div class="field">
+    <%= form.label :bio, "Breve biografia" %>
+    <%= form.text_area :bio %>
+    <%== simplemde_gerar :pessoa_bio %>
+  </div>
+
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit "Confirmar" %>
   </div>
 <% end %>

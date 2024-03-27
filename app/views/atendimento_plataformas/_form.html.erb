@@ -1,0 +1,42 @@
+<%= form_with(model: atendimento_plataforma) do |form| %>
+  <% if atendimento_plataforma.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(atendimento_plataforma.errors.count, "error") %> prohibited this atendimento_plataforma from being saved:</h2>
+
+      <ul>
+        <% atendimento_plataforma.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :nome, style: "display: block" %>
+    <%= form.text_field :nome %>
+  </div>
+
+  <div>
+    <%= form.label :site, style: "display: block" %>
+    <%= form.text_field :site %>
+  </div>
+
+  <div>
+    <%= form.label :descricao, style: "display: block" %>
+    <%= form.text_field :descricao %>
+  </div>
+
+  <div>
+    <%= form.label :taxa_fixa, style: "display: block" %>
+    <%= form.text_field :taxa_fixa %>
+  </div>
+
+  <div>
+    <%= form.label :taxa_atendimento, style: "display: block" %>
+    <%= form.text_field :taxa_atendimento %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -3,7 +3,7 @@
   <th colspan="100%">Alimentação</th>
 </tr>
 
-<% path = infantojuvenil_anamnese_path(alimentacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s) %>
+<% path = infantojuvenil_anamnese_path(alimentacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s) %>
 
 <tr class="<%= cl %>">
   <% curr_id = "#{cl}-succao-boa" %>

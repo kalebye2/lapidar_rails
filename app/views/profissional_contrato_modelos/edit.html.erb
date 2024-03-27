@@ -1,0 +1,12 @@
+<h1>Editar modelo de contrato</h1>
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Voltar", profissional_contrato_modelos_path, class: "icon-previous" %>
+    </li>
+  </ul>
+</nav>
+
+<%= button_to "Excluir", profissional_contrato_modelo_path, class: "icon-bin", method: :delete, confirm: "Tem certeza que deseja excluir #{@profissional_contrato_modelo.descricao}?" %>
+
+<%= render "form", profissional_contrato_modelo: @profissional_contrato_modelo %>

@@ -1,5 +1,4 @@
 class AcompanhamentoDadosPdf < BasePdf
-
   def initialize(acompanhamento = Acompanhamento.new)
     super()
     @acompanhamento = acompanhamento
@@ -30,11 +29,10 @@ class AcompanhamentoDadosPdf < BasePdf
     text 'Início em: ' + @acompanhamento.data_inicio.strftime("%d/%m/%Y")
     text 'Quantidade de sessões: ' + @acompanhamento.atendimento.count.to_s
     text 'Sessões atendidas: ' + @acompanhamento.atendimento.where(presenca: true).count.to_s
-    text 'Valor da sessão: ' + helpers.number_to_currency(@acompanhamento.valor_atual.to_f / 100, unit: "R$ ", separator: ",", delimiter: ".", precision: 2)
+    text 'Valor da sessão: ' + helpers.number_to_currency(@acompanhamento.valor_sessao.to_f / 100, unit: "R$ ", separator: ",", delimiter: ".", precision: 2)
   end
 
   def helpers
     ActionController::Base.helpers
   end
-
 end

@@ -1,12 +1,23 @@
 <% titulo "Devolutiva #{@pessoa_devolutiva.paciente.nome_abreviado}" %>
 <p id="notice"><%= notice %></p>
-<%= link_to 'Edit', edit_pessoa_devolutiva_path(@pessoa_devolutiva) %>
-|
-<%= link_to 'Back', pessoa_devolutivas_path %>
-|
-<a href="javascript:void(0)" class="dropdown">Baixar
-<%= link_to "Markdown", pessoa_devolutiva_path(@pessoa_devolutiva, format: :md) %>
-<%= link_to "PDF", pessoa_devolutiva_path(@pessoa_devolutiva, format: :pdf), target: :blank %>
-</a>
+
+<nav class="navbar">
+  <ul>
+    <li>
+      <%= link_to 'Voltar', pessoa_devolutivas_path, class: 'icon-previous' %>
+    </li>
+    <li>
+      <%= link_to 'Baixar', 'javascript:void(0);', class: 'icon-download3' %>
+      <ul>
+        <li>
+          <%= link_to "Markdown", pessoa_devolutiva_path(@pessoa_devolutiva, format: :md) %>
+        </li>
+        <li>
+          <%= link_to "PDF", pessoa_devolutiva_path(@pessoa_devolutiva, format: :pdf), target: :blank %>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
 
 <%= render "tabela-resumo", devolutiva: @pessoa_devolutiva %>

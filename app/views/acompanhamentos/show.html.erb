@@ -1,15 +1,45 @@
 <%= titulo "#{@acompanhamento.tipo(titulo: true)}: #{@acompanhamento.pessoa.nome_completo}"%>
 <% usuario = usuario_atual == @acompanhamento.profissional.usuario %>
-<% caminho = acompanhamento_path(@acompanhamento, ajax: true, authenticity_token: form_authenticity_token.to_s) %>
+<% caminho = acompanhamento_path(@acompanhamento, authenticity_token: form_authenticity_token.to_s) %>
 
 <%= link_to "Voltar", acompanhamentos_path %>
 <% p = @acompanhamento.pessoa %>
 <% r = @acompanhamento.pessoa_responsavel %>
 <% pro = @acompanhamento.profissional.pessoa %>
-<%= link_to p, class: "pessoa" do %><h1><%= p.nome_abreviado %> <%= p.render_sexo_sigla %> </h1><% end %>
+<%= link_to p, class: "pessoa" do %><h1 class="icon-user"><%= p.nome_abreviado %> <%= p.render_sexo_sigla %> </h1><% end %>
 <%= render_data_brasil p.data_nascimento %>
 -
 <%= p.render_idade %> <%= p.data_nascimento.nil? ? "" : p.idade_anos.to_i < 18 ? "(infantojuvenil)" : "(adulto)" %>
+
+<p>Início em
+<% if usuario %>
+  <%# <input type="date" name="acompanhamento[data_inicio]" value="<%= @acompanhamento.data_inicio %1>" hx-patch="<%= acompanhamento_path(@acompanhamento, authenticity_token: form_authenticity_token.to_s) %1>"> %>
+<% else %>
+  <%= render_data_brasil @acompanhamento.data_inicio %>
+<% end %>
+<%= render_data_brasil @acompanhamento.data_inicio || @acompanhamento.primeiro_atendimento&.data %>
+</p>
+
+<% if !r.nil? %>
+  <%= link_to r, class: "pessoa" do %>
+    <h2 class="icon-eye">
+      <%= r.nome_abreviado %> <%= r.render_sexo_sigla %>
+      <% if !p.pessoa_parentesco_juncoes.find_by(parente_id: r.id).nil? %>
+        <%= p.pessoa_parentesco_juncoes.find_by(parente_id: r.id).parentesco.parentesco.upcase %>
+      <% end %>
+    </h2>
+  <% end %>
+<% end %>
+
+<%= link_to @acompanhamento.profissional, class: "profissional" do %>
+  <h2 class="icon-user-tie">
+    <%= pro.nome_abreviado %>
+    <span style="font-size:.5em;font-weight:normal;">
+      <%= @acompanhamento.profissional.documento %>
+    </span>
+  </h2>
+<% end %>
+
 <% if p.infantojuvenil_anamneses.count > 0 %>
   <h3>
     <%= pluralize p.infantojuvenil_anamneses.count, "Anamnese infantojuvenil", "Anamneses infantojuvenis" %>
@@ -28,97 +58,163 @@
     <% end %>
   </ul>
 <% end %>
-<% if !r.nil? %>
-  <%= link_to r, class: "pessoa" do %>
-    <h2
-        ><%= r.nome_abreviado %> <%= r.render_sexo_sigla %>
-      <% if !p.pessoa_parentesco_juncoes.find_by(parente_id: r.id).nil? %>
-        <%= p.pessoa_parentesco_juncoes.find_by(parente_id: r.id).parentesco.parentesco.upcase %>
-      <% end %>
-    </h2>
-  <% end %>
-<% end %>
 
-<%= link_to @acompanhamento.profissional, class: "profissional" do %>
-  <h2>
-    <%= pro.nome_abreviado %>
-    <span style="font-size:.5em;font-weight:normal;">
-      <%= @acompanhamento.profissional.documento %>
-    </span>
-  </h2>
-<% end %>
+<nav class="navbar navcenter">
+  <ul>
+    <% if usuario %>
+      <li>
+        <%= link_to "Editar", edit_acompanhamento_path(@acompanhamento), class: 'icon-quill' %>
+      </li>
 
-<div id="acompanhamento-horarios">
-<%= render "acompanhamento_horarios/resumo_acompanhamento", acompanhamento: @acompanhamento %>
-</div>
+    <li>
+      <%= link_to "Declaração", declaracao_acompanhamento_path(@acompanhamento), class: 'icon-file-text2' %>
+      <ul>
+        <li>
+          <%= link_to "Markdown", declaracao_acompanhamento_path(@acompanhamento, format: :md) %>
+        </li>
+        <li>
+          <%= link_to "PDF", declaracao_acompanhamento_path(@acompanhamento, format: :pdf), target: :blank %>
+        </li>
+      </ul>
+    </li>
 
-<h2>
-  <% if usuario %>
-    <label for="acompanhamento-tipo">Tipo de acompanhamento</label>
-    <% curr_id = "acompanhamento-tipo" %>
-    <select id=<%= curr_id %> name="acompanhamento[acompanhamento_tipo_id]" <%== hx_set patch: caminho, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>
-      <% AcompanhamentoTipo.all.each do |tipo| %>
-        <option value="<%= tipo.id %>" <%= if tipo.id == @acompanhamento.acompanhamento_tipo_id then "selected" end %>><%= tipo.tipo.upcase %></option>
-      <% end %>
-    </select>
-  <% else %>
-    <%= @acompanhamento.tipo.upcase %>
-  <% end %>
-</h2>
-
-<h3>
-  Motivo do acompanhamento:
-  <% if usuario %>
-    <input type="text" name ="acompanhamento[motivo]" value="<%= @acompanhamento.motivo %>" placeholder="Descreva o motivo do acompanhamento" width="50" hx-patch="<%= acompanhamento_path(@acompanhamento, ajax: true, authenticity_token: form_authenticity_token.to_s) %>">
-  <% else %>
-  <%= @acompanhamento.motivo %>
-  <% end %>
-</h3>
-
-<p>Início em
-<%
-=begin %>
-<% if usuario %>
-  <input type="date" name="acompanhamento[data_inicio]" value="<%= @acompanhamento.data_inicio %>" hx-patch="<%= acompanhamento_path(@acompanhamento, ajax: true, authenticity_token: form_authenticity_token.to_s) %>">
-<% else %>
-<%= render_data_brasil @acompanhamento.data_inicio %>
-<% end %>
-<%
-=end %>
-<%= render_data_brasil @acompanhamento.primeiro_atendimento.data %>
-</p>
-
-<% if usuario %>
-  <label>Status</label>
-  <% curr_id = "acompanhamento-status" %>
-  <select id=<%= curr_id %> name="acompanhamento[finalizacao_motivo_id]"
-    <%== hx_set patch: caminho, swap: "outerHTML", target: "##{curr_id}", select: "##{curr_id}" %>>
-    <option value="" <%= if @acompanhamento.finalizacao_motivo_id.nil? then "selected" end %>>Em andamento</option>
-    <% AcompanhamentoFinalizacaoMotivo.all.each do |motivo| %>
-      <option value="<%= motivo.id %>" <%= if @acompanhamento.finalizacao_motivo_id == motivo.id then "selected" end %>> Finalizado por <%= motivo.motivo.downcase %></option>
+      <li>
+        <%= link_to "Contrato", contrato_acompanhamento_path(@acompanhamento), class: 'icon-drawer' %>
+      </li>
     <% end %>
-  </select>
-  <label>Data da finalização</label>
-  <input type="date" name="acompanhamento[data_final]" value="<%= @acompanhamento.data_final %>" hx-patch="<%= acompanhamento_path(@acompanhamento, ajax: true, authenticity_token: form_authenticity_token.to_s) %>">
-<% else %>
-<p><%= @acompanhamento.data_final ? (render_data_brasil @acompanhamento.data_final) : "Em andamento" %><%= @acompanhamento.acompanhamento_finalizacao_motivo ? " (finalização por #{@acompanhamento.acompanhamento_finalizacao_motivo.motivo})" : "" %></p>
-<% end %>
-<p id="atendimentos-contagem">
-<%= pluralize(@acompanhamento.atendimentos.count, "atendimento", "atendimentos") %>
-</p>
 
-<% if usuario_atual.secretaria? || usuario_atual.profissional == @acompanhamento.profissional %>
-  <% if @acompanhamento.em_andamento? %>
-    <%= link_to "+ Atendimento", new_atendimento_path, data: { "turbo_frame" => "modal" }%>
-    <%= button_to "Adicionar atendimento para próxima semana", acompanhamento_new_atendimento_proxima_semana_path(@acompanhamento) %>
-  <% end %>
-  <a href="javascript:void(0);" class="dropdown-list strong-link">
-    Declaração
-    <%= link_to "Markdown", declaracao_acompanhamento_path(@acompanhamento, format: :md) %>
-    <%= link_to "PDF", declaracao_acompanhamento_path(@acompanhamento, format: :pdf) %>
-  </a>
-<% end %>
+    <li>
+      <%= link_to "Prontuário", prontuario_acompanhamento_path(@acompanhamento), class: 'icon-profile' %>
+      <ul>
+        <li>
+          <%= link_to "Markdown", prontuario_acompanhamento_path(@acompanhamento, format: :md) %>
+        </li>
+        <li>
+          <%= link_to "PDF", prontuario_acompanhamento_path(@acompanhamento, format: :pdf), target: :blank %>
+        </li>
+      </ul>
+    </li>
 
-<p>Valor da sessão: <%= render_dinheiro_centavos @acompanhamento.valor_atual %></p>
+    <% if usuario_atual.financeiro? || usuario_atual.profissional == @acompanhamento.profissional %>
+      <li>
+        <%= link_to "Financeiro", financeiro_acompanhamento_path(@acompanhamento), class: 'icon-coin-dollar' %>
+        <ul>
+          <li>
+            <%= link_to "Recebimentos", recebimentos_acompanhamento_path(@acompanhamento) %>
+          </li>
+          <li>
+            <%= link_to "Reajustes", acompanhamento_reajustes_acompanhamento_path(@acompanhamento) %>
+          </li>
+          <li>
+            <%= link_to "Valores de atendimentos", atendimento_valores_acompanhamento_path(@acompanhamento) %>
+          </li>
+        </ul>
+      </li>
+    <% end %>
+
+    <% if @acompanhamento.em_andamento? && usuario %>
+      <li>
+        <%= link_to "Novo atendimento", new_atendimento_acompanhamento_path(@acompanhamento), class: "icon-plus" %>
+        <ul>
+          <li>
+            <%= button_to "Gerar atendimento para a próxima semana", new_atendimento_proxima_semana_acompanhamento_path(@acompanhamento), class: 'icon-plus' %>
+          </li>
+        </ul>
+      </li>
+    <% end %>
+  </ul>
+</nav>
+
+<%== "<br>" * 3 %>
+<div class="grid-2">
+  <div id="acompanhamento-horarios">
+    <%= render "acompanhamento_horarios/resumo_acompanhamento", acompanhamento: @acompanhamento %>
+  </div>
+
+  <div>
+    <% if usuario %>
+      <div class="field">
+        <label for="acompanhamento-tipo">Tipo de acompanhamento</label>
+        <% curr_id = "acompanhamento-tipo" %>
+        <select id=<%= curr_id %> name="acompanhamento[acompanhamento_tipo_id]" <%== hx_set patch: caminho, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>
+          <% AcompanhamentoTipo.all.each do |tipo| %>
+            <option value="<%= tipo.id %>" <%= if tipo.id == @acompanhamento.acompanhamento_tipo_id then "selected" end %>><%= tipo.tipo.upcase %></option>
+            <% end %>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="acompanhamento[motivo]">Motivo do acompanhamento</label>
+        <input type="text" id="acompanhamento[motivo]" name="acompanhamento[motivo]" value="<%= @acompanhamento.motivo %>" placeholder="Descreva o motivo do acompanhamento" width="50" hx-patch="<%= acompanhamento_path(@acompanhamento, authenticity_token: form_authenticity_token.to_s) %>">
+      </div>
+
+      <div class="field">
+        <label for="acompanhamento[hipotese_diagnostica]">Hipótese diagnóstica</label>
+        <input type="text" name="acompanhamento[hipotese_diagnostica]" id="acompanhamento[hipotese_diagnostica]" value="<%= @acompanhamento.hipotese_diagnostica %>" placeholder="Hipótese diagnóstica" hx-patch="<%= acompanhamento_path(@acompanhamento, authenticity_token: form_authenticity_token.to_s) %>">
+      </div>
+
+      <div class="field">
+        <label>Status</label>
+        <% curr_id = "acompanhamento-status" %>
+        <select id="<%= curr_id %>" name="acompanhamento[finalizacao_motivo_id]"
+          <%== hx_set patch: caminho, swap: "outerHTML", target: "##{curr_id}", select: "##{curr_id}" %>>
+          <option value="" <%= if @acompanhamento.finalizacao_motivo_id.nil? then "selected" end %>>Em andamento</option>
+            <% AcompanhamentoFinalizacaoMotivo.all.each do |motivo| %>
+              <option value="<%= motivo.id %>" <%= if @acompanhamento.finalizacao_motivo_id == motivo.id then "selected" end %>> Finalizado por <%= motivo.motivo.downcase %></option>
+              <% end %>
+        </select>
+      </div>
+
+      <form id="acompanhamento_suspensao_form" <%== hx_set patch: caminho, swap: "outerHTML", target: "#acompanhamento_suspensao_form", select: "#acompanhamento_suspensao_form" %>>
+        <input type="hidden" name="acompanhamento[suspenso]" id="acompanhamento[suspenso]" value="<%= @acompanhamento.suspenso? ? 0 : 1 %>">
+        <button>
+          <%== @acompanhamento.suspenso? ? "Retomar" : "Suspender" %>
+        </button>
+      </form>
+    <% else %>
+      <table>
+        <caption>Dados do acompanhamento</caption>
+        <thead>
+        </thead>
+        <tbody>
+          <tr>
+            <th width="30%">Tipo de acompanhamento</th>
+            <td><%= @acompanhamento.tipo.upcase %></td>
+          </tr>
+
+          <tr>
+            <th>Motivo</th>
+            <td><%= @acompanhamento.motivo %></td>
+          </tr>
+
+          <tr>
+            <th>Status</th>
+            <td><%= @acompanhamento.status %></td>
+          </tr>
+
+          <tr>
+            <th>Plataforma</th>
+            <td>
+              <%= @acompanhamento.atendimento_plataforma.nome %>
+              <%= if @acompanhamento.atendimento_plataforma.site then link_to "", @acompanhamento.atendimento_plataforma.site, target: :blank, class: 'icon-compass2' end %>
+              </td>
+          </tr>
+
+          <tr>
+            <th>Nº de atendimentos</th>
+            <td><%= pluralize(@acompanhamento.atendimentos.count, 'atendimento', 'atendimentos') %></td>
+          </tr>
+        </tbody>
+      </table>
+    <% end %>
+
+    <h3>
+      Plataforma: <%= @acompanhamento.atendimento_plataforma.nome %>
+    <%= if @acompanhamento.atendimento_plataforma.site then link_to "", @acompanhamento.atendimento_plataforma.site, target: :blank, class: 'icon-compass2' end %>
+      </h3>
+
+      <p>Valor da sessão: <%= render_dinheiro_centavos @acompanhamento.valor_sessao %></p>
+  </div>
+</div>
 
 <%= render "caso-resumo", acompanhamento: @acompanhamento %>

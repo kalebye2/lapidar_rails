@@ -1,4 +1,4 @@
-<% titulo_doc = "Prontuário" %>
+<% titulo_doc = @pessoa.nome_completo %>
 
 ---
 # Para ser usado com Pandoc
@@ -46,9 +46,9 @@ header-includes:
     % para cabeçalho e rodapé
     \usepackage{fancyhdr}
     \fancyhead[L]{} % coloque aqui cabeçalho à esquerda
-    \fancyhead[R]{<%= titulo_doc %>}
+    \fancyhead[R]{Ficha de cadastro}
     \fancyfoot[L]{\footnotesize{
-      Clínica
+    <%= titulo_da_aplicacao %>
     }}
     \fancyfoot[C]{\thepage\ / \pageref{LastPage}}
     \pagestyle{fancy}
@@ -56,26 +56,20 @@ header-includes:
 
 ---
 
-**Nome do paciente**:
-<%= @pessoa.nome_completo %>
-
 **Data de nascimento**:
 <%= render_data_brasil @pessoa.data_nascimento %>
-
-**Idade**:
-<%= @pessoa.render_idade.upcase %>
 
 **Sexo**:
 <%= @pessoa.render_sexo %>
 
 **Estado Civil**:
-<%= @pessoa.estado_civil.upcase %>
+<%= @pessoa.estado_civil&.upcase %>
 
 **Grau de instrução**:
-<%= @pessoa.grau_de_instrucao %>
+<%= @pessoa.grau_de_instrucao&.upcase %>
 
 **Profissão**:
-<%= @pessoa.profissao.to_s.upcase %>
+<%= @pessoa.profissao&.upcase %>
 
 **Fone**:
 [<%= @pessoa.render_fone %>](tel:<%= @pessoa.render_fone_link %>)
@@ -84,62 +78,31 @@ header-includes:
 <<%= @pessoa.email %>>
 
 **Contato para emergência**:
+<% if @pessoa.parentescos.count == 0 %>
 INSERIR CONTATO PARA EMERGÊNCIA
+<% else %>
+<% contatos = @pessoa.pessoa_parentesco_juncoes.map { |p| "#{p.parente.render_fone.blank? ? "" : "#{p.parente.render_fone} - #{p.parente.nome_completo.upcase} (#{p.parentesco.parentesco.upcase})"}"} %>
+<%= contatos.join(", ") %>
+<% end %>
 
 **RG**:
-INSERIR RG
+<%= @pessoa.render_rg %>
 
 **CPF**:
 <%= @pessoa.render_cpf %>
 
 **Endereço**:
-<%= @pessoa.render_endereco %> ---
-<%= @pessoa.cidade %>/<%= @pessoa.estado %>
+<%= @pessoa.endereco_completo_com_cep %>
 
 **Início dos atendimentos**:
 <%= render_data_brasil @pessoa.atendimentos.order(data: :asc).first.data %>
 
 **Toma medicação**:
-INSERIR SE TOMA MEDICAÇÃO
+<%= @pessoa.pessoa_medicacoes.map { |medicacao| "#{medicacao.medicacao}#{medicacao.dose&.insert(0, " (")&.insert(-1, ")")}" }.join(", ") %>
 
 **Serviços**:
-<%== @pessoa.acompanhamentos.select(:acompanhamento_tipo_id).distinct.map(&:tipo).map(&:upcase).join(", ") %>
+<%== @pessoa.acompanhamento_tipos.distinct.map(&:tipo).map(&:upcase).join(", ") %>
 
 **Acompanhado por**:
-<%== @pessoa.acompanhamentos.select(:profissional_id).distinct.map(&:profissional).map(&:descricao_completa).join(", ") %>
+<%== @pessoa.profissionais_acompanhando.distinct.map(&:descricao_completa).join(", ") %>
 
-# Registro dos atendimentos
-
-<% @pessoa.atendimentos.order(data: :asc).each_with_index do |atendimento, index| %>
-  
----
-
-## Sessão <%= index + 1 %> --- <%= atendimento.acompanhamento.tipo.upcase %>
-
-**Data**:
-<%= render_data_brasil atendimento.data %>
-
-**Horário**:
-<%= render_hora_brasil atendimento.horario %>
-
-**Status**:
-<%= atendimento.status %>
-
-**Atividade**:
-<%= atendimento.tipo %>
-
-**Profissional responsável**:
-<%= atendimento.profissional.descricao_completa %>
-
-### Anotações
-
-<%= atendimento.anotacoes || "Sem anotações" %>
-<% if atendimento.avancos %>
-### Avanços
-<%= atendimento.avancos %>
-<% end %>
-<% if atendimento.limitacoes %>
-### Limitações
-<%= atendimento.limitacoes %>
-<% end %>
-<% end %>

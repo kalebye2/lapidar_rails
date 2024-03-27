@@ -1,12 +1,33 @@
 <div class="documento" style="width:45em;margin:auto;">
+  <nav class="navbar navcenter">
+    <ul>
+      <li>
+        <%= link_to "Baixar", "javascript:void(0);", class: 'icon-download3' %>
+        <ul>
+          <li>
+            <%= link_to "Markdown", laudo_path(@laudo, format: :md), { target: :blank } %>
+          </li>
+          <li>
+            <%= link_to "PDF", laudo_path(@laudo, format: :pdf), { target: :blank} %>
+          </li>
+        </ul>
+      </li>
+
+      <li>
+        <%= link_to "Acompanhar", laudo.acompanhamento, class: 'icon-compass2' %>
+      </li>
+    </ul>
+  </nav>
+
   <h2>Identificação</h2>
+
   <table>
     <tr>
       <th width="15%">
-        Avaliador
+        Profissional
       </th>
       <td>
-        <%= laudo.profissional.descricao_completa %>
+        <%= link_to laudo.profissional.descricao_completa, laudo.profissional, class: 'icon-user-tie' %>
       </td>
     </tr>
 
@@ -15,7 +36,7 @@
         Paciente
       </th>
       <td>
-        <%= laudo.paciente.nome_completo %>
+        <%= link_to laudo.paciente.nome_completo, laudo.paciente, class: 'icon-user' %>
       </td>
     </tr>
 
@@ -72,7 +93,7 @@
         Nº de sessões
       </th>
       <td>
-        <%= laudo.num_sessoes %>
+        <%= laudo.numero_de_sessoes %>
       </td>
     </tr>
   </table>

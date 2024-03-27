@@ -1,12 +1,30 @@
 <% titulo "Financeiro" %>
-<h1>Financeiro</h1>
 
+<h1>Financeiro</h1>
+<div class="text-center">
+  <nav class="navbar navcenter">
+    <ul>
+      <li>
+        <%= link_to "Recebimentos", recebimentos_path %>
+      </li>
+      <li>
+        <%= link_to "Valores de atendimentos", atendimento_valores_path %>
+      </li>
+      <li>
+        <%= link_to "Repasses aos profissionais", profissional_financeiro_repasses_path %>
+      </li>
+      <li>
+        <%= link_to "Reajustes", acompanhamento_reajustes_path %>
+      </li>
+    </ul>
+  </nav>
+</div>
 <!-- tabela de profissionais e o quanto ganham no mês -->
 <div class="grid-2">
   <div class="financeiro-tabelas">
-    <%= render "tabela-resumo", profissionais: @profissionais %>
+    <%= render "tabela-resumo", profissionais: @profissionais, acompanhamentos: @acompanhamentos %>
     <br />
-    <%= render "tabela-repasses", profissionais: @profissionais %>
+    <%= render "tabela-repasses", profissionais: @profissionais, acompanhamentos: @acompanhamentos %>
     <br />
     <% if usuario_atual.financeiro? %>
       <%= render "tabela-gastos" %>
@@ -18,10 +36,10 @@
       <div class="recebimentos-container">
         <% @recebimentos.each do |recebimento| %>
           <p>
-            <%= render_data_brasil recebimento.data %> -
-            <%= recebimento.pagante.nome_completo %>
-            <%= render_dinheiro_centavos recebimento.valor %>
-            <%= recebimento.modalidade || "Meio desconhecido" %>
+          <%= render_data_brasil recebimento.data %> -
+          <%= recebimento.pagante.nome_completo %>
+          <%= render_dinheiro_centavos recebimento.valor %>
+          <%= recebimento.modalidade || "Meio desconhecido" %>
           </p>
         <% end %>
         <%= link_to "ver mais", recebimentos_path %>
@@ -33,12 +51,12 @@
       <div class="atendimento-valores-container">
         <% @atendimento_valores.each do |atendimento_valor| %>
           <p>
-            <strong><%= render_dinheiro_centavos atendimento_valor.valor %></strong>
-            <%= render_data_brasil atendimento_valor.data %>
-            <%= render_hora_brasil atendimento_valor.horario %>
-            <%= atendimento_valor.pessoa.nome_completo %>
-            <%= atendimento_valor.atendimento.tipo.upcase %>
-            <%= atendimento_valor.atendimento.modalidade %>
+          <strong><%= render_dinheiro_centavos atendimento_valor.valor %></strong>
+          <%= render_data_brasil atendimento_valor.data %>
+          <%= render_hora_brasil atendimento_valor.horario %>
+          <%= atendimento_valor.pessoa.nome_completo %>
+          <%= atendimento_valor.atendimento.tipo.upcase %>
+          <%= atendimento_valor.atendimento.modalidade %>
           </p>
         <% end %>
         <%= link_to "mais...", atendimento_valores_path %>
@@ -49,10 +67,10 @@
       <h2>Últimos repasses</h2>
       <% @profissional_financeiro_repasses.each do |repasse| %>
         <p>
-          <%= render_data_brasil repasse.data %>
-          <%= repasse.profissional.nome_abreviado %>
-          <%= repasse.profissional.documento %>
-          <%= render_dinheiro_centavos repasse.valor %>
+        <%= render_data_brasil repasse.data %>
+        <%= repasse.profissional.nome_abreviado %>
+        <%= repasse.profissional.documento %>
+        <%= render_dinheiro_centavos repasse.valor %>
         </p>
       <% end %>
       <%= link_to "ver mais", profissional_financeiro_repasses_path %>

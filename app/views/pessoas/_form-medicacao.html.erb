@@ -1,0 +1,42 @@
+<% pessoa_medicacao = pessoa_medicacao || nil %>
+<% formpath = pessoa_medicacao&.id.nil? ? create_medicacao_pessoa_path(pessoa) : update_medicacao_pessoa_path(pessoa, pessoa_medicacao) %>
+<% verb = pessoa_medicacao&.id.nil? ? :post : :patch %>
+<form <%= hx_set verb => formpath, swap: "innerHTML", target: "##{dom_id(pessoa)}-medicacao" %>>
+  <% if pessoa_medicacao&.errors&.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(pessoa_medicacao.errors.count, "erro") %> impediram que os dados da medicação fossem salvos:</h2>
+      <ul>
+        <% pessoa.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+
+  <label for="pessoa_medicacao[medicacao]">Medicação</label>
+  <input type="text" name="pessoa_medicacao[medicacao]" id="pessoa_medicacao[medicacao]" value="<%= pessoa_medicacao&.medicacao %>">
+
+  <br>
+
+  <label for="pessoa_medicacao[dose]">Dose</label>
+  <input type="text" name="pessoa_medicacao[dose]" id="pessoa_medicacao[dose]" value="<%= pessoa_medicacao&.dose %>">
+
+  <br>
+
+  <label for="pessoa_medicacao[motivo]">Motivo</label>
+  <input type="text" name="pessoa_medicacao[motivo]" id="pessoa_medicacao[motivo]" value="<%= pessoa_medicacao&.motivo %>">
+
+  <br>
+
+
+  <label for="pessoa_medicacao[data_inicio]">Início da utilização</label>
+  <input type="date" name="pessoa_medicacao[data_inicio]" id="pessoa_medicacao[data_inicio]" value="<%= pessoa_medicacao&.data_inicio %>">
+  <label for="pessoa_medicacao[data_fim]">Fim da utilização</label>
+  <input type="date" name="pessoa_medicacao[data_fim]" id="pessoa_medicacao[data_fim]" value="<%= pessoa_medicacao&.data_fim %>">
+
+  <br>
+  <button>Confirmar</button>
+  <button <%= hx_set get: show_medicacoes_pessoa_path, target: "##{dom_id(pessoa)}-medicacao", swap: "innerHTML" %>>Cancelar</button>
+</form>

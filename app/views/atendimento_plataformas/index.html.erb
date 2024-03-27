@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Atendimento plataformas</h1>
+
+<div id="atendimento_plataformas">
+  <% @atendimento_plataformas.each do |atendimento_plataforma| %>
+    <%= render atendimento_plataforma %>
+    <p>
+      <%= link_to "Show this atendimento plataforma", atendimento_plataforma %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New atendimento plataforma", new_atendimento_plataforma_path %>

@@ -1,0 +1,93 @@
+<%== "<br>" * 2 %>
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "CSV", atendimento_valores_path(@params.merge(format: :csv)), class: 'icon-table2' %>
+    </li>
+    <li>
+      <%= link_to "Excel", atendimento_valores_path(@params.merge(format: :xlsx)), class: 'icon-file-excel' %>
+    </li>
+  </ul>
+</nav>
+<%== "<br>" * 2 %>
+
+<table class="tabela-valores">
+  <thead>
+    <tr>
+      <% if params[:controller].to_sym != :pessoas %>
+        <th rowspan=2>Paciente</th>
+      <% end %>
+      <th colspan=3>Atendimento</th>
+      <th colspan=3>Dados</th>
+      <th colspan=3>Taxas</th>
+      <th rowspan=2>Total líquido</th>
+    </tr>
+    <tr>
+      <th>Data</th>
+      <th>Tipo de atendimento</th>
+      <th>Status</th>
+      <th>Valor</th>
+      <th>Desconto</th>
+      <th>Valor com desconto</th>
+      <th>Externa</th>
+      <th>Clínica</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <% soma_valores = {
+    bruto: 0,
+    desconto: 0,
+    bruto_com_desconto: 0,
+    taxa_externa: 0,
+    taxa_interna: 0,
+    taxa_total: 0,
+    liquido: 0,
+  } %>
+
+<% atendimento_valores.each do |atendimento_valor| %>
+  <tr>
+    <% valor_bruto_com_desconto = (atendimento_valor.valor || 0) - (atendimento_valor.desconto || 0) %>
+    <% valor_taxa_total = (atendimento_valor.valor * atendimento_valor.taxa_porcentagem_externa / 10000) + (atendimento_valor.valor * atendimento_valor.taxa_porcentagem_interna / 10000) %>
+    <% if params[:controller].to_sym != :pessoas %>
+      <td><%= atendimento_valor.pessoa.nome_completo %><%= atendimento_valor.pessoa_responsavel&.nome_abreviado&.insert(0, " (resp.: ")&.insert(-1, ")") %></td>
+    <% end %>
+    <td><%= render_data_brasil atendimento_valor.data %></td>
+    <td><%= atendimento_valor.atendimento_tipo %></td>
+    <td><%= atendimento_valor.atendimento.status.upcase %></td>
+
+    <td class="dinheiro"><%= render_dinheiro_centavos atendimento_valor.valor %></td>
+    <% soma_valores[:bruto] += (atendimento_valor.valor || 0) %>
+
+    <td class="dinheiro"><%= render_dinheiro_centavos atendimento_valor.desconto %></td>
+    <% soma_valores[:desconto] += (atendimento_valor.desconto || 0)  %>
+
+    <td class="dinheiro resultado"><%= render_dinheiro_centavos (atendimento_valor.valor || 0) - (atendimento_valor.desconto || 0) %></td>
+    <% soma_valores[:bruto_com_desconto] += (atendimento_valor.valor || 0) - (atendimento_valor.desconto || 0) %>
+
+    <td class="dinheiro">
+      <%= render_dinheiro_centavos((atendimento_valor.valor || 0) * (atendimento_valor.taxa_porcentagem_externa || 0) / 10000) %>
+    </td>
+    <% soma_valores[:taxa_externa] += (atendimento_valor.valor || 0) * (atendimento_valor.taxa_porcentagem_externa || 0) / 10000 %>
+
+    <td class="dinheiro">
+      <%= render_dinheiro_centavos((atendimento_valor.valor || 0) * (atendimento_valor.taxa_porcentagem_interna) / 10000) %>
+    </td>
+    <% soma_valores[:taxa_interna] += (atendimento_valor.valor || 0) * (atendimento_valor.taxa_porcentagem_interna || 0) / 10000 %>
+
+    <td class="dinheiro"><%= render_dinheiro_centavos valor_taxa_total %></td>
+    <% soma_valores[:taxa_total] += valor_taxa_total %>
+
+    <td class="dinheiro resultado"><%= render_dinheiro_centavos valor_bruto_com_desconto - valor_taxa_total %></td>
+    <% soma_valores[:liquido] += valor_bruto_com_desconto - valor_taxa_total %>
+  </tr>
+<% end %>
+
+<th colspan=<%= params[:controller].to_sym == :pessoas ? 3 : 4 %> class="resultado">Total</th>
+<td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:bruto] %></td>
+<td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:desconto] %></td>
+<td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:bruto_com_desconto] %></td>
+<td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:taxa_externa] %></td>
+<td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:taxa_interna] %></td>
+<td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:taxa_total] %></td>
+<td class="dinheiro resultado"><%= render_dinheiro_centavos soma_valores[:liquido] %></td>
+</table>

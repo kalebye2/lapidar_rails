@@ -3,7 +3,7 @@
 
 <h3>Administração de Base de dados - Informações</h3>
 <ul>
-  <%= AdminController.paths.each do |m| %>
+  <% AdminController.paths.each do |m| %>
     <li><%= link_to m.to_sym, "admin/#{m}" %></li>
   <% end %>
 </ul>

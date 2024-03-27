@@ -1,0 +1,35 @@
+<% titulo "Modelos de contrato" %>
+<h1>Modelos de contrato</h1>
+
+<h2><%= @profissional.descricao_completa %></h2>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Voltar", @profissional, class: "icon-previous" %>
+    </li>
+    <% if usuario_atual.secretaria? || usuario_atual.profissional == @profissional %>
+      <li>
+        <%= link_to "Adicionar", novo_contrato_modelo_profissional_path, class: "icon-plus" %>
+      </li>
+    <% end %>
+  </ul>
+</nav>
+
+
+<div class="grid-2" id="<%= dom_id(@profissional) %>-documento-modelos">
+  <div style="align-content:baseline;max-height:75vh;overflow-y:scroll;">
+
+    <% @profissional.profissional_contrato_modelos.each do |profissional_contrato_modelo| %>
+      <%= hx_link profissional_contrato_modelo, target: "#documento" do %>
+        <div class="card">
+          <h2><%= profissional_contrato_modelo.descricao %></h2>
+          <h3><%= profissional_contrato_modelo.titulo %></h3>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="documento" id="documento" style="max-height:75vh;overflow-y:scroll;">
+  </div>
+</div>

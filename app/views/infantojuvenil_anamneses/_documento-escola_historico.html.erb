@@ -1,0 +1,32 @@
+<h1>Histórico escolar</h1>
+
+<dt>Em qual tipo de escola a criança estuda?</dt>
+<dd><%= escola_historico.tipo_de_escola %></dd>
+
+<dt>Com quantos anos a criança entrou na escola?</dt>
+<dd><%= pluralize(escola_historico.idade_entrada_anos, 'ano', 'anos') %></dd>
+
+<dt>Como é o aproveitamento escolar desta criança?</dt>
+<dd><%==  escola_historico.aproveitamento %></dd>
+
+<dt>Quais dificuldades a criança tem na escola?</dt>
+<dd><%==  escola_historico.dificuldades %></dd>
+
+<dt>Quais foram as mudanças percebidas na criança durante o período escolar?</dt>
+<dd><%==  escola_historico.mudancas %></dd>
+
+<dt>Quais são as atitudes da criança com a vida escolar?</dt>
+<dd><%==  escola_historico.atitudes_paciente_vida_escolar %></dd>
+
+<dt>Quais as atitudes dos pais em relação às dificuldades da criança na escola?</dt>
+<dd><%==  escola_historico.atitudes_pais_dificuldades %></dd>
+
+<dt>Como é a participação dos pais na vida escolar da criança?</dt>
+<dd><%==  escola_historico.participacao_pais %></dd>
+
+<dt>Quais são as atividades extracurriculares da criança?</dt>
+<dd><%==  escola_historico.atividades_extras %></dd>
+
+<dt>Há alguma outra consideração sobre a vida escolar da criança?</dt>
+<dd><%==  escola_historico.outras_consideracoes %></dd>
+

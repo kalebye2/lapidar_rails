@@ -1,14 +1,10 @@
-<ul>
-<% profissional.acompanhamentos_em_andamento.order(data_inicio: :desc).first(5).each do |a| %>
-  <%= link_to a, class: "#{a.data_final && !a.acompanhamento_finalizacao_motivo.nil? ? 'acompanhamento-finalizado ' + 'acompanhamento-finalizado-' + a.acompanhamento_finalizacao_motivo.motivo.parameterize : 'acompanhamento-em-andamento'}" do %>
-    <li>
-      <%= a.render_info_para_profissional %>
-      <% if !a.data_final.nil? && !a.acompanhamento_finalizacao_motivo.nil? %>
-        <span style="font-size:.7em;">
-          Finalizado em <%= render_data_brasil a.data_final %> por <%= a.acompanhamento_finalizacao_motivo.motivo %>
-        </span>
-      <% end %>
-    </li>
-  <% end %>
+<div class="grid-3" id="profissional-acompanhamentos-resumo">
+<% profissional.acompanhamentos.em_andamento.order(data_inicio: :desc).first(5).each do |a| %>
+  <%= render 'acompanhamentos/card', acompanhamento: a %>
 <% end %>
-</ul>
+<%= link_to acompanhamentos_profissional_path(profissional), class: 'card', style: 'display:grid;align-content:center;' do %>
+<div>
+  <h2 style="text-align:center;">Ver todos</h2>
+</div>
+<% end %>
+</div>

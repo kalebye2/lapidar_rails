@@ -41,6 +41,17 @@
 	}
 }
 
+.atendimento {
+	--bg-color: var(--doc-bg-color);
+	--border-color: var(--main-color);
+	--shade-color: var(--secondary-color);
+	--highlight-color: var(--doc-bg-color);
+	--text-color: var(--doc-text-color);
+
+	background-color: var(--bg-color);
+	colot: var(--text-color);
+}
+
 .atendimento-realizado {
 	--bg-color: var(--atendimento-realizado-bg-color);
 	--border-color: var(--atendimento-realizado-shade-color);

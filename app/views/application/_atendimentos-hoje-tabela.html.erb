@@ -1,3 +1,5 @@
+<% atendimentos = atendimentos || [] %>
+<% atendimentos_reagendados = atendimentos_reagendados || [] %>
 <% if !atendimentos.empty? %>
   <table class="tabela-atendimentos" id="tabela-atendimentos"
                                      hx-get="update_tabela_atendimentos_hoje"
@@ -23,6 +25,18 @@
       <% atendimentos.each do |ah| %>
         <%= render "atendimentos/atendimento-em-tabela", atendimento: ah %>
       <% end %>
+      <% if !atendimentos_reagendados.empty? %>
+        <% atendimentos_reagendados.each do |ah| %>
+          <%= render "atendimentos/atendimento-reagendado-em-tabela", atendimento: ah %>
+        <% end %>
+      <% end %>
     </tbody>
   </table>
+<% end %>
+
+<%# essa vai ser difícil, creio eu, mas ideia
+é fazer com que o calendário atualize junto com a atualização
+dos atendimentos de hoje %>
+<% if hx_request? && false %>
+  <%= render "calendario-atendimentos-semana", events: @atendimentos %>
 <% end %>

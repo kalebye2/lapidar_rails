@@ -1,4 +1,4 @@
-<%= link_to acompanhamento, class: "acompanhamento-card" + " " + "#{acompanhamento.data_final ? 'acompanhamento-finalizado' : 'acompanhamento-em-andamento'}" + " " + "#{acompanhamento.acompanhamento_finalizacao_motivo ? 'acompanhamento-finalizado-' + acompanhamento.acompanhamento_finalizacao_motivo.motivo.downcase.parameterize : ''}" do %>
+<%= link_to acompanhamento, class: "acompanhamento-card" + " " + "#{acompanhamento.data_final ? 'acompanhamento-finalizado' : 'acompanhamento-em-andamento'}" + " " + "#{acompanhamento.acompanhamento_finalizacao_motivo ? 'acompanhamento-finalizado-' + acompanhamento.acompanhamento_finalizacao_motivo.motivo.downcase.parameterize : ''} #{"acompanhamento-suspenso" unless !acompanhamento.suspenso?}" do %>
 <div>
   <% p = acompanhamento.pessoa %>
   <% pro = acompanhamento.profissional %>
@@ -8,5 +8,8 @@
   <h3><%= pro.nome_abreviado %> <span style="font-size:.8em;font-weight:normal;"><%= pro.documento %></span></h3>
   <p><%= render_data_brasil acompanhamento.data_inicio %> - <%= (render_data_brasil acompanhamento.data_final) || "Em andamento" %> <%= acompanhamento.data_final ? "(#{acompanhamento.acompanhamento_finalizacao_motivo.motivo.upcase})" : "" %></p>
   <p><%= acompanhamento.atendimentos.count %> <%= acompanhamento.atendimentos.count == 1 ? 'sessão' : 'sessões' %></p>
+  <p class="icon-calendar">
+  <%= acompanhamento.acompanhamento_horarios.map { |horario| "#{horario.semana_dia.nome.upcase} às #{render_hora_brasil horario.horario}" }.join("; ").presence || "SEM HORÁRIO(S) DEFINIDO(S)" %>
+  </p>
 </div>
 <% end %>

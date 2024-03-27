@@ -1,15 +1,23 @@
 <h3>Parentes</h3>
-<% pessoa.pessoa_parentesco_juncoes.each do |parentesco| %>
-  <%= link_to parentesco.parente.nome_completo, parentesco.parente %> - <%= parentesco.parentesco.parentesco.upcase %><br>
-<% end %>
+<ul>
+  <% pessoa.pessoa_parentesco_juncoes.each do |parentesco| %>
+    <li>
+      <%= link_to parentesco.parente.nome_completo, parentesco.parente %> - <%= parentesco.parentesco.parentesco.upcase %>
+      <%= hx_link "", edit_parentesco_pessoa_path(pessoa, parentesco.parente), class: "icon-pencil", target: "#pessoa-parentes" %>
+      <%= hx_link "", destroy_parentesco_pessoa_path(pessoa, parentesco.parente), class: "icon-bin", confirm: "Tem certeza que deseja excluir parentesco entre #{pessoa.nome} e #{parentesco.parente.nome}?", verb: :delete %>
+    </li>
+  <% end %>
+</ul>
 
 <%#= render "pessoas/form-parente", pessoa: pessoa %>
-<button <%== hx_set get: new_parentesco_pessoa_path(pessoa, ajax: true), target: "#pessoa-parentes" %>>
-  Registrar parente
-</button>
+<div>
+  <button <%= hx_set get: new_parentesco_pessoa_path(pessoa, ajax: true), target: "#pessoa-parentes" %>>
+    Registrar parente
+  </button>
+</div>
 
 <% pessoa.parente_parentesco_juncoes.each do |parentesco| %>
   <%= parentesco.parentesco.parentesco.capitalize %>
   de
-  <%= parentesco.pessoa.nome_completo %><br>
+  <%= link_to parentesco.pessoa.nome_completo, pessoa_path(parentesco.pessoa) %><br>
 <% end %>

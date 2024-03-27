@@ -1,0 +1,158 @@
+<% titulo "#{@pessoa.nome_abreviado} - Prontuário multiprofissional" %>
+<nav class="navbar">
+  <ul>
+    <li>
+      <%= link_to 'voltar', pessoa_path(@pessoa), class: "icon-previous" %>
+    </li>
+
+    <li>
+      <%= link_to "Baixar", "javascript:void(0);", class: 'icon-download3' %>
+      <ul>
+        <li>
+          <%= link_to "Markdown", prontuario_pessoa_path(@pessoa, format: :md) %>
+        </li>
+
+        <li>
+          <%= link_to "PDF", prontuario_pessoa_path(@pessoa, format: :pdf), target: :blank %>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+<div class="documento">
+  <h1>Prontuário multiprofissional</h1>
+
+  <p>
+  <b>Nome do paciente</b>:
+  <%= @pessoa.nome_completo.upcase %>
+  </p>
+
+  <p>
+  <b>Data de nascimento</b>:
+  <%= render_data_brasil @pessoa.data_nascimento %>
+  </p>
+
+  <p>
+  <b>Idade</b>:
+  <%= @pessoa.render_idade.upcase %>
+  </p>
+
+  <p>
+  <b>Sexo</b>:
+  <%= @pessoa.render_sexo.upcase %>
+  </p>
+
+  <p>
+  <b>Estado Civil</b>:
+  <%= @pessoa.estado_civil.upcase %>
+  </p>
+
+  <p>
+  <b>Grau de instrução</b>:
+  <%= @pessoa.grau_de_instrucao&.upcase %>
+  </p>
+
+  <p>
+  <b>Profissão</b>:
+  <%= @pessoa.profissao&.upcase || @pessoa.profissional&.funcao&.upcase || "Não informada" %>
+  </p>
+
+  <p>
+  <b>Fone</b>:
+  <%= phone_to @pessoa.render_fone_link, @pessoa.render_fone %>
+  <% if @pessoa.usa_whatsapp? %>
+    <%= link_to "", @pessoa.render_whatsapp_link, class: "icon-whatsapp" %>
+  <% end %>
+  <% if @pessoa.usa_telegram? %>
+    <%= link_to "", @pessoa.render_telegram_link, class: "icon-telegram" %>
+  <% end %>
+
+  <p>
+  <b>E-mail</b>:
+  <% if @pessoa.email == "nao@informado.com" %>
+    Não informado
+  <% else %>
+    <%= mail_to @pessoa.email %>
+  <% end %>
+  </p>
+
+  <p>
+  <b>Contato(s) para emergência</b>:
+  <% if @pessoa.parentescos.count == 0%>
+    INSERIR CONTATO PARA EMERGÊNCIA
+  <% else %>
+    <% contatos = @pessoa.pessoa_parentesco_juncoes.map { |p| "#{p.parente.render_fone.blank? ? "" : "#{p.parente.render_fone} - #{p.parente.nome_completo.upcase} (#{p.parentesco.parentesco.upcase})"}"} %>
+    <%= contatos.join("; ") %>
+  <% end %>
+  </p>
+
+  <p>
+  <b>RG</b>:
+  <%= @pessoa.render_rg %>
+  </p>
+
+  <p>
+  <b>CPF</b>:
+  <%= @pessoa.render_cpf %>
+  </p>
+
+  <p>
+  <b>Endereço</b>:
+  <%= @pessoa.endereco_completo_com_cep %>
+  </p>
+
+  <p>
+  <b>Toma medicação</b>:
+  INSERIR SE TOMA MEDICAÇÃO
+  </p>
+
+  <% if @pessoa.atendimentos.count > 0 %>
+    <h2>Registros dos atendimentos</h2>
+
+    <table>
+      <tbody>
+        <% @pessoa.atendimentos.em_ordem.each_with_index do |atendimento, index| %>
+          <tr id="<%= dom_id(atendimento) %>">
+            <th colspan="100%" style="font-size:1.25em;">
+              Sessão <%= index + 1 %>
+            <% if usuario_atual.secretaria? || usuario_atual.profissional == atendimento.profissional %>
+              <%= link_to "", acompanhamento_path(atendimento.acompanhamento, anchor: dom_id(atendimento)), class: "icon-compass2" %>
+            <% end %>
+            </th>
+          </tr>
+          <tr>
+            <th width="30%" style="text-align:right;">Profissional responsável</th>
+            <td><%= atendimento.profissional.descricao_completa %></td>
+          </tr>
+          <tr>
+            <th style="text-align:right;">Data</th>
+            <td><%= render_data_brasil atendimento.data %></td>
+          </tr>
+          <tr>
+            <th style="text-align:right;">Horário</th>
+            <td><%= render_hora_brasil atendimento.horario %></td>
+          </tr>
+          <tr>
+            <th style="text-align:right;">Status</th>
+            <td><%= atendimento.status %></td>
+          </tr>
+          <tr>
+            <th style="text-align:right;">Atividade</th>
+            <td><%= atendimento.tipo.upcase %></td>
+          </tr>
+          <tr>
+            <th style="text-align:right;">Anotações</th>
+            <td>
+              <%== markdown_to_html atendimento.anotacoes %>
+          </tr>
+          <tr>
+            <th style="text-align:right;">Instrumentos usados</th>
+            <td>
+              <%= atendimento.instrumentos.map(&:nome).join(", ") %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>

@@ -7,7 +7,12 @@ class ProfissionalFinanceiroRepasse < ApplicationRecord
   scope :deste_mes, -> {do_mes}
   scope :do_mes_atual, -> {do_mes}
   scope :do_mes_passado, -> {do_mes((Date.current - 1.month).all_month)}
-  scope :do_periodo, -> (de: Date.today.beginning_of_month, ate: Date.today.end_of_month) { where(data: de.to_date..ate.to_date).order(data: :asc) }
+  scope :do_periodo, -> (periodo) { where(data: periodo).order(data: :asc) }
+
+  scope :do_profissional, -> (profissional) { where(profissional: profissional) }
+  scope :do_profissional_com_id, -> (id) { where(profissional_id: id) }
+  scope :da_modalidade, -> (modalidade) { where(pagamento_modalidade: modalidade) }
+  scope :da_modalidade_com_id, -> (id) { where(modalidade_id: id) }
 
   def para_linha_csv
     "#{data},#{valor},#{profissional.nome_completo},#{profissional.pessoa.cpf},#{pagamento_modalidade.modalidade}"

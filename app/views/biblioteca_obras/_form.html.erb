@@ -1,0 +1,87 @@
+<%= form_with(model: biblioteca_obra) do |form| %>
+  <% if biblioteca_obra.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(biblioteca_obra.errors.count, "error") %> prohibited this biblioteca_obra from being saved:</h2>
+
+      <ul>
+        <% biblioteca_obra.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :titulo, style: "display: block" %>
+    <%= form.text_field :titulo %>
+  </div>
+
+  <div>
+    <%= form.label :subtitulo, style: "display: block" %>
+    <%= form.text_field :subtitulo %>
+  </div>
+
+  <div>
+    <%= form.label :biblioteca_obra_tipo_id, style: "display: block" %>
+    <%= form.text_field :biblioteca_obra_tipo_id %>
+  </div>
+
+  <div>
+    <%= form.label :biblioteca_editora_id, style: "display: block" %>
+    <%= form.text_field :biblioteca_editora_id %>
+  </div>
+
+  <div>
+    <%= form.label :ordem, style: "display: block" %>
+    <%= form.text_field :ordem %>
+  </div>
+
+  <div>
+    <%= form.label :data_publicacao, style: "display: block" %>
+    <%= form.date_field :data_publicacao %>
+  </div>
+
+  <div>
+    <%= form.label :isbn, style: "display: block" %>
+    <%= form.text_field :isbn %>
+  </div>
+
+  <div>
+    <%= form.label :caminho, style: "display: block" %>
+    <%= form.text_field :caminho %>
+  </div>
+
+  <div>
+    <%= form.label :obra_virtual, style: "display: block" %>
+    <%= form.check_box :obra_virtual %>
+  </div>
+
+  <div>
+    <%= form.label :num_paginas, style: "display: block" %>
+    <%= form.number_field :num_paginas %>
+  </div>
+
+  <div>
+    <%= form.label :resumo, style: "display: block" %>
+    <%= form.text_area :resumo %>
+  </div>
+
+  <div>
+    <%= form.label :edicao, style: "display: block" %>
+    <%= form.number_field :edicao %>
+  </div>
+
+  <div>
+    <%= form.label :volume, style: "display: block" %>
+    <%= form.number_field :volume %>
+  </div>
+
+  <div>
+    <%= form.label :periodico_id, style: "display: block" %>
+    <%= form.text_field :periodico_id %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

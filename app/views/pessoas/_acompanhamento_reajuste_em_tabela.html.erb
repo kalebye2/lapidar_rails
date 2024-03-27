@@ -1,0 +1,31 @@
+<tr>
+  <td>
+    <%= acompanhamento_reajuste.profissional.descricao_completa %>
+  </td>
+
+  <td>
+    <%= acompanhamento_reajuste.acompanhamento.tipo.upcase %>
+    com início em
+    <%= render_data_brasil acompanhamento_reajuste.acompanhamento.data_inicio %>
+  </td>
+
+  <td>
+    <%= render_data_brasil acompanhamento_reajuste.data_negociacao %>
+  </td>
+
+  <td>
+    <%= render_dinheiro_centavos acompanhamento_reajuste.valor_novo %>
+  </td>
+
+  <td>
+    <%= render_data_brasil acompanhamento_reajuste.data_ajuste %>
+  </td>
+
+  <td>
+    <ul>
+      <li>
+        <%= link_to "Markdown", acompanhamento_reajuste_path(acompanhamento_reajuste, format: :md) %>
+      </li>
+    </ul>
+  </td>
+</tr>

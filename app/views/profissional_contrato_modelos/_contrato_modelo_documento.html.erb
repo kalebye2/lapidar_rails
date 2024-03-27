@@ -1,0 +1,11 @@
+<h1 id="titulo-principal" class="titulo-principal"><%= profissional_contrato_modelo.titulo %></h1>
+<% if usuario_atual.profissional == profissional_contrato_modelo.profissional %>
+  <nav class="navbar navcenter">
+    <ul>
+      <li>
+        <%= link_to "Editar", edit_profissional_contrato_modelo_path, class: "icon-pencil" %>
+      </li>
+    </ul>
+  </nav>
+<% end %>
+<%= markdown_to_html profissional_contrato_modelo.conteudo %>

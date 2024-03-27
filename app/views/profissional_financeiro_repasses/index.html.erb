@@ -1,8 +1,6 @@
 <% titulo "Repasses" %>
 <h1>Repasses aos profissionais</h1>
 
-<%#== hx_input get: profissional_financeiro_repasses_path, label: "Data inicial", type: :date, name: :de, replace_url: true %>
-<%#== hx_input get: profissional_financeiro_repasses_path, label: "Data final", type: :date, name: :ate, replace_url: true %>
 
 <div class="form-g" id="repasses-form">
   <form <%== hx_set get: profissional_financeiro_repasses_path(), replace_url: true, swap: "outerHTML", target: "#tabela-repasses", select: "#tabela-repasses", trigger: "change" %>>
@@ -14,10 +12,38 @@
     <button type="submit">Atualizar</button>
     <button type="reset" <%== hx_set get: profissional_financeiro_repasses_path, replace_url: true %>>Deste mês</button>
     <button type="button" <%== hx_set get: profissional_financeiro_repasses_path(de: Date.today.beginning_of_month - 1.month, ate: (Date.today.beginning_of_month - 1.month).end_of_month), replace_url: true %>>Do mês passado</button>
+
+    <div class="field">
+      <label for="profissional">Profissional</label>
+      <select id="profissional" name="profissional">
+        <option value="">TODOS</option>
+        <% Profissional.all.each do |profissional| %>
+          <option value="<%= profissional.id %>" <%= "selected" unless profissional.id != params[:profissional] %>><%= profissional.descricao_completa %></option>
+        <% end %>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="pagamento_modalidade">Modalidade de pagamento</label>
+      <select id="pagamento_modalidade" name="pagamento_modalidade">
+        <option value="">TODOS</option>
+        <% PagamentoModalidade.all.each do |pagamento_modalidade| %>
+          <option value="<%= pagamento_modalidade.id %>" <%= "selected" unless pagamento_modalidade.id != params[:pagamento_modalidade] %>><%= pagamento_modalidade.modalidade.upcase %></option>
+        <% end %>
+      </select>
+    </div>
   </form>
+  <p style="text-align:center;" id="numero-repasses">
+  <b><%= deixar_no_plural @repasses.count, "repasse", "repasses" %></b> no período.
+  </p>
 </div>
 
-<%= @repasses.count %>
-<%= link_to "CSV", profissional_financeiro_repasses_path(format: :csv, de: @de, ate: @ate) %>
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "CSV", profissional_financeiro_repasses_path(format: :csv, de: @de, ate: @ate), class: "icon-table" %>
+    </li>
+  </ul>
+</nav>
 
 <%= render "tabela-repasses", repasses: @repasses %>

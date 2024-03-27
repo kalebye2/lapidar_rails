@@ -1,0 +1,3 @@
+<% titulo "Novo atendimento - #{@acompanhamento.tipo.upcase} #{@acompanhamento.pessoa.nome_abreviado}" %>
+
+<%= render "atendimentos/form", atendimento: Atendimento.new(data: Date.today) %>

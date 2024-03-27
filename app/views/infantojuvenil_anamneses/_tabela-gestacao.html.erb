@@ -1,33 +1,32 @@
 <% cl = "tabela-infantojuvenil-anamnese-gestacao" %>
+<% caminho_ajax = infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s) %>
 <tr class="<%= cl %>">
   <th class="big-header" colspan="100%">Gestação e nascimento</th>
 </tr>
 
-<tr class="<%= cl %>">
-  <% curr_id = "#{cl}-desejada" %>
-  <th>Gestação foi desejada?</th>
-  <td id="<%= curr_id %>">
-  <% if @usuario %>
-    <form hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax:true) %>" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML" hx-trigger="change delay:250ms">
-      <input name="authenticity_token" value="<%= form_authenticity_token.to_s %>" type="hidden">
-      <select name="gestacao[desejada]">
-        <option <%== if gestacao.desejada.nil? then "selected" end %> value="">Não informado</option>
-        <option <%== !gestacao.desejada.nil? && gestacao.desejada != 0 ? "selected" : "" %> value="1">Sim</option>
-        <option <%== !gestacao.desejada.nil? && gestacao.desejada == 0 ? "selected" : "" %> value="0">Não</option>
-      </select>
-    </form>
-  <% else %>
-    <%= sim_ou_nao gestacao.desejada %>
-  <% end %>
-  </td>
-</tr>
+<% dict_select = {
+    desejada: "A gestação foi desejada?",
+} %>
+
+<% dict_number = {
+} %>
+
+<% dict_text = {
+} %>
+
+<% dict_textarea = {
+} %>
+
+<% dict_select.each do |k,v| %>
+  <%= hx_tr_select patch: caminho_ajax, name: "gestacao[#{k}]", th: (h v), id: "#{id = "#{cl}-#{k}"}", select: "##{id}", target: "##{id}", swap: "outerHTML", value: gestacao.attributes[k.to_s], html_class: cl %>
+<% end %>
 
 <tr class="<%= cl %>">
   <% curr_id = "#{cl}-idade-mae" %>
   <th>Idade da mãe</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <form hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true) %>" hx-swap="outerHTML" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-trigger="change delay:500ms">
+      <form hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese) %>" hx-swap="outerHTML" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-trigger="change delay:500ms">
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
         <input type="number" name="gestacao[idade_mae]" value="<%= gestacao.idade_mae %>">
         anos
@@ -43,7 +42,7 @@
   <th>Idade do pai</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <form hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true) %>" hx-swap="outerHTML" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-trigger="change delay:500ms">
+      <form hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese) %>" hx-swap="outerHTML" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-trigger="change delay:500ms">
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
         <input type="number" name="gestacao[idade_pai]" value="<%= gestacao.idade_pai %>">
         anos
@@ -59,7 +58,7 @@
   <th>Irmãos mais velhos</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <form hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true) %>" hx-swap="outerHTML" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-trigger="change delay:500ms">
+      <form hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese) %>" hx-swap="outerHTML" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-trigger="change delay:500ms">
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
         <input type="number" name="gestacao[irmaos_mais_velhos]" value="<%= gestacao.irmaos_mais_velhos %>">
         <%= gestacao.irmaos_mais_velhos != 1 ? "irmãos/irmãs" : "irmão/irmã" %>
@@ -75,7 +74,7 @@
   <th>Irmãos mais novos</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <form hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true) %>" hx-swap="outerHTML" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-trigger="change delay:500ms">
+      <form hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese) %>" hx-swap="outerHTML" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-trigger="change delay:500ms">
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
         <input type="number" name="gestacao[irmaos_mais_novos]" value="<%= gestacao.irmaos_mais_novos %>">
         <%= gestacao.irmaos_mais_novos != 1 ? "irmãos/irmãs" : "irmão/irmã" %>
@@ -91,7 +90,7 @@
   <th>Com quantos meses após a gestação anterior a criança foi concebida?</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <form hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true) %>" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML" hx-trigger="change delay:500ms">
+      <form hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese) %>" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML" hx-trigger="change delay:500ms">
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
         <input type="number" name="gestacao[gestacao_anterior_meses]" value="<%= gestacao.gestacao_anterior_meses %>">
       </form>
@@ -108,7 +107,7 @@
   <th>Abortos anteriores (espontâneos e/ou intencionais)</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <form hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" hx-trigger="change delay:500ms">
+      <form hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" hx-trigger="change delay:500ms">
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
         <input type="number" name="gestacao[abortos_anteriores]" value="<%= gestacao.abortos_anteriores %>">
       </form>
@@ -123,7 +122,7 @@
   <th>Data do pré-natal</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <input type="date" name="gestacao[data_pre_natal]" value="<%= gestacao.data_pre_natal %>" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" hx-trigger="change delay:1000ms">
+      <input type="date" name="gestacao[data_pre_natal]" value="<%= gestacao.data_pre_natal %>" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" hx-trigger="change delay:1000ms">
     <% else %>
       <%= gestacao.data_pre_natal ? render_data_brasil(gestacao.data_pre_natal) : "Não informada" %>
     <% end %>
@@ -135,7 +134,7 @@
   <th>Como era a saúde da mãe durante a gestação?</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <textarea name="gestacao[mae_saude]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.mae_saude %></textarea>
+      <textarea name="gestacao[mae_saude]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.mae_saude %></textarea>
     <% else %>
       <%== markdown_to_html gestacao.mae_saude %>
     <% end %>
@@ -147,7 +146,7 @@
   <th>Quais foram as sensações sentidas pela mãe durante a gestação?</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <textarea name="gestacao[mae_sensacoes]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.mae_sensacoes %></textarea>
+      <textarea name="gestacao[mae_sensacoes]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.mae_sensacoes %></textarea>
     <% else %>
       <%== markdown_to_html gestacao.mae_sensacoes %>
     <% end %>
@@ -159,7 +158,7 @@
   <th>Houve internações da mãe durante a gravidez?</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <textarea name="gestacao[mae_internacoes]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.mae_internacoes %></textarea>
+      <textarea name="gestacao[mae_internacoes]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.mae_internacoes %></textarea>
     <% else %>
       <%== markdown_to_html gestacao.mae_internacoes %>
     <% end %>
@@ -171,7 +170,7 @@
   <th>A mãe sentiu enjoos?</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <textarea name="gestacao[mae_enjoos]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.mae_enjoos %></textarea>
+      <textarea name="gestacao[mae_enjoos]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.mae_enjoos %></textarea>
     <% else %>
       <%== markdown_to_html gestacao.mae_enjoos %>
     <% end %>
@@ -183,7 +182,7 @@
   <th>A mãe vomitou durante a gravidez?</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <textarea name="gestacao[mae_vomitos]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.mae_vomitos %></textarea>
+      <textarea name="gestacao[mae_vomitos]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.mae_vomitos %></textarea>
     <% else %>
       <%== markdown_to_html gestacao.mae_vomitos %>
     <% end %>
@@ -250,7 +249,7 @@
   <th>A mãe chegou a tomar medicamentos durante a gravidez?</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <textarea name="gestacao[mae_medicamentos]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.mae_medicamentos %></textarea>
+      <textarea name="gestacao[mae_medicamentos]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.mae_medicamentos %></textarea>
     <% else %>
       <%== markdown_to_html gestacao.mae_medicamentos %>
     <% end %>
@@ -262,7 +261,7 @@
   <th>Local do parto</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <select name="gestacao[parto_local_id]" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s) %>" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML">
+      <select name="gestacao[parto_local_id]" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s) %>" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML">
         <% PartoLocal.all.each do |parto_local| %>
           <option <%= if parto_local.id == gestacao.parto_local_id then "selected" end %> value="<%= parto_local.id %>"><%= parto_local.local %></option>
         <% end %>
@@ -278,7 +277,7 @@
   <th>Tipo de parto</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <select name="gestacao[parto_tipo_id]" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s) %>" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML">
+      <select name="gestacao[parto_tipo_id]" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s) %>" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML">
         <% PartoTipo.all.each do |parto_tipo| %>
           <option <%= if parto_tipo.id == gestacao.parto_tipo_id then "selected" end %> value="<%= parto_tipo.id %>"><%= parto_tipo.tipo %></option>
         <% end %>
@@ -294,7 +293,7 @@
   <th>Peso da criança ao nascer (g)</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <input type="number" name="gestacao[nascimento_peso_g]" value="<%= gestacao.nascimento_peso_g %>" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" hx-trigger="keyup delay:500ms">
+      <input type="number" name="gestacao[nascimento_peso_g]" value="<%= gestacao.nascimento_peso_g %>" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" hx-trigger="keyup delay:500ms">
     <% else %>
       <%= numero_com_medida gestacao.nascimento_peso_g, 'g' %>
     <% end %>
@@ -306,7 +305,7 @@
   <th>Comprimento da criança ao nascer (cm)</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <input type="number" name="gestacao[nascimento_comprimento_cm]" value="<%= gestacao.nascimento_comprimento_cm %>" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" hx-trigger="keyup delay:500ms">
+      <input type="number" name="gestacao[nascimento_comprimento_cm]" value="<%= gestacao.nascimento_comprimento_cm %>" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" hx-trigger="keyup delay:500ms">
     <% else %>
       <%= numero_com_medida gestacao.nascimento_comprimento_cm, 'g' %>
     <% end %>
@@ -318,7 +317,7 @@
   <th>Duração da gestação (semanas)</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <input type="number" name="gestacao[gestacao_semanas]" value="<%= gestacao.gestacao_semanas %>" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" hx-trigger="keyup delay:500ms">
+      <input type="number" name="gestacao[gestacao_semanas]" value="<%= gestacao.gestacao_semanas %>" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" hx-trigger="keyup delay:500ms">
     <% else %>
       <%= numero_com_medida gestacao.nascimento_peso_g, 'g' %>
     <% end %>
@@ -330,7 +329,7 @@
   <th>Condições da criança ao nascer</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <textarea name="gestacao[nascimento_crianca_condicoes]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.nascimento_crianca_condicoes %></textarea>
+      <textarea name="gestacao[nascimento_crianca_condicoes]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.nascimento_crianca_condicoes %></textarea>
     <% else %>
       <%== markdown_to_html gestacao.nascimento_crianca_condicoes %>
     <% end %>
@@ -342,7 +341,7 @@
   <th>Reação da mãe ao nascimento da criança</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <textarea name="gestacao[nascimento_reacao_mae]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.nascimento_reacao_mae %></textarea>
+      <textarea name="gestacao[nascimento_reacao_mae]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.nascimento_reacao_mae %></textarea>
     <% else %>
       <%== markdown_to_html gestacao.nascimento_reacao_mae %>
     <% end %>
@@ -354,7 +353,7 @@
   <th>Reação do pai ao nascimento da criança</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <textarea name="gestacao[nascimento_reacao_pai]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.nascimento_reacao_pai %></textarea>
+      <textarea name="gestacao[nascimento_reacao_pai]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.nascimento_reacao_pai %></textarea>
     <% else %>
       <%== markdown_to_html gestacao.nascimento_reacao_pai %>
     <% end %>
@@ -366,7 +365,7 @@
   <th>Reação dos irmãos ao nascimento da criança</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <textarea name="gestacao[nascimento_reacao_irmaos]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.nascimento_reacao_irmaos %></textarea>
+      <textarea name="gestacao[nascimento_reacao_irmaos]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.nascimento_reacao_irmaos %></textarea>
     <% else %>
       <%== markdown_to_html gestacao.nascimento_reacao_irmaos %>
     <% end %>
@@ -378,7 +377,7 @@
   <th>Desenvolvimento do parto</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <textarea name="gestacao[desenvolvimento_parto]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.desenvolvimento_parto %></textarea>
+      <textarea name="gestacao[desenvolvimento_parto]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.desenvolvimento_parto %></textarea>
     <% else %>
       <%== markdown_to_html gestacao.desenvolvimento_parto %>
     <% end %>
@@ -390,7 +389,7 @@
   <th>Outras considerações sobre a gestação e o parto</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <textarea name="gestacao[outras_consideracoes]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.outras_consideracoes %></textarea>
+      <textarea name="gestacao[outras_consideracoes]" cols="50" rows="10" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s ) %>" hx-target="#<%= curr_id %>" hx-select="#<%= curr_id %>" hx-swap="outerHTML" placeholder="Descreva..."><%= gestacao.outras_consideracoes %></textarea>
     <% else %>
       <%== markdown_to_html gestacao.outras_consideracoes %>
     <% end %>

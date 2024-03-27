@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Civil estados</h1>
+
+<div id="civil_estados">
+  <% @civil_estados.each do |civil_estado| %>
+    <%= render civil_estado %>
+    <p>
+      <%= link_to "Show this civil estado", civil_estado %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New civil estado", new_civil_estado_path %>

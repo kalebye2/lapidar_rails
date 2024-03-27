@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @civil_estado %>
+
+<div>
+  <%= link_to "Edit this civil estado", edit_civil_estado_path(@civil_estado) %> |
+  <%= link_to "Back to civil estados", civil_estados_path %>
+
+  <%= button_to "Destroy this civil estado", @civil_estado, method: :delete %>
+</div>

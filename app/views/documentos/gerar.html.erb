@@ -1,0 +1,136 @@
+<% titulo "Gerar documento novo" %>
+<% papersizes = [:a4, :a5, :a3] %>
+<% fontsizes = [8, 9, 10, 11, 12] %>
+<% permitted_params = params.except(:controller, :action).keys %>
+<% invisible_params = %w[controller action content assinatura_profissional data_atual title] %>
+<% unit_options = %w[em cm pt px in inch %] %>
+<% unit_selection = -> (id, selected=nil) { "<select style=\"min-width:4em;\" name=\"#{id}_unit\" id=\"#{id}_unit\">#{unit_options.map do |option| "<option value=\"#{option}\">#{option}</option>" end }</select>".html_safe } %>
+
+<h1>Gerar um documento</h1>
+<p>Esta é a área para a geração de um documento
+que não esteja disponível em nenhuma outra área.
+Assim que você escolher você poderá baixar o modelo em
+Markdown para uso.</p>
+
+<div class="grid-2">
+  <div>
+    <form <%= hx_set get: gerar_documento_path, target: "#documento-gerado", select: "#documento-gerado", trigger: "change", swap: "outerHTML", replace_url: true %>>
+      <div class="field">
+        <label for="papersize">Tamanho de papel</label>
+        <select name="papersize" id="papersize">
+          <% papersizes.each do |papersize| %>
+            <option value="<%= papersize %>" <%== if papersize.to_s == @papersize&.downcase then "selected" end %>><%= papersize.upcase %></option>
+          <% end %>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="fontsize">Tamanho da fonte</label>
+        <select name="fontsize" id="fontsize">
+          <% fontsizes.each do |fontsize| %>
+            <option value="<%= fontsize %>" <%= if fontsize.to_i == @fontsize&.to_i then "selected" end %>><%= fontsize %>pt</option>
+            <% end %>
+        </select>
+      </div>
+
+      <input type="checkbox" name="assinatura_profissional" <%= if @assinatura_profissional then "checked" end %>>
+        <label for="assinatura_profissional">Incluir assinatura profissional</label>
+
+        <br>
+
+        <input type="checkbox" name="data_atual" <%= if @data_atual then "checked" end %>>
+          <label for="data_atual">Incluir data atual</label>
+
+          <div>
+            <label for="parskip">Espaçamento entre parágrafos</label>
+            <input type="number" step=0.1 name="parskip" id="parskip" value="<%= @parskip %>">
+            <%= unit_selection.call :parskip, @parskip_unit %>
+            <input type="checkbox" name="parskip_trigger" id="parskip_trigger" <%= "selected" unless !@parskip_trigger %>>
+            <label for="parskip_trigger">Espaçar parágrafos</label>
+            <br>
+            <label for="parindent">Indentação</label>
+            <input type="number" step=0.1 name="parindent" id="parindent" value="<%= @parindent %>">
+            <%= unit_selection.call :parindent, @parindent_unit %>
+            <input type="checkbox" name="parindent_trigger" id="parindent_trigger" <%= "selected" unless !@parindent_trigger %>>
+            <label for="parindent_trigger">Indentar parágrafos</label>
+          </div>
+
+          <div>
+            <label for="baselinestretch">Espaçamento entre linhas</label>
+            <input type="number" step=0.1 name="baselinestretch" id="baselinestretch" value="<%= @baselinestretch %>">
+            <input type="checkbox" name="baselinestretch_trigger" id="baselinestretch_trigger" <%= "selected" unless !@baselinestretch_trigger %>>
+            <label for="baselinestretch_trigger">Espaçar linhas</label>
+          </div>
+
+          <div>
+            <input type="checkbox" name="pageshow" id="pageshow" <%= "selected" unless !@pageshow %>>
+            <label for="pageshow">Mostrar páginas</label>
+          </div>
+
+          <div>
+            <input type="checkbox" name="lastpage" id="lastpage" <%= "selected" unless !@lastpage %>>
+            <label for="pageshow">Mostrar última página</label>
+          </div>
+
+          <div>
+            <input type="checkbox" name="header" id="header" <%= "selected" unless !@header %>>
+            <label for="pageshow">Cabeçalho</label>
+          </div>
+
+          <div>
+            <input type="checkbox" name="footer" id="footer" <%= "selected" unless !@footer %>>
+            <label for="pageshow">Rodapé</label>
+          </div>
+
+          <div class="field">
+            <label for="title">Título</label>
+            <input type="text" name="title" id="title" value="<%= params[:title] %>">
+          </div>
+
+          <div class="field">
+            <label for="content">Conteúdo</label>
+            <textarea name="content" id="content"><%= params[:content] %></textarea>
+            <%= simplemde_gerar :content %>
+          </div>
+
+          <input type="submit" value="Atualizar conteúdo">
+    </form>
+  </div>
+
+  <div class="documento" id="documento-gerado">
+    <nav class="navbar navcenter">
+      <ul>
+        <li>
+          <%= link_to "Baixar Markdown", gerar_documento_path(format: :md, **params.permit(permitted_params)), class: 'icon-download3' %>
+        </li>
+      </ul>
+    </nav>
+
+    <%# <div style="background-color:yellow;"> %>
+      <%#   <%= params.except *invisible_params %1> %>
+      <%# </div> %>
+
+    <h1 id="main-title" style="font-size:3em;text-align:center;text-transform:uppercase;">
+      <%= @titulo %>
+    </h1>
+
+    <%# <%= gerar_documento_path(format: :md, **params.permit(permitted_params)) %1> %>
+
+    <%= markdown_to_html @conteudo, nil %>
+
+    <% if @data_atual %>
+      <%== "<br>" * 2 %>
+      <p style="text-align:center;">
+      <%= data_por_extenso Date.today %>
+      </p>
+    <% end %>
+
+    <% if @assinatura_profissional %>
+      <%== "<br>" * 4 %>
+      <hr>
+      <div class="assinatura">
+        <%= markdown_to_html usuario_atual.profissional.descricao_completa.gsub(' - ', "  \n") %>
+      </div>
+    <% end %>
+  </div>
+</div>

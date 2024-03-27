@@ -1,0 +1,19 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Tipos de atendimento</h1>
+
+<% if usuario_atual.informatica? || usuario_atual.secretaria? %>
+  <nav class="navbar navcenter">
+    <ul>
+      <li>
+        <%= link_to "Adicionar", new_atendimento_tipo_path, class: 'icon-plus' %>
+      </li>
+    </ul>
+  </nav>
+<% end %>
+
+<div id="atendimento_tipos" class="grid-3">
+  <% @atendimento_tipos.each do |atendimento_tipo| %>
+    <%= render atendimento_tipo %>
+  <% end %>
+</div>

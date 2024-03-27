@@ -1,0 +1,97 @@
+---
+# Para ser usado com Pandoc
+# convertendo para LaTeX ou PDF
+# Caso queira saber mais visite https://pandoc.org
+#
+title: Informativo de reajuste
+author-meta: <%= @acompanhamento_reajuste.profissional.descricao_completa %>
+date: <%= render_data_brasil @acompanhamento_reajuste.data_negociacao %>
+
+# Formatação
+# tire o "#" onde quiser mudar valor
+papersize: a4
+fontsize: 12pt
+# mainfont: Liberation Sans
+# geometry:
+#    - left=2cm
+#    - right=2cm
+#    - top=3cm
+#    - bottom=4cm
+
+header-includes:
+- |
+    ```{=latex}
+    % Tire o símbolo "%" do início das linhas que você quiser usar uma regra
+    \usepackage{titlesec}
+    \usepackage{titling}
+
+    % melhora o título
+    \renewcommand{\maketitle}{
+    \begin{center}
+    {\huge\bfseries\thetitle}
+    \vspace{4em}
+    \end{center}
+    }
+
+    %\usepackage{indentfirst} % para indentar o primeiro parágrafo como os seguintes
+
+    %\setlength\parindent{2em} % recuo da primeira linha do parágrafo
+
+    %\parskip=1.5em % alterar o espaço entre parágrafos
+    %\renewcommand{\baselinestretch}{1.5} % alterar o espaço entre linhas
+
+    % contar o número total de páginas do documento
+    \usepackage{lastpage}
+
+    % para cabeçalho e rodapé
+    \usepackage{fancyhdr}
+    \renewcommand{\headrulewidth}{0em}
+    \fancyhead[L]{} % coloque aqui cabeçalho à esquerda
+    \fancyhead[R]{}
+    \fancyfoot[L]{\footnotesize{
+    E-mail: \href{mailto:<%= @acompanhamento_reajuste.profissional.email %>}{<%= @acompanhamento_reajuste.profissional.email %>}\\
+    Fone: \href{tel:<%= @acompanhamento_reajuste.profissional.pessoa.render_fone_link %>}{<%= @acompanhamento_reajuste.profissional.pessoa.render_fone_local %>}
+    }}
+    %\fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+    \fancyfoot[C]{}
+    \pagestyle{fancy}
+    ```
+---
+
+\vfill
+
+Considerando as condições financeiras do atual período
+ficou negociado que o valor para o acompanhamento de
+**<%= @acompanhamento_reajuste.pessoa.nome_completo %>**
+em <%= @acompanhamento_reajuste.acompanhamento.tipo.upcase %>,
+iniciado em <%= render_data_brasil @acompanhamento_reajuste.acompanhamento.data_inicio %>,
+será reajustado para os atendimentos a partir de
+<%= render_data_brasil @acompanhamento_reajuste.data_ajuste %>
+no valor de
+**<%= render_dinheiro_centavos @acompanhamento_reajuste.valor_novo %>**
+por atendimento.
+
+Agradeço a confiança no meu serviço
+e continuo trabalhando para que a relação continue harmoniosa
+e traga bons resultados.
+
+\vspace{3em}
+
+\begin{center}
+<%= @acompanhamento_reajuste.profissional.cidade %>,
+<%= @acompanhamento_reajuste.data_negociacao.day %>
+de
+<%= t('date.month_names')[@acompanhamento_reajuste.data_negociacao.month].downcase %>
+de
+<%= @acompanhamento_reajuste.data_negociacao.year %>.
+\end{center}
+
+\vspace{3cm}
+
+---
+\begin{center}
+<%= @acompanhamento_reajuste.profissional.nome_completo %>\\
+<%= @acompanhamento_reajuste.profissional.descricao_profissional %>
+\end{center}
+
+\vfill

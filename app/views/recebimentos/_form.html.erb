@@ -11,12 +11,40 @@
     </div>
   <% end %>
 
-  <%= form_with(model: recebimento, local: true) do |form| %>
+  <% if @pessoa %>
+    <nav class="navbar navcenter">
+      <ul>
+        <li>
+          <%= link_to "Cadastro", @pessoa, class: 'icon-previous' %>
+        </li>
+        <li>
+          <%= link_to "Financeiro", financeiro_pessoa_path(@pessoa), class: 'icon-coin-dollar' %>
+          <ul>
+            <li>
+              <%= link_to "Recebimentos", recebimentos_pessoa_path(@pessoa) %>
+            </li>
+            <li>
+              <%= link_to "Reajustes", acompanhamento_reajustes_pessoa_path(@pessoa) %>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  <% end %>
 
+  <%= form_with(model: recebimento, local: true) do |form| %>
     <div class="field">
-      <% acompanhamentos = usuario_atual.financeiro? ? Acompanhamento.all.order(data_inicio: :asc) : usuario_atual.profissional.acompanhamentos.order(data_inicio: :asc) %>
-      <%= form.label "Acompanhamento" %>
-      <%= form.select :acompanhamento_id, acompanhamentos.map { |a| [a.render_info_padrao, a.id] } %>
+      <% if @acompanhamento %>
+        <%= form.hidden_field :acompanhamento_id, value: @acompanhamento.id %>
+      <% else %>
+        <% if @pessoa %>
+          <% acompanhamentos = @pessoa.acompanhamentos %>
+        <% else %>
+          <% acompanhamentos = usuario_atual.financeiro? ? Acompanhamento.joins(:pessoa).order("pessoas.nome" => :asc, "pessoas.nome_do_meio" => :asc, "pessoas.sobrenome" => :asc) : usuario_atual.profissional.acompanhamentos.por_paciente_em_ordem_alfabetica %>
+        <% end %>
+        <%= form.label "Acompanhamento" %>
+        <%= form.select :acompanhamento_id, acompanhamentos.map { |a| [a.render_info_padrao, a.id] } %>
+      <% end %>
     </div>
 
     <div class="field">
@@ -47,8 +75,7 @@
     <% end %>
 
     <div class="action">
-      <%= form.submit %>
+      <%= form.submit "#{recebimento.id ? "Atualizar" : "Adicionar"}" %>
     </div>
-
   <% end %>
 </div>

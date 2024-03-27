@@ -1,8 +1,8 @@
-<% titulo @obra.titulo_completo %>
-<h1><%= @obra.titulo_completo %></h1>
+<% titulo @biblioteca_obra.titulo_completo %>
+<h1><%= @biblioteca_obra.titulo_completo %></h1>
 <h2>
-<% autores_count = @obra.autores.count %>
-<% @obra.autores.map { |a| [a.nome_completo, a] }.each_with_index do |autor, id| %>
+<% autores_count = @biblioteca_obra.autores.count %>
+<% @biblioteca_obra.autores.map { |a| [a.nome_completo, a] }.each_with_index do |autor, id| %>
   <%= link_to autor[0], autor[1] %><% if id != autores_count - 1 %>;<% end %>
 <% end %>
 </h2>
@@ -11,31 +11,31 @@
 <%= link_to "voltar", biblioteca_path %>
 
 <div class="biblioteca-obra-resumo">
-  <%= @obra.resumo || "LOREM IPSUM DOLOR SIT AMET CONSECTETUR" %>
+  <%= @biblioteca_obra.resumo || "LOREM IPSUM DOLOR SIT AMET CONSECTETUR" %>
 </div>
 
 <div class="biblioteca-obra-informacoes">
-  <p><%= @obra.tipo %></p>
-  <p><%= @obra.editora.nome %></p>
-  <p><%= @obra.data_formatada %></p>
-  <p>ISBN: <%= @obra.isbn || "Não informado" %></p>
+  <p><%= @biblioteca_obra.tipo %></p>
+  <p><%= @biblioteca_obra.editora.nome %></p>
+  <p><%= @biblioteca_obra.data_formatada %></p>
+  <p>ISBN: <%= @biblioteca_obra.isbn || "Não informado" %></p>
 
-  <% if @obra.obra_virtual %>
-    <%= link_to "Visualizar", @obra.caminho %>
+  <% if @biblioteca_obra.obra_virtual %>
+    <%= link_to "Visualizar", @biblioteca_obra.caminho %>
   <% end %>
 
-  <% if @obra.edicao > 0 %>
-    <p><%= @obra.edicao %>ª edição</p>
+  <% if @biblioteca_obra.edicao > 0 %>
+    <p><%= @biblioteca_obra.edicao %>ª edição</p>
   <% end %>
 
-  <% if @obra.volume > 0 %>
-    <p>Volume <%= @obra.volume %></p>
+  <% if @biblioteca_obra.volume > 0 %>
+    <p>Volume <%= @biblioteca_obra.volume %></p>
   <% end %>
 
-  <% if @obra.periodico %>
-    <p><%= @obra.periodico.nome %></p>
+  <% if @biblioteca_obra.periodico %>
+    <p><%= @biblioteca_obra.periodico.nome %></p>
   <% end %>
   <p><strong>Tags:</strong>
-  <%= @obra.tags.map { |t| t.nome } %>
+  <%= @biblioteca_obra.tags.map { |t| t.nome } %>
   </p>
 </div>

@@ -1,0 +1,32 @@
+<%= form_with(model: profissional_horario) do |form| %>
+  <% if profissional_horario.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(profissional_horario.errors.count, "error") %> prohibited this profissional_horario from being saved:</h2>
+
+      <ul>
+        <% profissional_horario.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :profissional_id, style: "display: block" %>
+    <%= form.text_field :profissional_id %>
+  </div>
+
+  <div>
+    <%= form.label :semana_dia_id, style: "display: block" %>
+    <%= form.text_field :semana_dia_id %>
+  </div>
+
+  <div>
+    <%= form.label :horario, style: "display: block" %>
+    <%= form.time_field :horario %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

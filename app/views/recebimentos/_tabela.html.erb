@@ -11,12 +11,14 @@
       <th>Serviço</th>
       <th>Link</th>
     </tr>
-    <tr id="recebimento-adicionar" style="font-size:.85em;">
+    <% if usuario_atual.financeiro? %>
+      <tr id="recebimento-adicionar" style="font-size:.85em;">
         <%= render "recebimentos/table-adicionar" %>
-    </tr>
+      </tr>
+    <% end %>
   </thead>
   <tbody>
-    <% @recebimentos.each do |recebimento| %>
+    <% recebimentos.each do |recebimento| %>
       <%= render 'recebimentos/tabela-item', recebimento: recebimento %>
     <% end %>
   </tbody>

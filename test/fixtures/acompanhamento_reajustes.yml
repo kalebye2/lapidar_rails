@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  acompanhamento: one
+  acompanhamento_reajuste_motivo: one
+
+two:
+  acompanhamento: two
+  acompanhamento_reajuste_motivo: two

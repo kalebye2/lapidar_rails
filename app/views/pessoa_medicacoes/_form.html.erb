@@ -1,0 +1,47 @@
+<%= form_with(model: pessoa_medicacao) do |form| %>
+  <% if pessoa_medicacao.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(pessoa_medicacao.errors.count, "error") %> prohibited this pessoa_medicacao from being saved:</h2>
+
+      <ul>
+        <% pessoa_medicacao.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :pessoa_id, style: "display: block" %>
+    <%= form.text_field :pessoa_id %>
+  </div>
+
+  <div>
+    <%= form.label :medicacao, style: "display: block" %>
+    <%= form.text_field :medicacao %>
+  </div>
+
+  <div>
+    <%= form.label :dose, style: "display: block" %>
+    <%= form.text_field :dose %>
+  </div>
+
+  <div>
+    <%= form.label :motivo, style: "display: block" %>
+    <%= form.text_field :motivo %>
+  </div>
+
+  <div>
+    <%= form.label :data_inicio, style: "display: block" %>
+    <%= form.date_field :data_inicio %>
+  </div>
+
+  <div>
+    <%= form.label :data_final, style: "display: block" %>
+    <%= form.date_field :data_final %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

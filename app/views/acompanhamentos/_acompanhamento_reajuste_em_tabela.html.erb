@@ -1,0 +1,16 @@
+<tr>
+  <td><%= acompanhamento_reajuste.profissional.descricao_completa %></td>
+  <td><%= render_data_brasil acompanhamento_reajuste.data_negociacao %></td>
+  <td><%= render_dinheiro_centavos acompanhamento_reajuste.valor_novo %></td>
+  <td><%= render_data_brasil acompanhamento_reajuste.data_ajuste %></td>
+  <td>
+    <ul style="list-style:none;">
+      <li>
+        <%= link_to "Ver", acompanhamento_reajuste, class: "icon-eye" %>
+      </li>
+      <li>
+        <%= link_to "Markdown", acompanhamento_reajuste_path(acompanhamento_reajuste, format: :md), class: "icon-file-empty" %>
+      </li>
+    </ul>
+  </td>
+</tr>

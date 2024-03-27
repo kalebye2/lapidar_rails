@@ -1,0 +1,20 @@
+<% titulo "Locais de atendimento" %>
+<p style="color: green"><%= notice %></p>
+
+<h1>Locais de atendimento</h1>
+
+<% if usuario_atual&.secretaria? %>
+  <nav class="navbar navcenter">
+    <ul>
+      <li>
+        <%= link_to "Adicionar", new_atendimento_local_path, class: 'icon-plus' %>
+      </li>
+    </ul>
+  </nav>
+<% end %>
+
+<div id="atendimento_locais" class="grid-3">
+  <% @atendimento_locais.each do |atendimento_local| %>
+    <%= render atendimento_local %>
+  <% end %>
+</div>

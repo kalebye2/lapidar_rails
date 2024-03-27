@@ -1,4 +1,11 @@
-<h1>InfantojuvenilAnamneses#new</h1>
-<p>Find me in app/views/infantojuvenil_anamneses/new.html.erb</p>
-<form>
-</form>
+<% titulo "Criar anamnese infantojuvenil" %>
+
+<h1 id="main-title">Criar anamnese infantojuvenil</h1>
+
+<%= form_for @infantojuvenil_anamnese do |form| %>
+  <div class="field">
+  <%= form.label :atendimento_id, "Atendimento" %>
+  <%= form.select :atendimento_id, usuario_atual.profissional.atendimentos.de_menores_de_idade.query_like_tipo("anamnese").map { |atendimento| [atendimento.informacoes_com_pessoa, atendimento.id] } %>
+  </div>
+  <%= form.submit "Criar" %>
+<% end %>

@@ -1,0 +1,44 @@
+<h1>Identificação</h1>
+<table>
+  <tbody>
+    <tr>
+      <th width='30%'>Nome completo</th>
+      <td><%= infantojuvenil_anamnese.paciente.nome_completo %></td>
+    </tr>
+
+    <tr>
+      <th>Data de nascimento</th>
+      <td><%= render_data_brasil infantojuvenil_anamnese.paciente.data_nascimento %></td>
+    </tr>
+
+    <tr>
+      <th>Idade</th>
+      <td><%= infantojuvenil_anamnese.paciente.render_idade(infantojuvenil_anamnese.atendimento.data) %></td>
+    </tr>
+
+    <tr>
+      <th>Sexo</th>
+      <td><%= infantojuvenil_anamnese.paciente.render_sexo %></td>
+    </tr>
+
+    <tr>
+      <th>Responsável legal</th>
+      <td><%= infantojuvenil_anamnese.pessoa_responsavel.nome_completo %></td>
+    </tr>
+
+    <tr>
+      <th>Serviço procurado</th>
+      <td><%= infantojuvenil_anamnese.acompanhamento.tipo.upcase %></td>
+    </tr>
+
+    <tr>
+      <th>Profissional</th>
+      <td><%= infantojuvenil_anamnese.profissional.descricao_completa %></td>
+    </tr>
+
+    <tr>
+      <th>Motivo da consulta</th>
+      <td><%= markdown_to_html infantojuvenil_anamnese.motivo_consulta %></td>
+    </tr>
+  </tbody>
+</table>

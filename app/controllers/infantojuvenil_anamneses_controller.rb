@@ -2,14 +2,40 @@ class InfantojuvenilAnamnesesController < ApplicationController
   before_action :set_infantojuvenil_anamnese, only: %i[ show edit update delete ]
   before_action :validar_usuario
   before_action :validar_edicao, only: %i[ edit update destroy ]
+
+  include Pagy::Backend
+
   def index
     @infantojuvenil_anamneses = InfantojuvenilAnamnese.all
+
+    @de = params[:de]&.to_date || @infantojuvenil_anamneses.joins(:atendimento).minimum("atendimentos.data")
+    @ate = params[:ate]&.to_date || @infantojuvenil_anamneses.joins(:atendimento).maximum("atendimentos.data")
+
+    @infantojuvenil_anamenses = @infantojuvenil_anamneses.do_periodo(@de..@ate)
+
+    if params[:pessoa].present?
+      @infantojuvenil_anamneses = @infantojuvenil_anamneses.query_pessoa_like_nome(params[:pessoa])
+    end
+    if params[:responsavel].present?
+      @infantojuvenil_anamneses = @infantojuvenil_anamneses.query_responsavel_like_nome(params[:responsavel])
+    end
+
+    if params[:profissional].present?
+      @infantojuvenil_anamneses = @infantojuvenil_anamneses.do_profissional_com_id(params[:profissional])
+    end
+
+    @params = params.permit(:de, :ate, :pessoa, :profissional, :responsavel)
+    @contagem = @infantojuvenil_anamneses.count
+    @pagy, @infantojuvenil_anamneses = pagy(@infantojuvenil_anamneses, items: 9)
   end
 
   def show
     respond_to do |format|
       format.html
-      format.md
+      format.md do
+        response.headers["Content-Type"] = "text/markdown"
+        response.headers["Content-Disposition"] = "attachment; filename=anamnese-infantojuvenil_#{@infantojuvenil_anamnese.pessoa.nome_completo.parameterize}_#{@infantojuvenil_anamnese.atendimento.data}.md"
+      end
       # format.md do
       #   response.headers['Content-Type'] = "text/markdown"
       #   response.headers['Content-Disposition'] = "attachment; filename=anamnese-infantojuvenil_#{@infantojuvenil_anamnese.pessoa.nome_completo.parameterize}_#{@infantojuvenil_anamnese.atendimento.data}.md"
@@ -22,13 +48,24 @@ class InfantojuvenilAnamnesesController < ApplicationController
   end
 
   def create
-    @infantojuvenil_anamnese.criar_anamnese_completa
+    @infantojuvenil_anamnese = InfantojuvenilAnamnese.new(infantojuvenil_anamnese_params)
+    respond_to do |format|
+      if @infantojuvenil_anamnese.save
+        format.html do
+          redirect_to infantojuvenil_anamnese_path(@infantojuvenil_anamnese, notice: "Anamnese gerada com sucesso!")
+        end
+        format.json { render :show, status: :created, location: @infantojuvenil_anamnese }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @infantojuvenil_anamnese.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def edit
     respond_to do |format|
       format.html do
-        if params[:ajax].present?
+        if hx_request?
           render partial: "infantojuvenil_anamneses/tabela-dados-principais-edit", locals: {infantojuvenil_anamnese: @infantojuvenil_anamnese}
           return
         else
@@ -79,7 +116,8 @@ class InfantojuvenilAnamnesesController < ApplicationController
     if params[:pessoa].present?
       @infantojuvenil_anamnese.pessoa.update(pessoa_params)
     end
-    if params[:ajax].present?
+
+    if hx_request?
       render :show
     else
     end
@@ -164,6 +202,10 @@ class InfantojuvenilAnamnesesController < ApplicationController
 
   def pessoa_params
     params.require(:pessoa).permit(:data_nascimento, :feminino)
+  end
+
+  def acompanhamento_params
+    params.require(:acompanhamento).permit(:motivo)
   end
 
   def gestacao_params

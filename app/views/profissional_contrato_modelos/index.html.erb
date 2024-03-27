@@ -1,0 +1,18 @@
+<% titulo "Modelos de contrato" %>
+
+<p id="notice"><%= notice %></p>
+
+<h1>Modelos de contratos</h1>
+
+<h2>Escolha o profissional</h2>
+
+<div class="grid-3">
+  <% @profissionais.each do |profissional| %>
+    <%= link_to contrato_modelos_profissional_path(profissional) do %>
+      <div class="card">
+        <h2 class="icon-user-tie"><%= profissional.descricao_completa %></h2>
+        <p><%= deixar_no_plural profissional.contrato_modelos.count, 'modelo', 'modelos' %></p>
+      </div>
+    <% end %>
+  <% end %>
+</div>

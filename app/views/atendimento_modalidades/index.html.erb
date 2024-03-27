@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Atendimento modalidades</h1>
+
+<div id="atendimento_modalidades">
+  <% @atendimento_modalidades.each do |atendimento_modalidade| %>
+    <%= render atendimento_modalidade %>
+    <p>
+      <%= link_to "Show this atendimento modalidade", atendimento_modalidade %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New atendimento modalidade", new_atendimento_modalidade_path %>

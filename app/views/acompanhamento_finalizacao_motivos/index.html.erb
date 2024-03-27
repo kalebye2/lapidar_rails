@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Acompanhamento finalizacao motivos</h1>
+
+<div id="acompanhamento_finalizacao_motivos">
+  <% @acompanhamento_finalizacao_motivos.each do |acompanhamento_finalizacao_motivo| %>
+    <%= render acompanhamento_finalizacao_motivo %>
+    <p>
+      <%= link_to "Show this acompanhamento finalizacao motivo", acompanhamento_finalizacao_motivo %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New acompanhamento finalizacao motivo", new_acompanhamento_finalizacao_motivo_path %>

@@ -1,0 +1,16 @@
+<% titulo "Anamneses adultas" %>
+
+<p style="color: green"><%= notice %></p>
+
+<h1>Anamneses adultas</h1>
+
+<div id="adulto_anamneses">
+  <% @adulto_anamneses.each do |adulto_anamnese| %>
+    <%= render adulto_anamnese %>
+    <p>
+      <%= link_to "Show this  adulto anamnese", adulto_anamnese %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "Criar anamnese", new_adulto_anamnese_path %>

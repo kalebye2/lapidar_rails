@@ -1,4 +1,10 @@
 class Pessoa < ApplicationRecord
+  require "csv"
+  include ApplicationHelper
+  
+  include Enderecavel
+  include Abreviavel
+
   belongs_to :civil_estado, optional: true
   belongs_to :instrucao_grau, optional: true
   belongs_to :pais, optional: true
@@ -9,12 +15,29 @@ class Pessoa < ApplicationRecord
   scope :do_sexo_masculino, -> { where(feminino: [false, nil]) }
   scope :mulheres, -> { do_sexo_feminino }
   scope :homens, -> { do_sexo_masculino }
+  scope :contagem_por_sexo, -> (collection=all) { group(:feminino).count }
   scope :profissionais, -> { joins(:profissional) }
   scope :atendidas_hoje, -> { joins(:atendimentos).where("atendimentos.data" => Date.today) }
   scope :ordem_alfabetica, -> { order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc) }
+  scope :em_ordem_alfabetica, -> { ordem_alfabetica }
+
+  scope :trabalhando_na_clinica, -> { joins(:profissional) }
+  scope :nao_trabalhando_na_clinica, -> { joins("LEFT JOIN profissionais ON profissionais.pessoa_id = pessoas.id").where("profissionais.id" => nil) }
+
+  scope :de_acompanhamentos_em_andamento, -> { joins(:acompanhamentos).where(acompanhamentos: {suspenso: [nil, false, 0], acompanhamento_finalizacao_motivo: nil }).uniq }
+  scope :de_acompanhamentos_finalizados, -> { joins(:acompanhamentos).where.not(acompanhamentos: {acompanhamento_finalizacao_motivo: nil}).uniq }
+  scope :de_acompanhamentos_suspensos, -> { joins(:acompanhamentos).where(acompanhamentos: {suspenso: 1..}).uniq }
   
+  scope :query_like_nome, -> (like = "") do
+    like = like.to_s
+    query = "LOWER(nome || ' ' || COALESCE(nome_do_meio, '') || ' '|| sobrenome) LIKE ?", "%#{like}%"
+    if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
+      query = "LOWER(CONCAT(nome, ' ', COALESCE(nome_do_meio, ''), ' ', sobrenome)) LIKE ?", "%#{like}%"
+    end
+    where(query)
+  end
+
   # has associations
-  has_one :usuario
   # quando o cadastro for de um profissional
   has_one :profissional
   has_many :profissional_acompanhamento, through: :profissional, source: :acompanhamento
@@ -24,17 +47,25 @@ class Pessoa < ApplicationRecord
   has_many :parente_parentesco_juncoes, class_name: "PessoaParentescoJuncao", foreign_key: :parente_id
   has_many :parentes_cadastrados, through: :pessoa_parentesco_juncoes, class_name: "Pessoa", source: :parente
   has_many :parentescos, through: :pessoa_parentesco_juncoes
-  has_many :parente_parentescos, through: :parente_parentesco_juncoes#, foreign_key: :parente_id
+  has_many :parente_parentescos, through: :parente_parentesco_juncoes, source: :pessoa
   has_many :parente_de_quais_pessoas, through: :parente_parentesco_juncoes, source: :pessoa
+  # registros parentais
+  ParenteStruct = Struct.new(:parente, :parentesco)
+  ParenteDeStruct = Struct.new(:pessoa, :parentesco)
+  ParenteListaStruct = Struct.new(:parentes, :parente_de)
+  ParentescoStruct = Struct.new(*self.column_names.map(&:to_sym) + [:parentesco, :origem])
+
 
   # quando o cadastro for de um paciente
   has_many :acompanhamentos
+  has_many :acompanhamento_tipos, through: :acompanhamentos
   has_many :acompanhamento_horarios, through: :acompanhamentos
+  has_many :acompanhamento_reajustes, through: :acompanhamentos
   has_many :atendimentos, through: :acompanhamentos
   has_many :instrumento_relatos, through: :atendimentos
   has_many :instrumentos_aplicados, through: :instrumento_relatos, source: :instrumento
   has_many :infantojuvenil_anamneses, through: :atendimentos
-  has_many :profissionais_acompanhando, class_name: "Profissional", through: :acompanhamento, source: :profissional
+  has_many :profissionais_acompanhando, class_name: "Profissional", through: :acompanhamentos, source: :profissional
   has_many :devolutivas, class_name: "PessoaDevolutiva", foreign_key: :pessoa_id
   has_many :laudos, through: :acompanhamentos
   # quando o cadastro for de um resopnsável
@@ -51,14 +82,11 @@ class Pessoa < ApplicationRecord
 
   has_many :pessoa_extra_informacoes
 
-
+  # medicação
+  has_many :pessoa_medicacoes
 
   def nome_completo
-    if !nome_do_meio.nil?
-      [nome, nome_do_meio, sobrenome].join(' ')
-    else
-      [nome, sobrenome].join(' ')
-    end
+    [nome, nome_do_meio, sobrenome].compact.join(' ')
   end
 
   def nome_abreviado_meio
@@ -98,6 +126,12 @@ class Pessoa < ApplicationRecord
     cr.at(0..2) + "." + cr.at(3..5) + "." + cr.at(6..8) + "-" + cr.at(-2..) 
   end
 
+  def render_rg
+    rr = rg.to_s
+    rr = ("000000000" + rr).delete(" ").chars.last(9).join("").to_s
+    rr.at(0..1) + "." + rr.at(2..4) + "." + rr.at(5..7) + "-" + rr.at(-1)
+  end
+
   def tem_telefone?
     fone_cod_area && fone_num && fone_cod_pais
   end
@@ -117,12 +151,22 @@ class Pessoa < ApplicationRecord
   end
 
   def render_fone_link
-    tem_telefone? ? "+#{fone_cod_pais}#{fone_cod_area}#{fone_num}" : nil
+    tem_telefone? ? "+#{fone_cod_pais.gsub(/\D/, "")}#{fone_cod_area.gsub(/\D/, "")}#{fone_num.gsub(/\D/, "")}" : nil
+  end
+
+  def render_whatsapp_link
+    if !tem_telefone? then return nil end
+    "https://wa.me/#{render_fone_link[1..]}"
+  end
+
+  def render_telegram_link
+    if !tem_telefone? then return nil end
+    "https://t.me/#{render_fone_link}"
   end
 
 
   def render_data_nascimento
-    data_nascimento.strftime("%d/%m/%Y")
+    data_nascimento&.strftime("%d/%m/%Y")
   end
 
   def idade_anos(data = Time.now.to_date)
@@ -217,6 +261,7 @@ class Pessoa < ApplicationRecord
   end
 
   def estado_civil
+    if civil_estado.nil? then return "Sem informação" end
     sufixo = feminino ? 'a' : 'o'
     civil_estado.estado[..-2] + sufixo
   end
@@ -235,9 +280,7 @@ class Pessoa < ApplicationRecord
   end
 
   def render_cidade_estado
-    c = cidade || "Não informado"
-    e = estado || "Não informado"
-    "#{c} - #{e}"
+    [endereco_cidade, endereco_estado].compact.join(' - ')
   end
 
   def nome_confidencial
@@ -261,8 +304,8 @@ class Pessoa < ApplicationRecord
     atendimento_valores.where(atendimentos: {data: [..(Date.today - 1.month).end_of_month]}).sum("valor - desconto") - recebimentos.sum(:valor)
   end
 
-  def valor_a_cobrar
-    (atendimento_valores.sum("valor - desconto") - recebimentos.sum(:valor)).to_i
+  def valor_a_cobrar(periodo=..Date.today.end_of_month)
+    (atendimento_valores.do_periodo(periodo).sum("valor - desconto") - recebimentos.do_periodo(periodo).sum(:valor)).to_i
   end
 
   def pronome_tratamento
@@ -281,14 +324,170 @@ class Pessoa < ApplicationRecord
     instrucao_grau&.grau
   end
 
-  private
-
-  def abreviar string, separator = ''
-    string = string.to_s
-    str_abreviar = string.split.map { |n| n[0] == n[0].upcase ? n[0] : ''}
-    str_abreviar = str_abreviar.reject!(&:empty?) || str_abreviar
-    str_abreviar.join(separator)
+  def profissao_para_clinica
+    profissional&.funcao || profissao
   end
 
+  def parente_de outro
+    if outro.class.to_s != "Pessoa" then return nil end
+    parentes_cadastrados.include?(outro) || parente_parentescos.include?(outro)
+  end
+  alias parente_de? parente_de
+
+  def grau_parentesco outro
+    if outro.class.to_s != "Pessoa" then return nil end
+
+    parente = pessoa_parentesco_juncoes.find_by(parente_id: outro.id)
+    parentesco = parente_parentesco_juncoes.find_by(pessoa_id: outro.id)
+
+    parente_atual = parente&.parente || parentesco&.parente
+    pessoa_atual = parente&.pessoa || parentesco&.pessoa
+
+    pessoa_parentesco_juncoes.find_by(parente_id: outro.id) || parente_parentesco_juncoes.find_by(pessoa_id: outro.id)
+    OpenStruct.new({ parente: parente_atual, pessoa: pessoa_atual, parentesco: parente&.parentesco&.parentesco || parentesco&.parentesco&.parentesco })
+  end
+
+  def registro_parentescos
+    parentes = pessoa_parentesco_juncoes.map { |p| ParenteStruct.new(Pessoa.find(p.parente_id), Parentesco.find(p.parentesco_id).parentesco) }
+    parente_de = parente_parentesco_juncoes.map { |p| ParenteDeStruct.new(Pessoa.find(p.pessoa_id), Parentesco.find(p.parentesco_id).parentesco) }
+    ParenteListaStruct.new(parentes, parente_de)
+  end
+  alias parentescos_registrados registro_parentescos
+
+  def registro_parentes
+    regpar = registro_parentescos
+    final = []
+    final << regpar.parentes.map { |parente| ParentescoStruct.new(*parente.parente.attributes.values, parente.parentesco, true) }
+    final << regpar.parente_de.map { |parente| ParentescoStruct.new(*parente.pessoa.attributes.values, parente.parentesco, false) }
+  end
+  alias parentes_registrados registro_parentes
+
+  def contagem_registro_parentes
+    rp = registro_parentes
+    rp.parentes.count + rp.parente_de.count
+  end
+
+  def dados_cadastrais
+    {
+      nome_completo: nome_completo,
+      data_de_nascimento: render_data_nascimento,
+      idade: render_idade,
+      sexo: render_sexo,
+      estado_civil: estado_civil,
+      grau_de_instrução: grau_de_instrucao,
+      profissão: profissao,
+      fone: render_fone,
+      email: email,
+      contatos_para_emergência: parentes_cadastrados.map { |p| "#{p.nome_completo} - #{p.render_fone}" }.join("; "),
+      RG: render_rg,
+      CPF: render_cpf,
+      endereço: render_endereco,
+      cidade: endereco_cidade,
+      estado: endereco_estado,
+      país: pais.nome,
+      toma_medicação: pessoa_medicacoes.map { |medicacao| "#{medicacao.medicacao}#{medicacao.dose&.insert(0, " (")&.insert(-1, ")")}"}.join(", ").presence }.presence || "Sem dados de medicação"
+  end
+
+  def para_csv incluir_trans: false, incluir_orientacao_sexual: false
+    # "\"#{nome}\"," \
+    #   "\"#{nome_do_meio}\"," \
+    #   "\"#{sobrenome}\"," \
+    #   "\"#{render_sexo}\"," \
+    #   "\"#{render_data_brasil data_nascimento}\"," \
+    #   "\"#{cpf}\"," \
+    #   "\"#{render_fone_link}\"," \
+    #   "\"#{email}\"," \
+    #   "\"#{nascimento_pais&.nome}\"," \
+    #   "\"#{endereco_cep}\"," \
+    #   "\"#{endereco_logradouro} nº #{endereco_numero}#{endereco_complemento&.insert(0, ' ')}\"," \
+    #   "\"#{endereco_cidade}\"," \
+    #   "\"#{endereco_estado}\"," \
+    #   "\"#{pais&.nome}\"," \
+    #   "\"#{profissao_para_clinica&.upcase}\"," \
+    #   "\"#{preferencia_contato&.delete("\n", '')}\"," \
+    #   "#{incluir_orientacao_sexual ? "\"#{orientacao_sexual}\"," : ""}" \
+    #   "\"#{pronome_tratamento}\"," \
+    #   "\"#{nome_preferido}\"" \
+    #   "#{incluir_trans ? ",\"#{inverter_pronome_tratamento ? 'sim' : 'não'}\"" : ""}"
+
+    CSV.generate(col_sep: ',') do |csv|
+      csv << [
+        nome,
+        nome_do_meio || "-",
+        sobrenome,
+        render_sexo,
+        data_nascimento&.strftime("%d/%m/%Y") || "-",
+        render_cpf || "-",
+        render_fone || "-",
+        email || "-",
+        nascimento_pais&.nome || "-",
+        "#{endereco_logradouro}#{endereco_numero&.to_s&.insert(0, "nº ")}#{endereco_complemento&.insert(0, " ")}" || "-",
+        endereco_cidade || "-",
+        endereco_estado || "-",
+        pais&.nome || "-",
+        profissao || "-",
+        preferencia_contato || "-",
+        pronome_tratamento || " - ",
+      ].compact
+    end
+  end
+  alias para_linha_csv para_csv
+
+  def self.para_csv collection=ordem_alfabetica, incluir_trans: false, incluir_orientacao_sexual: false
+    # header = "nome,nome do meio,sobrenome,sexo,data de nascimento,cpf,fone,e-mail,natural de,cep,endereço,cidade,estado,país,profissão,preferência de contato,#{incluir_orientacao_sexual ? "orientação sexual," : ""}pronome de tratamento,nome preferido#{incluir_trans ? ",transexual" : ""}".upcase
+    # "#{header}\n" \
+    #   "#{collection.each.map {|pessoa| "#{pessoa.para_csv}"}.join("\n")}"
+    CSV.generate(col_sep: ',') do |csv|
+      csv << [
+        "NOME",
+        "NOME DO MEIO",
+        "SOBRENOME",
+        "SEXO",
+        "DATA DE NASCIMENTO",
+        "CPF",
+        "FONE",
+        "E-MAIL",
+        "NATURAL DE",
+        "CEP",
+        "ENDEREÇO",
+        "CIDADE",
+        "ESTADO",
+        "PAÍS",
+        "PROFISSÃO",
+        "PREFERÊNCIA DE CONTATO",
+        "PRONOME DE TRATAMENTO",
+      ].compact
+
+      collection.each do |p|
+        csv << [
+          p.nome,
+          p.nome_do_meio || "-",
+          p.sobrenome,
+          p.render_sexo,
+          p.data_nascimento&.strftime("%d/%m/%Y") || "-",
+          p.render_cpf || "-",
+          p.render_fone || "-",
+          p.email || "-",
+          p.nascimento_pais&.nome || "-",
+          "#{p.endereco_logradouro}#{p.endereco_numero&.to_s&.insert(0, "nº ")}#{p.endereco_complemento&.insert(0, " ")}" || "-",
+          p.endereco_cidade || "-",
+          p.endereco_estado || "-",
+          p.pais&.nome || "-",
+          p.profissao || "-",
+          p.preferencia_contato || "-",
+          p.pronome_tratamento || " - ",
+        ].compact
+      end
+    end
+  end
+
+  def self.aniversariantes
+    if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase.include? "sqlite"
+      self.where("strftime('%d%m', data_nascimento) = strftime('%d%m', CURRENT_DATE)")
+    else
+    end
+  end
+
+  private
   # recebimentos
 end

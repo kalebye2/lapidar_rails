@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Atendimento local tipos</h1>
+
+<div id="atendimento_local_tipos">
+  <% @atendimento_local_tipos.each do |atendimento_local_tipo| %>
+    <%= render atendimento_local_tipo %>
+    <p>
+      <%= link_to "Show this atendimento local tipo", atendimento_local_tipo %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New atendimento local tipo", new_atendimento_local_tipo_path %>

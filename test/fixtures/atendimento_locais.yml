@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  atendimento_local_tipo: one
+  descricao: MyString
+  pais: one
+  estado: MyString
+  cidade: MyString
+  endereco_cep: 1
+  endereco_logradouro: MyString
+  endereco_numero: 1
+  endereco_complemento: MyString
+  latitude: 9.99
+  longitude: 9.99
+
+two:
+  atendimento_local_tipo: two
+  descricao: MyString
+  pais: two
+  estado: MyString
+  cidade: MyString
+  endereco_cep: 1
+  endereco_logradouro: MyString
+  endereco_numero: 1
+  endereco_complemento: MyString
+  latitude: 9.99
+  longitude: 9.99

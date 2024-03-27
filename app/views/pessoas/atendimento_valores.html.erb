@@ -1,0 +1,28 @@
+<% titulo "Valores de atendimentos de #{@pessoa.nome_abreviado}" %>
+<h1>Valores de atendimentos - <%= @pessoa.nome_abreviado %></h1>
+
+<form>
+  <div class="field">
+    <label for="de">De</label>
+    <input type="date" name="de" id="de" value="<%= @de %>">
+
+    <label for="ate">Até</label>
+    <input type="date" name="ate" id="ate" value="<%= @ate %>">
+
+    <input type="submit" value="Atualizar">
+  </div>
+
+</form>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Cadastro", pessoa_path(@pessoa), class: 'icon-previous' %>
+    </li>
+    <li>
+      <%= link_to 'Financeiro', financeiro_pessoa_path(@pessoa), class: 'icon-coin-dollar' %>
+    </li>
+  </ul>
+</nav>
+
+<%= render 'atendimento_valores/tabela', atendimento_valores: @atendimento_valores %>

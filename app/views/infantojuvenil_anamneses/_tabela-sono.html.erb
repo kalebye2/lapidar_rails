@@ -1,5 +1,5 @@
 <% cl = 'tabela-infantojuvenil-anamnese-sono' %>
-<% caminho_ajax = infantojuvenil_anamnese_path(sono.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s) %>
+<% caminho_ajax = infantojuvenil_anamnese_path(sono.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s) %>
 <% usuario = usuario_atual == sono.infantojuvenil_anamnese.profissional.usuario %>
 
 <tr class= '<%= cl %>'>
@@ -44,12 +44,14 @@
 <% dict_number.each do |k,v| %>
   <%== hx_tr_number patch: caminho_ajax, id: "#{id = "#{cl}-#{k}"}", th: v, html_class: cl, value: sono.attributes[k.to_s], target: "##{id}", select: "##{id}", swap: "outerHTML", name: "sono[#{k}]" %>
 <% end %>
+
 <% dict_text.each do |k,v| %>
   <%== hx_tr_text patch: caminho_ajax, id: "#{id = "#{cl}-#{k}"}", th: v, html_class: cl, value: html_escape(sono.attributes[k.to_s]), name: "sono[#{k}]", target: "##{id}", select: "##{id}", swap: "outerHTML", placeholder: "Descreva..." %>
 <% end %>
 
 <% dict_textarea.each do |k,v| %>
   <%== hx_tr_textarea placeholder: v, th: v, patch: caminho_ajax, id: "#{id = "#{cl}-#{k}"}", html_class: cl, texto: sono.attributes[k.to_s], select: "##{id}", target: "##{id}", swap: "outerHTML", name: "sono[#{k}]" %>
+  <%# <%== simplemde_gerar "#{id}" %1> %>
 <% end %>
 
 <% else %>

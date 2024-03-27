@@ -1,12 +1,41 @@
 class LaudosController < ApplicationController
   before_action :set_laudo, only: %i[ show edit update delete data_final data_final_edit identificacao_update informacoes_update interessado interessado_edit finalidade finalidade_edit demanda demanda_edit tecnicas tecnicas_edit analise analise_edit conclusao conclusao_edit referencias referencias_edit]
   before_action :validar_usuario
+
+  include Pagy::Backend
+
   def index
     if usuario_atual.secretaria?
-    @laudos = Laudo.order(data_avaliacao: :desc)
+      @laudos = Laudo.order(data_avaliacao: :desc)
     elsif usuario_atual.corpo_clinico?
       @laudos = usuario_atual.profissional.laudos.order(data_avaliacao: :desc)
     end
+
+    @de = params[:de]&.to_date || Laudo.minimum(:data_avaliacao)
+    @ate = params[:ate]&.to_date || Laudo.maximum(:data_avaliacao)
+
+    if params[:status].present?
+      if params[:status].to_sym == :fechado
+        @laudos = @laudos.fechados
+      elsif params[:status].to_sym == :aberto
+        @laudos = @laudos.abertos
+      end
+    end
+
+    if params[:paciente].present?
+      like =  params[:paciente].to_s
+      query = "LOWER(pessoas.nome || ' ' || COALESCE(pessoas.nome_do_meio, '') || ' '|| pessoas.sobrenome) LIKE ?", "%#{like}%"
+      if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
+        query = "LOWER(CONCAT(pessoas.nome, ' ', COALESCE(pessoas.nome_do_meio, ''), ' ', pessoas.sobrenome)) LIKE ?", "%#{like}%"
+      end
+      @laudos = @laudos.joins(:pessoa).where(query)
+    end
+
+    @laudos = @laudos.where(data_avaliacao: @de..@ate)
+
+    @contagem = @laudos.count
+    @pagy, @laudos = pagy(@laudos, items: 9)
+    @params = params.permit(:de, :ate, :profissional, :status, :acompanhamento, :paciente)
   end
 
   def show
@@ -51,7 +80,7 @@ class LaudosController < ApplicationController
   def update
     respond_to do |format|
       if @laudo.update(laudo_params)
-        if params[:ajax].present?
+        if hx_request?
           format.html { render :show }
         else
         format.html { redirect_to laudo_url(@laudo), notice: "laudo was successfully updated." }

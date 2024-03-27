@@ -1,19 +1,62 @@
 <% titulo "Profissionais" %>
 <h1>Quadro de profissionais</h1>
-<p>Profissionais cadastrados: <%= @profissionais.count %></p>
+<p>Profissionais cadastrados:
+<span id="num_profissionais"><%= @profissionais.count %></span>
+</p>
 <% if !usuario_atual.nil? && (usuario_atual.secretaria?) %>
-  <%= link_to "+ profissional", new_profissional_path %>
+  <nav class="navbar navcenter">
+    <ul>
+      <li>
+        <%= link_to "adicionar", new_profissional_path, class: 'icon-plus' %>
+      </li>
+    </ul>
+  </nav>
 <% end %>
 
 <br>
 
-<input name="q"
-       type="text"
-       placeholder="Pesquisar por nome..."
-       hx-get="/profissionais?ajax=true"
-       hx-target="#profissionais-container"
-       hx-trigger="keyup delay:500ms changed"
->
-<div id="query-name-field">
-</div>
+<nav class="navbar">
+  <%= hx_form get: profissionais_path, target: "#profissionais-container", trigger: "keyup delay:500ms changed, change", replace_url: true, style: "display:flex;flex-wrap:wrap;" do %>
+    <input id="nome" name="nome" type="text" placeholder="Pesquisar por nome..." style="width:70%:">
+
+    <div style="padding:.5em;">
+    <label for="sexo">Sexo</label>
+    <select name="sexo" id="sexo">
+      <option value="">AMBOS</option>
+      <option value="masculino" <%= "selected" unless params[:sexo] != "masculino" %>>MASCULINO</option>
+      <option value="feminino" <%= "selected" unless params[:sexo] != "feminino" %>>FEMININO</option>
+    </select>
+    </div>
+
+    <div style="padding:.5em;">
+      <label for="funcao">Função</label>
+      <select name="funcao" id="funcao">
+        <option value="">TODAS</option>
+        <% ProfissionalFuncao.que_realiza_atendimentos.each do |profissional_funcao| %>
+          <option value="<%= profissional_funcao.id %>"><%= profissional_funcao.funcao.upcase %></option>
+        <% end %>
+      </select>
+    </div>
+
+    <div>
+      <label for="pais">País</label>
+      <select name="pais" id="pais">
+        <option value="">TODOS</option>
+      <% Pessoa.joins(:profissional).group(:pais).count.keys.each do |pais| %>
+        <option value="<%= pais.id %>" <%= "selected" unless params[:pais] != pais.id %>><%= pais.nome %></option>
+      <% end %>
+      </select>
+    </div>
+
+    <div>
+      <label for="local_atendimento">Local de atendimento</label>
+      <select name="local_atendimento" id="local_atendimento">
+        <option value="">QUALQUER UM</option>
+        <% AtendimentoLocal.publicos.each do |atendimento_local| %>
+          <option value="<%= atendimento_local.id %>" <%= "selected" unless atendimento_local.id != params[:local_atendimento] %>><%= atendimento_local.descricao %> <%= atendimento_local.endereco_completo&.insert(0, " - ") %></option>
+        <% end %>
+      </select>
+    </div>
+  <% end %>
+</nav>
 <%= render "profissionais-container", profissionais: @profissionais %>

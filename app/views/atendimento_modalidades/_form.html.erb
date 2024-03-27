@@ -1,0 +1,22 @@
+<%= form_with(model: atendimento_modalidade) do |form| %>
+  <% if atendimento_modalidade.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(atendimento_modalidade.errors.count, "error") %> prohibited this atendimento_modalidade from being saved:</h2>
+
+      <ul>
+        <% atendimento_modalidade.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :modalidade, style: "display: block" %>
+    <%= form.text_field :modalidade %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,49 @@
+<nav class="navbar navcenter">
+  <ul class="navbar-ul">
+    <li>
+      <%= link_to 'Prontuário', prontuario_pessoa_path(pessoa), class: "icon-address-book" %>
+      <ul>
+        <%= link_to 'Markdown', prontuario_pessoa_path(pessoa, format: :md) %>
+        <%= link_to 'PDF', prontuario_pessoa_path(pessoa, format: :pdf), target: :blank %>
+      </ul>
+    </li>
+    <% if usuario_atual.financeiro? %>
+      <li>
+        <%= link_to 'Financeiro', financeiro_pessoa_path(pessoa), class: "icon-coin-dollar" %>
+        <ul>
+          <li>
+            <%= link_to 'Recebimentos', recebimentos_pessoa_path(pessoa) %>
+          </li>
+          <li>
+            <%= link_to 'Valores de atendimentos', atendimento_valores_pessoa_path(pessoa) %>
+          </li>
+          <li>
+            <%= link_to 'Reajustes', acompanhamento_reajustes_pessoa_path(pessoa) %>
+          </li>
+        </ul>
+      </li>
+    <% end %>
+    <li>
+      <%= link_to 'Acompanhamentos', acompanhamentos_pessoa_path(pessoa), class: "icon-drawer" %>
+    </li>
+    <% if usuario_atual.secretaria? || usuario_atual.corpo_clinico? %>
+      <li>
+        <%= link_to 'Editar', edit_pessoa_path(pessoa), class: "icon-pencil" %>
+      </li>
+    <% end %>
+    <li>
+      <%= link_to "Modelo de pasta", pessoa_path(pessoa, format: :zip), class: 'icon-file-zip' %>
+    </li>
+    <li>
+      <%= link_to "Ficha", pessoa_path, class: "icon-profile" %>
+      <ul>
+        <li>
+          <%= link_to "Markdown", pessoa_path(pessoa, format: :md) %>
+        </li>
+        <li>
+          <%= link_to "PDF", pessoa_path(pessoa, format: :pdf), target: :blank %>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>

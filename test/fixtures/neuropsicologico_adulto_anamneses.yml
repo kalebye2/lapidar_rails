@@ -1,0 +1,47 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  atendimento: one
+  escolaridade_anos: 1
+  historico_profissional: MyText
+  aspectos_psicoemocionais: MyText
+  historico_ocupacional: MyText
+  historico_medico: MyText
+  aspectos_psicossociais: MyText
+  antecedentes_familiares: MyText
+  comorbidades: MyText
+  desenvolvimento_neuropsicomotor: MyText
+  medicacoes_em_uso: MyText
+  uso_drogas_ilicitas: MyText
+  autonomia_atividades: MyText
+  alimentacao: MyText
+  sono: MyText
+  habilidades_afetadas: MyText
+  quem_encaminhou: MyString
+  motivo_encaminhamento: MyText
+  diagnostico_preliminar: MyText
+  plano_tratamento: MyText
+  prognostico: MyText
+
+two:
+  atendimento: two
+  escolaridade_anos: 1
+  historico_profissional: MyText
+  aspectos_psicoemocionais: MyText
+  historico_ocupacional: MyText
+  historico_medico: MyText
+  aspectos_psicossociais: MyText
+  antecedentes_familiares: MyText
+  comorbidades: MyText
+  desenvolvimento_neuropsicomotor: MyText
+  medicacoes_em_uso: MyText
+  uso_drogas_ilicitas: MyText
+  autonomia_atividades: MyText
+  alimentacao: MyText
+  sono: MyText
+  habilidades_afetadas: MyText
+  quem_encaminhou: MyString
+  motivo_encaminhamento: MyText
+  diagnostico_preliminar: MyText
+  plano_tratamento: MyText
+  prognostico: MyText

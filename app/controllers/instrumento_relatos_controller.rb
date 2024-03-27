@@ -17,7 +17,7 @@ class InstrumentoRelatosController < ApplicationController
       if params[:atendimento]
         @instrumento_relato.atendimento = Atendimento.find(params[:atendimento])
       end
-    if params[:ajax].present?
+    if hx_request?
       render 'new_ajax'
       return
     end

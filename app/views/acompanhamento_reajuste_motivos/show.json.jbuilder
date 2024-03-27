@@ -1,0 +1,1 @@
+json.partial! "acompanhamento_reajuste_motivos/acompanhamento_reajuste_motivo", acompanhamento_reajuste_motivo: @acompanhamento_reajuste_motivo

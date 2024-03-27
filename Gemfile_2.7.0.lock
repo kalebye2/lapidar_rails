@@ -298,7 +298,6 @@ DEPENDENCIES
   capybara (>= 2.15)
   chromedriver-helper
   coffee-rails (~> 4.2)
-  devise
   jbuilder (~> 2.5)
   kramdown
   listen (>= 3.0.5, < 3.2)

@@ -1,0 +1,21 @@
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Cadastro", pessoa, class: "icon-user" %>
+    </li>
+    <li>
+      <%= link_to "Financeiro", financeiro_pessoa_path(pessoa), class: "icon-coin-dollar" %>
+      <ul>
+        <li>
+          <%= link_to "Recebimentos", recebimentos_pessoa_path(pessoa) %>
+        </li>
+        <li>
+          <%= link_to "Valores de atendimentos", atendimento_valores_pessoa_path(pessoa) %>
+        </li>
+        <li>
+          <%= link_to "Reajustes", acompanhamento_reajustes_pessoa_path(pessoa) %>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>

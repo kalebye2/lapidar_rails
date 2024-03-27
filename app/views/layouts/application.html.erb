@@ -8,11 +8,17 @@
     <%= stylesheet_link_tag '/assets/stylesheets/fonts.css', media: 'all' %>
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
     <!-- editor markdown -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
     <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@1.9.5"></script>
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
   </head>
 
   <body class="light">
@@ -21,6 +27,16 @@
     <p class="alert"><%= alert %></p>
 
     <%= turbo_frame_tag "modal" %>
-    <%= yield %>
+    <div class="info-container">
+      <%= yield %>
+    </div>
+
+    <%= render "nav/footer" %>
   </body>
+
+  <script>
+    currency_inputs = document.querySelectorAll("input[data-type='currency']");
+
+    currency_inputs.forEach(currency_input_validate);
+  </script>
 </html>

@@ -1,0 +1,82 @@
+<%= form_with(model: atendimento_local) do |form| %>
+  <% if atendimento_local.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(atendimento_local.errors.count, "error") %> prohibited this atendimento_local from being saved:</h2>
+
+      <ul>
+        <% atendimento_local.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :atendimento_local_tipo_id, "Tipo de local", style: "display: block" %>
+    <%= form.select :atendimento_local_tipo_id, AtendimentoLocalTipo.all.map { |alt| [alt.tipo.upcase, alt.id] } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :descricao, "Descrição", style: "display: block" %>
+    <%= form.text_field :descricao %>
+  </div>
+
+  <div class="field">
+    <%= form.label :pais_id, "País", style: "display: block" %>
+    <%= form.select :pais_id, Pais.all.map { |pais| [pais.nome, pais.id] }, include_blank: true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :endereco_estado, "Estado", style: "display: block" %>
+    <%= form.text_field :endereco_estado %>
+  </div>
+
+  <div class="field">
+    <%= form.label :endereco_cidade, "Cidade", style: "display: block;" %>
+    <%= form.text_field :endereco_cidade %>
+  </div>
+
+  <div class="field">
+    <%= form.label :endereco_bairro, "Bairro", style: "display: block;" %>
+    <%= form.text_field :endereco_bairro %>
+  </div>
+
+  <div class="field">
+    <%= form.label :endereco_cep, style: "display: block" %>
+    <%= form.text_field :endereco_cep %>
+  </div>
+
+  <div class="field">
+    <%= form.label :endereco_logradouro, style: "display: block" %>
+    <%= form.text_field :endereco_logradouro %>
+  </div>
+
+  <div class="field">
+    <%= form.label :endereco_numero, style: "display: block" %>
+    <%= form.number_field :endereco_numero %>
+  </div>
+
+  <div class="field">
+    <%= form.label :endereco_complemento, style: "display: block" %>
+    <%= form.text_field :endereco_complemento %>
+  </div>
+
+  <div class="field">
+    <%= form.label :latitude, style: "display: block" %>
+    <%= form.number_field :latitude, step: :any %>
+  </div>
+
+  <div class="field">
+    <%= form.label :longitude, style: "display: block" %>
+    <%= form.number_field :longitude, step: :any %>
+  </div>
+
+  <div class="field">
+    <%= form.label :publico, "Público" %>
+    <%= form.check_box :publico %>
+  </div>
+
+  <div>
+    <%= form.submit atendimento_local.id.nil? ? "Criar local de atendimento" : "Atualizar local de atendimento" %>
+  </div>
+<% end %>

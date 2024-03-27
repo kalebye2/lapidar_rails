@@ -1,4 +1,10 @@
+<% if !@acompanhamento.nil? %>
+  <%= link_to "Voltar", @acompanhamento, class: "icon-previous" %>
+<% end %>
 <div class="atendimento-form">
+  <% if !@acompanhamento.nil? %>
+    <div class="grid-2">
+  <% end %>
   <%= form_with(model: atendimento, local: true) do |form| %>
     <% if atendimento.errors.any? %>
       <div id="error_explanation">
@@ -13,30 +19,57 @@
 
     <!-- formulário -->
 
-    <%= form.label :acompanhamento %>
-    <%= form.select :acompanhamento_id, Acompanhamento.order(data_inicio: :desc).map { 
-      |acompanhamento| ["#{acompanhamento.pessoa.nome_completo} acompanhado por #{acompanhamento.profissional.nome_completo} desde #{render_data_brasil acompanhamento.data_inicio}", acompanhamento.id] } %>
+    <% if @acompanhamento.nil? %>
+      <div class="field">
+        <%= form.label :acompanhamento %>
+        <%= form.select :acompanhamento_id, Acompanhamento.order(data_inicio: :desc).map { 
+          |acompanhamento| ["#{acompanhamento.pessoa.nome_completo} acompanhado por #{acompanhamento.profissional.nome_completo} desde #{render_data_brasil acompanhamento.data_inicio}", acompanhamento.id] }
+        %>
+      </div>
+    <% else %>
+      <%= form.hidden_field :acompanhamento_id, value: @acompanhamento.id %>
+    <% end %>
 
-    <%= form.label "Tipo de atendimento" %>
-    <%= form.select :atendimento_tipo_id, AtendimentoTipo.order(:tipo).map {
-      |atendimento_tipo| [atendimento_tipo.tipo.upcase, atendimento_tipo.id]
-    } %>
-  <%= form.label "Modalidade de atendimento" %>
-  <%= form.select :modalidade_id, AtendimentoModalidade.order(:modalidade).map { |atendimento_modalidade| [atendimento_modalidade.modalidade, atendimento_modalidade.id] } %>
+    <div class="field">
+      <%= form.label "Tipo de atendimento" %>
+      <%= form.select :atendimento_tipo_id, AtendimentoTipo.where(profissional_funcao: [@acompanhamento.profissional.profissional_funcao, nil]).order(:tipo).map {
+        |atendimento_tipo| [atendimento_tipo.tipo.upcase, atendimento_tipo.id] }
+      %>
+    </div>
 
-  <%= form.label :data %>
-  <%= form.date_field :data %>
+    <div class="field">
+      <%= form.label "Modalidade de atendimento" %>
+      <%= form.select :modalidade_id, AtendimentoModalidade.order(:modalidade).map { |atendimento_modalidade| [atendimento_modalidade.modalidade, atendimento_modalidade.id] } %>
+    </div>
 
-  <%= form.label "Horário" %>
-  <%= form.time_field :horario %>
+    <div class="field">
+      <%= form.label :data %>
+      <%= form.date_field :data %>
+    </div>
 
-  <%= form.label "Considerações" %>
-  <%= form.text_area :anotacoes %>
+    <div class="field">
+      <%= form.label :horario, "Horário" %>
+      <%= form.time_field :horario %>
 
-  <%= form.label "Reagendado" %>
-  <%= form.check_box :reagendado %>
+      <%= form.label :horario_fim, "Até" %>
+      <%= form.time_field :horario_fim %>
+    </div>
 
-  <%= form.submit %>
+    <div class="field">
+    </div>
 
-<% end %>
+    <div class="field">
+      <%= form.label "Considerações" %>
+      <%= form.text_area :anotacoes %>
+    </div>
+    <% submit_text = atendimento.id.nil? ? "Criar atendimento" : "Atualizar atendimento" %>
+    <%= form.submit submit_text %>
+  <% end %>
+
+  <% if !@acompanhamento.nil? %>
+      <div>
+        <%= render "acompanhamento_horarios/resumo_acompanhamento", acompanhamento: @acompanhamento %>
+      </div>
+    </div>
+  <% end %>
 </div>

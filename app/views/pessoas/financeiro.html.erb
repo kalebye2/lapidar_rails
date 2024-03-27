@@ -1,11 +1,13 @@
 <% titulo "Financeiro #{@pessoa.nome_abreviado}" %>
 
-<h1>Financeiro</h1>
+<h1>Financeiro - <%= @pessoa.nome_abreviado %></h1>
+
+<%= render 'navbar', pessoa: @pessoa %>
 
 <div class="grid-2">
   <div>
     <h2>Valores de atendimentos</h2>
-    <%= link_to "Ver todos", financeiro_pessoa_path(@pessoa) %>
+    <%= link_to "Ver todos", atendimento_valores_pessoa_path(@pessoa) %>
     <table>
       <thead>
         <tr>
@@ -56,6 +58,30 @@
             <td><%= recebimento.pagante.nome_completo %> - CPF <%= recebimento.pagante.render_cpf %></td>
             <td><%= recebimento.profissional.descricao_completa %></td>
             <td><%= render_dinheiro_centavos recebimento.valor %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div>
+    <h2>Reajustes</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Acompanhamento</th>
+          <th>Data de negociação</th>
+          <th>Data de reajuste</th>
+          <th>Valor negociado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @pessoa.acompanhamento_reajustes.each do |acompanhamento_reajuste| %>
+          <tr>
+            <td><%= acompanhamento_reajuste.acompanhamento.render_info_para_profissional_alt %></td>
+            <td><%= render_data_brasil acompanhamento_reajuste.data_negociacao %></td>
+            <td><%= render_data_brasil acompanhamento_reajuste.data_ajuste %></td>
+            <td><%= render_dinheiro_centavos acompanhamento_reajuste.valor_novo %></td>
           </tr>
         <% end %>
       </tbody>

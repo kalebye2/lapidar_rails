@@ -1,0 +1,8 @@
+<% if acompanhamento_tipo.presence %>
+<form>
+  <%# <label for="acompanhamento_tipo[tipo]">Tipo de acompanhamento</label> %>
+  <input type="text" name="acompanhamento_tipo[tipo]" id="acompanhamento_tipo[tipo]" value="<%= acompanhamento_tipo.tipo.to_s %>">
+  <button>Atualizar</button>
+  <button>Desfazer</button>
+</form>
+<% end %>

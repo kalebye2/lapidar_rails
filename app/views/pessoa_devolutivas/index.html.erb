@@ -1,11 +1,58 @@
 <% titulo "Devolutivas" %>
 <p id="notice"><%= notice %></p>
+<% total_devolutivas = usuario_atual.secretaria? ? PessoaDevolutiva.all : usuario_atual.profissional.pessoa_devolutivas %>
 
 <h1>Devolutivas para pacientes</h1>
-<%= link_to '+ devolutiva', new_devolutiva_path %>
 
-<ul class="lista-pessoa-devolutivas">
-<% @pessoa_devolutivas.each do |pessoa_devolutiva| %>
-  <li><%= link_to "#{pessoa_devolutiva.informacoes_abreviadas} [#{render_data_brasil pessoa_devolutiva.data}]", devolutiva_url(pessoa_devolutiva) %></li>
-<% end %>
-</ul>
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to '+ devolutiva', new_devolutiva_path %>
+    </li>
+  </ul>
+</nav>
+
+<nav class="navbar navcenter">
+  <%= hx_form get: pessoa_devolutivas_path, target: "#container", swap: "outerHTML", replace_url: true, trigger: "change" do %>
+    <div>
+      <label for="de">De</label>
+      <input type="date" name="de" value="<%= params[:de] %>">
+      <label for="ate">Até</label>
+      <input type="date" name="ate" value="<%= params[:ate] %>">
+    </div>
+
+    <div>
+      <label for="pessoa">Paciente</label>
+      <select name="pessoa">
+        <option value="">Todos</option>
+        <% total_devolutivas.joins(:pessoa).map(&:pessoa).uniq.each do |pessoa| %>
+          <option value="<%= pessoa.id %>" <%= "selected" unless params[:pessoa] != pessoa.id %>><%= pessoa.nome_completo %> (<%= pessoa.render_idade %>)</option>
+        <% end %>
+      </select>
+    </div>
+
+    <div>
+      <label for="responsavel">Responsável</label>
+      <select name="responsavel">
+        <option value="">Todos</option>
+        <% total_devolutivas.joins(:pessoa_responsavel).map(&:pessoa_responsavel).uniq.each do |responsavel| %>
+          <option value="<%= responsavel.id %>" <%= "selected" unless params[:responsavel] != responsavel.id %>><%= responsavel.nome_completo %> (<%= responsavel.render_idade %>)</option>
+        <% end %>
+      </select>
+    </div>
+
+    <% if usuario_atual.secretaria? %>
+      <div>
+        <label for="profissional">Profissional</label>
+        <select name="profissional">
+          <option value="">Todos</option>
+          <% total_devolutivas.joins(:profissional).map(&:profissional).uniq.each do |profissional| %>
+            <option value="<%= profissional.id %>" <%= "selected" unless params[:profissional] != profissional.id %>><%= profissional.descricao_completa %></option>
+          <% end %>
+        </select>
+      </div>
+    <% end %>
+  <% end %>
+</nav>
+
+<%= render "pessoa_devolutivas-container", pessoa_devolutivas: @pessoa_devolutivas %>

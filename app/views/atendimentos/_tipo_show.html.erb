@@ -1,0 +1,10 @@
+<% if atendimento %>
+  <% if usuario_atual.secretaria? || usuario_atual.profissional ==  atendimento.profissional %>
+    <div class="field">
+      <label for="atendimento[atendimento_tipo_id]">Tipo</label>
+        <%== hx_select options: AtendimentoTipo.where(profissional_funcao: [profissional_funcao || ProfissionalFuncao.all].concat([nil])).map { |tipo| [tipo.tipo.upcase, tipo.id]}, value: atendimento.atendimento_tipo_id, name: "atendimento[atendimento_tipo_id]", patch: atendimento_path(atendimento, authenticity_token: form_authenticity_token.to_s, no_redirect: true), swap: "outerHTML", target: "##{dom_id(atendimento)}" %>
+    </div>
+  <% else %>
+    <p><%= atendimento.tipo %></p>
+  <% end %>
+<% end %>

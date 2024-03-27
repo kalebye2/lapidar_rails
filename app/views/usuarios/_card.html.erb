@@ -1,8 +1,9 @@
 <% if usuario %>
   <%= link_to usuario, class: "usuario-card" do %>
-    <div>
-      <h2><%= usuario.profissional.nome_completo %></h2>
-      <p><%= usuario.username %></p>
+    <div class="pessoa-card <%= usuario.pessoa.render_sexo.parameterize %>" style="padding-top:1em;padding-bottom:1em;">
+      <h2 class="icon-user-tie"><%= usuario.profissional.nome_completo %></h2>
+      <h3 class="icon-v-card"> <%= usuario.username %></h3>
+      <p class="icon-profile"><%= usuario.profissional.funcao %> <%= usuario.profissional.documento %></p>
     </div>
   <% end %>
 <% end %>

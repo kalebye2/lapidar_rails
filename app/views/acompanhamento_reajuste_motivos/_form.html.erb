@@ -1,0 +1,17 @@
+<%= form_with(model: acompanhamento_reajuste_motivo) do |form| %>
+  <% if acompanhamento_reajuste_motivo.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(acompanhamento_reajuste_motivo.errors.count, "error") %> prohibited this acompanhamento_reajuste_motivo from being saved:</h2>
+
+      <ul>
+        <% acompanhamento_reajuste_motivo.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

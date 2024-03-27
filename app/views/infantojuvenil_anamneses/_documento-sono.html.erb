@@ -1,0 +1,50 @@
+<h1>Sono</h1>
+
+<dt>A criança dorme bem?</dt>
+<dd><%= sim_ou_nao sono.dorme_bem %></dd>
+
+<dt>A criança pula durante o sono?</dt>
+<dd><%= sim_ou_nao sono.pula %></dd>
+
+<dt>A criança baba durante o sono?</dt>
+<dd><%= sim_ou_nao sono.baba %></dd>
+
+<dt>A criança fala ou grita durante o sono?</dt>
+<dd><%= sim_ou_nao sono.fala_grita %></dd>
+
+<dt>A criança sua durante o sono?</dt>
+<dd><%= sim_ou_nao sono.sudorese %></dd>
+
+<dt>A criança tem movimentos demasiados durante o sono?</dt>
+<dd><%= sim_ou_nao sono.movimento_demasiado %></dd>
+
+<dt>A criança se movimenta durante o sono e não lembra no dia seguinte?</dt>
+<dd><%= sim_ou_nao sono.movimento_sem_lembrar_dia_seguinte %></dd>
+
+<dt>A criança acorda várias vezes?</dt>
+<dd><%= sim_ou_nao sono.acorda_varias_vezes %></dd>
+
+<dt>A criança volta a dormir com facilidade?</dt>
+<dd><%= sim_ou_nao sono.volta_dormir_facilmente %></dd>
+
+<dt>A criança dorme em quarto separado dos pais?</dt>
+<dd><%= sim_ou_nao sono.dorme_quarto_separado_pais %></dd>
+
+<dt>A criança dorme em ambiente compartilhado com quem?</dt>
+<dd><%= markdown_to_html sono.dorme_ambiente_compartilhado_com_quem %></dd>
+
+<dt>A criança dorme em cama individual?</dt>
+<dd><%= sim_ou_nao sono.cama_individual %></dd>
+
+<dt>Até quantos meses a criança dormiu no quarto dos pais?</dt>
+<dd><%= sono.dormiu_quarto_pais_meses %></dd>
+
+<dt>A criança vai para a cama dos pais durante a noite?</dt>
+<dd><%= sim_ou_nao sono.vai_cama_pais %></dd>
+
+<dt>Qual a atitude dos pais quando a criança vai para a cama deles?</dt>
+<dd><%= markdown_to_html sono.cama_pais_atitude_pais %></dd>
+
+<dt>Outras considerações sobre o sono da criança</dt>
+<dd><%= markdown_to_html sono.outras_consideracoes %></dd>
+

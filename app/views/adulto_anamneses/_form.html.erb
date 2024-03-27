@@ -1,0 +1,124 @@
+<%= form_with(model: adulto_anamnese) do |form| %>
+  <% if adulto_anamnese.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(adulto_anamnese.errors.count, "error") %> prohibited this adulto_anamnese from being saved:</h2>
+
+      <ul>
+        <% adulto_anamnese.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :atendimento_id, style: "display: block" %>
+    <%= form.select :atendimento_id, usuario_atual.profissional.atendimentos.de_maiores_de_idade.query_like_tipo("anamnese").map {
+      |atendimento| ["#{atendimento.pessoa.nome_abreviado} acompanhado por #{atendimento.profissional.nome_abreviado} em #{render_data_brasil atendimento.data}", atendimento.id]
+    } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :escolaridade_anos, "Anos de escolaridade", style: "display: block" %>
+    <%= form.number_field :escolaridade_anos %>
+  </div>
+
+  <div class="field">
+    <%= form.label :historico_profissional, "Histórico profissional", style: "display: block" %>
+    <%= form.text_area :historico_profissional %>
+  </div>
+
+  <div class="field">
+    <%= form.label :aspectos_psicoemocionais, style: "display: block" %>
+    <%= form.text_area :aspectos_psicoemocionais %>
+  </div>
+
+  <div class="field">
+    <%= form.label :historico_ocupacional, "Histórico ocupacional", style: "display: block" %>
+    <%= form.text_area :historico_ocupacional %>
+  </div>
+
+  <div class="field">
+    <%= form.label :historico_medico, "Histórico médico", style: "display: block" %>
+    <%= form.text_area :historico_medico %>
+  </div>
+
+  <div class="field">
+    <%= form.label :aspectos_psicossociais, style: "display: block" %>
+    <%= form.text_area :aspectos_psicossociais %>
+  </div>
+
+  <div class="field">
+    <%= form.label :antecedentes_familiares, style: "display: block" %>
+    <%= form.text_area :antecedentes_familiares %>
+  </div>
+
+  <div class="field">
+    <%= form.label :comorbidades, style: "display: block" %>
+    <%= form.text_area :comorbidades %>
+  </div>
+
+  <div class="field">
+    <%= form.label :desenvolvimento_neuropsicomotor, style: "display: block" %>
+    <%= form.text_area :desenvolvimento_neuropsicomotor %>
+  </div>
+
+  <div class="field">
+    <%= form.label :medicacoes_em_uso, "Medicações em uso", style: "display: block" %>
+    <%= form.text_area :medicacoes_em_uso %>
+  </div>
+
+  <div class="field">
+    <%= form.label :uso_drogas_ilicitas, "Faz ou fez uso de drogas ilícitas?", style: "display: block" %>
+    <%= form.text_area :uso_drogas_ilicitas %>
+  </div>
+
+  <div class="field">
+    <%= form.label :autonomia_atividades, "Possui autonomia nas atividades do dia a dia?", style: "display: block" %>
+    <%= form.text_area :autonomia_atividades %>
+  </div>
+
+  <div class="field">
+    <%= form.label :alimentacao, "Alimentação", style: "display: block" %>
+    <%= form.text_area :alimentacao %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sono, style: "display: block" %>
+    <%= form.text_area :sono %>
+  </div>
+
+  <div class="field">
+    <%= form.label :habilidades_afetadas, style: "display: block" %>
+    <%= form.text_area :habilidades_afetadas %>
+  </div>
+
+  <div class="field">
+    <%= form.label :quem_encaminhou, style: "display: block" %>
+    <%= form.text_field :quem_encaminhou %>
+  </div>
+
+  <div class="field">
+    <%= form.label :motivo_encaminhamento, "Motivo do encaminhamento", style: "display: block" %>
+    <%= form.text_area :motivo_encaminhamento %>
+  </div>
+
+  <div class="field">
+    <%= form.label :diagnostico_preliminar, "Diagnóstico preliminar", style: "display: block" %>
+    <%= form.text_area :diagnostico_preliminar %>
+  </div>
+
+  <div class="field">
+    <%= form.label :plano_tratamento, "Plano de tratamento", style: "display: block" %>
+    <%= form.text_area :plano_tratamento %>
+  </div>
+
+  <div class="field">
+    <%= form.label :prognostico, "Prognóstico", style: "display: block" %>
+    <%= form.text_area :prognostico %>
+  </div>
+
+  <div class="submit">
+    <%= form.submit "#{adulto_anamnese.id ? "Atualizar anamnese" : "Criar anamnese"}" %>
+  </div>
+<% end %>

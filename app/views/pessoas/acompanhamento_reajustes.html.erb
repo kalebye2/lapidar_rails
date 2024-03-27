@@ -1,0 +1,31 @@
+<% titulo "Reajustes de valor" %>
+<h1>
+  Reajustes de acompanhamentos -
+  <%= @pessoa.nome_completo %>
+</h1>
+
+<%= render 'navbar', pessoa: @pessoa %>
+
+<div class="acompanhamento-reajustes">
+  <table>
+    <caption><%= @pessoa.nome_abreviado %> - reajustes</caption>
+
+    <thead>
+      <tr>
+        <th>Profissional</th>
+        <th>Acompanhamento</th>
+        <th>Data da negociação</th>
+        <th>Valor negociado</th>
+        <th>Data de ajuste</th>
+        <th>Opções</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @pessoa.acompanhamento_reajustes.each do |acompanhamento_reajuste| %>
+        <%# <%= render "acompanhamento_reajuste_individual", acompanhamento_reajuste: acompanhamento_reajuste %1> %>
+        <%= render "acompanhamento_reajuste_em_tabela", acompanhamento_reajuste: acompanhamento_reajuste %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

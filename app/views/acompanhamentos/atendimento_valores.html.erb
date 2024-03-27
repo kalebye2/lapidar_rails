@@ -1,0 +1,32 @@
+<% titulo "Valores de atendimentos de #{@acompanhamento.tipo.upcase} de #{@acompanhamento.pessoa.nome_abreviado}" %>
+
+<h1>
+  Valores de atendimentos - <%= @acompanhamento.tipo.upcase %>
+  de <%= @acompanhamento.pessoa.nome_abreviado %>
+  iniciado em <%= render_data_brasil @acompanhamento.data_inicio %>
+</h1>
+
+<form>
+  <div class="field">
+    <label for="de">De</label>
+    <input type="date" name="de" id="de" value="<%= @de %>">
+
+    <label for="ate">Até</label>
+    <input type="date" name="ate" id="ate" value="<%= @ate %>">
+
+    <input type="submit" value="Atualizar">
+  </div>
+</form>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to 'Acompanhamento', @acompanhamento, class: 'icon-previous' %>
+    </li>
+    <li>
+      <%= link_to 'Cadastro', @acompanhamento.pessoa, class: 'icon-user' %>
+    </li>
+  </ul>
+</nav>
+
+<%= render 'atendimento_valores/tabela', atendimento_valores: @atendimento_valores %>

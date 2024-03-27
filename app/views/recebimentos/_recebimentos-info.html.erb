@@ -1,0 +1,14 @@
+<div id="recebimentos-info">
+  <%= render 'recebimentos/tabela', recebimentos: recebimentos, de: de, ate: ate %>
+  <%= render "valores-cobrar-container", pessoas: pessoas, atendimento_valores: atendimento_valores %>
+</div>
+
+<% if hx_request? %>
+  <h1 id="recebimentos-titulo" hx-swap-oob="true">Recebimentos - <%= render_data_brasil @de %> a <%= render_data_brasil @ate %></h1>
+
+  <p style="text-align:center;" id="recebimentos-do-periodo" hx-swap-oob="true">
+  Recebimentos do período:
+  <% @total_mes = @recebimentos.sum(:valor) %>
+  <%= render_dinheiro_centavos @total_mes %>
+  </p>
+<% end %>

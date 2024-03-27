@@ -12,7 +12,7 @@
          <form <%== hx_set patch: atendimento_path(atendimento, ajax: true, authenticity_token: form_authenticity_token), trigger: "change", swap: "outerHTML", target: "##{dom_id(atendimento)}" %>>
 
          <label for="atendimento[atendimento_valor_attributes][valor]">Valor</label>
-         <input type="number" value="<%= atendimento_valor.valor %>" name="atendimento[atendimento_valor_attributes][valor]">
+         <input type="text" value="<%= atendimento_valor.valor %>" name="atendimento[atendimento_valor_attributes][valor]" data-type="currency">
 
          <label for="atendimento[atendimento_valor_attributes][desconto]">Desconto</label>
          <input type="number" value="<%= atendimento_valor.desconto %>" name="atendimento[atendimento_valor_attributes][desconto]">
@@ -27,3 +27,7 @@
   <%= render_dinheiro_centavos atendimento.atendimento_valor.valor %>
 <% end %>
 <% end %>
+
+<script>
+  document.querySelectorAll["input[data-type='currency']").forEach(currency_input_validate);
+</script>

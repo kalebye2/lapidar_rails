@@ -1,0 +1,2 @@
+module AtendimentoLocalTiposHelper
+end

@@ -1,0 +1,16 @@
+<% titulo "Agenda - #{@profissional.descricao_completa}" %>
+
+<h1>Agenda profissional</h1>
+<h2><%= @profissional.descricao_completa %></h2>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Profissional", @profissional, class: 'icon-user-tie' %>
+    </li>
+  </ul>
+</nav>
+
+<% dias_disponiveis = @profissional_horarios.map(&:semana_dia).uniq %>
+
+<%= render 'tabela-agenda', profissional: @profissional %>

@@ -1,0 +1,73 @@
+<div id="<%= dom_id instrumento %>">
+  <h1 id="main-title"><%= instrumento.nome %></h2>
+  <h2 class="text-center"><%= instrumento.tipo.upcase %></h2>
+  <% if instrumento.exclusivo_psicologo? %>
+    <h4 class="important text-center">EXCLUSIVO DO PSICÓLOGO</h4>
+  <% end %>
+
+  <p class="<%= instrumento.tem_na_clinica? ? 'icon-checkmark' : 'icon-cross' %>">
+  <%= instrumento.tem_na_clinica? ? "Disponível" : "Indisponível" %>
+  </p>
+
+  <table>
+    <tbody>
+      <tr>
+        <th>Objetivo</th>
+        <td><%= instrumento.objetivo %></td>
+      </tr>
+
+      <tr>
+        <th width="30%">Faixa etária</th>
+        <td><%= instrumento.faixa_etaria ' a ' %></td>
+      </tr>
+
+      <tr>
+        <th>Aplicação</th>
+        <td><%== markdown_to_html instrumento.aplicacao %></td>
+      </tr>
+
+      <tr>
+        <th>Indicação</th>
+        <td><%== markdown_to_html instrumento.indicacao %></td>
+      </tr>
+
+      <tr>
+        <th>Material</th>
+        <td><%== markdown_to_html instrumento.material %></td>
+      </tr>
+
+      <tr>
+        <th>Cronometrado</th>
+        <td><%= instrumento.cronometrado? ? "Sim" : "Não" %></td>
+      </tr>
+
+      <tr>
+        <th>Particularidades</th>
+        <td><%== markdown_to_html instrumento.particularidades %></td>
+      </tr>
+
+      <tr>
+        <th>Funções envolvidas</th>
+        <td>
+          <% instrumento.psicologia_funcoes.uniq.each do |pf| %>
+            <p>
+            <strong><%= pf.nome.upcase %></strong>:
+            <%= pf.psicologia_subfuncoes.map(&:nome).uniq.join(", ").upcase %>
+            </p>
+          <% end %>
+        </td>
+      </tr>
+
+      <tr>
+        <th>Registros de aplicação na clínica</th>
+        <td>
+          <ul>
+            <% instrumento.atendimentos.joins(:acompanhamento).group(:profissional_id).count.map { |k,v| [Profissional.find(k), v] }.each do |record| %>
+              <li><b><%= record[0].funcao[..2] %> <%= record[0].nome_abreviado %></b>: <%= deixar_no_plural record[1], "aplicação", "aplicações" %></li>
+            <% end %>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

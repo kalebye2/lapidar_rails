@@ -94,3 +94,6 @@ gem 'prawn-markup'
 
 # for charts
 gem 'chartkick'
+
+# for maps
+gem 'leaflet-rails'

@@ -4,7 +4,7 @@
 <% tem_avancos_ou_limitacoes = !avancos.empty? || !limitacoes.empty? %>
 
 <% if atendimento.profissional == usuario_atual.profissional %>
-  <div hx-get="<%= anotacoes_edit_atendimento_path(atendimento) %>" hx-target="#<%= dom_id(atendimento) %>_anotacoes">
+  <div hx-get="<%= anotacoes_edit_atendimento_path(atendimento) %>" hx-target="#<%= dom_id(atendimento) %>_anotacoes" style="cursor:pointer;">
     <%== markdown_to_html atendimento.anotacoes || "<button style=\"width:100%;\">Anotar</button>" %>
   </div>
 

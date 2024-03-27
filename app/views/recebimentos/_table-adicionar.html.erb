@@ -1,7 +1,5 @@
 <td colspan="100%" style="text-align:center;">
-  <button
-      hx-get="recebimentos/inline-new"
-      hx-target="#recebimento-adicionar">
+  <button <%= hx_set get: inline_new_recebimentos_path, target: "#recebimento-adicionar" %>>
     Adicionar recebimento
   </button>
 </td>

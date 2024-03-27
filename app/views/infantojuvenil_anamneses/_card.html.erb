@@ -1,17 +1,15 @@
 <% if infantojuvenil_anamnese != nil %>
-  <%= link_to infantojuvenil_anamnese, {class: "infantojuvenil-anamnese-card"} do %>
-  <div class="infantojuvenil-anamnese-card">
-    <h2><%= infantojuvenil_anamnese.pessoa.nome_abreviado %></h2>
-    <h3>Responsável:
+  <%= link_to infantojuvenil_anamnese do %>
+  <div class="card infantojuvenil-anamnese-card">
+    <h2 class="icon-user"><%= infantojuvenil_anamnese.pessoa.nome_abreviado %></h2>
+    <h3 class="icon-eye">Responsável:
       <%= infantojuvenil_anamnese.pessoa_responsavel.nome_abreviado %>
     </h3>
-    <p>Realizado por:
-    <%= infantojuvenil_anamnese.profissional.nome_abreviado %>
-    em
-    <%= render_data_brasil infantojuvenil_anamnese.atendimento.data %>
-    às
-    <%= render_hora_brasil infantojuvenil_anamnese.atendimento.horario %>
-    </h4>
-  </p>
+
+    <h4 class="icon-user-tie"><%= infantojuvenil_anamnese.profissional.nome_abreviado %></h4>
+    <p class="icon-calendar"><%= render_data_brasil infantojuvenil_anamnese.atendimento.data %></p>
+    <p class="icon-clock"><%= render_hora_brasil infantojuvenil_anamnese.atendimento.horario %></p>
+    </p>
+  </div>
   <% end %>
 <% end %>

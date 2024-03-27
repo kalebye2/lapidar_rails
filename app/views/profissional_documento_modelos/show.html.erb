@@ -3,11 +3,24 @@
   <div class="documento-modelo-descricao">
     <h1>Documento: <%= @profissional_documento_modelo.titulo %></h1>
     <h2>Por <%= @profissional_documento_modelo.profissional.nome_abreviado %> (<%= @profissional_documento_modelo.profissional.funcao %>)</h2>
+    <h2>
+    <%= link_to "Editar", edit_profissional_documento_modelo_path(@profissional_documento_modelo), {class: "documento-modelo-edit-btn", style: "color:white;"} %>
+    <%= link_to "markdown", profissional_documento_modelo_path(@profissional_documento_modelo, format: :md) %>
+    </h2>
   </div>
 
   <%# para teste %>
-  <% acompanhamento = AcompanhamentoView.find_by(id: @profissional_documento_modelo.profissional.acompanhamentos.em_andamento.last.id) %>
+  <%# <select> %>
+  <%# <% ApplicationRecord.descendants.each do |d| %1> %>
+  <%#   <option><%= d %1></option> %>
+  <%# <% end %1> %>
+  <%# </select> %>
+  <%# <%= ApplicationRecord.descendants %1> %>
+
+  <% acompanhamento = @profissional_documento_modelo.profissional.acompanhamentos.em_andamento.last %>
   <%# mudar conteúdo do texto com um monte de baboseiras %>
+  <%# <%= acompanhamento.attributes.keys %1> %>
+  <%# <%= acompanhamento.class.reflect_on_all_associations %1> %>
   <% texto_conteudo = @profissional_documento_modelo.conteudo %>
   <% acompanhamento.attributes.each do |k,v| %>
     <% valor_formatado = nil %>
@@ -19,12 +32,30 @@
       <% valor_formatado = v.to_s %>
     <% end %>
 
-    <% texto_conteudo.gsub!("{%#{k.to_s}%}", valor_formatado.to_s) %>
+    <% texto_conteudo.gsub!(/{%\s*#{k.to_s}\s*%}/, valor_formatado.to_s) %>
   <% end %>
 
+  <%# <div> %>
+  <%# <% acompanhamento.class.reflections.keys.each do |k| %1> %>
+  <%#   <p> %>
+  <%#   <%= obj = acompanhamento.try(k) %1> %>
+  <%#   <%= obj.class %1> %>
+  <%#   <%= obj.class.to_s.include?("ActiveRecord_Associations_CollectionProxy") %1> %>
+  <%#   </p> %>
+  <%# <% end %1> %>
+  <%# </div> %>
+
+  <%# <% acompanhamento.profissional.attributes.each do |k,v| %1> %>
+  <%#   <% texto_conteudo.gsub!(/{%\s*profissional\.#{k.to_s}\s*%}/, acompanhamento.profissional[k.to_sym].to_s) %1> %>
+  <%# <% end %1> %>
+
   <div class="documento">
-    <%= link_to "Editar", edit_profissional_documento_modelo_path(@profissional_documento_modelo), {class: "documento-modelo-edit-btn"} %>
-    <%= link_to "markdown", profissional_documento_modelo_path(@profissional_documento_modelo, format: :md) %>
     <%== markdown_to_html texto_conteudo.html_safe %>
   </div>
 </div>
+  <%# <%= acompanhamento.class.singleton_methods(false) %1> %>
+  <%# <%= acompanhamento.class.instance_methods(false) %1> %>
+  <%# <%= acompanhamento.class.methods %1> %>
+  <%# <%= acompanhamento.class.scope_attributes %1> %>
+  <%# <%= acompanhamento.class.reflections.keys.map { |k| acompanhamento.try(k) } %1> %>
+  <br><br>

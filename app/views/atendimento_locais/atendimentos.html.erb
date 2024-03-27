@@ -1,0 +1,51 @@
+<% titulo "Atendimentos em #{@atendimento_local.descricao}" %>
+
+<h1>Atendimentos em <%= @atendimento_local.descricao %></h1>
+
+<form <%= hx_set get: atendimentos_atendimento_local_path(@atendimento_local), target: "#atendimento_local_atendimentos", select: "#atendimento_local_atendimentos", replace_url: true, swap: "outerHTML" %>>
+  <div class="field">
+    <label for="de">De</label>
+    <input type="date" name="de" id="de" value="<%= params[:de] %>">
+  </div>
+
+  <div class="field">
+    <label for="ate">Até</label>
+    <input type="date" name="ate" id="ate" value="<%= params[:ate] %>">
+  </div>
+
+  <div class="action">
+    <input type="submit">
+  </div>
+</form>
+
+<table id="atendimento_local_atendimentos">
+  <caption>
+    Atendimentos <%= render_data_brasil @de %>
+  a <%= render_data_brasil @ate %>
+(<%= deixar_no_plural @atendimentos.count, 'atendimento', 'atendimentos' %>)
+  </caption>
+
+  <thead>
+    <tr>
+      <th>Data</th>
+      <th>Profissional</th>
+      <th>Paciente</th>
+      <th>Atividade</th>
+      <th>Horário</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @atendimentos.each do |atendimento| %>
+      <tr class="tr-atendimento tr-atendimento-<%= atendimento.status.parameterize %>">
+        <td><%= render_data_brasil atendimento.data %></td>
+        <td><%= atendimento.profissional.descricao_completa %></td>
+        <td><%= atendimento.pessoa.nome_abreviado %></td>
+        <td><%= atendimento.tipo %></td>
+        <td><%= atendimento.horario_periodo_verdadeiro %></td>
+        <td><%= atendimento.status.upcase %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

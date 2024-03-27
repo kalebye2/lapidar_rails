@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @atendimento_local_tipo %>
+
+<div>
+  <%= link_to "Edit this atendimento local tipo", edit_atendimento_local_tipo_path(@atendimento_local_tipo) %> |
+  <%= link_to "Back to atendimento local tipos", atendimento_local_tipos_path %>
+
+  <%= button_to "Destroy this atendimento local tipo", @atendimento_local_tipo, method: :delete %>
+</div>

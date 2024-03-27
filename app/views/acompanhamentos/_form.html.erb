@@ -13,27 +13,43 @@
 
 
   <%= form_with(model: acompanhamento, local: true) do |form| %>
-    <div class="field">
-      <%= form.label "Tipo de acompanhamento" %>
-      <%= form.select :acompanhamento_tipo_id, AcompanhamentoTipo.all.map { |acompanhamento_tipo| [acompanhamento_tipo.tipo.upcase, acompanhamento_tipo.id] } %>
-    </div>
+    <% if acompanhamento.id.nil? %>
+      <div class="field">
+        <%= form.label "Tipo de acompanhamento" %>
+        <%= form.select :acompanhamento_tipo_id, AcompanhamentoTipo.all.map { |acompanhamento_tipo| [acompanhamento_tipo.tipo.upcase, acompanhamento_tipo.id] } %>
+      </div>
 
-    <div class="field">
-      <%= form.label :paciente %>
-      <%= form.select :pessoa_id, Pessoa.all.order(nome: :asc, sobrenome: :asc).map {
-        |pessoa| [pessoa.nome_completo, pessoa.id]
-      } %>
-    </div>
+      <% if @pessoa.nil? %>
+        <div class="field">
+          <%= form.label :paciente %>
+          <%= form.select :pessoa_id, Pessoa.all.order(nome: :asc, sobrenome: :asc).map {
+            |pessoa| [pessoa.nome_completo, pessoa.id]
+          } %>
+        </div>
+      <% else %>
+        <%= form.hidden_field :pessoa_id, value: @pessoa.id %>
+      <% end %>
+
+      <% if @profissional.nil? %>
+        <div class="field">
+          <%= form.label "Profissional" %>
+          <%= form.select :profissional_id, Profissional.all.map { |profissional| ["#{profissional.nome_completo} - #{profissional.funcao} #{profissional.documento}", profissional.id ]} %>
+        </div>
+      <% else %>
+        <%= form.hidden_field :profissional_id, value: @profissional.id %>
+      <% end %>
+    <% else %>
+      <h2 class="icon-user"><%= @acompanhamento.pessoa.nome_completo %></h2>
+      <h3 class="icon-user-tie"><%= @acompanhamento.profissional.descricao_completa %></h3>
+      <%= link_to "Voltar", @acompanhamento, class: 'icon-previous' %>
+      <%= link_to "Excluir", @acompanhamento, class: 'icon-bin', method: :delete, "data-confirm" => "Tem certeza que quer excluir o acompanhamento em #{@acompanhamento.tipo.upcase} para #{@acompanhamento.pessoa.nome_abreviado}?" %>
+    <% end %>
 
     <div class="field">
       <%= form.label :plataforma %>
       <%= form.select :plataforma_id, AtendimentoPlataforma.all.order(nome: :asc).map { |plataforma| [plataforma.nome, plataforma.id] } %>
     </div>
 
-    <div class="field">
-      <%= form.label "Profissional" %>
-      <%= form.select :profissional_id, Profissional.all.map { |profissional| ["#{profissional.nome_completo} - #{profissional.funcao} #{profissional.documento}", profissional.id ]} %>
-    </div>
 
     <div class="field">
       <%= form.label "Menor de idade" %>
@@ -57,6 +73,32 @@
       <%= form.date_field :data_inicio %>
     </div>
 
+    <% if acompanhamento.id.nil? %>
+      <div class="field">
+        <%= form.label "Horário da primeira consulta" %>
+        <input type="time" name="horario_primeira_consulta" id="horario_primeira_consulta">
+      </div>
+
+      <div class="field">
+        <label for="tipo_primeira_consulta">Tipo da primeira consulta</label>
+        <select name="tipo_primeira_consulta" id="tipo_primeira_consulta">
+          <% AtendimentoTipo.all.each do |atendimento_tipo| %>
+            <option value="<%= atendimento_tipo.id %>"><%= atendimento_tipo.tipo.upcase %></option>
+          <% end %>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="modalidade_primeira_consulta">
+          Modalidade da primeira consulta
+        </label>
+        <select name="modalidade_primeira_consulta" id="modalidade_primeira_consulta">
+          <% AtendimentoModalidade.all.each do |atendimento_modalidade| %>
+            <option value="<%= atendimento_modalidade.id %>"><%= atendimento_modalidade.modalidade.upcase %></option>
+          <% end %>
+        </select>
+      </div>
+    <% end %>
 
     <% if !acompanhamento.id.nil? %>
       <div class="field">
@@ -71,27 +113,42 @@
 
       <div class="field">
         <%= form.label "Valor da sessão" %>
-        <%= form.text_field :valor_atual %>
+        <%= form.text_field :valor_sessao %>
       </div>
 
       <div class="field">
         <%= form.label "Quantidade de sessões" %>
-        <%= form.number_field :sessoes_atuais, min: 1, max: 31, value: acompanhamento.sessoes_atuais || 4 %>
+        <%= form.number_field :num_sessoes, min: 1, max: 31, value: acompanhamento.num_sessoes || 4 %>
       </div>
     <% end %>
 
     <div class="field">
       <%= form.label acompanhamento.nil? ? "Valor da sessão" : "Valor da sessão no contrato" %>
-      <%= form.text_field :valor_contrato %>
+      <%= form.text_field :valor_sessao_contrato %>
     </div>
 
     <div class="field">
       <%= form.label acompanhamento.nil? ? "Quantidade de sessões mensais" : "Quantidade de sessões mensais no contrato" %>
-      <%= form.number_field :sessoes_contrato, min: 1, max: 31, value: acompanhamento.sessoes_contrato || 4 %>
+      <%= form.number_field :num_sessoes_contrato, min: 1, max: 31, value: acompanhamento.num_sessoes_contrato || 4 %>
+    </div>
+
+    <div class="field">
+      <%= form.label :hipotese_diagnostica, "Hipótese diagnóstica" %>
+      <%= form.text_area :hipotese_diagnostica %>
+    </div>
+
+    <div class="field">
+      <%= form.label :objetivo, "Objetivo" %>
+      <%= form.text_area :objetivo %>
+    </div>
+
+    <div class="field">
+      <%= form.label :prognostico, "Prognóstico" %>
+      <%= form.text_area :prognostico %>
     </div>
 
     <div class="actions">
-      <%= form.submit %>
+      <%= form.submit "#{acompanhamento.id ? "Atualizar acompanhamento" : "Adicionar acompanhamento"}" %>
     </div>
   <% end %>
 </div>

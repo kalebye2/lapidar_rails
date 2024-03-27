@@ -76,6 +76,6 @@ class AcompanhamentoDeclaracaoPdf < BasePdf
 
   def local_e_data
     "#{@acompanhamento.profissional.cidade}, " \
-      "#{Date.today.day} de #{t('date.month_names')[Date.today.month].downcase} de #{Date.today.year}."
+      "#{data_por_extenso}"
   end
 end

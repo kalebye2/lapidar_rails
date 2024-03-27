@@ -4,9 +4,19 @@ class ProfissionalFinanceiroRepassesController < ApplicationController
 
   def index
     @repasses = repasses_por_periodo_params
+
+    if params[:profissional].present?
+      @repasses = @repasses.do_profissional_com_id(params[:profissional])
+    end
+
+    if params[:pagamento_modalidade].present?
+      @repasses = @repasses.da_modalidade_com_id(params[:pagamento_modalidade])
+    end
+
+    @params = params.permit(:de, :ate, :profissional, :pagamento_modalidade)
     respond_to do |format|
       format.html do
-        if params[:ajax].present?
+        if hx_request?
           render partial: "profissional_financeiro_repasses/tabela-repasses", locals: {repasses: @repasses}
           return
         else
@@ -22,8 +32,9 @@ class ProfissionalFinanceiroRepassesController < ApplicationController
     set_de_ate
 
     if usuario_atual.financeiro?
-      @repasses = ProfissionalFinanceiroRepasse.do_periodo(de: @de, ate: @ate)
+      @repasses = ProfissionalFinanceiroRepasse.do_periodo(@de..@ate)
     else
+      @repassses = usuario_atual.profissional.profissional_financeiro_repasses.do_periodo(@de..@ate)
     end
   end
 
@@ -31,7 +42,7 @@ class ProfissionalFinanceiroRepassesController < ApplicationController
     @repasse = ProfissionalFinanceiroRepasse.new
     respond_to do |format|
       format.html do
-        if params[:tabela].present?
+        if hx_request?
           render partial: "profissional_financeiro_repasses/repasse-em-tabela-edit", locals: { repasse: @repasse }
         end
       end
@@ -56,7 +67,7 @@ class ProfissionalFinanceiroRepassesController < ApplicationController
   def show
     respond_to do |format|
       format.html do
-        if params[:tabela].present?
+        if hx_request?
           render partial: "profissional_financeiro_repasses/repasse-em-tabela", locals: {repasse: @repasse}        end
       end
     end
@@ -65,7 +76,7 @@ class ProfissionalFinanceiroRepassesController < ApplicationController
   def edit
     respond_to do |format|
       format.html do
-        if params[:ajax].present?
+        if hx_request?
           render partial: "profissional_financeiro_repasses/repasse-em-tabela-edit", locals: {repasse: @repasse}
         end
       end
@@ -93,8 +104,7 @@ class ProfissionalFinanceiroRepassesController < ApplicationController
 
     respond_to do |format|
       format.html do
-        index
-        render "index"
+        redirect_to profissional_financeiro_repasses_url, notice: "Repasse excluído com sucesso!"
       end
     end
   end
@@ -116,7 +126,7 @@ class ProfissionalFinanceiroRepassesController < ApplicationController
   end
 
   def validar_usuario
-    if usuario_atual.nil? || !usuario_atual.financeiro?
+    if usuario_atual.nil? || !(usuario_atual.financeiro? || usuario_atual.corpo_clinico?)
       render file: "#{Rails.root}/public/404.html", status: 403
     end
   end

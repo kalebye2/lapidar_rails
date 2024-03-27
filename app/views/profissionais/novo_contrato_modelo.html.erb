@@ -1,0 +1,6 @@
+<% titulo "Novo modelo de contrato" %>
+<h1>Novo modelo de contrato para
+  <%= @profissional.descricao_completa %>
+</h1>
+
+<%= render "profissional_contrato_modelos/form", profissional_contrato_modelo: @profissional_contrato_modelo %>

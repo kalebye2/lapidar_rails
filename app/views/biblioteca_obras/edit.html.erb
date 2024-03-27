@@ -1,2 +1,10 @@
-<h1>BibliotecaObras#edit</h1>
-<p>Find me in app/views/biblioteca_obras/edit.html.erb</p>
+<h1>Editing biblioteca obra</h1>
+
+<%= render "form", biblioteca_obra: @biblioteca_obra %>
+
+<br>
+
+<div>
+  <%= link_to "Show this biblioteca obra", @biblioteca_obra %> |
+  <%= link_to "Back to biblioteca obras", biblioteca_obras_path %>
+</div>

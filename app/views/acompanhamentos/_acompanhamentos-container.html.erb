@@ -4,13 +4,14 @@
       <%= render "acompanhamento-card", acompanhamento: a %>
     <% end %>
   </div>
+
   <div id="replace" style="text-align:center;margin:auto;">
-    <% if @pagy && @pagy.page < @pagy.pages %>
-      <button
-        hx-get="acompanhamentos?page=<%= @pagy.page + 1 %>&ajax=true"
-        hx-swap="outerHTML"
-        hx-target="#replace">
-        Carregar mais
+    <% if @pagy %>
+      <button <%= hx_set get: acompanhamentos_path(@params.merge(page: @pagy.page - 1)), swap: "outerHTML", target: "#acompanhamentos-container", replace_url: true %> <%== "disabled" unless @pagy.page > 1 %>>
+        < Página anterior
+      </button>
+      <button <%= hx_set get: acompanhamentos_path(@params.merge(page: @pagy.page + 1)), swap: "outerHTML", target: "#acompanhamentos-container", replace_url: true %> <%= "disabled" unless @pagy.page < @pagy.pages %>>
+        Próxima página >
       </button>
     <% end %>
   </div>

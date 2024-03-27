@@ -35,5 +35,4 @@ class ProfissionalControllerTest < ActionDispatch::IntegrationTest
     get profissional_destroy_url
     assert_response :success
   end
-
 end

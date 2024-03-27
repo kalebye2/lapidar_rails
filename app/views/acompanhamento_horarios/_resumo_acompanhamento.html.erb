@@ -1,14 +1,26 @@
+<% pode_editar = usuario_atual.secretaria? || usuario_atual.profissional == acompanhamento.profissional %>
 <div id="acompanhamento-horarios-lista">
-  <ul>
-    <% acompanhamento.acompanhamento_horarios.each do |horario| %>
-      <li class="acompanhamento-horario-item">
-        <%= horario.descricao_resumida %>
-        <%== hx_link "excluir", acompanhamento_horario_path(acompanhamento, horario: horario.horario.strftime("%H:%M:%S"), horario_fim: horario.horario_fim.strftime("%H:%M:%S"), semana_dia_id: horario.semana_dia_id, authenticity_token: form_authenticity_token.to_s), {"hx-swap" => "outerHTML", "hx-target" => "#acompanhamento-horarios-lista"}, verb: :delete %>
-      </li>
-    <% end %>
-    <div id="acompanhamento-horario-new">
+  <table>
+    <caption>Horários do acompanhamento</caption>
+    <thead>
+    </thead>
+    <tbody>
+      <% acompanhamento.acompanhamento_horarios.each do |horario| %>
+        <tr>
+          <td>
+            <%= horario.descricao_resumida %>
+            <% if pode_editar %>
+              <%= hx_link "excluir", acompanhamento_horario_path(acompanhamento, horario: horario.horario.strftime("%H:%M:%S"), horario_fim: horario.horario_fim.strftime("%H:%M:%S")) %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if pode_editar %>
+    <div id="acompanhamento-horario-new" style="text-align:center;">
       <%= render "acompanhamento_horarios/registrar_novo_horario_button" %>
     </div>
-  </ul>
+  <% end %>
 </div>
-

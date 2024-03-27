@@ -1,25 +1,38 @@
 class ProfissionaisController < ApplicationController
-  paginas_que_precisam_de_validacao = %i[ new show edit update delete acompanhamentos new_profissional_horarios create_profissional_horarios update_profissional_horarios destroy_profissional_horarios ]
-  before_action :set_profissional, only: paginas_que_precisam_de_validacao
+  paginas_que_precisam_de_validacao = %i[ new edit update delete acompanhamentos new_profissional_horarios create_profissional_horarios update_profissional_horarios destroy_profissional_horarios contrato_modelos novo_contrato_modelo agenda ]
+  before_action :set_profissional, only: paginas_que_precisam_de_validacao + [:show] - [:new]
   before_action :validar_usuario, only: paginas_que_precisam_de_validacao
 
   include Pagy::Backend
 
   def index
-    query = "LOWER(nome || ' ' || COALESCE(nome_do_meio, '') || ' '|| sobrenome) LIKE ?", "%#{params[:q].to_s.downcase}%"
-    if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
-      query = "LOWER(CONCAT(nome, ' ', COALESCE(nome_do_meio, ''), ' ', sobrenome)) LIKE ?", "%#{params[:q].to_s.downcase}%"
+    @profissionais = params[:nome].present? ? Profissional.query_like_nome(params[:nome]) : Profissional.all
+    if !usuario_atual
+      @profissionais = @profissionais.que_realiza_atendimentos
     end
-    @profissionais = params[:q].present? ? Profissional.joins(:pessoa).where(query) : Profissional.all.joins("JOIN pessoas ON profissionais.pessoa_id = pessoas.id").order(nome: :asc, sobrenome: :asc)
-    if params[:ajax].present?
-      if params[:q].present?
-        @pagy = nil
-      else
-        @pagy, @profissionais = pagy(@profissionais, items: 9)
-      end
+
+    if params[:sexo].present?
+      @profissionais = params[:sexo].to_sym == :feminino ? @profissionais.mulheres : @profissionais.homens
+    end
+
+    if params[:funcao].present?
+      @profissionais = @profissionais.where(profissional_funcao_id: params[:funcao])
+    end
+
+    if params[:pais].present?
+      @profissionais = @profissionais.joins(:pessoa).where(pessoa: { pais_id: params[:pais] })
+    end
+
+    if params[:local_atendimento].present?
+      @profissionais = @profissionais.no_local_de_atendimento_por_id(params[:local_atendimento])
+    end
+
+    @contagem = @profissionais.count
+    @pagy, @profissionais = pagy(@profissionais, items: 9)
+    @params = params.permit(:nome, :sexo, :funcao)
+
+    if hx_request?
       render partial: "profissionais/profissionais-container", locals: {profissionais: @profissionais}
-    else
-      @pagy, @profissionais = pagy(@profissionais, items: 9)
     end
   end
 
@@ -51,7 +64,40 @@ class ProfissionaisController < ApplicationController
   end
 
   def acompanhamentos
-    @acompanhamentos = @profissional.acompanhamentos
+    if !(usuario_atual.secretaria? || usuario_atual.corpo_clinico?)
+      erro403
+      return
+    end
+
+    @acompanhamentos = @profissional.acompanhamentos.order(data_inicio: :desc)
+
+    if params[:tipo].presence
+      @acompanhamentos = @acompanhamentos.where(acompanhamento_tipo_id: params[:tipo])
+    end
+
+    if params[:status].present?
+      case params[:status].to_sym
+      when :em_andamento
+        @acompanhamentos = @acompanhamentos.em_andamento
+      when :finalizado
+        @acompanhamentos = @acompanhamentos.finalizados
+      when :suspenso
+        @acompanhamentos = @acompanhamentos.suspensos
+      end
+    end
+
+    if params[:paciente].present?
+      like =  params[:paciente].to_s
+      query = "LOWER(pessoas.nome || ' ' || COALESCE(pessoas.nome_do_meio, '') || ' '|| pessoas.sobrenome) LIKE ?", "%#{like}%"
+      if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
+        query = "LOWER(CONCAT(pessoas.nome, ' ', COALESCE(pessoas.nome_do_meio, ''), ' ', pessoas.sobrenome)) LIKE ?", "%#{like}%"
+      end
+      @acompanhamentos = @acompanhamentos.joins(:pessoa).where(query)
+    end
+
+    @contagem = @acompanhamentos.count
+    @pagy, @acompanhamentos = pagy(@acompanhamentos, items: 9)
+    @params = params.permit(:tipo, :status, :paciente)
   end
   
   def new_profissional_horario
@@ -69,6 +115,17 @@ class ProfissionaisController < ApplicationController
   def destroy_profissional_horario
   end
 
+  def contrato_modelos
+  end
+
+  def novo_contrato_modelo
+    @profissional_contrato_modelo = ProfissionalContratoModelo.new(profissional: @profissional)
+  end
+
+  def agenda
+    @profissional_horarios = ProfissionalHorario.where(profissional: @profissional)
+  end
+
   private
 
   def set_profissional
@@ -76,7 +133,7 @@ class ProfissionaisController < ApplicationController
   end
 
   def profissional_params
-    params.require(:profissional).permit(:pessoa_id, :profissional_funcao_id, :documento_regiao_id, :documento_valor, :chave_pix_01, :chave_pix_02, :bio)
+    params.require(:profissional).permit(:pessoa_id, :profissional_funcao_id, :documento_regiao_id, :documento_valor, :chave_pix_01, :chave_pix_02, :bio, profissional_horarios: [:profissional_id, :semana_dia_id, :horario])
   end
 
   def validar_usuario

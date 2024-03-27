@@ -1,10 +1,20 @@
 module ApplicationHelper
   include Pagy::Frontend
 
+  @@site_name = Rails.application.config.app_name || Rails.application.class.module_parent_name.to_s
+
   def titulo(titulo)
     # nome do site
-    site_name = Rails.application.class.module_parent_name.to_s
-    content_for :titulo, [titulo.presence, site_name].compact.join(" | ")
+    site_name = Rails.application.config.app_name || Rails.application.class.module_parent_name.to_s
+    content_for :titulo, [titulo.presence, @@site_name].compact.join(" | ")
+  end
+
+  def nome_do_site
+    @@site_name
+  end
+
+  def titulo_da_aplicacao
+    site_name = Rails.application.config.app_name || Rails.application.class.module_parent_name.to_s
   end
 
   def render_tempo_meses_resumido(tempo_meses = 0)
@@ -51,12 +61,61 @@ module ApplicationHelper
     end
   end
 
-  def markdown_to_html valor, default = "Sem informação"
-    valor.nil? ? default : Kramdown::Document.new(valor.to_s).to_html
-  end
+  def calcular_tempo data1, data2 = Date.today
+    if data1 == nil || data1.class.to_s != "Date" then return "data não informada" end
+    if data2.class.to_s != "Date" then return "" end
+    ultima_data = data2
+    #ultima_data = Date.parse '1996-11-07'
 
-  def markdown valor, default = "Nada"
-    valor.nil? ? default : Kramdown::Document.new(valor.to_s).to_kramdown
+
+    ultima_data_ano = ultima_data.year
+    ultima_data_mes = ultima_data.month
+    ultima_data_dia = ultima_data.day
+
+    data1_ano = data1.year
+    data1_mes = data1.month
+    data1_dia = data1.day
+
+    # agora para os calculos
+    dia_dif = ultima_data_dia - data1_dia
+    mes_dif = ultima_data_mes - data1_mes
+    ano_dif = ultima_data_ano - data1_ano
+
+    #return "# #{mes_dif} #{ano_dif}"
+    # se a diferença é menor que um mês
+    if data2 - data1 < data1.end_of_month.day
+      return pluralize (data2 - data1).to_i, 'dia', 'dias'
+    end
+
+    # data1ido no mesmo ano que ultima_data
+    if ano_dif == 0
+      plural = mes_dif == 1 ? "mês" : "meses"
+      return "#{ultima_data_mes - data1_mes} #{plural}"
+    end
+
+    # data1ido no mesmo mês que ultima_data
+    if mes_dif == 0
+      dia_me = dia_dif >= 0
+      anos_passados = dia_me ? ano_dif : ano_dif - 1
+      plural_anos = anos_passados == 1 ? "" : "s"
+      tem_meses = !dia_me ? " e 11 meses" : ""
+      return "#{anos_passados} ano#{plural_anos}#{tem_meses}"
+    end
+
+    # agora o bicho vai pegar
+    meses_passados = mes_dif < 0 ? 12 + mes_dif : mes_dif
+    dias_passados = dia_dif >= 0
+    meses_passados = dias_passados ? meses_passados : meses_passados - 1
+    anos_passados = mes_dif > 0 ? ano_dif : ano_dif - 1
+
+    plural_anos = anos_passados == 1 ? "ano" : "anos"
+    # plural_meses = meses_passados == 1 ? "mês" : "meses"
+    plural_meses = meses_passados == 1 ? "mês" : "meses"
+    tem_meses = meses_passados > 0 ? " e #{meses_passados} #{plural_meses}" : ""
+
+    return "#{ano_dif} #{plural_anos}#{tem_meses}"
+
+    return "Não foi possível calcular"
   end
 
   def informar valor, default = "Sem informações"
@@ -71,233 +130,11 @@ module ApplicationHelper
     numero.nil? ? default : "#{number_to_currency(numero, precision: casas_decimais, delimiter: ".", unit: "")}#{medida}"
   end
 
-  # markdown
-
-  def markdown_substituir_paragrafo(texto="", substitui_por="")
-    texto.to_s.gsub(/\n\n/, substitui_por)
+  def data_por_extenso data=Date.today
+    return nil if data.class.to_s != "Date"
+    "#{data.day} de #{t('date.month_names')[data.month].downcase} de #{data.year}"
   end
 
-  # HTMX
-  def hx_set get: "", patch: "", put: "", post: "", select: "", target: "", swap: "", swap_oob: "", trigger: "", id: "", html_class: "", replace_url: false, confirm: "", delete: "", includes: ""
-    {
-      "hx-get" => get,
-      "hx-patch" => patch,
-      "hx-put" => put,
-      "hx-post" => post,
-      "hx-delete" => delete,
-      "hx-confirm" => confirm,
-      "hx-trigger" => trigger,
-      "hx-select" => select,
-      "hx-target" => target,
-      "hx-swap" => swap,
-      "swap-oob" => swap_oob,
-      id: id,
-      class: html_class,
-      "hx-replace-url" => replace_url,
-      "hx-include" => includes,
-    }.map{ |k,v| v.to_s.blank? ? "" : "#{k}=\"#{v}\"" }.join(' ')
-  end
-
-  def hx_link body = "Link", url = "", html_options = {}, verb: :get, confirm: "Tem certeza?", &block
-    if block_given?
-    else
-      "<a hx-#{verb}=\"#{url}\" #{verb.to_s.downcase == "delete" && !confirm.empty? ? "hx-confirm=\"#{h confirm}\"" : ""} #{html_options.map { |k,v| "#{k}=\"#{h v}\""}.join(' ')} href=\"javascript:void(0);\">#{h body}</a>"
-    end
-  end
-
-  # formularios ajax HTMX
-  def hx_textarea placeholder: "Descreva...", get: "", patch: "", put: "", post: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", texto: "", cols: "50", rows: "10", name: ""
-    dict = {
-      "hx-get" => get,
-      "hx-patch" => patch,
-      "hx-put" => put,
-      "hx-post" => post,
-      "hx-trigger" => trigger,
-      "hx-select" => select,
-      "hx-target" => target,
-      "hx-swap" => swap,
-      "hx-swap-oob" => swap_oob,
-      :cols => cols,
-      :rows => rows,
-      :name => name,
-    }
-    "<textarea #{dict.map{ |k,v| v.to_s.blank? ? "" : "#{k}=\"#{v}\""}.join(" ")}>#{texto}</textarea>"
-  end
-
-  def hx_input placeholder: "", get: "", patch: "", put: "", post: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", name: "", value: "", type: "text", label: "", replace_url: false
-    dict = {
-      "hx-get" => get,
-      "hx-patch" => patch,
-      "hx-put" => put,
-      "hx-post" => post,
-      "hx-trigger" => trigger,
-      "hx-select" => select,
-      "hx-target" => target,
-      "hx-swap" => swap,
-      "hx-swap-oob" => swap_oob,
-      :name => name,
-      "hx-replace-url" => replace_url,
-    }
-    "#{label.empty? ? '' : "<label for=\"#{name}\">#{label}</label>"}<input type=\"#{type}\" #{dict.map{ |k,v| v.to_s.blank? ? "" : "#{k}=\"#{v}\""}.join(" ")} value=\"#{h value}\">"
-  end
-
-  def hx_text placeholder: "Descreva...", get: "", patch: "", put: "", post: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", texto: "", name: "", value: ""
-    dict = {
-      "hx-get" => get,
-      "hx-patch" => patch,
-      "hx-put" => put,
-      "hx-post" => post,
-      "hx-trigger" => trigger,
-      "hx-select" => select,
-      "hx-target" => target,
-      "hx-swap" => swap,
-      "hx-swap-oob" => swap_oob,
-      :name => name,
-    }
-    "<input type=\"text\" #{dict.map{ |k,v| v.to_s.blank? ? "" : "#{k}=\"#{v}\""}.join(" ")} value=\"#{html_escape value.blank? && !texto.blank? ? texto : value}\">"
-  end
-
-  def hx_number placeholder: "Descreva...", get: "", patch: "", put: "", post: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", value: "", name: ""
-    dict = {
-      "hx-get" => get,
-      "hx-patch" => patch,
-      "hx-put" => put,
-      "hx-post" => post,
-      "hx-trigger" => trigger,
-      "hx-select" => select,
-      "hx-target" => target,
-      "hx-swap" => swap,
-      "hx-swap-oob" => swap_oob,
-      :name => name,
-    }
-    "<input type=\"number\" #{dict.map{ |k,v| v.to_s.blank? ? "" : "#{k}=\"#{v}\""}.join(" ")} value=\"#{value}\">"
-  end
-
-  def hx_select get: "", patch: "", put: "", post: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", options: [["Sem informação", ""], ["Sim", 1], ["Não", 0]], name: "", value: ""
-    dict = {
-      "hx-get" => get,
-      "hx-patch" => patch,
-      "hx-put" => put,
-      "hx-post" => post,
-      "hx-trigger" => trigger,
-      "hx-select" => select,
-      "hx-target" => target,
-      "hx-swap" => swap,
-      "hx-swap-oob" => swap_oob,
-      :name => name,
-    }
-    options_str = options.map{ |k,v| "<option value=\"#{v}\" #{v.to_s == value.to_s ? "selected" : ""}>#{k}</option>"}.join("\n")
-    "<select #{dict.map{ |k,v| v.to_s.blank? ? "" : "#{k}=\"#{v}\""}.join(' ')}>
-    #{options_str}
-    </select>"
-  end
-
-  ## HTMX para formulários em tabela vertical
-  def hx_tr_select id: "", html_class: "", get: "", patch: "", post: "", put: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", options: [["Sem informação", ""], ["Sim", 1], ["Não", 0]], name: "", value: "", th: "", blank: false, blank_option: "[Escolha]"
-    hx_options = {
-      "hx-get" => get,
-      "hx-patch" => patch,
-      "hx-put" => put,
-      "hx-post" => post,
-      "hx-trigger" => trigger,
-      "hx-select" => select,
-      "hx-target" => target,
-      "hx-swap" => swap,
-      "hx-swap-oob" => swap_oob,
-      :name => name,
-    }
-    options_str = options.map{ |k,v| "<option value=\"#{v}\" #{v.to_s == value.to_s ? "selected" : ""}>#{k}</option>"}.join("\n")
-
-    "<tr class=\"#{html_escape html_class}\">
-    <th>#{html_escape th}</th>
-    <td id=\"#{html_escape id}\">
-    <select #{hx_options.map{ |k,v| v.to_s.blank? ? "" : "#{html_escape k}=\"#{html_escape v}\""}.join(' ')}>
-    #{if blank then "<option value=\"\">#{blank_option}</option>" end}
-    #{options_str}
-    </select>
-    </td>
-    </tr>"
-  end
-  
-  def hx_tr_number id: "", html_class: "", get: "", patch: "", post: "", put: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", number: "", name: "", value: "", th: "", placeholder: ""
-    hx_options = {
-      "hx-get" => get,
-      "hx-patch" => patch,
-      "hx-put" => put,
-      "hx-post" => post,
-      "hx-trigger" => trigger,
-      "hx-select" => select,
-      "hx-target" => target,
-      "hx-swap" => swap,
-      "hx-swap-oob" => swap_oob,
-      :name => name,
-      :placeholder => placeholder,
-    }
-
-    "<tr class=\"#{html_escape html_class}\">
-    <th>#{html_escape th}</th>
-    <td id=\"#{html_escape id}\">
-    <input type=\"number\" value=\"#{value.blank? && !number.blank? ? number : value}\" #{hx_options.map{ |k,v| v.to_s.blank? ? "" : "#{html_escape k}=\"#{html_escape v}\""}.join(" ")}>
-    </td>
-    </tr>"
-  end
-  
-  def hx_tr_text id: "", html_class: "", get: "", patch: "", post: "", put: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", texto: "", name: "", value: "", th: "", placeholder: ""
-    hx_options = {
-      "hx-get" => get,
-      "hx-patch" => patch,
-      "hx-put" => put,
-      "hx-post" => post,
-      "hx-trigger" => trigger,
-      "hx-select" => select,
-      "hx-target" => target,
-      "hx-swap" => swap,
-      "hx-swap-oob" => swap_oob,
-      :name => name,
-      :placeholder => placeholder,
-    }
-
-    "<tr class=\"#{html_escape html_class}\">
-    <th>#{html_escape th}</th>
-    <td id=\"#{html_escape id}\">
-    <input type=\"text\" value=\"#{value}\" #{hx_options.map{ |k,v| v.to_s.blank? ? "" : "#{html_escape k}=\"#{html_escape v}\""}.join(" ")}>
-    </td>
-    </tr>"
-  end
-
-  def hx_tr_textarea id: "", html_class: "", get: "", patch: "", post: "", put: "", trigger: "", select: "", target: "", swap: "", swap_oob: "", texto: "", name: "", value: "", th: "", placeholder: "", cols: "50", rows: "10"
-    hx_options = {
-      "hx-get" => get,
-      "hx-patch" => patch,
-      "hx-put" => put,
-      "hx-post" => post,
-      "hx-trigger" => trigger,
-      "hx-select" => select,
-      "hx-target" => target,
-      "hx-swap" => swap,
-      "hx-swap-oob" => swap_oob,
-      :name => name,
-      :placeholder => placeholder,
-      :cols => cols,
-      :rows => rows,
-    }
-
-    "<tr #{h html_class} class=\"#{h html_class}\">
-    <th>#{html_escape th}</th>
-    <td id=\"#{html_escape id}\">
-    <textarea #{hx_options.map{ |k,v| v.to_s.blank? ? "" : "#{html_escape k}=\"#{html_escape v}\""}.join(' ')}>#{texto}</textarea>
-    </td>
-    </tr>"
-  end
-
-  # SimpleMDE
-  def simplemde_gerar id=""
-    "<script>
-        var simplemde = simplemde || {};
-        simplemde[\"#{id}\"] = new SimpleMDE({ element: document.getElementById(\"#{id}\") });
-        simplemde[\"#{id}\"].codemirror.on(\"change\", function() {
-                      document.getElementById(\"#{id}\").innerHTML = simplemde[\"#{id}\"].value();
-                    });
-      </script>"
+  def montar_sentenca
   end
 end

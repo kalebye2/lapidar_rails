@@ -1,6 +1,6 @@
 <% if !events.nil? %>
   <div id="calendario-atendimentos-semana" style="min-height:100vh;">
-    <%= week_calendar(events: events, attribute: :data) do |date, atendimentos|%>
+    <%= week_calendar(events: events, attribute: :data_inicio_verdadeira) do |date, atendimentos|%>
       <div class="day">
         <%= date.day %>
       </div>

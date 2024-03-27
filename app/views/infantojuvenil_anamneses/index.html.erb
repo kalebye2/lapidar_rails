@@ -1,10 +1,56 @@
 <% titulo "Anamneses infantojuvenis" %>
 <h1>Anamneses infantojuvenis</h1>
 
-<%= link_to "Adicionar", new_infantojuvenil_anamnese_path %>
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Adicionar", new_infantojuvenil_anamnese_path, class: 'icon-plus' %>
+    </li>
+  </ul>
+</nav>
 
-<div class="infantojuvenil-anamneses-container">
-  <% @infantojuvenil_anamneses.each do |anamnese| %>
-    <%= render "card", infantojuvenil_anamnese: anamnese %>
+<nav class="navbar navcenter">
+  <%= hx_form get: infantojuvenil_anamneses_path, target: "#infantojuvenil-anamneses-container", select: "#infantojuvenil-anamneses-container", swap: "outerHTML", trigger: "change", replace_url: true do %>
+    <div>
+      <label for="periodo">Período</label>
+      <input name="de" type="date" value="<%= params[:de]&.to_date %>">
+      a
+      <input name="ate" type="date" value="<%= params[:ate]&.to_date %>">
+    </div>
+
+    <div>
+      <label for="pessoa">Paciente</label>
+      <input name="pessoa" type="text" value="<%= params[:pessoa] %>">
+    </div>
+    <div>
+      <label for="responsavel">Responsável</label>
+      <input name="responsavel" type="text" value="<%= params[:responsavel] %>">
+    </div>
+
+    <div>
+      <label for="profissional">Profissional</label>
+      <select name="profissional">
+        <option value="">Qualquer um</option>
+        <% @infantojuvenil_anamneses.map(&:profissional).uniq.each do |profissional| %>
+          <option value="<%= profissional.id %>" <%= "selected" unless profissional.id != params[:profissional] %>><%= profissional.descricao_completa %></option>
+        <% end %>
+      </select>
+    </div>
   <% end %>
+</nav>
+
+<div id="infantojuvenil-anamneses-container">
+  <div class="infantojuvenil-anamneses-container grid-3">
+    <% @infantojuvenil_anamneses.each do |anamnese| %>
+      <%= render "card", infantojuvenil_anamnese: anamnese %>
+    <% end %>
+  </div>
+
+  <div id="replace" style="margin:auto;text-align:center;">
+    <% if @pagy && @pagy.page < @pagy.pages %>
+      <button <%= hx_set get: infantojuvenil_anamneses_path(@params.merge(page: @pagy.page + 1)), target: "#replace", select: "#infantojuvenil-anamneses-container", swap: "outerHTML" %>>
+        Carregar mais
+      </button>
+    <% end %>
+  </div>
 </div>

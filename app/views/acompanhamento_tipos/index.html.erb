@@ -1,0 +1,27 @@
+<h1>Tipos de acompanhamento</h1>
+<%= link_to 'Voltar ao painel administrativo', admin_path() %>
+
+<table>
+  <caption>Tipos de acompanhamento</caption>
+  <thead>
+    <tr>
+      <th width="10%">id</th>
+      <th>Tipo</th>
+    </tr>
+    <tr>
+      <td colspan="100%" style="text-align:center;">
+        <button>+ tipo de acompanhamento</button>
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <% @acompanhamento_tipos.each do |acompanhamento_tipo| %>
+      <tr>
+        <td style="text-align:right;"><%= acompanhamento_tipo.id %></td>
+        <td style="text-align:center;">
+          <%= render "form", acompanhamento_tipo: acompanhamento_tipo %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

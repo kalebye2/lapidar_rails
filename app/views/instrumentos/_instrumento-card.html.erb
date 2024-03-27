@@ -1,0 +1,12 @@
+<a href="javascript:void(0);"
+   class="card instrumento-card <%= if instrumento.exclusivo_psicologo? then "instrumento-exclusivo-psicologo" end %> <%= if !instrumento.tem_na_clinica? then "instrumento-indisponivel" end%>"
+  <%== hx_set get: instrumento_path(instrumento), target: "#instrumento-show", select: "#instrumento-show" %>
+  >
+  <div>
+      <h2 class="icon-file-empty"><%= instrumento.nome %></h2>
+      <h3><%= instrumento.tipo.upcase %></h3>
+      <h4><%= instrumento.faixa_etaria %></h4>
+      <p><%= instrumento.exclusivo_psicologo? ? "EXCLUSIVO DO PSICÓLOGO" : "APLICAÇÃO LIVRE" %></p>
+      <p class="<%= instrumento.tem_na_clinica? ? 'icon-checkmark' : 'icon-cross' %>">Na clínica</p>
+  </div>
+</a>

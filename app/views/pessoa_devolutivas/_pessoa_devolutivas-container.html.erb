@@ -1,0 +1,21 @@
+<div id="container">
+  <div class="devolutivas-container grid-3" id="devolutivas-container">
+    <% pessoa_devolutivas.each do |pessoa_devolutiva| %>
+      <%= render 'card', devolutiva: pessoa_devolutiva %>
+    <% end %>
+  </div>
+
+  <div id="replace" style="margin:auto;text-align:center;">
+    <% if @pagy %>
+      <% if @pagy.page < @pagy.pages %>
+        <button <%= hx_set get: pessoa_devolutivas_path(@params.merge(page: @pagy.page + 1)), target: "#replace", swap: "outerHTML" %>>
+          Carregar mais
+        </button>
+      <% end %>
+    <% end %>
+  </div>
+
+  <% if hx_request? %>
+    <span id="num_devolutivas" hx-swap-oob="true"><%= @contagem %></span>
+  <% end %>
+</div>

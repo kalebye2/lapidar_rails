@@ -1,0 +1,18 @@
+<% titulo "#{@acompanhamento.tipo.upcase} #{@acompanhamento.pessoa.nome_sigla} - Recebimentos" %>
+
+<h1>Recebimentos</h1>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to 'Voltar', @acompanhamento, class: 'icon-previous' %>
+    </li>
+    <li>
+      <%= link_to 'Adicionar', new_recebimento_acompanhamento_path(@acompanhamento), class: 'icon-plus' %>
+    </li>
+  </ul>
+</nav>
+
+<div class="recebimentos">
+  <%= render 'pessoas/recebimentos-tabela', recebimentos: @acompanhamento.recebimentos, de: @de, ate: @ate %>
+</div>

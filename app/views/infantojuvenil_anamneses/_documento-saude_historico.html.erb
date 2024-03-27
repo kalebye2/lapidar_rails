@@ -1,0 +1,29 @@
+<h1>Histórico de saúde</h1>
+
+<dt>Histórico de doenças</dt>
+<dd><%==  saude_historico.doencas %></dd>
+
+<dt>A criança possui histórico de doença grave? Se sim, descreva a evolução</dt>
+<dd><%==  saude_historico.doenca_grave_e_evolucao %></dd>
+
+<dt>A criança tem acompanhamento médico?</dt>
+<dd><%= sim_ou_nao saude_historico.acompanhamento_medico %></dd>
+
+<dt>A criança usa medicamentos?</dt>
+<dd><%==  saude_historico.medicamentos %></dd>
+
+<dt>A criança possui algum problema de visão?</dt>
+<dd><%==  saude_historico.visao %></dd>
+
+<dt>A criança possui algum problema de audição?</dt>
+<dd><%==  saude_historico.audicao %></dd>
+
+<dt>A criança sofreu algum acidente?</dt>
+<dd><%= sim_ou_nao saude_historico.acidente_sofrido %></dd>
+
+<dt>Se houve acidente, quais foram as consequências?</dt>
+<dd><%==  saude_historico.acidente_consequencias %></dd>
+
+<dt>Outras considerações em relação à saúde da criança</dt>
+<dd><%==  saude_historico.outras_consideracoes %></dd>
+

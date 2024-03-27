@@ -1,7 +1,8 @@
 class BasePdf < Prawn::Document
   include ApplicationHelper
+  include MarkdownHelper
   include ActionView::Helpers::TranslationHelper
-  def initialize(model = nil, page_size: 'A4', margin: [50, 100, 140, 200])
+  def initialize(model = nil, page_size: 'A4', margin: [50, 100, 140, 200], options: {})
     super(page_size: page_size)
     font_families.update(
     "Liberation Sans" => {

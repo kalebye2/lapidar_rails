@@ -1,6 +1,6 @@
 <% cl = 'tabela-infantojuvenil-anamnese-comunicacao' %>
 <% usuario = usuario_atual == comunicacao.infantojuvenil_anamnese.profissional.usuario %>
-<% caminho_ajax = infantojuvenil_anamnese_path(comunicacao.infantojuvenil_anamnese, ajax: true, authenticity_token: form_authenticity_token.to_s) %>
+<% caminho_ajax = infantojuvenil_anamnese_path(comunicacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s) %>
 
 <tr class='<%= cl %>'>
   <th colspan='100%'>

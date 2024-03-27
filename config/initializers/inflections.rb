@@ -21,6 +21,7 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.irregular 'subfuncao', 'subfuncoes'
   inflect.irregular 'juncao', 'juncoes'
   inflect.irregular 'especializacao', 'especializacoes'
+  inflect.irregular 'profissional_especializacao', 'profissional_especializacoes'
   inflect.irregular 'regiao', 'regioes'
   inflect.irregular 'papel', 'papeis'
   inflect.irregular 'pais', 'paises'
@@ -39,4 +40,5 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.irregular 'sessao', 'sessoes'
   inflect.irregular 'repasse', 'repasses'
   inflect.irregular 'dia', 'dias'
+  inflect.irregular 'medicacao', 'medicacoes'
 end

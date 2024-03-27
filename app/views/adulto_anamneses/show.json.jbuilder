@@ -1,0 +1,1 @@
+json.partial! "neuropsicologico_adulto_anamneses/neuropsicologico_adulto_anamnese", neuropsicologico_adulto_anamnese: @neuropsicologico_adulto_anamnese

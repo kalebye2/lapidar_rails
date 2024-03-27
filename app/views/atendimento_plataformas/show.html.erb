@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @atendimento_plataforma %>
+
+<div>
+  <%= link_to "Edit this atendimento plataforma", edit_atendimento_plataforma_path(@atendimento_plataforma) %> |
+  <%= link_to "Back to atendimento plataformas", atendimento_plataformas_path %>
+
+  <%= button_to "Destroy this atendimento plataforma", @atendimento_plataforma, method: :delete %>
+</div>

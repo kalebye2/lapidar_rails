@@ -1,0 +1,9 @@
+<div id="<%= dom_id atendimento_tipo %>" class="card">
+
+  <h2 class="icon-bubble"><%= atendimento_tipo.tipo.upcase %></h2>
+  <h3 class="icon-user-tie"><%= atendimento_tipo.profissional_funcao&.funcao || "Todos" %></h3>
+
+  <%= link_to "Ver", atendimento_tipo_path(atendimento_tipo), class: 'icon-eye' %>
+  <%= link_to "Editar", edit_atendimento_tipo_path(atendimento_tipo), class: 'icon-pencil' %>
+
+</div>
