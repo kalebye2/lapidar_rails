@@ -25,6 +25,15 @@
         <option value="aberto">Aberto</option>
       </select>
     </div>
+    <div>
+      <label for="pessoa">Paciente</label>
+      <select id="pessoa" name="pessoa">
+        <option value="">TODOS</option>
+        <% @laudos_totais.map(&:pessoa).each do |pessoa| %>
+          <option value="<%= pessoa.id %>" <%= "selected" unless pessoa.id != params[:pessoa] %>><%= pessoa.nome_completo %></option>
+        <% end %>
+      </select>
+    </div>
   <% end %>
 </nav>
 

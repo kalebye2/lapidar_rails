@@ -11,6 +11,8 @@ class LaudosController < ApplicationController
       @laudos = usuario_atual.profissional.laudos.order(data_avaliacao: :desc)
     end
 
+    @laudos_totais = @laudos
+
     @de = params[:de]&.to_date || Laudo.minimum(:data_avaliacao)
     @ate = params[:ate]&.to_date || Laudo.maximum(:data_avaliacao)
 
@@ -22,13 +24,17 @@ class LaudosController < ApplicationController
       end
     end
 
-    if params[:paciente].present?
-      like =  params[:paciente].to_s
-      query = "LOWER(pessoas.nome || ' ' || COALESCE(pessoas.nome_do_meio, '') || ' '|| pessoas.sobrenome) LIKE ?", "%#{like}%"
-      if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
-        query = "LOWER(CONCAT(pessoas.nome, ' ', COALESCE(pessoas.nome_do_meio, ''), ' ', pessoas.sobrenome)) LIKE ?", "%#{like}%"
-      end
-      @laudos = @laudos.joins(:pessoa).where(query)
+    # if params[:pessoa].present?
+    #   like =  params[:pessoa].to_s
+    #   @laudos = @laudos.query_pessoa_like_nome(like)
+    # end
+    # if params[:interessado].present?
+    #   like =  params[:interessado].to_s
+    #   @laudos = @laudos.query_interessado_like_nome(like)
+    # end
+
+    if params[:pessoa].present?
+      @laudos = @laudos.joins(:pessoa).where(pessoa: {id: params[:pessoa]})
     end
 
     @laudos = @laudos.where(data_avaliacao: @de..@ate)

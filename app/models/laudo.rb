@@ -7,6 +7,20 @@ class Laudo < ApplicationRecord
   scope :fechados, -> { where(fechado: true) }
   scope :abertos, -> { where(fechado: [false, nil]) }
 
+  scope :query_pessoa_like_nome, -> (like = "") do
+    like = like.to_s
+    query = "LOWER(pessoas.nome || ' ' || COALESCE(pessoas.nome_do_meio, '') || ' '|| pessoas.sobrenome) LIKE ?", "%#{like}%"
+    if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
+      query = "LOWER(CONCAT(pessoas.nome, ' ', COALESCE(pessoas.nome_do_meio, ''), ' ', pessoas.sobrenome)) LIKE ?", "%#{like}%"
+    end
+    joins(:pessoa).where(query)
+  end
+
+  scope :query_interessado_like_nome, -> (like = "") do
+    like = like.downcase
+    where("LOWER(interessado) LIKE '%#{like}%'")
+  end
+
   def paciente
     pessoa
   end
