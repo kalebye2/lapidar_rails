@@ -31,13 +31,13 @@ class AcompanhamentosController < ApplicationController
       @acompanhamentos = @acompanhamentos.do_profissional_com_id(params[:profissional])
     end
 
-    if params[:paciente].present?
-      like =  params[:paciente].to_s
-      query = "LOWER(pessoas.nome || ' ' || COALESCE(pessoas.nome_do_meio, '') || ' '|| pessoas.sobrenome) LIKE ?", "%#{like}%"
-      if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
-        query = "LOWER(CONCAT(pessoas.nome, ' ', COALESCE(pessoas.nome_do_meio, ''), ' ', pessoas.sobrenome)) LIKE ?", "%#{like}%"
-      end
-      @acompanhamentos = @acompanhamentos.joins(:pessoa).where(query)
+    if params[:pessoa].present?
+      like =  params[:pessoa].to_s
+      @acompanhamentos = @acompanhamentos.query_pessoa_like_nome(like)
+    end
+    if params[:responsavel].present?
+      like =  params[:responsavel].to_s
+      @acompanhamentos = @acompanhamentos.query_responsavel_like_nome(like)
     end
 
     @pagy, @acompanhamentos = pagy(@acompanhamentos, items: 9)
