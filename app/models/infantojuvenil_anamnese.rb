@@ -21,8 +21,6 @@ class InfantojuvenilAnamnese < ApplicationRecord
   accepts_nested_attributes_for :pessoa
   accepts_nested_attributes_for :acompanhamento
 
-  belongs_to :atendimento
-
   scope :do_periodo, -> (periodo) { joins(:atendimento).where(atendimento: {data: periodo}) }
 
   scope :do_profissional, -> (profissional) { joins(:profissional).where(profissional: { id: profissional.id }) }
@@ -42,11 +40,11 @@ class InfantojuvenilAnamnese < ApplicationRecord
   end
   scope :query_responsavel_like_nome, -> (like = "") do
     like = like.to_s
-    query = "LOWER(pessoas.nome || ' ' || COALESCE(pessoas.nome_do_meio, '') || ' '|| pessoas.sobrenome) LIKE ?", "%#{like}%"
+    query = "LOWER(responsaveis.nome || ' ' || COALESCE(responsaveis.nome_do_meio, '') || ' '|| responsaveis.sobrenome) LIKE ?", "%#{like}%"
     if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
-      query = "LOWER(CONCAT(pessoas.nome, ' ', COALESCE(pessoas.nome_do_meio, ''), ' ', pessoas.sobrenome)) LIKE ?", "%#{like}%"
+      query = "LOWER(CONCAT(responsaveis.nome, ' ', COALESCE(responsaveis.nome_do_meio, ''), ' ', responsaveis.sobrenome)) LIKE ?", "%#{like}%"
     end
-    joins(:pessoa_responsavel).where(query)
+    joins(:acompanhamento).joins("JOIN pessoas AS responsaveis ON responsaveis.id = acompanhamentos.pessoa_responsavel_id").where(query)
   end
 
   after_create -> (anamnese) { anamnese.criar_anamnese_completa }

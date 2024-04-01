@@ -1,4 +1,6 @@
 class Acompanhamento < ApplicationRecord
+  validates :pessoa, :profissional, :data_inicio, :num_sessoes_contrato, presence: true
+
   belongs_to :profissional
   belongs_to :pessoa
   belongs_to :pessoa_responsavel, class_name: "Pessoa", foreign_key: "pessoa_responsavel_id", optional: true
@@ -46,11 +48,11 @@ class Acompanhamento < ApplicationRecord
   end
   scope :query_responsavel_like_nome, -> (like = "") do
     like = like.to_s
-    query = "LOWER(pessoas.nome || ' ' || COALESCE(pessoas.nome_do_meio, '') || ' '|| pessoas.sobrenome) LIKE ?", "%#{like}%"
+    query = "LOWER(responsaveis.nome || ' ' || COALESCE(responsaveis.nome_do_meio, '') || ' '|| responsaveis.sobrenome) LIKE ?", "%#{like}%"
     if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
-      query = "LOWER(CONCAT(pessoas.nome, ' ', COALESCE(pessoas.nome_do_meio, ''), ' ', pessoas.sobrenome)) LIKE ?", "%#{like}%"
+      query = "LOWER(CONCAT(responsaveis.nome, ' ', COALESCE(responsaveis.nome_do_meio, ''), ' ', responsaveis.sobrenome)) LIKE ?", "%#{like}%"
     end
-    joins(:pessoa_responsavel).where(query)
+    joins("JOIN pessoas AS responsaveis ON responsaveis.id = acompanhamentos.pessoa_responsavel_id").where(query)
   end
 
   accepts_nested_attributes_for :acompanhamento_reajustes

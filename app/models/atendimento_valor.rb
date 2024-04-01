@@ -35,11 +35,11 @@ class AtendimentoValor < ApplicationRecord
   end
   scope :query_responsavel_like_nome, -> (like = "") do
     like = like.to_s
-    query = "LOWER(pessoas.nome || ' ' || COALESCE(pessoas.nome_do_meio, '') || ' '|| pessoas.sobrenome) LIKE ?", "%#{like}%"
+    query = "LOWER(responsaveis.nome || ' ' || COALESCE(responsaveis.nome_do_meio, '') || ' '|| responsaveis.sobrenome) LIKE ?", "%#{like}%"
     if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
-      query = "LOWER(CONCAT(pessoas.nome, ' ', COALESCE(pessoas.nome_do_meio, ''), ' ', pessoas.sobrenome)) LIKE ?", "%#{like}%"
+      query = "LOWER(CONCAT(responsaveis.nome, ' ', COALESCE(responsaveis.nome_do_meio, ''), ' ', responsaveis.sobrenome)) LIKE ?", "%#{like}%"
     end
-    joins(:pessoa_responsavel).where(query)
+    includes(:acompanhamento).joins("JOIN pessoas AS responsaveis ON acompanhamentos.pessoa_responsavel_id = responsaveis.id").where(query)
   end
 
   scope :do_profissional, -> (profissional) { joins(:profissional).where(profissional: {id: profissional.id}) }
@@ -70,6 +70,7 @@ class AtendimentoValor < ApplicationRecord
   def liquido
     valor - taxa_externa - taxa_interna
   end
+  alias valor_liquido liquido
 
   def liquido_externo
     valor - taxa_externa
