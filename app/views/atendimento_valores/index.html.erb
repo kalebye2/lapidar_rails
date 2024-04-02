@@ -1,21 +1,14 @@
 <% titulo "Valores de atendimentos" %>
 <h1>Valores de atendimentos</h1>
 
-<%# <%= form_with url: atendimento_valores_path, local: :true, method: :get do |form| %1> %>
-<%#   <%= form.label :de %1> %>
-<%#   <%= form.date_field :de, value: @de %1> %>
-<%#   <%= form.label :ate, "Até" %1> %>
-<%#   <%= form.date_field :ate, value: @ate %1> %>
-<%#   <%= form.submit "Carregar" %1> %>
-<%# <% end %1> %>
+<nav class="navbar navcenter">
+  <form <%= hx_set get: atendimento_valores_path, target: "#tabela-valores", replace_url: true, trigger: "change" %>>
+    <label for="de">De</label>
+    <input type="date" name="de" id="de" value="<%= @de %>">
+    <label for="ate">Até</label>
+    <input type="date" name="ate" id="ate" value="<%= @ate %>">
 
-<form <%= hx_set get: atendimento_valores_path, target: "#tabela-valores", replace_url: true, trigger: "change" %>>
-  <label for="de">De</label>
-  <input type="date" name="de" id="de" value="<%= @de %>">
-  <label for="ate">Até</label>
-  <input type="date" name="ate" id="ate" value="<%= @ate %>">
-
-  <div class="field">
+    <br>
     <label for="profissional">Profissional</label>
     <select id="profissional" name="profissional">
       <option value="">TODOS</option>
@@ -23,33 +16,28 @@
         <option value="<%= profissional.id %>" <%= "selected" unless profissional.id != params[:profissional] %>><%= profissional.descricao_completa %></option>
       <% end %>
     </select>
-  </div>
 
-  <div class="field">
+    <br>
     <label for="pessoa">Paciente</label>
     <input type="text" value="<%= params[:pessoa] %>" name="pessoa" id="pessoa">
-  </div>
 
-  <div class="field">
+    <br>
     <label for="responsavel">Responsável</label>
     <input type="text" value="<%= params[:pessoa_responavel] %>" name="responsavel" id="responsavel">
-  </div>
+  </form>
+</nav>
 
-  <%# <label for="atendimento_tipo">Tipo de atendimento</label> %>
-  <%# <select id="atendimento_tipo" name="atendimento_tipo"> %>
-  <%#   <option value="">TODOS</option> %>
-  <%#   <% AtendimentoTipo.all.each do |atendimento_tipo| %1> %>
-  <%#     <option value="<%= atendimento_tipo.id %1>" <%= "selected" unless atendimento_tipo.id != params[:atendimento_tipo] %1>><%= atendimento_tipo.tipo.upcase %1></option> %>
-  <%#   <% end %1> %>
-  <%# </select> %>
-
-  <%# <label for="realizado">Status</label> %>
-  <%# <select id="realizado" name="realizado"> %>
-  <%#   <option value="">TODOS</option> %>
-  <%#   <option value="true" <%= "selected" if params[:realizado] %1>>REALIZADOS</option> %>
-  <%#   <option value="false" <%= "selected" if params[:realizado].present? && !params[:realizado] %1>>NÃO REALIZADOS</option> %>
-  <%# </select> %>
-</form>
+<nav class="navbar navcenter" id="formatos-download">
+  <ul>
+    <li>
+      <%= link_to "CSV", atendimento_valores_path(@params.merge(format: :csv)), class: 'icon-table2' %>
+    </li>
+    <li>
+      <%= link_to "Excel", atendimento_valores_path(@params.merge(format: :xlsx)), class: 'icon-file-excel' %>
+    </li>
+  </ul>
+</nav>
+<%== "<br>" * 2 %>
 
 <div id="tabela-valores">
 <%= render "tabela", atendimento_valores: @atendimento_valores %>

@@ -1,0 +1,94 @@
+<% titulo "Financeiro - #{@acompanhamento.tipo.upcase} #{@acompanhamento.pessoa.nome_sigla}" %>
+
+<h1>FINANCEIRO: <%= @acompanhamento.render_info_para_profissional %></h1>
+
+<%= render "navbar_financeiro" %>
+
+<div class="grid-3">
+  <div id="recebimentos">
+    <h2>Últimos recebimentos</h2>
+    <table class="tabela-valores">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Valor</th>
+          <th>Recebido de</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @acompanhamento.recebimentos.last(5).each do |recebimento| %>
+          <tr>
+            <td><%= render_data_brasil recebimento.data %></td>
+            <td class="dinheiro"><%= render_dinheiro_centavos recebimento.valor %></td>
+            <td><%= recebimento.pagante.nome_abreviado %> (CPF <%= recebimento.pagante.render_cpf %>)</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <div class="text-center">
+      <br>
+      <%= link_to "Ver mais...", recebimentos_acompanhamento_path, class: "button" %>
+    </div>
+  </div>
+
+  <div id="atendimento_valores">
+    <h2>Últimos valores de atendimentos</h2>
+    <table class="tabela-valores">
+      <thead>
+        <tr>
+          <th>Atendimento</th>
+          <th>Valor bruto</th>
+          <th>Desconto</th>
+          <th>Taxa externa</th>
+          <th>Taxa interna</th>
+          <th>Valor líquido</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @acompanhamento.atendimento_valores.last(5).each do |atendimento_valor| %>
+          <tr>
+            <td><%= render_data_brasil atendimento_valor.atendimento.data %> às <%= render_hora_brasil atendimento_valor.atendimento.horario_inicio_verdadeiro %></td>
+            <td class="dinheiro"><%= render_dinheiro_centavos atendimento_valor.valor %></td>
+            <td class="dinheiro"><%= render_dinheiro_centavos atendimento_valor.desconto %></td>
+            <td class="dinheiro"><%= render_dinheiro_centavos atendimento_valor.taxa_externa %> (<%= atendimento_valor.taxa_porcentagem_externa / 100.0 %>%)</td>
+            <td class="dinheiro"><%= render_dinheiro_centavos atendimento_valor.taxa_interna %> (<%= atendimento_valor.taxa_porcentagem_interna / 100.0 %>%)</td>
+            <td class="dinheiro"><%= render_dinheiro_centavos atendimento_valor.valor_liquido %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+    <br>
+    <div class="text-center">
+      <%= link_to "Ver mais...", atendimento_valores_acompanhamento_path, class: "button" %>
+    </div>
+  </div>
+
+  <div id="reajustes">
+    <h2>Últimos reajustes</h2>
+    <table class="tabela-valores">
+      <thead>
+        <tr>
+          <th>Data da negociação</th>
+          <th>Data do ajuste</th>
+          <th>Valor do ajuste</th>
+          <th>Motivo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @acompanhamento.acompanhamento_reajustes.each do |acompanhamento_reajuste| %>
+        <tr>
+          <td><%= render_data_brasil acompanhamento_reajuste.data_negociacao %></td>
+          <td><%= render_data_brasil acompanhamento_reajuste.data_ajuste %></td>
+          <td class="dinheiro"><%= render_dinheiro_centavos acompanhamento_reajuste.valor_novo %></td>
+          <td><%= acompanhamento_reajuste.motivo %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+    <br>
+    <div class="text-center">
+      <%= link_to "Ver mais...", acompanhamento_reajustes_acompanhamento_path, class: "button" %>
+    </div>
+  </div>
+</div>

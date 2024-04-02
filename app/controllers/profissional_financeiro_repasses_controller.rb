@@ -14,6 +14,7 @@ class ProfissionalFinanceiroRepassesController < ApplicationController
     end
 
     @params = params.permit(:de, :ate, :profissional, :pagamento_modalidade)
+
     respond_to do |format|
       format.html do
         if hx_request?
@@ -23,7 +24,7 @@ class ProfissionalFinanceiroRepassesController < ApplicationController
         end
       end
       format.csv do
-        send_data ProfissionalFinanceiroRepasse.para_csv(collection: @repasses), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-repasses_#{@de}_#{@ate}.csv", type: "text/csv"
+        send_data ProfissionalFinanceiroRepasse.para_csv(collection: @repasses), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-repasses_#{@de}_#{@ate}#{Profissional.find(params[:profissional]).nome_completo.parameterize.insert(0, "_") unless params[:profissional].blank?}#{PagamentoModalidade.find(params[:pagamento_modalidade]).modalidade.insert(0, "_") unless params[:pagamento_modalidade].blank?}.csv", type: "text/csv"
       end
     end
   end

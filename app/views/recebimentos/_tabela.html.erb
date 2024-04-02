@@ -11,11 +11,10 @@
       <th>Serviço</th>
       <th>Link</th>
     </tr>
-    <% if usuario_atual.financeiro? %>
-      <tr id="recebimento-adicionar" style="font-size:.85em;">
-        <%= render "recebimentos/table-adicionar" %>
-      </tr>
-    <% end %>
+
+    <tr id="recebimento-adicionar" style="font-size:.85em;">
+      <%= render "recebimentos/table-adicionar" %>
+    </tr>
   </thead>
   <tbody>
     <% recebimentos.each do |recebimento| %>

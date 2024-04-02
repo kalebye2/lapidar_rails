@@ -707,7 +707,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "profissional_id", null: false
     t.integer "valor", default: 0, null: false
     t.date "data"
-    t.integer "modalidade_id", null: false
+    t.integer "pagamento_modalidade_id", null: false
   end
 
   create_table "profissional_folga_motivos", force: :cascade do |t|

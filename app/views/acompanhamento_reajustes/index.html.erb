@@ -34,6 +34,26 @@
       <label for="negociacao_ate">Negociação (data final)</label>
       <input type="date" name="negociacao_ate" id="negociacao_ate" value="<%= params[:negociacao_ate] %>">
     </div>
+
+    <div>
+      <label for="pessoa">Cadastro</label>
+      <select name="pessoa" id="pessoa">
+        <option value="">Todos</option>
+        <% @pessoas.each do |pessoa| %>
+          <option value="<%= pessoa.id %>" <%= "selected" unless pessoa.id != params[:pessoa] %>><%= pessoa.nome_completo %> (<%= deixar_no_plural pessoa.acompanhamento_reajustes.count, "reajuste", "reajustes" %>)</option>
+        <% end %>
+      </select>
+    </div>
+
+    <div>
+      <label for="profissional">Profissional</label>
+      <select name="profissional" id="profissional">
+        <option value="">Todos</option>
+        <% @profissionais.each do |profissional| %>
+          <option value="<%= profissional.id %>" <%= "selected" unless profissional.id != params[:profissional] %>><%= profissional.nome_completo %> (<%= deixar_no_plural profissional.acompanhamento_reajustes.count, "reajuste", "reajustes" %>)</option>
+        <% end %>
+      </select>
+    </div>
   <% end %>
 </nav>
 

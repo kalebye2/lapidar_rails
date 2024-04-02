@@ -8,7 +8,62 @@
 
   <p style="text-align:center;" id="recebimentos-do-periodo" hx-swap-oob="true">
   Recebimentos do período:
-  <% @total_mes = @recebimentos.sum(:valor) %>
-  <%= render_dinheiro_centavos @total_mes %>
+  <% @soma_valor_recebimentos = @recebimentos.sum(:valor) %>
+  <%= render_dinheiro_centavos @soma_valor_recebimentos %>
   </p>
+
+  <nav class="navbar navcenter" id="formatos-download" hx-swap-oob="true">
+    <ul>
+      <li>
+        <%= link_to "Baixar relatório", "javascript:void(0);", class: 'icon-download3' %>
+        <ul>
+          <li>
+            <%= link_to "CSV", recebimentos_path(@params.merge(format: :csv)), class: 'icon-table2' %>
+          </li>
+          <li>
+            <%= link_to "Excel", recebimentos_path(@params.merge(format: :xlsx)), class: 'icon-file-excel' %>
+          </li>
+          <li>
+            <%= link_to "Recibos (markdown)", recebimentos_path(@params.merge(format: :zip)), class: 'icon-file-zip' %>
+          </li>
+        </ul>
+      </li>
+
+    <li>
+      <%= link_to "Relatório do mês atual", "javascript:void(0);", class: 'icon-download3' %>
+      <ul>
+        <li>
+          <%= link_to "CSV", recebimentos_path(@params.merge(format: :csv, de: Date.today.beginning_of_month, ate: Date.today.end_of_month)), class: 'icon-table2' %>
+        </li>
+        <li>
+          <%= link_to "Excel", recebimentos_path(@params.merge(format: :xlsx, de: Date.today.beginning_of_month, ate: Date.today.end_of_month)), class: 'icon-file-excel' %>
+        </li>
+        <li>
+          <%= link_to "Recibos (markdown)", recebimentos_path(@params.merge format: :zip, de: Date.today.beginning_of_month, ate: Date.today.end_of_month), class: 'icon-file-zip' %>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <%= link_to "Relatório do mês passado", "javascript:void(0);", class: 'icon-download3' %>
+      <ul>
+        <li>
+          <%= link_to "CSV", recebimentos_path(@params.merge format: :csv, de: (Date.today - 1.month).beginning_of_month, ate: (Date.today - 1.month).end_of_month), class: 'icon-table2' %>
+        </li>
+        <li>
+          <%= link_to "Excel", recebimentos_path(@params.merge format: :xlsx, de: (Date.today - 1.month).beginning_of_month, ate: (Date.today - 1.month).end_of_month), class: 'icon-file-excel' %>
+        </li>
+        <li>
+          <%= link_to "Recibos (markdown)", recebimentos_path(@params.merge format: :zip, de: (Date.today - 1.month).beginning_of_month, ate: (Date.today - 1.month).end_of_month), class: 'icon-file-zip' %>
+        </li>
+      </ul>
+    </li>
+
+    <% if usuario_atual.financeiro? %>
+      <li>
+        <%= link_to "adicionar", new_recebimento_path, { class: "btn-dinheiro icon-plus" } %>
+      </li>
+    <% end %>
+  </ul>
+</nav>
 <% end %>

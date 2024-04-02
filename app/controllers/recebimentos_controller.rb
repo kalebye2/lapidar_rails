@@ -25,22 +25,6 @@ class RecebimentosController < ApplicationController
     end
   end
 
-  #def recebimentos_por_params
-  #  @ano = params[:ano] || Date.today.year
-  #  @mes = params[:mes] || Date.today.month
-  #  @ano_mes = "#{@ano}-#{@mes.to_s.rjust(2, "0")}"
-  #  #@recebimentos = nil
-  #  if usuario_atual.financeiro?
-  #    @pessoas = Pessoa.joins(:atendimento_valores).distinct.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc)
-  #    @atendimento_valores = AtendimentoValor.joins(:atendimento).where("atendimentos.data" => "#{@ano_mes}-01".."#{@ano_mes}-01".to_date.end_of_month.to_s)
-  #    @recebimentos = Recebimento.do_periodo(mes: @mes, ano: @ano)
-  #  else
-  #    @pessoas = usuario_atual.profissional.pacientes
-  #    @atendimento_valores = usuario_atual.profissional.atendimento_valores.joins(:atendimento).where("atendimentos.data" => "#{@ano_mes}-01".."#{@ano_mes}-01".to_date.end_of_month.to_s)
-  #    @recebimentos = usuario_atual.profissional.recebimentos.do_periodo(mes: @mes, ano: @ano)
-  #  end
-  #end
-
   def index
     recebimento_por_periodo_params
 
@@ -49,6 +33,7 @@ class RecebimentosController < ApplicationController
     end
 
     if params[:pessoa].present?
+      @pessoa = params[:pessoa]
       @recebimentos = @recebimentos.query_pessoa_like_nome(params[:pessoa])
     end
 
@@ -60,18 +45,30 @@ class RecebimentosController < ApplicationController
       @recebimentos = @recebimentos.da_modalidade_com_id(params[:modalidade])
     end
 
+    profissional = @profissional || (Profissional.find(params[:profissional]) unless params[:profissional].blank?) || usuario_atual.profissional
+    modalidade = PagamentoModalidade.find(params[:modalidade]) unless params[:modalidade].blank?
+    pessoa = params[:pessoa]
+    pagante = params[:pagante]
+
+    @params = params.permit(:de, :ate, :pessoa, :pagante, :modalidade, :profissional)
+
+    filename = "#{nome_do_site}-relatorio-recebimentos_#{@de}_#{@ate}_#{profissional.funcao.parameterize}_#{profissional.nome_completo.parameterize}#{"_" + pessoa&.parameterize unless pessoa.blank?}#{"_" + pagante&.parameterize unless pagante.blank?}#{"_" + modalidade&.modalidade unless modalidade.blank?}"
+
     respond_to do |format|
       format.html do
         if hx_request?
           render partial: "recebimentos-info", locals: { recebimentos: @recebimentos, de: @de, ate: @ate, pessoas: @pessoas, atendimento_valores: @atendimento_valores }
         end
       end
+
       format.csv do
-        send_data Recebimento.para_csv(collection: @recebimentos), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-recebimentos_#{@de}_#{@ate}.csv", type: 'text/csv'
+        send_data Recebimento.para_csv(collection: @recebimentos), filename: "#{filename}.csv", type: 'text/csv'
       end
+
       format.xlsx do
-        response.headers['Content-Disposition'] = "attachment; filename=#{Rails.application.class.module_parent_name.to_s}-relatorio-recebimentos_#{@de}_#{@ate}.xlsx"
+        response.headers['Content-Disposition'] = "attachment; filename=#{filename}.xlsx"
       end
+
       format.zip do
         compressed_filestream = Zip::OutputStream.write_buffer do |zos|
           @recebimentos.each do |recebimento|
@@ -105,10 +102,12 @@ class RecebimentosController < ApplicationController
   end
 
   def inline_new
+    @hx_params = params.permit(:de, :ate, :pessoa, :pagante, :modalidade, :profissional)
     render partial: "recebimentos/table-form", recebimento: Recebimento.new
   end
 
   def inline_adicionar
+    @hx_params = params.permit(:de, :ate, :pessoa, :pagante, :modalidade, :profissional)
     render partial: "recebimentos/table-adicionar"
   end
 
@@ -125,15 +124,14 @@ class RecebimentosController < ApplicationController
     if @acompanhamento then @recebimento.acompanhamento = @acompanhamento end
     if params[:recebimento][:direto_profissional]
       p = params[:recebimento]
-      ProfissionalFinanceiroRepasse.create(profissional_id: Acompanhamento.find(p[:acompanhamento_id]).profissional.id, valor: p[:valor], data: p[:data], modalidade_id: p[:modalidade_id])
+      ProfissionalFinanceiroRepasse.create(profissional_id: Acompanhamento.find(p[:acompanhamento_id]).profissional.id, valor: p[:valor], data: p[:data], pagamento_modalidade_id: p[:pagamento_modalidade_id])
     end
 
     respond_to do |format|
       if @recebimento.save
         format.html do
           if hx_request?
-            # recebimentos_por_params
-            render partial: "recebimentos/recebimentos-info", locals: { recebimentos: @recebimentos, de: @de, ate: @ate, atendimento_valores: @atendimento_valores, pessoas: @pessoas }
+            index
             return
           else
             if @acompanhamento
@@ -143,7 +141,7 @@ class RecebimentosController < ApplicationController
               redirect_to recebimentos_pessoa_path(@pessoa), notice: "Recebimento criado com sucesso para #{@pessoa.nome_abreviado}!"
               return
             else
-              redirect_to recebimentos_path, notice: "recebimento was successfully created."
+              redirect_to recebimentos_path, notice: "Recebimento was successfully created."
               return
             end
           end
@@ -214,7 +212,7 @@ class RecebimentosController < ApplicationController
   end
 
   def recebimento_params
-    params.require(:recebimento).permit(:pessoa_pagante_id, :acompanhamento_id, :valor, :data, :modalidade_id)
+    params.require(:recebimento).permit(:pessoa_pagante_id, :acompanhamento_id, :valor, :data, :pagamento_modalidade_id)
   end
 
   def validar_usuario

@@ -18,6 +18,19 @@ class AcompanhamentoReajustesController < ApplicationController
       @acompanhamento_reajustes = usuario_atual.profissional.acompanhamento_reajustes
     end
 
+    @pessoas = @acompanhamento_reajustes.includes(:pessoa).order("pessoas.nome" => :asc, "pessoas.nome_do_meio" => :asc, "pessoas.sobrenome" => :asc).map(&:pessoa).uniq
+    @profissionais = @acompanhamento_reajustes.includes(:profissional).map(&:profissional).uniq
+
+    if params[:pessoa].present?
+      @pessoa = Pessoa.find(params[:pessoa])
+      @acompanhamento_reajustes = @acompanhamento_reajustes.da_pessoa(@pessoa)
+    end
+
+    if params[:profissional].present?
+      @profissional = Profissional.find(params[:profissional])
+      @acompanhamento_reajustes = @acompanhamento_reajustes.do_profissional(@profissional)
+    end
+
     @acompanhamento_reajustes = @acompanhamento_reajustes.ajustes_no_periodo(@ajuste_de..@ajuste_ate)
     @acompanhamento_reajustes = @acompanhamento_reajustes.negociacoes_no_periodo(@negociacao_de..@negociacao_ate)
     @contagem = @acompanhamento_reajustes.count

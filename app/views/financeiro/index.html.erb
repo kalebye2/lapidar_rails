@@ -5,16 +5,16 @@
   <nav class="navbar navcenter">
     <ul>
       <li>
-        <%= link_to "Recebimentos", recebimentos_path %>
+        <%= link_to "Recebimentos", recebimentos_path, class: "icon-coins" %>
       </li>
       <li>
-        <%= link_to "Valores de atendimentos", atendimento_valores_path %>
+        <%= link_to "Valores de atendimentos", atendimento_valores_path, class: "icon-archive" %>
       </li>
       <li>
-        <%= link_to "Repasses aos profissionais", profissional_financeiro_repasses_path %>
+        <%= link_to "Repasses aos profissionais", profissional_financeiro_repasses_path, class: "icon-forward1" %>
       </li>
       <li>
-        <%= link_to "Reajustes", acompanhamento_reajustes_path %>
+        <%= link_to "Reajustes", acompanhamento_reajustes_path, class: "icon-abacus" %>
       </li>
     </ul>
   </nav>
@@ -42,7 +42,9 @@
           <%= recebimento.modalidade || "Meio desconhecido" %>
           </p>
         <% end %>
-        <%= link_to "ver mais", recebimentos_path %>
+        <div class="text-center">
+          <%= link_to "ver mais", recebimentos_path, class: "button" %>
+        </div>
       </div>
     </div>
 
@@ -59,7 +61,9 @@
           <%= atendimento_valor.atendimento.modalidade %>
           </p>
         <% end %>
-        <%= link_to "mais...", atendimento_valores_path %>
+        <div class="text-center">
+          <%= link_to "mais...", atendimento_valores_path, class: "button full-width" %>
+        </div>
       </div>
     </div>
 
@@ -73,7 +77,9 @@
         <%= render_dinheiro_centavos repasse.valor %>
         </p>
       <% end %>
-      <%= link_to "ver mais", profissional_financeiro_repasses_path %>
+      <div class="text-center">
+        <%= link_to "ver mais", profissional_financeiro_repasses_path, class: "button" %>
+      </div>
     </div>
   </div>
 </div>

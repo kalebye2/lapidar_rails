@@ -1,7 +1,8 @@
 <td>
   <select name="acompanhamentos_de" style="max-width:10em;min-width:15em;font-size:.9em;" <%= hx_set get: select_acompanhamento_recebimentos_path(table: true), target: "#select_acompanhamento", swap: "outerHTML" %>>
     <option value="">[Escolha]</option>
-    <% Pessoa.em_ordem_alfabetica.each do |pessoa| %>
+    <% pessoas = usuario_atual.financeiro? ? Pessoa.all : usuario_atual.profissional.pacientes %>
+    <% pessoas.em_ordem_alfabetica.each do |pessoa| %>
       <option value="<%= pessoa.id %>"><%= pessoa.nome_completo %> (<%= pessoa.render_idade %>)</option>
     <% end %>
   </select>
@@ -12,7 +13,7 @@
 <td>
   <select name="recebimento[pessoa_pagante_id]" style="max-width:15em;min-width:15em;font-size:.85em;">
     <option value="">[Deixe assim se o pagante for o beneficiário]</option>
-    <% Pessoa.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc).each do |p| %>
+    <% Pessoa.em_ordem_alfabetica.each do |p| %>
       <option value="<%= p.id %>">
       <%= p.nome_completo %> -
       CPF <%= p.render_cpf %>
@@ -29,10 +30,10 @@
   <input type="number" name="recebimento[valor]" value="0">
 </td>
 <td>
-  <select name="recebimento[modalidade_id]">
+  <select name="recebimento[pagamento_modalidade_id]">
     <% PagamentoModalidade.all.each do |pag| %>
       <option value="<%= pag.id %>">
-        <%= pag.modalidade %>
+      <%= pag.modalidade %>
       </option>
     <% end %>
   </select>
@@ -42,15 +43,17 @@
   Pagamento direto
   <input type="checkbox" name="recebimento[direto_profissional]">
 </td>
+
 <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
 <input type="hidden" name="ajax" value="1">
+
 <td>-</td>
+
 <td>
-  <button hx-post="<%= recebimentos_path %>" hx-include="closest tr" hx-target="#recebimentos-info" hx-swap="outerHTML">
+  <button <%= hx_set post: recebimentos_path(@hx_params), include: "closest tr", target: "#recebimentos-info", swap: "outerHTML", select: "#recebimentos-info" %>>
     Confirmar
   </button>
-  <button
-      hx-get="recebimentos/inline-adicionar"
-      hx-target="#recebimento-adicionar">
+  <button <%= hx_set get: inline_adicionar_recebimentos_path(@hx_params), target: "#recebimento-adicionar" %>>
     Cancelar
   </button>
+</td>

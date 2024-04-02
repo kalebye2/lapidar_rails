@@ -31,4 +31,12 @@
   <p style="text-align:center;" id="numero-repasses" hx-swap-oob="true">
   <b><%= deixar_no_plural @repasses.count, "repasse", "repasses" %></b> no período.
   </p>
+
+  <nav class="navbar navcenter" id="formatos-download" hx-swap-oob="true">
+    <ul>
+      <li>
+        <%= link_to "CSV", profissional_financeiro_repasses_path(@params.merge format: :csv), class: "icon-table" %>
+      </li>
+    </ul>
+  </nav>
 <% end %>

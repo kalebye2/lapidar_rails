@@ -31,6 +31,11 @@
     <li>
       <%= link_to "CSV", recebimentos_pessoa_path(@pessoa, de: @de, ate: @ate, format: :csv), class: 'icon-table2' %>
     </li>
+
+    <li>
+      <%= link_to "Excel", recebimentos_pessoa_path(@pessoa, de: @de, ate: @ate, format: :xlsx), class: "icon-file-excel" %>
+    </li>
+
     <li>
       <%= link_to "Recibos (markdown)", recebimentos_pessoa_path(@pessoa, de: @de, ate: @ate, format: :zip), class: 'icon-file-zip' %>
     </li>

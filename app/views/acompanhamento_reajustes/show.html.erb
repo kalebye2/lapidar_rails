@@ -17,10 +17,16 @@ a cobrança de
 por atendimento.
 </p>
 
-<%= link_to 'Voltar', acompanhamento_reajustes_path %>
-
 <nav class="navbar navcenter">
   <ul>
+    <li>
+      <%= link_to "Reajustes", acompanhamento_reajustes_path, class: "icon-previous" %>
+    </li>
+
+    <li>
+      <%= link_to "Acompanhamento", acompanhamento_path(@acompanhamento_reajuste.acompanhamento), class: "icon-profile" %>
+    </li>
+
     <li>
       <%= link_to 'Editar', edit_acompanhamento_reajuste_path(@acompanhamento_reajuste), class: 'icon-pencil'%>
     </li>

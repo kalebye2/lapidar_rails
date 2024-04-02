@@ -1,7 +1,8 @@
 class ProfissionalFinanceiroRepasse < ApplicationRecord
   require 'csv'
   belongs_to :profissional
-  belongs_to :pagamento_modalidade, foreign_key: :modalidade_id
+  belongs_to :pagamento_modalidade
+  alias modalidade pagamento_modalidade
 
   scope :do_mes, -> (mes = Date.current.all_month, ordem: :asc) { where(data: mes).order(data: ordem) }
   scope :deste_mes, -> {do_mes}

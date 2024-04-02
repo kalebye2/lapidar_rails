@@ -2,17 +2,54 @@
 
 <h1>Recebimentos</h1>
 
+<%= render "navbar_financeiro" %>
+
 <nav class="navbar navcenter">
   <ul>
     <li>
-      <%= link_to 'Voltar', @acompanhamento, class: 'icon-previous' %>
+      <%= link_to 'Financeiro', financeiro_acompanhamento_path, class: 'icon-previous' %>
     </li>
+
     <li>
       <%= link_to 'Adicionar', new_recebimento_acompanhamento_path(@acompanhamento), class: 'icon-plus' %>
     </li>
   </ul>
 </nav>
 
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "CSV", recebimentos_acompanhamento_path(@params.merge(format: :csv)), class: "icon-table" %>
+    </li>
+
+    <li>
+      <%= link_to "Excel", recebimentos_acompanhamento_path(@params.merge(format: :xlsx)), class: "icon-file-excel" %>
+    </li>
+
+    <li>
+      <%= link_to "Recibos (Markdown)", recebimentos_acompanhamento_path(@params.merge(format: :zip)), class: "icon-file-zip" %>
+    </li>
+  </ul>
+</nav>
+
+<nav class="navbar navcenter">
+  <form <%= hx_set get: recebimentos_acompanhamento_path(@params), target: "#tabela-recebimentos", swap: "outerHTML", trigger: "change", replace_url: true %> id="form-recebimentos">
+    <label for="de">De</label>
+    <input type="date" name="de" id="de" value="<%= @de %>">
+    <label for="ate">Até</label>
+    <input type="date" name="ate" id="ate" value="<%= @ate %>">
+
+    <br>
+    <label for="pagamento_modalidade">Modalidade de pagamento</label>
+    <select name="pagamento_modalidade" id="pagamento_modalidade">
+      <option value="">Qualquer uma</option>
+      <% PagamentoModalidade.all.each do |pagamento_modalidade| %>
+        <option value="<%= pagamento_modalidade.id %>" <%= "selected" unless pagamento_modalidade.id != params[:pagamento_modalidade] %>><%= pagamento_modalidade.modalidade.upcase %></option>
+      <% end %>
+    </select>
+  </form>
+</nav>
+
 <div class="recebimentos">
-  <%= render 'pessoas/recebimentos-tabela', recebimentos: @acompanhamento.recebimentos, de: @de, ate: @ate %>
+  <%= render 'pessoas/recebimentos-tabela', recebimentos: @recebimentos, de: @de, ate: @ate %>
 </div>

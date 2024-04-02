@@ -12,6 +12,11 @@ class AcompanhamentoReajuste < ApplicationRecord
   scope :ajustes_no_periodo, -> (periodo) { where(data_ajuste: periodo) }
   scope :negociacoes_no_periodo, -> (periodo) { where(data_negociacao: periodo) }
 
+  scope :do_profissional, -> (profissional) { joins(:profissional).where(acompanhamento: {profissional: profissional}) }
+  scope :do_profissional_com_id, -> (id) { joins(:profissional).where(profissional: {id: id}) }
+  scope :da_pessoa, -> (pessoa) { joins(:pessoa).where(acompanhamento: {pessoa: pessoa}) }
+  scope :da_pessoa_com_id, -> (id) { joins(:pessoa).where(pessoa: {id: id}) }
+
   accepts_nested_attributes_for :acompanhamento
 
   def motivo

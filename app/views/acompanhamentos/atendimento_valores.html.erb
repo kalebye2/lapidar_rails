@@ -6,27 +6,44 @@
   iniciado em <%= render_data_brasil @acompanhamento.data_inicio %>
 </h1>
 
-<form>
-  <div class="field">
-    <label for="de">De</label>
-    <input type="date" name="de" id="de" value="<%= @de %>">
 
-    <label for="ate">Até</label>
-    <input type="date" name="ate" id="ate" value="<%= @ate %>">
-
-    <input type="submit" value="Atualizar">
-  </div>
-</form>
+<%= render "navbar_financeiro" %>
 
 <nav class="navbar navcenter">
+  <form <%= hx_set get: atendimento_valores_acompanhamento_path, select: "#tabela-atendimento-valores", target: "#tabela-atendimento-valores", swap: "outerHTML", replace_url: true, trigger: "change" %>>
+      <label for="de">De</label>
+      <input type="date" name="de" id="de" value="<%= @de %>">
+
+      <label for="ate">Até</label>
+      <input type="date" name="ate" id="ate" value="<%= @ate %>">
+  </form>
+</nav>
+
+<nav class="navbar navcenter" id="formatos-download">
   <ul>
     <li>
-      <%= link_to 'Acompanhamento', @acompanhamento, class: 'icon-previous' %>
+      <%= link_to "CSV", atendimento_valores_acompanhamento_path(@params.merge(format: :csv)), class: "icon-table" %>
     </li>
+
     <li>
-      <%= link_to 'Cadastro', @acompanhamento.pessoa, class: 'icon-user' %>
+      <%= link_to "Excel", atendimento_valores_acompanhamento_path(@params.merge(format: :xlsx)), class: "icon-file-excel" %>
     </li>
   </ul>
 </nav>
 
-<%= render 'atendimento_valores/tabela', atendimento_valores: @atendimento_valores %>
+<div id="tabela-atendimento-valores">
+  <%= render 'atendimento_valores/tabela', atendimento_valores: @atendimento_valores %>
+  <% if hx_request? %>
+    <nav class="navbar navcenter" id="formatos-download" hx-swap-oob="true">
+      <ul>
+        <li>
+          <%= link_to "CSV", atendimento_valores_acompanhamento_path(@params.merge(format: :csv)), class: "icon-table" %>
+        </li>
+
+        <li>
+          <%= link_to "Excel", atendimento_valores_acompanhamento_path(@params.merge(format: :xlsx)), class: "icon-file-excel" %>
+        </li>
+      </ul>
+    </nav>
+  <% end %>
+</div>

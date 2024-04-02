@@ -10,14 +10,19 @@ class AtendimentoValoresController < ApplicationController
     @de = params[:de]&.to_date || Date.today.beginning_of_month
     @ate = params[:ate]&.to_date || Date.today.end_of_month
 
-    if usuario_atual.financeiro?
-      @atendimento_valores = AtendimentoValor.do_periodo(@de..@ate, ordem: :desc)
-    else
-      @atendimento_valores = usuario_atual.profissional.atendimento_valores.do_periodo
+    @profissional = nil
+    @pessoa = nil
+    @responsavel = nil
+
+    if @atendimento_valores.blank?
+      if usuario_atual.financeiro?
+        @atendimento_valores = AtendimentoValor.do_periodo(@de..@ate, ordem: :desc)
+      else
+        @atendimento_valores = usuario_atual.profissional.atendimento_valores.do_periodo
+      end
     end
 
     if params[:profissional].present?
-      @profissional = Profissional.find(params[:profissional])
       @atendimento_valores = @atendimento_valores.do_profissional(@profissional)
     end
 
@@ -43,7 +48,9 @@ class AtendimentoValoresController < ApplicationController
       end
     end
 
-    @params = params.permit(:de, :ate, :profissional, :atendimento_tipo, :realizado)
+    @profissional = @acompanhamento&.profissional || (Profissional.find(params[:profissional]) unless params[:profissional].blank?) || usuario_atual.profissional
+    @responsavel = params[:responsavel]
+    @params = params.permit(:de, :ate, :profissional, :atendimento_tipo, :realizado, :pessoa, :responsavel)
 
     respond_to do |format|
       format.html do
@@ -51,8 +58,9 @@ class AtendimentoValoresController < ApplicationController
           render partial: "atendimento_valores/tabela", locals: {atendimento_valores: @atendimento_valores}
         end
       end
+
       format.csv do
-        send_data AtendimentoValor.para_csv(@atendimento_valores), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@de}_#{@ate}#{@profissional&.nome_completo&.parameterize&.insert(0, "_")}#{@pessoa&.parameterize&.insert(0, "_")}#{@responsavel&.parameterize&.insert(0, "_")}.csv", type: "text/csv"
+        send_data AtendimentoValor.para_csv(@atendimento_valores), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@de}_#{@ate}#{@profissional&.nome_completo&.parameterize&.insert(0, "#{@profissional&.funcao&.parameterize}-")&.insert(0, "_")}#{@pessoa&.parameterize&.insert(0, "_")}#{@responsavel&.parameterize&.insert(0, "_")}#{@acompanhamento&.tipo&.parameterize&.insert(0, "_")}#{params[:acompanhamento]}.csv", type: "text/csv"
       end
       format.xlsx do
         response.headers['Content-Disposition'] = "attachment; filename=#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@de}-#{@ate}#{@profissional&.nome_completo&.parameterize&.insert(0, "_")}#{@pessoa&.parameterize&.insert(0, "_")}#{@responsavel&.parameterize&.insert(0, "_")}.xlsx"
