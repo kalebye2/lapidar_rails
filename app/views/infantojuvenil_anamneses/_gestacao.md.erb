@@ -19,7 +19,7 @@ Quanto tempo depois da última gestação a criança foi concebida?
 : <%== render_tempo_meses_resumido gestacao.gestacao_anterior_meses %>
 
 Abortos anteriores (espontâneos e/ou intencionais):
-: <%== gestacao.abortos_anteriores %>
+: <%== gestacao.abortos_anteriores || "Sem informação" %>
 
 Data do pré-natal:
 : <%== render_data_brasil gestacao.data_pre_natal %>
@@ -40,7 +40,7 @@ A mãe vomitou durante a gravidez?
 : <%== informar gestacao.mae_vomitos %>
 
 A mãe teve diabetes durante a gravidez?
-: <%== gestacao.mae_diabetes || "Sem informações" %>
+: <%== sim_ou_nao gestacao.mae_diabetes || "Sem informações" %>
 
 A mãe sofreu traumatismos durante a gravidez?
 : <%== gestacao.mae_traumatismo || "Sem informações" %>
@@ -58,7 +58,7 @@ Tipo de parto
 : <%== gestacao.tipo_de_parto %>
 
 Peso da criança ao nascer:
-: <%== numero_com_medida gestacao.nascimento_peso_g %>
+: <%== numero_com_medida gestacao.nascimento_peso_g, "g" %>
 
 Comprimento da criança ao nascer:
 : <%== numero_com_medida(gestacao.nascimento_comprimento_cm, "cm") %>

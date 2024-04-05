@@ -262,6 +262,7 @@
   <td id="<%= curr_id %>">
     <% if @usuario %>
       <select name="gestacao[parto_local_id]" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s) %>" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML">
+        <option value="">Sem informação</option>
         <% PartoLocal.all.each do |parto_local| %>
           <option <%= if parto_local.id == gestacao.parto_local_id then "selected" end %> value="<%= parto_local.id %>"><%= parto_local.local %></option>
         <% end %>
@@ -278,6 +279,7 @@
   <td id="<%= curr_id %>">
     <% if @usuario %>
       <select name="gestacao[parto_tipo_id]" hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s) %>" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML">
+        <option value="">Sem informação</option>
         <% PartoTipo.all.each do |parto_tipo| %>
           <option <%= if parto_tipo.id == gestacao.parto_tipo_id then "selected" end %> value="<%= parto_tipo.id %>"><%= parto_tipo.tipo %></option>
         <% end %>
