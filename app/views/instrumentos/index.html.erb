@@ -10,6 +10,37 @@
     </li>
   </ul>
 </nav>
+<nav class="navbar navcenter">
+  <%= hx_form get: instrumentos_path, select: "#instrumentos", target: "#instrumentos", swap: "outerHTML", replace_url: true, trigger: "change" do %>
+    <label for="nome">Nome</label>
+    <input type="text" name="nome" id="nome">
+
+    <br>
+
+    <label for="indicacao">Indicação</label>
+    <input type="text" name="indicacao" id="indicacao">
+
+    <br>
+
+    <label for="disponibilidade">Disponibilidade na clínica</label>
+    <select id="disponibilidade" name="disponibilidade">
+      <option value="">Qualquer uma</option>
+      <option value="true">Disponível</option>
+      <option value="false">Indisponível</option>
+    </select>
+
+    <br>
+
+    <label for="exclusivo_psicologo">Exclusivo do psicólogo?</label>
+    <select id="exclusivo_psicologo" name="exclusivo_psicologo">
+      <option value="">Independente</option>
+      <option value="true">Sim</option>
+      <option value="false">Não</option>
+    </select>
+  <% end %>
+</nav>
+
+<br>
 
 <div class="grid-2" style="">
   <div id="instrumentos" class="" style="position:relative;max-height:50em;overflow-y:scroll;">

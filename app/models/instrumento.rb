@@ -4,11 +4,18 @@ class Instrumento < ApplicationRecord
   has_many :psicologia_subfuncoes, through: :instrumento_subfuncao_juncoes
   has_many :psicologia_funcoes, through: :psicologia_subfuncoes
 
-  scope :por_nome, -> (nome) { where("LOWER(nome) LIKE LOWER('%#{nome}%')") }
-  scope :por_indicacao, -> (indicacao) { where("LOWER(indicacao) LIKE LOWER('%#{indicacao}%')") }
+  scope :query_like_nome, -> (nome) { where("LOWER(nome) LIKE LOWER('%#{nome}%')") }
+  scope :query_like_indicacao, -> (indicacao) { where("LOWER(indicacao) LIKE LOWER('%#{indicacao}%')") }
 
-  scope :na_clinica, -> { where(tem_na_clinica: true) }
-  scope :nao_tem_na_clinica, -> { where(tem_na_clinica: [false, nil]) }
+  scope :disponivel_na_clinica, -> { where(tem_na_clinica: true) }
+  scope :nao_disponivel_na_clinica, -> { where(tem_na_clinica: [false, nil]) }
+
+  scope :exclusivo_psicologo, -> { where exclusivo_psicologo: true }
+  scope :nao_exclusivo_psicologo, -> { where exclusivo_psicologo: [false, nil] }
+
+  scope :por_tipo, -> (instrumento_tipo) { where(instrumento_tipo: instrumento_tipo) }
+  scope :por_funcao_psicologica, -> (psicologia_funcao) { joins(:psicologia_funcoes).where(psicologia_funcoes: psicologia_funcao) }
+  scope :por_subfuncao_psicologica, -> (psicologia_subfuncao) { joins(:psicologia_subfuncoes).where(psicologia_subfuncoes: psicologia_subfuncao) }
 
   scope :em_ordem_alfabetica, -> { order(nome: :asc) }
 

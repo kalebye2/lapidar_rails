@@ -7,11 +7,29 @@ class InstrumentosController < ApplicationController
     @instrumentos = Instrumento.all
 
     if params[:nome].present?
-      @instrumentos = @instrumentos.por_nome(params[:nome])
+      @instrumentos = @instrumentos.query_like_nome(params[:nome])
     end
 
     if params[:indicacao].present?
-      @instrumentos = @instrumentos.por_indicacao(params[:indicacao])
+      @instrumentos = @instrumentos.query_like_indicacao(params[:indicacao])
+    end
+
+    if params[:disponibilidade].present?
+      case params[:disponibilidade]
+      when "false", :false, "0"
+        @instrumentos = @instrumentos.nao_disponivel_na_clinica
+      when "true", :true, "1"
+        @instrumentos = @instrumentos.disponivel_na_clinica
+      end
+    end
+
+    if params[:exclusivo_psicologo].present?
+      case params[:exclusivo_psicologo]
+      when "false", :false, "0"
+        @instrumentos = @instrumentos.nao_exclusivo_psicologo
+      when "true", :true, "1"
+        @instrumentos = @instrumentos.exclusivo_psicologo
+      end
     end
   end
 
