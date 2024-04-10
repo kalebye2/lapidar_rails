@@ -2,6 +2,7 @@ class ProfissionalFinanceiroRepasse < ApplicationRecord
   require 'csv'
   belongs_to :profissional
   belongs_to :pagamento_modalidade
+  belongs_to :usuario, optional: true
   alias modalidade pagamento_modalidade
 
   scope :do_mes, -> (mes = Date.current.all_month, ordem: :asc) { where(data: mes).order(data: ordem) }
@@ -9,6 +10,8 @@ class ProfissionalFinanceiroRepasse < ApplicationRecord
   scope :do_mes_atual, -> {do_mes}
   scope :do_mes_passado, -> {do_mes((Date.current - 1.month).all_month)}
   scope :do_periodo, -> (periodo) { where(data: periodo).order(data: :asc) }
+
+  scope :em_ordem, -> (crescente = true) { order(data: crescente ? :asc : :desc) }
 
   scope :do_profissional, -> (profissional) { where(profissional: profissional) }
   scope :do_profissional_com_id, -> (id) { where(profissional_id: id) }

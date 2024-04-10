@@ -123,7 +123,7 @@ class ProfissionalFinanceiroRepassesController < ApplicationController
   end
 
   def profissional_financeiro_repasse_params
-    params.require(:profissional_financeiro_repasse).permit(:data, :profissional_id, :valor, :modalidade_id)
+    params.require(:profissional_financeiro_repasse).permit(:data, :profissional_id, :valor, :pagamento_modalidade_id)
   end
 
   def validar_usuario

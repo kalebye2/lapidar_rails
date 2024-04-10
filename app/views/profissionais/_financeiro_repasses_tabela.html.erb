@@ -1,0 +1,29 @@
+<table id="<%= dom_id profissional %>_repasses_tabela">
+  <thead>
+    <tr>
+      <th>Data</th>
+      <th>Valor</th>
+      <th>Modalidade</th>
+      <th>Registrado por</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% profissional_financeiro_repasses.each do |profissional_financeiro_repasse| %>
+      <tr>
+        <td class="text-center">
+          <%= render_data_brasil profissional_financeiro_repasse.data %>
+        </td>
+        <td class="dinheiro">
+          <%= render_dinheiro_centavos profissional_financeiro_repasse.valor %>
+        </td>
+        <td class="text-center">
+          <%= profissional_financeiro_repasse.pagamento_modalidade.modalidade %>
+        </td>
+        <td class="text-center">
+          <%= profissional_financeiro_repasse.usuario&.profissional&.descricao_completa %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
