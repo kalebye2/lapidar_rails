@@ -4,6 +4,18 @@ class AtendimentosController < ApplicationController
   before_action :validar_edicao, only: %i[ show edit update destroy reagendar_para_proxima_semana gerar_atendimento_valor ]
 
   def index
+    @de = params[:de] || Date.today.beginning_of_month
+    @ate = params[:ate] || Date.today.end_of_month
+
+    @atendimentos = usuario_atual.secretaria? ? Atendimento.em_ordem.do_periodo(@de..@ate) : usuario_atual.profissional.atendimentos.em_ordem.do_periodo(@de..@ate)
+
+    if params[:tipo].present?
+      @atendimentos = @atendimentos.do_tipo_com_id(params[:tipo])
+    end
+
+    if hx_request?
+      render partial: "atendimentos-container", locals: { atendimentos: @atendimentos }
+    end
   end
 
   def show
@@ -21,6 +33,9 @@ class AtendimentosController < ApplicationController
   def new
     @atendimento = Atendimento.new
     @atendimento.build_atendimento_valor
+
+    # @acompanhamento = Acompanhamento.find(atendimento_params[:acompanhamento_id]) if atendimento_params[:acompanhamento_id] != nil
+    @acompanhamento = Acompanhamento.find(params[:atendimento][:acompanhamento_id]) if params[:atendimento] != nil && params[:atendimento][:acompanhamento_id] != nil
   end
 
   def edit

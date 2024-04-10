@@ -6,6 +6,8 @@ class Atendimento < ApplicationRecord
   belongs_to :atendimento_tipo
   belongs_to :atendimento_modalidade, foreign_key: :modalidade_id, inverse_of: :atendimentos
   has_one :profissional, through: :acompanhamento
+  has_one :pessoa, through: :acompanhamento
+  has_one :pessoa_responsavel, through: :acompanhamento
 
   has_one :atendimento_valor, foreign_key: :atendimento_id, primary_key: :id, inverse_of: :atendimento
   has_one :atendimento_reagendamento, foreign_key: :atendimento_id, primary_key: :id, inverse_of: :atendimento
@@ -57,44 +59,89 @@ class Atendimento < ApplicationRecord
   scope :com_anotacoes, -> { where.not(anotacoes: [nil, ""]) }
 
   scope :sem_local_definido, -> { where(atendimento_local: nil) }
+  scope :dos_locais, -> (atendimento_local = AtendimentoLocal.all, ordem = nil) do
+    relation = group(atendimento_local: atendimento_local)
+    if ordem != nil
+    end
+    relation.count
+  end
 
   scope :de_menores_de_idade, -> { joins(:acompanhamento).where(acompanhamento: {menor_de_idade: true}) }
   scope :de_maiores_de_idade, -> { joins(:acompanhamento).where(acompanhamento: {menor_de_idade: [false, nil]}) }
 
   # agrupamentos
-  scope :contagem_por_dia, -> (periodo = "1900-01-01".."2999-12-31") { where(data: periodo).group(:data).count }
-  scope :contagem_por_mes, -> (periodo = "1900-01-01".."2999-12-31") { contagem_por_dia(periodo).group_by { |k,v| k.strftime("%m/%Y") }.map { |k,v| {k.to_date.all_month=>v.count} } }
-  scope :contagem_por_profissional, -> { joins(:profissional).group("profissionais.id").count.map { |k,v| {Profissional.find(k) => v} } }
-  scope :contagem_por_tipo, -> (tipos = AtendimentoTipo.all) { where(atendimento_tipo: tipos).group(:atendimento_tipo).count }
-  scope :contagem_por_pessoa, -> (pessoas = Pessoa.all) { joins(:acompanhamento).where(acompanhamentos: { pessoa: pessoas }).group("acompanhamentos.pessoa_id").count.map { |k,v| {Pessoa.find(k) => v} } }
-  scope :contagem_por_local, -> (locais = AtendimentoLocal.all) { where(atendimento_local: locais).group(:atendimento_local).count }
+  scope :contagem_por_dia, -> (periodo = "1900-01-01".."2999-12-31", ordem = nil) do
+    relation = where(data: periodo).group(:data)
+    if ordem != nil
+      relation.order(count_id: ordem)
+    end
+    relation.count
+  end
+  scope :contagem_por_mes, -> (periodo = "1900-01-01".."2999-12-31", ordem = nil) do
+    contagem_por_dia(periodo, ordem).group_by { |k,v| k.strftime("%m/%Y") }.map { |k,v| [k.to_date.all_month, v.map(&:last).sum] }.to_h
+  end
+  scope :contagem_por_ano, -> (periodo = "1900-01-01".."2999-12-31", ordem = nil) do
+    contagem_por_dia(periodo, ordem).group_by { |k,v| k.strftime("%Y") }.map { |k,v| [k, v.map(&:last).sum] }.to_h
+  end
+  scope :contagem_por_profissional, -> (profissionais = Profissional.all, ordem = nil) do
+    relation = joins(:acompanhamento).group(:profissional_id)
+    if ordem != nil
+      relation = relation.order(count_id: ordem)
+    end
+    relation.count.map { |k,v| [Profissional.find(k), v] }.to_h
+  end
+  scope :contagem_por_tipo, -> (tipos = AtendimentoTipo.all, ordem = nil) do
+    relation = where(atendimento_tipo: tipos).group(:atendimento_tipo)
+    if ordem != nil
+      relation = relation.order(count_id: ordem)
+    end
+    relation.count
+  end
+  scope :contagem_por_pessoa, -> (pessoas = Pessoa.all, ordem = nil) do
+    relation = joins(:acompanhamento).where(acompanhamentos: { pessoa: pessoas }).group(:pessoa_id)
+    if ordem != nil
+      relation = relation.order(count_id: ordem)
+    end
+    relation.count.map { |k,v| [Pessoa.find(k), v] }.to_h
+  end
+  scope :contagem_por_local, -> { group(:atendimento_local).count }
   # scope :contagem_por_profissional_e_pessoa, -> (profissionais = Profissional.all, pessoas = Pessoa.all) { joins(:acompanhamento).where(acompanhamentos: { profissional: profissionais, pessoa: pessoas }).group("acompanhamentos.profissional_id, acompanhamentos.pessoa_id").count }
 
   scope :query_like_tipo, -> (like) { where(atendimento_tipo: AtendimentoTipo.where("LOWER(tipo) LIKE '%#{like}%'")) }
+  scope :do_tipo, -> (tipo) { where(atendimento_tipo: tipo) }
+  scope :do_tipo_com_id, -> (id) { where(atendimento_tipo_id: id) }
+
+  scope :query_pessoa_like_nome, -> (like = "") do
+    like = like.to_s
+    query = "LOWER(pessoas.nome || ' ' || COALESCE(pessoas.nome_do_meio, '') || ' '|| pessoas.sobrenome) LIKE ?", "%#{like}%"
+    if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
+      query = "LOWER(CONCAT(pessoas.nome, ' ', COALESCE(pessoas.nome_do_meio, ''), ' ', pessoas.sobrenome)) LIKE ?", "%#{like}%"
+    end
+    joins(:pessoa).where(query)
+  end
+  scope :query_responsavel_like_nome, -> (like = "") do
+    like = like.to_s
+    query = "LOWER(responsaveis.nome || ' ' || COALESCE(responsaveis.nome_do_meio, '') || ' '|| responsaveis.sobrenome) LIKE ?", "%#{like}%"
+    if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
+      query = "LOWER(CONCAT(responsaveis.nome, ' ', COALESCE(responsaveis.nome_do_meio, ''), ' ', responsaveis.sobrenome)) LIKE ?", "%#{like}%"
+    end
+    joins("JOIN pessoas AS responsaveis ON responsaveis.id = acompanhamentos.pessoa_responsavel_id").where(query)
+  end
+
+  scope :valor, -> { includes(:atendimento_valor).sum(:valor) }
 
   def consideracoes
     anotacoes
   end
   
   # pessoas envolvidas
-  def pessoa
-    acompanhamento.pessoa
-  end
   alias paciente pessoa
 
-  def profissional
-    acompanhamento.profissional
-  end
-
-  def responsavel
-    acompanhamento.pessoa_responsavel
-  end
-  alias pessoa_responsavel responsavel
+  alias responsavel pessoa_responsavel
 
   def acompanhamento_tipo
     acompanhamento.acompanhamento_tipo.tipo
   end
-
 
   # the resto
   def pessoa_presente

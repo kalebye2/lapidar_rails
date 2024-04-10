@@ -5,6 +5,15 @@ class Pessoa < ApplicationRecord
   include Enderecavel
   include Abreviavel
 
+  validates :nome, :sobrenome, :email, presence: true
+  validates :cpf, uniqueness: true, allow_blank: true
+  before_save do
+    self.cpf = cpf.gsub(/\D/, '')[-11..] unless cpf.nil?
+    self.fone_num = fone_num&.gsub(/\D/, '')
+    self.fone_cod_pais = fone_cod_pais&.gsub(/\D/, '')
+    self.fone_cod_area = fone_cod_area&.gsub(/\D/, '')
+  end
+
   belongs_to :civil_estado, optional: true
   belongs_to :instrucao_grau, optional: true
   belongs_to :pais, optional: true

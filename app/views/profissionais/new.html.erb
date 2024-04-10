@@ -1,4 +1,12 @@
 <%= titulo "Adicionar profissional" %>
 <h1>Adicionar profissional</h1>
 
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Profissionais", profissionais_path, class: "icon-previous" %>
+    </li>
+  </ul>
+</nav>
+
 <%= render 'form', profissional: Profissional.new %>

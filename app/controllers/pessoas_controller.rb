@@ -325,9 +325,15 @@ class PessoasController < ApplicationController
     @recebimentos = @pessoa.recebimentos.where(data: @de..@para)
     respond_to do |format|
       format.html
+
       format.csv do
         send_data Recebimento.para_csv(collection: @recebimentos), type: "text/csv", filename: "#{Rails.application.class.module_parent.to_s}_#{@pessoa.nome_completo.parameterize}_#{@de}_#{@ate}.csv"
       end
+
+      format.xlsx do
+        response.headers['Content-Disposition'] = "attachment; filename=#{@pessoa.nome_completo.parameterize}_#{@de}_#{@ate}.xlsx"
+      end
+
       format.zip do
         compressed_filestream = Zip::OutputStream.write_buffer do |zos|
           @pessoa.recebimentos.each do |recebimento|
@@ -356,11 +362,11 @@ class PessoasController < ApplicationController
   end
 
   def atendimento_valores
-    # @de = params[:de]&.to_date || @pessoa.recebimentos.order(data: :asc).first&.data || Date.today.beginning_of_month
-    # @ate = params[:ate]&.to_date || @pessoa.recebimentos.order(data: :asc).last&.data || Date.today.beginning_of_month
     @de = params[:de]&.to_date || Date.today.beginning_of_month
     @ate = params[:ate]&.to_date || Date.today.end_of_month
     @atendimento_valores = @pessoa.atendimento_valores.joins(:atendimento).where(atendimentos: {data: @de..@para})
+
+    @params = params.permit(:de, :ate)
     respond_to do |format|
       format.html
       format.pdf
@@ -429,11 +435,6 @@ class PessoasController < ApplicationController
     end
 
     def validar_params
-      if params[:pessoa][:cpf].presence
-        params[:pessoa][:cpf] = params[:pessoa][:cpf].gsub(/\D/, '')[-11..]
-      end
-      if params[:pessoa][:fone_num].presence
-        params[:pessoa][:fone_num] = params[:pessoa][:fone_num].gsub(/\D/, '')
-      end
+      
     end
 end

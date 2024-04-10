@@ -11,6 +11,7 @@ class AtendimentoValor < ApplicationRecord
 
   default_scope { includes(:atendimento) }
 
+  scope :em_ordem, -> (crescente = true) { order(data: crescente ? :asc : :desc) }
   scope :de_atendimentos_realizados, -> { where(atendimento: {presenca: true}) }
   scope :de_atendimentos_nao_realizados, -> { where(atendimento: {presenca: [false, nil]}) }
   scope :do_periodo, -> (periodo = Date.today.all_month, ordem: :asc) { includes(:atendimento).where("atendimentos.data" => periodo).order("atendimentos.data" => ordem, "atendimentos.horario" => ordem) }
@@ -65,6 +66,10 @@ class AtendimentoValor < ApplicationRecord
 
   def taxa_interna
     valor * taxa_porcentagem_interna / 10000
+  end
+
+  def taxa
+    taxa_externa + taxa_interna
   end
 
   def liquido

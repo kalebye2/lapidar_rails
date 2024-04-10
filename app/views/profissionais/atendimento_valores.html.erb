@@ -1,0 +1,19 @@
+<% titulo "#{@profissional.nome_abreviado} - Valores de atendimentos" %>
+
+<h1>Valores de atendimentos - <%= @profissional.descricao_completa %></h1>
+
+<%= render "navbar", profissional: @profissional %>
+
+<nav class="navbar navcenter">
+  <% atendimento_tabela_id = "#{dom_id @profissional}_atendimento_valores_tabela" %>
+  <form <%= hx_set get: atendimento_valores_profissional_path, target: "##{atendimento_tabela_id}", select: "##{atendimento_tabela_id}", swap: "outerHTML", replace_url: true, trigger: "change" %>>
+    <label for="de">De</label>
+    <input type="date" name="de" id="de" value="<%= @de %>">
+    <label for="ate">Até</label>
+    <input type="date" name="ate" id="ate" value="<%= @ate %>">
+  </form>
+</nav>
+
+<br>
+
+<%= render "atendimento_valores_tabela", atendimento_valores: @atendimento_valores, profissional: @profissional %>

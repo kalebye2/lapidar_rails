@@ -121,6 +121,7 @@ class RecebimentosController < ApplicationController
       return
     end
     @recebimento = Recebimento.new(recebimento_params)
+    @recebimento.usuario = usuario_atual
     if @acompanhamento then @recebimento.acompanhamento = @acompanhamento end
     if params[:recebimento][:direto_profissional]
       p = params[:recebimento]
@@ -155,6 +156,7 @@ class RecebimentosController < ApplicationController
   end
 
   def update
+    @recebimento.usuario = usuario_atual
     if !usuario_atual.financeiro?
       if !usuario_atual.profissional.acompanhamentos.map(&:id).include?(params[:recebimento][:acompanhamento_id])
         render file: "#{Rails.root}/public/404.html", status: 403

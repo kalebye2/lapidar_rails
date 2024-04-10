@@ -676,6 +676,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "chave_pix_01", limit: 255
     t.string "chave_pix_02", limit: 255
     t.boolean "ativo", default: true
+    t.boolean "realiza_atendimentos"
   end
 
   create_table "profissional_contrato_modelos", force: :cascade do |t|
@@ -708,6 +709,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "valor", default: 0, null: false
     t.date "data"
     t.integer "pagamento_modalidade_id", null: false
+    t.integer "usuario_id"
   end
 
   create_table "profissional_folga_motivos", force: :cascade do |t|
@@ -766,6 +768,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.date "data", default: -> { "CURRENT_DATE" }, null: false
     t.integer "pagamento_modalidade_id", default: 1, null: false
     t.integer "taxa_porcentagem_clinica", default: 0
+    t.integer "usuario_id"
   end
 
   create_table "semana_dias", force: :cascade do |t|
@@ -875,6 +878,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "profissional_especializacao_juncoes", "profissional_especializacoes", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_especializacao_juncoes", "profissional_especializacoes", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_financeiro_repasses", "profissionais", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "profissional_financeiro_repasses", "usuarios", primary_key: "profissional_id", on_update: :nullify, on_delete: :nullify
   add_foreign_key "profissional_folgas", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_folgas", "profissional_folga_motivos", on_update: :cascade, on_delete: :nullify
   add_foreign_key "profissional_horarios", "profissionais", on_update: :cascade, on_delete: :cascade
@@ -884,6 +888,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "recebimentos", "acompanhamentos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "recebimentos", "pagamento_modalidades", on_update: :cascade, on_delete: :cascade
   add_foreign_key "recebimentos", "pessoas", column: "pessoa_pagante_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "recebimentos", "usuarios", primary_key: "profissional_id", on_update: :nullify, on_delete: :nullify
   add_foreign_key "subtestes", "instrumentos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "subtestes", "psicologia_subfuncoes", on_update: :cascade, on_delete: :cascade
   add_foreign_key "usuarios", "profissionais", on_update: :cascade, on_delete: :cascade

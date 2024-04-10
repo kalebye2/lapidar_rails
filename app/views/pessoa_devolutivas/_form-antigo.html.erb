@@ -12,13 +12,13 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :pessoa_id %>
+    <%= form.label :pessoa_id, "Sobre quem?" %>
     <%= form.select :pessoa_id, Pessoa.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc).map { |p| ["#{p.nome_completo} - #{p.render_idade}", p.id] } %>
   </div>
 
   <div class="field">
-    <%= form.label "Responsável" %>
-    <%= form.select :pessoa_responsavel_id, Pessoa.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc).map { |p| ["#{p.nome_completo} - #{p.render_idade}", p.id] }  %>
+    <%= form.label :pessoa_responsavel_id, "Com quem?" %>
+    <%= form.select :pessoa_responsavel_id, Pessoa.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc).map { |p| ["#{p.nome_completo} - #{p.render_idade}", p.id] }, include_blank: "[a própria pessoa]"  %>
   </div>
 
   <div class="field">

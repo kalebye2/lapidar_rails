@@ -50,7 +50,8 @@ module ApplicationHelper
   def render_porcentagem_int porcentagem_int = 0
     if porcentagem_int == nil then return nil end
 
-    "%0.2f%%" % [porcentagem_int / 100]
+    # "%0.2f%%" % [porcentagem_int / 100]
+    number_to_percentage porcentagem_int / 100, precision: 2, delimiter: ".", separator: ","
   end
 
   def sim_ou_nao valor=false

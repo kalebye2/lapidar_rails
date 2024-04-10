@@ -40,6 +40,9 @@ class Profissional < ApplicationRecord
 
   scope :contagem_de_acompanhamentos, -> (profissionais=all) { group(:acompanhamento).count }
 
+  scope :que_nao_realiza_atendimentos, -> { where realiza_atendimentos: [false, nil] }
+  scope :que_realiza_atendimentos, -> { where realiza_atendimentos: true }
+
   scope :query_like_nome, -> (like) do
     query = "LOWER(nome || ' ' || COALESCE(nome_do_meio, '') || ' '|| sobrenome) LIKE ?", "%#{like.downcase}%"
     if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
@@ -52,6 +55,7 @@ class Profissional < ApplicationRecord
   scope :no_local_de_atendimento, -> (atendimento_locais) do
     joins(:atendimento_locais).where(atendimento_locais: atendimento_locais)
   end
+
   scope :no_local_de_atendimento_por_id, -> (atendimento_locais_id) do
     joins(:atendimento_locais).where(atendimento_locais: {id: atendimento_locais_id})
   end

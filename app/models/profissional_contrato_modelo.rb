@@ -111,7 +111,7 @@ class ProfissionalContratoModelo < ApplicationRecord
     texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_documento_regiao].join("|"), acompanhamento.profissional.documento_regiao_id
     texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_documento_valor].join("|"), acompanhamento.profissional.documento_valor
     texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_email].join("|"), acompanhamento.profissional.email
-    texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_fone].join("|"), acompanhamento.profissional.render_fone[3..]
+    texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_fone].join("|"), (acompanhamento.profissional.render_fone[3..] unless acompanhamento.profissional.render_fone.nil?)
     texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_fone_link].join("|"), acompanhamento.profissional.render_fone_link
     texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_pix].join("|"), acompanhamento.profissional.chave_pix_01
     texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_valor_sessao_contrato].join("|"), number_to_currency(acompanhamento.valor_sessao_contrato / 100.0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2)

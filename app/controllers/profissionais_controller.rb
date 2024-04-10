@@ -1,7 +1,9 @@
 class ProfissionaisController < ApplicationController
   paginas_que_precisam_de_validacao = %i[ new edit update delete acompanhamentos new_profissional_horarios create_profissional_horarios update_profissional_horarios destroy_profissional_horarios contrato_modelos novo_contrato_modelo agenda ]
-  before_action :set_profissional, only: paginas_que_precisam_de_validacao + [:show] - [:new]
-  before_action :validar_usuario, only: paginas_que_precisam_de_validacao
+  # before_action :set_profissional, only: paginas_que_precisam_de_validacao + [:show] - [:new]
+  # before_action :validar_usuario, only: paginas_que_precisam_de_validacao
+  before_action :set_profissional, except: %i[ index new ]
+  before_action :validar_usuario, except: %i[ index show ]
 
   include Pagy::Backend
 
@@ -24,7 +26,7 @@ class ProfissionaisController < ApplicationController
     end
 
     if params[:local_atendimento].present?
-      @profissionais = @profissionais.no_local_de_atendimento_por_id(params[:local_atendimento])
+      @profissionais = @profissionais.no_local_de_atendimento_por_id(params[:local_atendimento]).uniq
     end
 
     @contagem = @profissionais.count
@@ -46,6 +48,17 @@ class ProfissionaisController < ApplicationController
   end
 
   def create
+    @profissional = Profissional.new(profissional_params)
+
+    respond_to do |format|
+      if @profissional.save
+        format.html { redirect_to profissional_url(@profissional), notice: "profissional was successfully created." }
+        format.json { render :show, status: :created, location: @profissional }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @profissional.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def update
@@ -124,6 +137,29 @@ class ProfissionaisController < ApplicationController
 
   def agenda
     @profissional_horarios = ProfissionalHorario.where(profissional: @profissional)
+  end
+
+  def financeiro
+    @atendimento_valores = @profissional.atendimento_valores.em_ordem(false).first(5)
+    @profissional_financeiro_repasses = @profissional.profissional_financeiro_repasses.em_ordem(false).first(5)
+  end
+
+  def atendimento_valores
+    @de = params[:de]&.to_date || Date.today.beginning_of_month
+    @ate = params[:ate]&.to_date || Date.today.end_of_month
+
+    @atendimento_valores = @profissional.atendimento_valores.do_periodo(@de..@ate)
+  end
+
+  def financeiro_repasses
+    @de = params[:de]&.to_date || Date.today.beginning_of_month
+    @ate = params[:ate]&.to_date || Date.today.end_of_month
+
+    @profissional_financeiro_repasses = @profissional.profissional_financeiro_repasses.do_periodo(@de..@ate)
+  end
+
+  def recebimentos
+    render html: @profissional.attributes
   end
 
   private

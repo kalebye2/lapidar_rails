@@ -1,6 +1,6 @@
 module HtmxHelper
   # HTMX
-  @@keys_to_transform = [:get, :patch, :put, :post, :delete, :confirm, :trigger, :select, :target, :swap, :swap_oob, :replace_url, :include, :on, :push_url, :select_oob, :vals, :boost, :disable, :disable_elt, :disinherit, :encoding, :ext, :headers, :history, :history_elt, :indicator, :params, :preserve, :prompt, :request, :sync, :validate, :vars]
+  @@keys_to_transform = [:get, :patch, :put, :post, :delete, :confirm, :trigger, :select, :target, :swap, :swap_oob, :replace_url, :include, :on, :push_url, :select_oob, :vals, :boost, :disable, :disable_elt, :disinherit, :encoding, :ext, :headers, :history, :history_elt, :indicator, :params, :preserve, :prompt, :request, :sync, :validate, :vars, :include]
   @@select_opcoes_padrao = [["Escolha", ""], ["Sim", 1], ["Não", 0]]
 
   def hx_transform dict = {}

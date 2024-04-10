@@ -1,0 +1,62 @@
+<nav class="navbar navcenter" style="z-index:100000000;">
+  <ul>
+    <% if params[:action].to_sym != :show %>
+      <li>
+        <%= link_to "Profissional", profissional_path(profissional), class: "icon-previous" %>
+      </li>
+    <% end %>
+    <%# para editar o usuário. TODO: não permitir edição de quem seria o profissional para o usuário %>
+    <% if usuario_atual.informatica? %>
+      <% if profissional.usuario.nil? %>
+        <li>
+          <%= link_to "Criar usuário", new_usuario_path, class: 'icon-plus' %>
+        </li>
+      <% end %>
+    <% end %>
+
+    <% if usuario_atual.secretaria? || usuario_atual.profissional == profissional %>
+      <li>
+        <%= link_to "Editar cadastro", "javascript:void(0);", class: 'icon-pencil' %>
+        <ul>
+          <% if usuario_atual.secretaria? || usuario_atual == profissional.usuario %>
+            <li>
+              <%= link_to "Pessoal", edit_pessoa_path(profissional.pessoa), class: 'icon-user' %>
+            </li>
+            <li>
+              <%= link_to "Profissional", edit_profissional_path(profissional), class: 'icon-user-tie' %>
+            </li>
+          <% end %>
+          <% if (usuario_atual.informatica? || usuario_atual == profissional.usuario) && !profissional.usuario.nil? %>
+            <li>
+              <%= link_to "Usuário", edit_usuario_path(profissional.usuario), class: 'icon-keyboard' %>
+            </li>
+          <% end %>
+        </ul>
+      </li>
+    <% end %>
+
+    <li>
+      <%= link_to "Acompanhamentos", acompanhamentos_profissional_path(profissional), class: 'icon-address-book' %>
+    </li>
+
+    <li>
+      <%= link_to "Modelos de contrato", contrato_modelos_profissional_path(profissional), class: 'icon-drawer' %>
+    </li>
+
+    <% if usuario_atual.financeiro? || usuario_atual.profissional == profissional %>
+      <li>
+        <%= link_to "Financeiro", financeiro_profissional_path, class: "icon-coin-dollar" %>
+        <ul>
+          <li>
+            <%= link_to "Valores de atendimentos", atendimento_valores_profissional_path %>
+          </li>
+          <%= link_to "Repasses financeiros", financeiro_repasses_profissional_path %>
+        </ul>
+      </li>
+    <% end %>
+
+    <li>
+      <%= link_to "Agenda", agenda_profissional_path(profissional), class: 'icon-calendar' %>
+    </li>
+  </ul>
+</nav>

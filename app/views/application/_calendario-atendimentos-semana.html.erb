@@ -10,3 +10,18 @@
     <% end %>
   </div>
 <% end %>
+
+<% if hx_request? %>
+  <div id="atendimento-informacoes-semana" hx-swap-oob="true">
+    <h2><%= @start_date.to_date.year %> - Semana <%= @start_date.to_date.strftime("%U") %></h2>
+    <h3><%= @atendimentos.count %> atendimento(s) nesta semana</h3>
+    <p>
+    <% atendidos = @atendimentos.where(presenca: true).count %>
+    <% nao_atendidos = @atendimentos.ate_hoje.nao_realizados.ate_agora.count %>
+    <% futuros = @atendimentos.where(data: [Date.today..]).count %>
+    <%= atendidos %> <%= 'realizados'.pluralize(atendidos) %>,
+    <%= nao_atendidos %> <%= 'não realizado'.pluralize(nao_atendidos) %>,
+    <%= futuros %> <%= 'futuro'.pluralize(futuros) %>.
+    </p>
+  </div>
+<% end %>

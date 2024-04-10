@@ -1,0 +1,59 @@
+<table id="<%= dom_id profissional %>_atendimento_valores_tabela">
+  <thead>
+    <tr>
+      <th>
+        Atendimento
+      </th>
+      <th>
+        Valor bruto
+      </th>
+      <th>
+        Taxa interna
+      </th>
+      <th>
+        Taxa externa
+      </th>
+      <th>
+        Total taxa
+      </th>
+      <th>
+        Valor líquido
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% atendimento_valores.each do |atendimento_valor| %>
+      <tr>
+        <td class="text-center">
+          <% span_font_size = ".75em" %>
+          <%= atendimento_valor.atendimento.tipo %>
+          <%= render_data_brasil atendimento_valor.atendimento.data %>
+          às
+          <%= render_hora_brasil atendimento_valor.atendimento.horario_inicio_verdadeiro %>
+        </td>
+        <td class="dinheiro">
+          <%= render_dinheiro_centavos atendimento_valor.valor %>
+        </td>
+        <td class="dinheiro">
+          <%= render_dinheiro_centavos atendimento_valor.taxa_interna %>
+          <span style="font-size:<%= span_font_size %>;">
+            (<%= render_porcentagem_int atendimento_valor.taxa_porcentagem_interna %>)
+          </span>
+        </td>
+        <td class="dinheiro">
+          <%= render_dinheiro_centavos atendimento_valor.taxa_externa %>
+          <span style="font-size:<%= span_font_size %>;">
+            (<%= render_porcentagem_int atendimento_valor.taxa_porcentagem_externa %>)
+          </span>
+        </td>
+        <td class="dinheiro">
+          <%= render_dinheiro_centavos atendimento_valor.taxa %>
+        </td>
+        <td class="dinheiro">
+          <%= render_dinheiro_centavos atendimento_valor.liquido %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

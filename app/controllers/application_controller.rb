@@ -36,9 +36,9 @@ class ApplicationController < ActionController::Base
 
   def update_calendario_atendimentos_semana
     #atendimentos = Atendimento.da_semana(semana: @start_date.to_date.all_week)
-    start_date = params[:start_date] || Date.today.beginning_of_week
+    start_date = params[:start_date].to_date || Date.today.beginning_of_week
     atendimentos = Atendimento.da_semana(semana: start_date.to_date.all_week)
-    render partial: 'application/calendario-atendimentos-semana', locals: { events: atendimentos }
+    render partial: 'application/calendario-atendimentos-semana', locals: { events: atendimentos, start_date: start_date }
   end
 
   def usuario_atual
@@ -92,6 +92,11 @@ class ApplicationController < ActionController::Base
   def erro403
     render file: "#{Rails.root}/public/404.html", status: 403
   end
+
+  def nome_do_site
+    Rails.application.config.app_name || Rails.application.class.module_parent_name.to_s
+  end
+  alias site_name nome_do_site
 
   private
 

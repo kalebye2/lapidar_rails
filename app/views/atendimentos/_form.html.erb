@@ -23,16 +23,21 @@
       <div class="field">
         <%= form.label :acompanhamento %>
         <%= form.select :acompanhamento_id, Acompanhamento.order(data_inicio: :desc).map { 
-          |acompanhamento| ["#{acompanhamento.pessoa.nome_completo} acompanhado por #{acompanhamento.profissional.nome_completo} desde #{render_data_brasil acompanhamento.data_inicio}", acompanhamento.id] }
+          |acompanhamento| ["#{acompanhamento.pessoa.nome_completo} acompanhado por #{acompanhamento.profissional.nome_completo} desde #{render_data_brasil acompanhamento.data_inicio}", acompanhamento.id] },
+        {include_blank: "ESCOLHA ACOMPANHAMENTO"},
+        "hx-get" => new_atendimento_path,
+        "hx-target" => "#atendimento_tipo",
+        "hx-select" => "#atendimento_tipo"
         %>
       </div>
     <% else %>
       <%= form.hidden_field :acompanhamento_id, value: @acompanhamento.id %>
     <% end %>
 
-    <div class="field">
+    <div class="field" id="atendimento_tipo">
       <%= form.label "Tipo de atendimento" %>
-      <%= form.select :atendimento_tipo_id, AtendimentoTipo.where(profissional_funcao: [@acompanhamento.profissional.profissional_funcao, nil]).order(:tipo).map {
+      <% funcoes_profissionais = @acompanhamento&.profissional&.profissional_funcao || ProfissionalFuncao.all %>
+      <%= form.select :atendimento_tipo_id, AtendimentoTipo.where(profissional_funcao: [funcoes_profissionais, nil].flatten).order(:tipo).map {
         |atendimento_tipo| [atendimento_tipo.tipo.upcase, atendimento_tipo.id] }
       %>
     </div>

@@ -1,12 +1,6 @@
 <% titulo "#{@profissional.nome_abreviado} - Acompanhamentos" %>
 <h1 id="main-title"><%= @profissional.descricao_completa %> - Acompanhamentos</h1>
-<nav class="navbar navcenter">
-  <ul>
-    <li>
-      <%= link_to "Profissional", @profissional, class: "icon-user-tie" %>
-    </li>
-  </ul>
-</nav>
+<%= render "navbar", profissional: @profissional %>
 
 <nav class="navbar navcenter" style="padding:.5em;">
   <p>Filtrar</p>
@@ -67,24 +61,3 @@
     <% end %>
   </div>
 </div>
-
-<%# <div> %>
-<%#   <h2>Em andamento (<%= @profissional.acompanhamentos.where(data_final: nil, acompanhamento_finalizacao_motivo: nil).count %1>)</h2> %>
-<%#   <div class="acompanhamentos-container"> %>
-<%#     <% @profissional.acompanhamentos.where(data_final: nil, acompanhamento_finalizacao_motivo: nil).joins(:pessoa).order("pessoas.nome": :asc, "pessoas.nome_do_meio": :asc, "pessoas.sobrenome": :asc).each do |acompanhamento| %1> %>
-<%#       <%= render "acompanhamentos/card", acompanhamento: acompanhamento %1> %>
-<%#     <% end %1> %>
-<%#   </div> %>
-<%# </div> %>
-
-<%# <div> %>
-<%#   <h2>Finalizados (<%= @profissional.acompanhamentos.where.not(acompanhamento_finalizacao_motivo: nil).count %1>)</h2> %>
-<%#   <% @profissional.acompanhamentos.where.not(acompanhamento_finalizacao_motivo: nil).group(:acompanhamento_finalizacao_motivo).count.each do |a| %1> %>
-<%#     <div class="acompanhamento-card acompanhamento-finalizado-<%= a[0].motivo.parameterize %1>" style="display:inline-block;"><%= a[0].motivo %1> - <%= a[1] %1></div> %>
-<%#   <% end %1> %>
-<%#   <div class="acompanhamentos-container"> %>
-<%#     <% @profissional.acompanhamentos.where.not(data_final: nil, acompanhamento_finalizacao_motivo: nil).joins(:pessoa).order("pessoas.nome": :asc, "pessoas.nome_do_meio": :asc, "pessoas.sobrenome": :asc).each do |acompanhamento| %1> %>
-<%#       <%= render "acompanhamentos/card", acompanhamento: acompanhamento %1> %>
-<%#     <% end %1> %>
-<%#   </div> %>
-<%# </div> %>

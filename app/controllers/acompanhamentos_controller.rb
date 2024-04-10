@@ -185,8 +185,7 @@ class AcompanhamentosController < ApplicationController
   end
 
   def new_atendimento_proxima_semana
-    vem_de_acompanhamento = params[:controller] == "acompanhamentos"
-    @acompanhamento = vem_de_acompanhamento ? Acompanhamento.find(params[:id]) : Acompanhamento.find(params[:acompanhamento_id])
+    vem_de_acompanhamento = params[:index].blank?
     # retorna se não for secretária que trabalha o dia inteiro comigo ou o profissional responsável
     if @acompanhamento.profissional != usuario_atual.profissional
       redirect_to acompanhamento_path(@acompanhamento), notice: "Não senhor!"
@@ -218,7 +217,7 @@ class AcompanhamentosController < ApplicationController
       if vem_de_acompanhamento
         redirect_to @acompanhamento, notice: "Novo atendimento registrado"
       else
-        redirect_to root, notive: "Atendimento registrado para #{@acompanhamento.tipo.upcase} de #{@acompanhamento.pessoa.nome_abreviado} em #{atendimento.data.strftime("%d/%m/%Y")} às #{atendimento.horario.strftime("%Hh%M")}"
+        redirect_to root_path, notice: "Atendimento registrado para #{@acompanhamento.tipo.upcase} de #{@acompanhamento.pessoa.nome_abreviado} em #{atendimento.data.strftime("%d/%m/%Y")} às #{atendimento.horario.strftime("%Hh%M")}"
       end
     else
       redirect_to @acompanhamento, notice: "Não deu certo"
@@ -267,12 +266,59 @@ class AcompanhamentosController < ApplicationController
   end
 
   def acompanhamento_reajustes
+    @negociacao_de = params[:de]&.to_date || @acompanhamento.acompanhamento_reajustes.minimum(:data_negociacao)
+    @negociacao_ate = params[:ate]&.to_date || @acompanhamento.acompanhamento_reajustes.maximum(:data_negociacao)
+    @ajuste_de = params[:de]&.to_date || @acompanhamento.acompanhamento_reajustes.minimum(:data_ajuste)
+    @ajuste_ate = params[:ate]&.to_date || @acompanhamento.acompanhamento_reajustes.maximum(:data_ajuste)
+    @params = params.permit
   end
 
   def financeiro
+    @params = params.permit
   end
 
   def recebimentos
+    @de = params[:de]&.to_date || @acompanhamento.recebimentos.minimum(:data)
+    @ate = params[:ate]&.to_date || @acompanhamento.recebimentos.maximum(:data)
+
+
+    @params = params.permit(:de, :ate, :pagamento_modalidade)
+    @recebimentos = @acompanhamento.recebimentos.do_periodo(@de..@ate)
+
+    if params[:pagamento_modalidade].present?
+      @recebimentos = @recebimentos.da_modalidade_com_id params[:pagamento_modalidade]
+    end
+
+    pagamento_modalidade = PagamentoModalidade.find(params[:pagamento_modalidade]) unless params[:pagamento_modalidade].blank?
+    filename = "relatorio-recebimentos_#{@de}_#{@ate}_#{@acompanhamento.pessoa.nome_completo.parameterize}_#{@acompanhamento.tipo.parameterize}_#{@acompanhamento.profissional.nome_completo.parameterize}#{pagamento_modalidade&.modalidade&.parameterize}"
+
+    respond_to do |format|
+      format.html do
+        if hx_request?
+          render partial: "pessoas/recebimentos-tabela", locals: {recebimentos: @recebimentos, de: @de, ate: @ate }
+          return
+        end
+      end
+      
+      format.csv do
+        send_data Recebimento.para_csv(collection: @recebimentos), filename: "#{filename}.csv", type: "text/csv"
+      end
+
+      format.xlsx do
+        response.headers['Content-Disposition'] = "attachment; filename=#{filename}.xlsx"
+      end
+
+      format.zip do
+        compressed_filestream = Zip::OutputStream.write_buffer do |zos|
+          @recebimentos.each do |recebimento|
+            zos.put_next_entry "recibo_#{recebimento.pessoa.nome_completo.parameterize}_#{recebimento.data}_#{recebimento.id}.md"
+            zos.print recebimento.recibo_markdown
+          end
+        end
+        compressed_filestream.rewind
+        send_data compressed_filestream.read, filename: "recibos_markdown_#{@de}_#{@ate}_#{@acompanhamento.pessoa.nome_completo.parameterize}_#{@acompanhamento.tipo.parameterize}_#{@acompanhamento.profissional.nome_completo.parameterize}.zip"
+      end
+    end
   end
 
   def new_recebimento
@@ -282,7 +328,21 @@ class AcompanhamentosController < ApplicationController
   def atendimento_valores
     @de = params[:de]&.to_date || Date.today.beginning_of_month
     @ate = params[:ate]&.to_date || Date.today.end_of_month
+
     @atendimento_valores = @acompanhamento.atendimento_valores.do_periodo(@de..@ate)
+    @params = params.permit(:de, :ate)
+
+    respond_to do |format|
+      format.html
+
+      format.csv do
+        send_data AtendimentoValor.para_csv(@atendimento_valores), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@de}_#{@ate}#{@acompanhamento.profissional.nome_completo.parameterize.insert(0, "_")}#{@acompanhamento.pessoa.nome_completo.parameterize.insert(0, "_")}#{@acompanhamento.pessoa_responsavel&.nome_completo&.parameterize&.insert(0, "_")}_#{@acompanhamento.tipo.parameterize}.csv", type: "text/csv"
+      end
+
+      format.xlsx do
+        response.headers['Content-Disposition'] = "attachment; filename=#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@de}-#{@ate}#{@acompanhamento.profissional.nome_completo.parameterize.insert(0, "_")}#{@acompanhamento.pessoa.nome_completo.parameterize.insert(0, "_")}#{@acompanhamento.pessoa_responsavel&.nome_completo&.parameterize&.insert(0, "_")}_#{@acompanhamento.tipo.parameterize}.xlsx"
+      end
+    end
   end
 
   private

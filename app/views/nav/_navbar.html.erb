@@ -33,6 +33,9 @@
       <% if usuario_atual.corpo_clinico? || usuario_atual.secretaria? %>
         <li>
           <%= link_to "Acompanhamentos", acompanhamentos_path, class: "icon-profile" %>
+          <ul>
+            <%= link_to "Atendimentos", atendimentos_path, class: "icon-drawer" %>
+          </ul>
         </li>
       <% end %>
 

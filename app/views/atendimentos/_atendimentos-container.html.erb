@@ -1,0 +1,74 @@
+<div id="atendimentos-container">
+  <table>
+    <thead>
+      <th>Paciente (responsável)</th>
+      <th>Profissional</th>
+      <th>Local</th>
+      <th>Tipo</th>
+      <th>Data</th>
+      <th>Horário</th>
+      <th>Anotações</th>
+      <th>Instrumentos usados</th>
+      <th>Opções</th>
+    </thead>
+    <tbody>
+      <% atendimentos.each do |atendimento| %>
+        <tr>
+          <td>
+            <%= link_to atendimento.paciente.nome_abreviado, atendimento.paciente %>
+            <%= link_to "(#{atendimento.pessoa_responsavel&.nome_abreviado})", atendimento.responsavel if atendimento.responsavel %>
+          </td>
+
+          <td>
+            <%= link_to atendimento.profissional.descricao_completa, atendimento.profissional %>
+          </td>
+
+          <td>
+            <%= atendimento.local %>
+          </td>
+
+          <td>
+            <%= atendimento.tipo %>
+          </td>
+
+          <td>
+            <%= render_data_brasil atendimento.data_inicio_verdadeira %>
+            <br>
+            <span style="font-size:.75em;">
+            [<%= SemanaDia.find(atendimento.data_inicio_verdadeira.strftime("%w")).nome %>]
+            <%= "(reagendado)" if atendimento.reagendado?%>
+            </span>
+          </td>
+
+          <td>
+            <%= render_hora_brasil atendimento.horario_inicio_verdadeiro %>
+          </td>
+
+          <td>
+            <%= markdown_to_html atendimento.anotacoes, "Sem anotações" %>
+          </td>
+
+          <td>
+            <ul>
+              <% atendimento.instrumentos_aplicados.each do |instrumento| %>
+                <li><%= instrumento.nome %></li>
+              <% end %>
+            </ul>
+          </td>
+
+          <td>
+            <ul style="list-style:none;">
+              <li>
+                <%= link_to "Acompanhar", acompanhamento_path(atendimento.acompanhamento), class: "icon-compass" %>
+              </li>
+              <li>
+                <%= link_to "Editar", atendimento_path(atendimento), class: "icon-pencil" %>
+              </li>
+              <%= hx_link "Excluir", delete: atendimento_path(atendimento), confirm: "Tem certeza que deseja excluir #{atendimento.tipo} de #{atendimento.pessoa.nome_abreviado} #{render_data_brasil atendimento.data_inicio_verdadeira} às #{render_hora_brasil atendimento.horario_inicio_verdadeiro}?", class: "icon-bin" %>
+            </ul>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

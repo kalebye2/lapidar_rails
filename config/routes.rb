@@ -81,6 +81,10 @@ Rails.application.routes.draw do
         get :contrato_modelos
         get :novo_contrato_modelo
         get :agenda
+        get :financeiro
+        get :atendimento_valores
+        get :financeiro_repasses
+        get :recebimentos
       end
     end
 

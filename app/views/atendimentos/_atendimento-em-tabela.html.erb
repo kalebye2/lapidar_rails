@@ -76,7 +76,7 @@
           </li>
         <% end %>
         <li>
-          <%= link_to "registrar atendimento para a próxima semana", new_atendimento_proxima_semana_acompanhamento_path(atendimento.acompanhamento, acompanhamento_id: atendimento.acompanhamento.id), method: :post %>
+          <%= link_to "registrar atendimento para a próxima semana", new_atendimento_proxima_semana_acompanhamento_path(atendimento.acompanhamento, index: true), method: :post %>
         </li>
         <%# LEMBRE DE IMPLEMENTAR O "SOLICITAR REAGENDAMENTO" %>
       </ul>

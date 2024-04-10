@@ -1,7 +1,7 @@
 <% content_for titulo "" %>
 <h1 style="font-size:3em;text-align:center;"><%= Rails.application.config.app_name || Rails.application.class_module_name %></h1>
 
-<% if @database_exists %>
+<% if @database_exists && Usuario.count > 0 %>
   <!-- atendimentos de hoje -->
   <%= render "atendimentos-hoje-tabela", atendimentos: @atendimentos_hoje, atendimentos_reagendados: @atendimentos_reagendados_hoje %>
 
@@ -42,16 +42,18 @@
 
 
     <!-- calendário semanal? -->
-    <h2><%= @start_date.to_date.year %> - Semana <%= @start_date.to_date.strftime("%U") %></h2>
-    <h3><%= @atendimentos.count %> atendimento(s) nesta semana</h3>
-    <p>
-    <% atendidos = @atendimentos.where(presenca: true).count %>
-    <% nao_atendidos = @atendimentos.ate_hoje.nao_realizados.ate_agora.count %>
-    <% futuros = @atendimentos.where(data: [Date.today..]).count %>
-    <%= atendidos %> <%= 'realizados'.pluralize(atendidos) %>,
-    <%= nao_atendidos %> <%= 'não realizado'.pluralize(nao_atendidos) %>,
-    <%= futuros %> <%= 'futuro'.pluralize(futuros) %>.
-    </p>
+    <div id="atendimento-informacoes-semana">
+      <h2><%= @start_date.to_date.year %> - Semana <%= @start_date.to_date.strftime("%U") %></h2>
+      <h3><%= @atendimentos.count %> atendimento(s) nesta semana</h3>
+      <p>
+      <% atendidos = @atendimentos.where(presenca: true).count %>
+      <% nao_atendidos = @atendimentos.ate_hoje.nao_realizados.ate_agora.count %>
+      <% futuros = @atendimentos.where(data: [Date.today..]).count %>
+      <%= atendidos %> <%= 'realizados'.pluralize(atendidos) %>,
+      <%= nao_atendidos %> <%= 'não realizado'.pluralize(nao_atendidos) %>,
+      <%= futuros %> <%= 'futuro'.pluralize(futuros) %>.
+      </p>
+    </div>
 
     <input type="week" hx-post="?start_date=" hx-target="#calendario-atendimentos-semana" hx-swap="outerHTML" hx-replace-url="true" name="start_date">
 
