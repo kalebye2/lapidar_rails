@@ -44,7 +44,7 @@ class AcompanhamentoHorariosController < ApplicationController
   end
 
   def destroy
-    @acompanhamento_horario = AcompanhamentoHorario.find_by(acompanhamento: @acompanhamento, horario: params[:horario], horario_fim: params[:horario_fim], semana_dia_id: params[:semana_dia_id])
+    @acompanhamento_horario = AcompanhamentoHorario.find_by(acompanhamento: @acompanhamento, horario: params[:horario]&.to_time, horario_fim: params[:horario_fim]&.to_time, semana_dia_id: params[:semana_dia_id])
     @acompanhamento_horario.destroy
     render partial: 'acompanhamento_horarios/resumo_acompanhamento', locals: { acompanhamento: @acompanhamento }
   end

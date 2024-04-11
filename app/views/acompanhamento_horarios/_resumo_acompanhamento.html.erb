@@ -10,7 +10,7 @@
           <td>
             <%= horario.descricao_resumida %>
             <% if pode_editar %>
-              <%= hx_link "excluir", acompanhamento_horario_path(acompanhamento, horario: horario.horario.strftime("%H:%M:%S"), horario_fim: horario.horario_fim.strftime("%H:%M:%S")) %>
+              <%= hx_link "excluir", acompanhamento_horario_path(acompanhamento, horario: horario.horario.strftime("%H:%M:%S"), horario_fim: horario.horario_fim.strftime("%H:%M:%S"), semana_dia_id: horario.semana_dia_id, authenticity_token: form_authenticity_token.to_s), verb: :delete, target: "#acompanhamento-horarios-lista", select: "#acompanhamento-horarios-lista", swap: "outerHTML" %>
             <% end %>
           </td>
         </tr>
