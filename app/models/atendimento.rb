@@ -25,8 +25,9 @@ class Atendimento < ApplicationRecord
 
   scope :realizados, -> { where(presenca: true) }
   scope :nao_realizados, -> { where(presenca: [false, nil]) }
-  scope :futuros, -> { where(data: [Date.today + 1.day..]).or(self.where(data: Date.today, horario: [Time.now.beginning_of_hour - 3.hour..])).or(self.where(data_reagendamento: Date.today, horario_reagendamento: [Time.now.beginning_of_hour - 3.hour..])).or(self.where(data_reagendamento: [Date.today + 1.day..])) }
-  scope :passados, -> { where(data: [..Date.today]) }
+  scope :futuros, -> { where(data: Date.today + 1.day..).or(self.where(data: Date.today, horario: Time.now..)).or(self.where(data_reagendamento: Date.today, horario_reagendamento: [Time.now..])).or(self.where(data_reagendamento: [Date.today + 1.day..])) }
+  scope :passados, -> { where(data: Date.today, horario: ..Time.now).or(self.where data_reagendamento: Date.today, horario: ..Time.now).or(self.where data: ..Date.today - 1.day).or(self.where data_reagendamento: ..Date.today - 1.day) }
+  # scope :a_ocorrer, -> { where("COALESCE(data_reagendamento, data) > CURRENT_DATE").or self.where("COALESCE(data_reagendamento, data) >= CURRENT_DATE AND COALESCE(horario_reagendamento, horario) > CURRENT_TIME") }
 
   scope :do_periodo, -> (periodo = Atendimento.minimum(:data)..Atendimento.maximum(:data), ordem = :asc) { where(data: periodo).order(data: ordem, horario: ordem) }
   scope :ate_hoje, -> { where(data: ..Date.today).or(self.where(data_reagendamento: ..Date.today)) }
@@ -68,6 +69,7 @@ class Atendimento < ApplicationRecord
 
   scope :de_menores_de_idade, -> { joins(:acompanhamento).where(acompanhamento: {menor_de_idade: true}) }
   scope :de_maiores_de_idade, -> { joins(:acompanhamento).where(acompanhamento: {menor_de_idade: [false, nil]}) }
+
 
   # agrupamentos
   scope :contagem_por_dia, -> (periodo = "1900-01-01".."2999-12-31", ordem = nil) do
