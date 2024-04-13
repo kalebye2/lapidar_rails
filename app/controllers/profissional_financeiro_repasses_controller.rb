@@ -56,6 +56,7 @@ class ProfissionalFinanceiroRepassesController < ApplicationController
       return
     end
     @repasse = ProfissionalFinanceiroRepasse.new(profissional_financeiro_repasse_params)
+    @repasse.usuario = usuario_atual
     respond_to do |format|
       if @repasse.save
         format.html { redirect_to profissional_financeiro_repasses_path }
@@ -91,7 +92,8 @@ class ProfissionalFinanceiroRepassesController < ApplicationController
           render file: "#{Rails.root}/public/404.html", status: 403
           return
         end
-        if @repasse.update(profissional_financeiro_repasse_params)
+        the_final_params = profissional_financeiro_repasse_params.merge usuario_id: usuario_atual.id
+        if @repasse.update(the_final_params)
           if params[:tabela].present?
             render partial: "profissional_financeiro_repasses/repasse-em-tabela", locals: {repasse: @repasse}
           end
@@ -123,7 +125,7 @@ class ProfissionalFinanceiroRepassesController < ApplicationController
   end
 
   def profissional_financeiro_repasse_params
-    params.require(:profissional_financeiro_repasse).permit(:data, :profissional_id, :valor, :pagamento_modalidade_id)
+    params.require(:profissional_financeiro_repasse).permit(:data, :profissional_id, :valor, :pagamento_modalidade_id, :usuario)
   end
 
   def validar_usuario
