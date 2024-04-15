@@ -101,6 +101,6 @@
     </div>
   <% end %>
 <% end %>
-<%== hx_link "voltar", instrumento_relato_path(instrumento_relato, card: true, pessoa: instrumento_relato.pessoa.id, usuario_atual: usuario_atual.id), {"hx-target" => "##{curr_id}", "hx-swap" => "outerHTML"} %>
+<%== hx_link "voltar", instrumento_relato_path(instrumento_relato, card: true, pessoa: instrumento_relato.pessoa.id, usuario_atual: usuario_atual.id), "hx-target" => "##{curr_id}", "hx-swap" => "outerHTML" %>
 </div>
 

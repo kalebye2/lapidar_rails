@@ -7,8 +7,15 @@ class InstrumentoRelatosController < ApplicationController
 
   def show
     if params.has_key?(:card) && params[:card]
-      # render partial: "instrumento_relatos/instrumento-card", locals: { instrumento_relato: @instrumento_relato }
+      render partial: "instrumento_relatos/instrumento-card", locals: { instrumento_relato: @instrumento_relato }
       return
+    end
+
+    respond_to do |format|
+      format.html do
+        if hx_request
+        end
+      end
     end
   end
 
