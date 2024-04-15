@@ -49,6 +49,15 @@ class AcompanhamentosController < ApplicationController
   end
 
   def show
+    @de = params[:de] || @acompanhamento.atendimentos.minimum(:data) || Date.today.beginning_of_month
+    @ate = params[:ate] || @acompanhamento.atendimentos.maximum(:data) || Date.today.end_of_month
+    @n_items = params[:n_items] || 5
+    @atendimentos = @acompanhamento.atendimentos.do_periodo(@de..@ate, :desc)
+    @contagem_atendimentos = @atendimentos.count
+
+    @pagy, @atendimentos = pagy(@atendimentos, items: @n_items)
+    @params = params.permit(:de, :ate, :n_items, *acompanhamento_params_soft)
+
     respond_to do |format|
       format.html
       format.pdf do
@@ -97,7 +106,7 @@ class AcompanhamentosController < ApplicationController
       if @acompanhamento.update(acompanhamento_params)
         if hx_request?
           format.html do
-            render :show
+            show
           end
         else
         format.html { redirect_to acompanhamento_url(@acompanhamento), notice: "acompanhamento was successfully updated." }
@@ -353,6 +362,10 @@ class AcompanhamentosController < ApplicationController
 
   def acompanhamento_params
     params.require(:acompanhamento).permit(:pessoa_id, :profissional_id, :plataforma_id, :motivo, :data_inicio, :data_final, :finalizacao_motivo_id, :valor_sessao_contrato, :num_sessoes_contrato, :valor_sessao, :num_sessoes, :acompanhamento_tipo_id, :menor_de_idade, :pessoa_responsavel_id, :sessoes_previstas, :suspenso, :hipotese_diagnostica, :objetivo, :prognostico)
+  end
+
+  def acompanhamento_params_soft
+    params[:acompanhamento]&.permit(:pessoa_id, :profissional_id, :plataforma_id, :motivo, :data_inicio, :data_final, :finalizacao_motivo_id, :valor_sessao_contrato, :num_sessoes_contrato, :valor_sessao, :num_sessoes, :acompanhamento_tipo_id, :menor_de_idade, :pessoa_responsavel_id, :sessoes_previstas, :suspenso, :hipotese_diagnostica, :objetivo, :prognostico)
   end
 
   def dados_atendimento_pdf at
