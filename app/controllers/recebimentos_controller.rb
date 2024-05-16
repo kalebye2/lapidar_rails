@@ -72,8 +72,15 @@ class RecebimentosController < ApplicationController
       format.zip do
         compressed_filestream = Zip::OutputStream.write_buffer do |zos|
           @recebimentos.each do |recebimento|
-            zos.put_next_entry "recibo_#{recebimento.pessoa.nome_completo.parameterize}_#{recebimento.data}_#{recebimento.id}.md"
-            zos.print recebimento.recibo_markdown
+            titulo = "recibo_#{recebimento.pessoa.nome_completo.parameterize}_#{recebimento.data}_#{recebimento.id}"
+            if params[:filetype].to_sym == :pdf
+              zos.put_next_entry "#{titulo}.pdf"
+              pdf = RecebimentoReciboPdf.new(recebimento)
+              zos.print pdf.render
+            else
+              zos.put_next_entry "#{titulo}.md"
+              zos.print recebimento.recibo_markdown
+            end
           end
         end
         compressed_filestream.rewind
@@ -83,11 +90,21 @@ class RecebimentosController < ApplicationController
   end
 
   def show
+    nome_documento = "recibo_#{@recebimento.beneficiario.nome_completo.parameterize}_#{@recebimento.data}_#{@recebimento.id}"
     respond_to do |format|
       format.html
+
       format.md do
         response.headers['Content-Type'] = 'text/markdown'
-        response.headers['Content-Disposition'] = "attachment; filename=recibo_#{@recebimento.beneficiario.nome_completo.parameterize}_#{@recebimento.data}.md"
+        response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.md"
+      end
+
+      format.pdf do
+        pdf = RecebimentoReciboPdf.new(@recebimento)
+        send_data pdf.render,
+          filename: "#{nome_documento}.pdf",
+          type: "application/pdf",
+          disposition: :inline
       end
     end
   end
@@ -125,7 +142,7 @@ class RecebimentosController < ApplicationController
     if @acompanhamento then @recebimento.acompanhamento = @acompanhamento end
     if params[:recebimento][:direto_profissional]
       p = params[:recebimento]
-      ProfissionalFinanceiroRepasse.create(profissional_id: Acompanhamento.find(p[:acompanhamento_id]).profissional.id, valor: p[:valor], data: p[:data], pagamento_modalidade_id: p[:pagamento_modalidade_id])
+      ProfissionalFinanceiroRepasse.create(profissional_id: Acompanhamento.find(p[:acompanhamento_id]).profissional.id, valor: p[:valor], data: p[:data], pagamento_modalidade_id: p[:pagamento_modalidade_id], usuario: usuario_atual)
     end
 
     respond_to do |format|

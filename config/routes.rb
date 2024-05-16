@@ -2,12 +2,13 @@ Rails.application.routes.draw do
   resources :pessoa_medicacoes
   scope :estatisticas do
     get '/', to: 'estatisticas#index', as: "estatisticas"
-    get 'estatisticas/acompanhamentos'
-    get 'estatisticas/atendimentos'
-    get 'estatisticas/profissionais'
-    get 'estatisticas/pacientes'
-    get 'estatisticas/instrumentos'
-    get 'estatisticas/financeiro'
+    get "/clinica", to: "estatisticas#clinica", as: "clinica_estatisticas"
+    get "/acompanhamentos", to: "estatisticas#acompanhamentos", as: "acompanhamentos_estatisticas"
+    get "/atendimentos", to: "estatisticas#atendimentos", as: "atendimentos_estatisticas"
+    get "/profissionais", to: "estatisticas#profissionais", as: "profissionais_estatisticas"
+    get "/pacientes", to: "estatisticas#pacientes", as: "pacientes_estatisticas"
+    get "/instrumentos", to: "estatisticas#instrumentos", as: "instrumentos_estatisticas"
+    get "/financeiro", to: "estatisticas#financeiro", as: "financeiro_estatisticas"
   end
 
   resources :adulto_anamneses

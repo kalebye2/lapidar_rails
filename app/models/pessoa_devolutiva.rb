@@ -25,4 +25,13 @@ class PessoaDevolutiva < ApplicationRecord
   def substituir_template_por_dados atributo=""
     self[atributo]&.to_s&.gsub(/{%\s*(paciente|pessoa|cliente)\s*%}/, pessoa.nome)&.gsub(/{%\s*(responsavel|responsável|interessado|entrevistado)\s*%}/, responsavel.nome)
   end
+
+  def dados_principais
+    {
+      profissional: profissional.descricao_completa,
+      paciente: paciente.nome_completo,
+      responsável: pessoa_responsavel.nome_completo,
+      data: data.strftime("%d/%m/%Y"),
+    }
+  end
 end

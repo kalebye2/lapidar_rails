@@ -15,15 +15,15 @@ class Recebimento < ApplicationRecord
 
   default_scope { includes(:acompanhamento, :pagamento_modalidade) }
 
-  scope :do_mes, -> (mes = Date.today.all_month, ordem: :asc) { where(data: mes).order(data: ordem) }
-  scope :do_mes_passado, -> { where(data: (Date.today - 1.month).all_month) }
-  scope :do_mes_atual, -> { where(data: Date.today.all_month) }
+  scope :do_mes, -> (mes = Date.current.all_month, ordem: :asc) { where(data: mes).order(data: ordem) }
+  scope :do_mes_passado, -> { where(data: (Date.current - 1.month).all_month) }
+  scope :do_mes_atual, -> { where(data: Date.current.all_month) }
   scope :deste_mes, -> { do_mes_atual }
-  scope :do_ano_atual, -> { where(data: Date.today.all_year) }
+  scope :do_ano_atual, -> { where(data: Date.current.all_year) }
   scope :deste_ano, -> { do_ano_atual }
-  scope :do_ano_passado, -> { where(data: (Date.today - 1.year).all_year) }
+  scope :do_ano_passado, -> { where(data: (Date.current - 1.year).all_year) }
 
-  scope :do_periodo_alt, -> (mes: Date.today.month, ano: Date.today.year, ordem: :desc, de: nil, ate: nil) do
+  scope :do_periodo_alt, -> (mes: Date.current.month, ano: Date.current.year, ordem: :desc, de: nil, ate: nil) do
     if de.nil?
       where(data: ["01-#{mes}-#{ano}".to_date.."01-#{mes}-#{ano}".to_date.end_of_month]).order(data: ordem)
     else

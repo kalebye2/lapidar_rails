@@ -62,6 +62,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "hipotese_diagnostica"
     t.text "objetivo"
     t.text "prognostico"
+    t.index ["hipotese_diagnostica"], name: "ix_acompanhamentos_hipotese_diagnostica"
+    t.index ["motivo"], name: "ix_acompanhamentos_motivo"
   end
 
   create_table "adulto_anamneses", id: false, force: :cascade do |t|
@@ -157,6 +159,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.date "data_reagendamento_fim"
     t.time "horario_reagendamento"
     t.time "horario_reagendamento_fim"
+    t.index ["data", "horario", "data_reagendamento", "horario_reagendamento"], name: "ix_atendimentos_data_horario"
   end
 
   create_table "biblioteca_autores", force: :cascade do |t|
@@ -505,6 +508,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
 
   create_table "instrumentos", force: :cascade do |t|
     t.string "nome"
+    t.string "sigla", limit: 255
     t.integer "instrumento_tipo_id"
     t.boolean "exclusivo_psicologo"
     t.integer "faixa_etaria_meses_inicio"
@@ -515,7 +519,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "aplicacao"
     t.text "indicacao"
     t.text "particularidades"
-    t.boolean "tem_na_clinica", null: false
+    t.boolean "tem_na_clinica"
   end
 
   create_table "laudos", force: :cascade do |t|
@@ -531,6 +535,15 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "acompanhamento_id"
     t.text "referencias"
     t.integer "fechado", default: 0
+  end
+
+  create_table "navegacao_erros", force: :cascade do |t|
+    t.string "remote_ip", limit: 255, null: false
+    t.date "data", default: -> { "CURRENT_DATE" }, null: false
+    t.time "horario", null: false
+    t.string "request_url", limit: 255, null: false
+    t.integer "error_code", null: false
+    t.text "mensagem"
   end
 
   create_table "pagamento_modalidades", force: :cascade do |t|
@@ -664,6 +677,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "usa_whatsapp"
     t.integer "usa_telegram"
     t.text "bio"
+    t.index ["nome", "nome_do_meio", "sobrenome"], name: "ix_pessoas_nome_completo"
   end
 
   create_table "profissionais", force: :cascade do |t|
@@ -788,6 +802,14 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "sigla", limit: 2, null: false
   end
 
+  create_table "usuario_logins", force: :cascade do |t|
+    t.integer "usuario_id", null: false
+    t.string "remote_ip", limit: 255
+    t.date "data", default: -> { "CURRENT_DATE" }
+    t.time "horario", default: -> { "CURRENT_TIME" }
+    t.index ["remote_ip"], name: "ix_usuario_logins_remote_ips"
+  end
+
   create_table "usuarios", primary_key: "profissional_id", force: :cascade do |t|
     t.string "username", limit: 255, null: false
     t.string "password_digest", limit: 255, null: false
@@ -891,5 +913,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "recebimentos", "usuarios", primary_key: "profissional_id", on_update: :nullify, on_delete: :nullify
   add_foreign_key "subtestes", "instrumentos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "subtestes", "psicologia_subfuncoes", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "usuario_logins", "usuarios", primary_key: "profissional_id", on_update: :cascade
   add_foreign_key "usuarios", "profissionais", on_update: :cascade, on_delete: :cascade
 end

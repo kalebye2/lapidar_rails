@@ -31,16 +31,19 @@
     <% end %>
   </div>
   <div class="grid-3">
-    <div>
+    <div class="card">
       <h2>Últimos Recebimentos</h2>
       <div class="recebimentos-container">
         <% @recebimentos.each do |recebimento| %>
-          <p>
-          <%= render_data_brasil recebimento.data %> -
-          <%= recebimento.pagante.nome_completo %>
-          <%= render_dinheiro_centavos recebimento.valor %>
-          <%= recebimento.modalidade || "Meio desconhecido" %>
-          </p>
+          <div class="card card-destaque">
+            <span class="icon-calendar"><%= render_data_brasil recebimento.data %></span>
+            <br>
+            <span class="icon-user"><%= recebimento.pagante.nome_completo %></span>
+            <br>
+            <span class="icon-coin-dollar"><%= render_dinheiro_centavos recebimento.valor %></span>
+            <br>
+            <span class="icon-tag"><%= recebimento.modalidade || "Meio desconhecido" %></span>
+          </div>
         <% end %>
         <div class="text-center">
           <%= link_to "ver mais", recebimentos_path, class: "button" %>
@@ -48,18 +51,20 @@
       </div>
     </div>
 
-    <div>
+    <div class="card">
       <h2>Últimos atendimentos</h2>
       <div class="atendimento-valores-container">
         <% @atendimento_valores.each do |atendimento_valor| %>
-          <p>
-          <strong><%= render_dinheiro_centavos atendimento_valor.valor %></strong>
-          <%= render_data_brasil atendimento_valor.data %>
-          <%= render_hora_brasil atendimento_valor.horario %>
-          <%= atendimento_valor.pessoa.nome_completo %>
-          <%= atendimento_valor.atendimento.tipo.upcase %>
-          <%= atendimento_valor.atendimento.modalidade %>
-          </p>
+          <div class="card card-destaque">
+            <span class="icon-calendar"><%= render_data_brasil atendimento_valor.data %>
+            <%= render_hora_brasil atendimento_valor.horario %></span>
+            <br>
+            <span class="icon-user"><%= atendimento_valor.pessoa.nome_abreviado %></span>
+            <br>
+            <span class="icon-coin-dollar"><%= render_dinheiro_centavos atendimento_valor.valor %></span>
+            <br>
+            <span class="icon-archive"><%= atendimento_valor.atendimento.tipo.upcase %></span>
+          </div>
         <% end %>
         <div class="text-center">
           <%= link_to "mais...", atendimento_valores_path, class: "button full-width" %>
@@ -67,15 +72,17 @@
       </div>
     </div>
 
-    <div>
+    <div class="card">
       <h2>Últimos repasses</h2>
       <% @profissional_financeiro_repasses.each do |repasse| %>
-        <p>
-        <%= render_data_brasil repasse.data %>
-        <%= repasse.profissional.nome_abreviado %>
-        <%= repasse.profissional.documento %>
-        <%= render_dinheiro_centavos repasse.valor %>
-        </p>
+        <div class="card card-destaque">
+          <span class="icon-calendar"><%= render_data_brasil repasse.data %></span>
+        <br>
+        <span class="icon-tie"><%= repasse.profissional.nome_abreviado %>
+        <%= repasse.profissional.documento %></span>
+        <br>
+        <span class="icon-coin-dollar"><%= render_dinheiro_centavos repasse.valor %></span>
+        </div>
       <% end %>
       <div class="text-center">
         <%= link_to "ver mais", profissional_financeiro_repasses_path, class: "button" %>

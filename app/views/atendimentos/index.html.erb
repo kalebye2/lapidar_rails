@@ -10,23 +10,6 @@
   </ul>
 </nav>
 
-<nav class="navbar navcenter">
-  <%= hx_form get: atendimentos_path, target: "#atendimentos-container", replace_url: true, trigger: "change", swap: "outerHTML" do %>
-    <label for="de">De</label>
-    <input type="date" name="de" id="de" value="<%= @de %>">
-    <label for="ate">Até</label>
-    <input type="date" name="ate" id="ate" value="<%= @ate %>">
-
-    <br>
-    
-    <label for="tipo">Tipo de atendimento</label>
-    <select name="tipo">
-      <option value="">Todos</option>
-      <% AtendimentoTipo.all.each do |atendimento_tipo| %>
-          <option value="<%= atendimento_tipo.id %>" <%= "selected" unless atendimento_tipo.id != params[:tipo] %>><%= atendimento_tipo.tipo.upcase %></option>
-      <% end %>
-    </select>
-  <% end %>
-</nav>
+<%= render "atendimentos-form", atendimentos: @atendimentos, atendimentos_totais: @atendimentos_totais, pessoas: @pessoas %>
 
 <%= render "atendimentos-container", atendimentos: @atendimentos %>

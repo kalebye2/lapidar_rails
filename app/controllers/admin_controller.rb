@@ -42,7 +42,7 @@ class AdminController < ApplicationController
 
   def validar_usuario
     if usuario_atual.nil? || !usuario_atual.informatica?
-      render file: "#{Rails.root}/public/404.html", status: 403
+      erro403
     end
   end
 end

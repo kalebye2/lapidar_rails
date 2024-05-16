@@ -45,11 +45,11 @@ header-includes:
     \usepackage{fancyhdr}
     \fancyhead[L]{} % coloque aqui cabeçalho à esquerda
     \fancyhead[R]{<%= titulo_doc %>}
-    \fancyfoot[L]{\footnotesize{
-    E-mail: \href{mailto:<%= @acompanhamento.profissional.email %>}{<%= @acompanhamento.profissional.email %>}\\
-    Fone: \href{tel:<%= @acompanhamento.profissional.pessoa.render_fone_link %>}{<%= @acompanhamento.profissional.pessoa.render_fone_local %>}
-    }}
-    \fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+    %\fancyfoot[L]{\footnotesize{
+    %E-mail: \href{mailto:<%= @acompanhamento.profissional.email %>}{<%= @acompanhamento.profissional.email %>}\\
+    %Fone: \href{tel:<%= @acompanhamento.profissional.pessoa.render_fone_link %>}{<%= @acompanhamento.profissional.pessoa.render_fone_local %>}
+    %}}
+    \fancyfoot[C]{Página \thepage}
     \pagestyle{fancy}
     ```
 
@@ -60,9 +60,6 @@ header-includes:
 
 **Data de nascimento**:
 <%= render_data_brasil @acompanhamento.paciente.data_nascimento %>
-
-**Idade**:
-<%= @acompanhamento.paciente.render_idade.upcase %>
 
 **Sexo**:
 <%= @acompanhamento.paciente.render_sexo.upcase %>
@@ -105,19 +102,19 @@ INSERIR CONTATO PARA EMERGÊNCIA
 **Endereço**:
 <%= @acompanhamento.paciente.endereco_completo_com_cep.upcase %>
 
-**Toma medicação**:
+**Medicação**:
 <%= @acompanhamento.pessoa.pessoa_medicacoes.map(&:medicacao).to_sentence(last_word_connector: ' e ').upcase %>
 
 **Motivo da consulta**:
 <%= @acompanhamento.motivo.upcase %>
 
 **Hipótese diagnóstica**:
-<%= (@acompanhamento.hipotese_diagnostica || "Não definida").upcase %>
+<%= (@acompanhamento.hipotese_diagnostica)&.upcase %>
 
-**Objetivo do acompanhamento**:
-<%= (@acompanhamento.objetivo || "Não definido").upcase %>
+**Objetivo**:
+<%= (@acompanhamento.objetivo)&.upcase %>
 
-**Início do acompanhamento**:
+**Início**:
 <%= render_data_brasil @acompanhamento.data_inicio %>
 
 <% if !@acompanhamento.data_final.nil? %>
@@ -140,11 +137,11 @@ EM ANDAMENTO
 
 **Assinatura**:
 
-# Registro dos atendimentos
-
 <% @acompanhamento.atendimentos.em_ordem.each_with_index do |atendimento, index| %>
 
-## Atendimento <%= index + 1 %>
+\newpage
+
+# Atendimento nº <%= index + 1 %>
 
 **Data**:
 <%= render_data_brasil atendimento.data %>

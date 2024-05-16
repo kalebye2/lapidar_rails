@@ -1,5 +1,6 @@
 class UsuariosController < ApplicationController
   before_action :set_usuario, only: %i[ show edit update destroy ]
+  before_action :validar_usuario
 
   def index
     @usuarios = Usuario.all
@@ -47,5 +48,12 @@ class UsuariosController < ApplicationController
 
   def usuario_params
     params.require(:usuario).permit(:profissional_id, :username, :password, :password_confirmation, :admin, :secretaria, :financeiro, :informatica, :corpo_clinico)
+  end
+
+  def validar_usuario
+    if !usuario_atual&.informatica?
+      erro403
+      return
+    end
   end
 end

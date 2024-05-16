@@ -44,6 +44,18 @@ class AcompanhamentoReajustesController < ApplicationController
 
   # GET /acompanhamento_reajustes/1 or /acompanhamento_reajustes/1.json
   def show
+    nome_documento = "reajuste_#{@acompanhamento_reajuste.pessoa.nome_completo.parameterize}_#{@acompanhamento_reajuste.data_ajuste}"
+    respond_to do |format|
+      format.html
+
+      format.md do
+        response.headers["Content-Type"] = "text/markdown"
+        response.headers["Content-Disposition"] = "attachment;filename=#{nome_documento}.md"
+      end
+
+      format.pdf do
+      end
+    end
   end
 
   # GET /acompanhamento_reajustes/new

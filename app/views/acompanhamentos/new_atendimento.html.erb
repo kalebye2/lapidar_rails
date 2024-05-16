@@ -1,3 +1,10 @@
 <% titulo "Novo atendimento - #{@acompanhamento.tipo.upcase} #{@acompanhamento.pessoa.nome_abreviado}" %>
 
-<%= render "atendimentos/form", atendimento: Atendimento.new(data: Date.today) %>
+<% atendimento_referencia = @acompanhamento.atendimentos.realizados.em_ordem.last %>
+<%= render "atendimentos/form", atendimento: @acompanhamento.atendimentos.new(data: (atendimento_referencia&.data + 1.week) || Date.today + 1.week, horario: atendimento_referencia&.horario, horario_fim: atendimento_referencia&.horario_fim || (atendimento_referencia&.horario + 1.hour), atendimento_modalidade: atendimento_referencia&.atendimento_modalidade, atendimento_tipo: atendimento_referencia&.atendimento_tipo, atendimento_local: atendimento_referencia&.atendimento_local) %>
+<% @acompanhamento.acompanhamento_horarios.each do |horario| %>
+  <div>
+    <%= atendimento_referencia.data.wday == horario.semana_dia.id %>
+    <%= (Date.today + 1.week).all_week.to_a[horario.semana_dia.id] %>
+  </div>
+<% end %>

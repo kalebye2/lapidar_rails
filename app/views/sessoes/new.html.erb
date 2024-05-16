@@ -1,4 +1,10 @@
+<% titulo "Entrar" %>
 <h1>Entrar</h1>
+
+<p>
+Entrando com o endereço
+<%= request.remote_ip %>.
+</p>
 <%= form_with url: sessoes_path, action: :new, local: true, autocomplete: 'on' do |form| %>
   <div class="field">
     <%= form.label "Nome de usuário" %>

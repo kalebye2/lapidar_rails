@@ -3,20 +3,38 @@ class AcompanhamentoDetalhesPdf < BasePdf
     super
     @acompanhamento = acompanhamento
     @options = options
+    @titulo = "Prontuário #{@acompanhamento.profissional.profissional_funcao.adjetivo_masc}"
+    @markup_options = {
+      text: {
+        align: :justify,
+        # indent_paragraphs: 24,
+        leading: 5,
+      },
+      heading1: {
+        align: :left,
+        style: :bold,
+        indent_paragraphs: 0,
+      }
+    }
+
     header
     title
     move_down 7
     body
-    local_assinatura @acompanhamento.profissional.descricao_completa.gsub(' - ', "\n")
+    # local_assinatura @acompanhamento.profissional.descricao_completa.gsub(' - ', "\n")
     footer
+    number_pages "<page>", at: [bounds.left, 0], align: :center
   end
 
   def header
+    gerar_cabecalho "#{@titulo} - #{@acompanhamento.pessoa.nome_completo}".upcase
   end
 
   def title
+    move_down 36
     font @heading_font, style: :bold
-    text "Prontuário #{@acompanhamento.profissional.profissional_funcao.adjetivo_masc}", size: 36, align: :center
+    text @titulo, size: 36, align: :center
+    move_down 36
   end
 
   def body
@@ -27,7 +45,7 @@ class AcompanhamentoDetalhesPdf < BasePdf
     @acompanhamento.atendimentos.each_with_index do |atendimento, index|
       start_new_page
       font @heading_font, style: :bold
-      markup "<h2><b>Atendimento nº #{index + 1}</b></h2>"
+      markup "<h2><b>Atendimento nº #{index + 1}</b></h2>", @markup_options
       font @body_font
       dados_atendimento atendimento
     end
@@ -83,7 +101,6 @@ class AcompanhamentoDetalhesPdf < BasePdf
       "#{if @acompanhamento.paciente.usa_telegram? then " | <a href='#{@acompanhamento.paciente.render_telegram_link}'>Telegram</a>" end}" \
         ""
     dados[:email] = "<a href='mailto:#{@acompanhamento.paciente.email.downcase}'>#{@acompanhamento.paciente.email}</a>"
-    dados[:toma_medicação] = dados[:toma_medicação] || "Sem informações de medicação"
 
     markup dados.map { |k,v| "<b>#{k&.to_s&.humanize}</b>: #{v&.upcase}" }.join("\n<br>\n")
     move_down 12
@@ -110,7 +127,7 @@ class AcompanhamentoDetalhesPdf < BasePdf
     move_down 12
 
     markup "<h3><b>Anotações</b></h3>"
-    markup markdown_to_html(atendimento&.anotacoes)
+    markup markdown_to_html(atendimento&.anotacoes, nil)
   end
 
 

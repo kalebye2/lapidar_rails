@@ -159,7 +159,19 @@ class ProfissionaisController < ApplicationController
   end
 
   def recebimentos
-    render html: @profissional.attributes
+    @de = params[:de]&.to_date || Date.today.beginning_of_month
+    @ate = params[:ate]&.to_date || Date.today.end_of_month
+    @num_itens = params[:n_itens] || 10
+
+    @params = params.permit :de, :ate, :num_itens, :page
+
+    @recebimentos = @profissional.recebimentos.do_periodo(@de..@ate)
+    @recebimentos_totais = @recebimentos
+    @pagy, @recebimentos = pagy(@recebimentos, items: @num_itens)
+
+    if hx_request?
+      render partial: "recebimentos-tabela", locals: {profissional: @profissional, recebimentos: @recebimentos, recebimentos_totais: @recebimentos_totais }
+    end
   end
 
   private

@@ -1,0 +1,61 @@
+<div id="<%= dom_id @profissional %>-recebimentos-tabela">
+  <table>
+    <thead>
+      <tr>
+        <th>Acompanhamento</th>
+        <th>Valor</th>
+        <th>Data</th>
+        <th>Recebido de</th>
+        <th>Registrado por</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @recebimentos.each do |recebimento| %>
+        <tr>
+          <td class="text-center">
+            <%= recebimento.acompanhamento.tipo.upcase %>
+            para
+            <%= recebimento.acompanhamento.pessoa.nome_abreviado %>
+            <% if recebimento.acompanhamento.pessoa_responsavel %>
+              <br>
+              <span style="font-size:.9em;">
+                (resp.: <%= recebimento.acompanhamento.pessoa_responsavel.nome_abreviado %>)
+              </span>
+            <% end %>
+          </td>
+          <td class="dinheiro"><%= render_dinheiro_centavos recebimento.valor %></td>
+          <td class="text-center"><%= render_data_brasil recebimento.data %></td>
+          <td class="text-center">
+            <%= recebimento.pagante.nome_abreviado %>
+            <br>
+            <span style="font-size:.9em;">
+              CPF <%= recebimento.pagante.render_cpf %>
+            </span>
+          </td>
+          <td class="text-center"><%= recebimento.usuario.profissional.descricao_completa %></td>
+          <td></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if hx_request? %>
+    <div class="text-center" id="recebimentos-page-select" hx-swap-oob="true">
+      <%= deixar_no_plural @recebimentos_totais.count, "recebimento", "recebimentos" %>
+      -
+      <%= render_dinheiro_centavos @recebimentos_totais.sum(:valor) %>
+      <% hx_options = {class: "button", style: "border: 1px solid var(--caption-color);", select: "##{dom_id @profissional}-recebimentos-tabela", target: "##{dom_id @profissional}-recebimentos-tabela", swap: "outerHTML", replace_url: true} %>
+      <br>
+      Página
+      <%= @pagy.page %>
+      /
+      <%= @pagy.pages %>
+      <br>
+      <br>
+      <%= hx_link "<", recebimentos_profissional_path(@params.merge page: @pagy.page - 1), **hx_options unless @pagy.page < 2 %>
+      <%= hx_link ">", recebimentos_profissional_path(@params.merge page: @pagy.page + 1), **hx_options unless @pagy.page >= @pagy.pages %>
+      <br>
+    </div>
+  <% end %>
+</div>

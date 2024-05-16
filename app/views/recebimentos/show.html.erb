@@ -1,2 +1,72 @@
-<h1>Recebimentos#show</h1>
-<p>Find me in app/views/recebimentos/show.html.erb</p>
+<% titulo "Recebimento ID ##{@recebimento.id}" %>
+<h1 id="main-title">Recebimento ID: <%= @recebimento.id %></h1>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Recebimentos", recebimentos_path, class: "icon-coin-dollar" %>
+    </li>
+
+    <li>
+      <%= link_to "Recibo", "javascript:void(0);", class: "icon-file-empty" %>
+      <ul>
+        <li>
+          <%= link_to "Markdown", recebimento_path(@recebimento, format: :md), class: "icon-file-empty" %>
+        </li>
+        <li>
+          <%= link_to "PDF", recebimento_path(@recebimento, format: :pdf), class: "icon-file-pdf" %>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <%= link_to "Acompanhamento", acompanhamento_path(@recebimento.acompanhamento), class: "icon-profile" %>
+    </li>
+
+    <li>
+      <%= link_to "Paciente", pessoa_path(@recebimento.pessoa), class: "icon-user" %>
+    </li>
+    
+    <li>
+      <%= link_to "Profissional", profissional_path(@recebimento.profissional), class: "icon-user-tie" %>
+    </li>
+
+    <li>
+      <%= link_to "Editar", edit_recebimento_path, class: "icon-pencil" %>
+    </li>
+  </ul>
+</nav>
+
+<table>
+  <tbody>
+    <tr>
+      <th>Acompanhamento</th>
+      <td>
+        <%= @recebimento.acompanhamento.render_info_padrao %>
+        <%= link_to "Acompanhamento", acompanhamento_path(@recebimento.acompanhamento) %>
+        <%= link_to "Paciente", pessoa_path(@recebimento.pessoa) %>
+        <%= link_to "Profissional", profissional_path(@recebimento.profissional) %>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Data</th>
+      <td><%= render_data_brasil @recebimento.data %></td>
+    </tr>
+
+    <tr>
+      <th>Valor</th>
+      <td><%= render_dinheiro_centavos @recebimento.valor %></td>
+    </tr>
+
+    <tr>
+      <th>Modalidade de pagamento</th>
+      <td><%= @recebimento.modalidade %></td>
+    </tr>
+
+    <tr>
+      <th>Registrado por</th>
+      <td><%= @recebimento.usuario&.profissional&.descricao_completa || "Sem informação de quem registrou" %></td>
+    </tr>
+  </tbody>
+</table>

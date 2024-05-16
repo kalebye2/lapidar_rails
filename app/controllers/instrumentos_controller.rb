@@ -10,6 +10,10 @@ class InstrumentosController < ApplicationController
       @instrumentos = @instrumentos.query_like_nome(params[:nome])
     end
 
+    if params[:sigla].present?
+      @instrumentos = @instrumentos.query_like_sigla(params[:sigla])
+    end
+
     if params[:indicacao].present?
       @instrumentos = @instrumentos.query_like_indicacao(params[:indicacao])
     end
@@ -52,7 +56,7 @@ class InstrumentosController < ApplicationController
 
     respond_to do |format|
       if @instrumento.save
-        format.html { redirect_to instrumento_url(@instrumento), notice: "Instrumento was successfully created." }
+        format.html { redirect_to instrumentos_url, notice: "Instrumento was successfully created." }
         format.json { render :show, status: :created, location: @instrumento }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -65,7 +69,7 @@ class InstrumentosController < ApplicationController
   def update
     respond_to do |format|
       if @instrumento.update(instrumento_params)
-        format.html { redirect_to instrumento_url(@instrumento), notice: "Instrumento was successfully updated." }
+        format.html { redirect_to instrumentos_url, notice: "Instrumento was successfully updated." }
         format.json { render :show, status: :ok, location: @instrumento }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -92,7 +96,7 @@ class InstrumentosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def instrumento_params
-      params.require(:instrumento).permit(:nome, :instrumento_tipo_id, :exclusivo_psicologo, :faixa_etaria_meses_inicio, :faixa_etaria_meses_final, :objetivo, :cronometrado, :material, :aplicacao, :indicacao, :particularidades, :tem_na_clinica)
+      params.require(:instrumento).permit(:nome, :sigla, :instrumento_tipo_id, :exclusivo_psicologo, :faixa_etaria_meses_inicio, :faixa_etaria_meses_final, :objetivo, :cronometrado, :material, :aplicacao, :indicacao, :particularidades, :tem_na_clinica)
     end
 
     def validar_usuario

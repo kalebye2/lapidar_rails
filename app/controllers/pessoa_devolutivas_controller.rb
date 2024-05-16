@@ -46,7 +46,7 @@ class PessoaDevolutivasController < ApplicationController
 
   # GET /pessoa_devolutivas/1/edit
   def edit
-    redirect_to :devolutiva
+    # redirect_to :devolutiva
   end
 
   # POST /pessoa_devolutivas or /pessoa_devolutivas.json

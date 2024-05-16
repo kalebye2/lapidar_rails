@@ -86,7 +86,22 @@
         <%= @pessoa.endereco_completo %>
       </td>
     </tr>
+
+    <tr>
+      <th>Valor a cobrar até mês passado</th>
+      <td class="dinheiro"><%= render_dinheiro_centavos @pessoa.valor_a_cobrar_ate_mes_passado %></td>
+    </tr>
+    <tr>
+      <th>Valor a cobrar total</th>
+      <td class="dinheiro"><%= render_dinheiro_centavos @pessoa.valor_a_cobrar %></td>
+    </tr>
   </thead>
 </table>
 
+<div id="<%= dom_id(@pessoa) %>_recebimentos">
 <%= render "recebimentos-tabela", recebimentos: @recebimentos %>
+</div>
+
+<div id="<%= dom_id(@pessoa) %>-pagamentos">
+  <%= render "recebimentos-tabela", recebimentos: @pagamentos, titulo: "Pagamentos" %>
+</div>

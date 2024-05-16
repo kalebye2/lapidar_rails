@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  usuario: one
+  remote_ip: MyString
+  data: 2024-04-21
+  horario: 2024-04-21 21:24:28
+  sucesso: false
+
+two:
+  usuario: two
+  remote_ip: MyString
+  data: 2024-04-21
+  horario: 2024-04-21 21:24:28
+  sucesso: false

@@ -26,7 +26,7 @@ class Pessoa < ApplicationRecord
   scope :homens, -> { do_sexo_masculino }
   scope :contagem_por_sexo, -> (collection=all) { group(:feminino).count }
   scope :profissionais, -> { joins(:profissional) }
-  scope :atendidas_hoje, -> { joins(:atendimentos).where("atendimentos.data" => Date.today) }
+  scope :atendidas_hoje, -> { joins(:atendimentos).where("atendimentos.data" => Date.current) }
   scope :ordem_alfabetica, -> { order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc) }
   scope :em_ordem_alfabetica, -> { ordem_alfabetica }
 
@@ -178,7 +178,7 @@ class Pessoa < ApplicationRecord
     data_nascimento&.strftime("%d/%m/%Y")
   end
 
-  def idade_anos(data = Time.now.to_date)
+  def idade_anos(data = Time.current.to_date)
     if data_nascimento == nil then return "idade não informada" end
     if data.class.to_s != "Date" then return "" end
 
@@ -189,7 +189,7 @@ class Pessoa < ApplicationRecord
     mes_dif < 0 || (mes_dif == 0 && dia_dif <= 0) ? ano_dif - 1 : ano_dif
   end
 
-  def idade_meses(data = Time.now.to_date)
+  def idade_meses(data = Time.current.to_date)
     if data_nascimento == nil then return "idade não informada" end
     if data.class.to_s != "Date" then return "" end
 
@@ -200,7 +200,7 @@ class Pessoa < ApplicationRecord
     ano_dif * 12 + mes_dif
   end
 
-  def render_idade(data = Time.now.to_date)
+  def render_idade(data = Time.current.to_date)
     if data_nascimento == nil then return "idade não informada" end
     if data.class.to_s != "Date" then return "" end
     hoje = data
@@ -302,7 +302,7 @@ class Pessoa < ApplicationRecord
 
   def atendimentos_futuros
     # depois ajusta
-    atendimentos.where(data: [Date.today, Date.today + 1.day..], horario: Time.now..)
+    atendimentos.where(data: [Date.current, Date.current + 1.day..], horario: Time.current..)
   end
 
   def recebimentos_beneficiario
@@ -310,10 +310,10 @@ class Pessoa < ApplicationRecord
   end
 
   def valor_a_cobrar_ate_mes_passado
-    atendimento_valores.where(atendimentos: {data: [..(Date.today - 1.month).end_of_month]}).sum("valor - desconto") - recebimentos.sum(:valor)
+    atendimento_valores.where(atendimentos: {data: [..(Date.current - 1.month).end_of_month]}).sum("valor - desconto") - recebimentos.sum(:valor)
   end
 
-  def valor_a_cobrar(periodo=..Date.today.end_of_month)
+  def valor_a_cobrar(periodo=..Date.current.end_of_month)
     (atendimento_valores.do_periodo(periodo).sum("valor - desconto") - recebimentos.do_periodo(periodo).sum(:valor)).to_i
   end
 
@@ -326,7 +326,7 @@ class Pessoa < ApplicationRecord
   end
 
   def atendimentos_a_partir_de_hoje
-    atendimentos.where(data: Date.today..)
+    atendimentos.where(data: Date.current..)
   end
 
   def grau_de_instrucao
@@ -394,7 +394,7 @@ class Pessoa < ApplicationRecord
       cidade: endereco_cidade,
       estado: endereco_estado,
       país: pais.nome,
-      toma_medicação: pessoa_medicacoes.map { |medicacao| "#{medicacao.medicacao}#{medicacao.dose&.insert(0, " (")&.insert(-1, ")")}"}.join(", ").presence }.presence || "Sem dados de medicação"
+      medicação: pessoa_medicacoes.map { |medicacao| "#{medicacao.medicacao}#{medicacao.dose&.insert(0, " (")&.insert(-1, ")")}"}.join(", ").presence }.presence || ""
   end
 
   def para_csv incluir_trans: false, incluir_orientacao_sexual: false
@@ -492,7 +492,7 @@ class Pessoa < ApplicationRecord
 
   def self.aniversariantes
     if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase.include? "sqlite"
-      self.where("strftime('%d%m', data_nascimento) = strftime('%d%m', CURRENT_DATE)")
+      self.where("strftime('%d%m', data_nascimento) = strftime('%d%m', '#{Date.current}')")
     else
     end
   end

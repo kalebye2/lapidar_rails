@@ -3,7 +3,7 @@
   <%== hx_set get: instrumento_path(instrumento), target: "#instrumento-show", select: "#instrumento-show" %>
   >
   <div>
-      <h2 class="icon-file-empty"><%= instrumento.nome %></h2>
+      <h2 class="icon-file-empty"><%= [instrumento.nome, instrumento.sigla].compact.join " - " %></h2>
       <h3><%= instrumento.tipo.upcase %></h3>
       <h4><%= instrumento.faixa_etaria %></h4>
       <p><%= instrumento.exclusivo_psicologo? ? "EXCLUSIVO DO PSICÓLOGO" : "APLICAÇÃO LIVRE" %></p>

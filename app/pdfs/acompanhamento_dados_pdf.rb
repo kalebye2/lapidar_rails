@@ -3,6 +3,7 @@ class AcompanhamentoDadosPdf < BasePdf
     super()
     @acompanhamento = acompanhamento
     heading
+    default_leading 10
     move_down 7
     stroke_horizontal_rule
     move_down 10

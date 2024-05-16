@@ -14,7 +14,7 @@
       <%= link_to "Markdown", contrato_acompanhamento_path(@acompanhamento, format: :md, contrato_modelo: @profissional_contrato_modelo.id, tamanho_papel: params[:tamanho_papel], assinatura_profissional: params[:assinatura_profissional].presence, assinatura_paciente: params[:assinatura_paciente].presence, assinatura_responsavel: params[:assinatura_responsavel].presence), class: "icon-file-empty" %>
     </li>
     <li>
-      <%= link_to "PDF", contrato_acompanhamento_path(@acompanhamento, format: :pdf, contrato_modelo: @profissional_contrato_modelo.id, tamanho_papel: params[:tamanho_papel]), class: "icon-file-pdf" %>
+      <%= link_to "PDF", contrato_acompanhamento_path(@acompanhamento, format: :pdf, contrato_modelo: @profissional_contrato_modelo.id, tamanho_papel: params[:tamanho_papel], assinatura_profissional: params[:assinatura_profissional].presence, assinatura_paciente: params[:assinatura_paciente].presence, assinatura_responsavel: params[:assinatura_responsavel].presence), class: "icon-file-pdf", target: :blank %>
     </li>
   </ul>
 </nav>
@@ -35,7 +35,7 @@
     </p>
   <% end %>
 
-  <% if params[:assinatura_responsavel].presence %>
+  <% if params[:assinatura_responsavel].presence && @acompanhamento.pessoa_responsavel %>
     <%== "<br>" * 4 %>
     <hr>
     <p style="text-align:center;">

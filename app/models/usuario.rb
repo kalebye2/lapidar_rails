@@ -9,6 +9,8 @@ class Usuario < ApplicationRecord
   validates_uniqueness_of :username
   validates_presence_of :username
 
+  has_many :usuario_logins
+
   scope :da_administracao, -> { where(admin: true) }
   scope :da_secretaria, -> { where(secretaria: true) }
   scope :do_corpo_clinico, -> { where(corpo_clinico: true) }

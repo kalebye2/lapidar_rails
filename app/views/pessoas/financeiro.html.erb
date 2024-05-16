@@ -4,6 +4,51 @@
 
 <%= render 'navbar', pessoa: @pessoa %>
 
+<table id="tabela-valores">
+  <thead>
+    <tr>
+      <th>Referência</th>
+      <th>Valor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <% periodo_total = @pessoa.atendimentos.minimum(:data)..@pessoa.atendimentos.maximum(:data) %>
+      <td>Valor total dos atendimentos</td>
+      <td class="dinheiro"><%= render_dinheiro_centavos @pessoa.atendimento_valores.soma_brutos periodo_total %></td>
+    </tr>
+
+    <tr>
+      <td>Total de recebimentos</td>
+      <td class="dinheiro"><%= render_dinheiro_centavos @pessoa.recebimentos.sum(:valor) %></td>
+    </tr>
+
+    <tr>
+      <td>Valor a receber até mês passado</td>
+      <td class="dinheiro"><%= render_dinheiro_centavos(@pessoa.valor_a_cobrar_ate_mes_passado > 0 ? @pessoa.valor_a_cobrar_ate_mes_passado : 0) %></td>
+    </tr>
+    <tr>
+      <td>Valor a receber</td>
+      <td class="dinheiro"><%= render_dinheiro_centavos @pessoa.valor_a_cobrar periodo_total %></td>
+    </tr>
+
+    <tr>
+      <td>Valor de atendimentos deste mês</td>
+      <td class="dinheiro"><%= render_dinheiro_centavos @pessoa.atendimento_valores.soma_brutos %></td>
+    </tr>
+
+    <tr>
+      <td>Taxa total</td>
+      <td class="dinheiro"><%= render_dinheiro_centavos @pessoa.atendimento_valores.soma_taxas periodo_total %></td>
+    </tr>
+
+    <tr>
+      <td>Taxa deste mês</td>
+      <td class="dinheiro"><%= render_dinheiro_centavos @pessoa.atendimento_valores.soma_taxas %></td>
+    </tr>
+  </tbody>
+</table>
+
 <div class="grid-2">
   <div>
     <h2>

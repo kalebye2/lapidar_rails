@@ -45,6 +45,9 @@
           </td>
 
           <td>
+            <div class="atendimento atendimento-<%= atendimento.status.parameterize %> text-center">
+              <%= atendimento.status.upcase %>
+            </div>
             <%= markdown_to_html atendimento.anotacoes, "Sem anotações" %>
           </td>
 
@@ -72,3 +75,7 @@
     </tbody>
   </table>
 </div>
+
+<% if hx_request? %>
+  <%= render "atendimentos-form", atendimentos: @atendimentos, atendimentos_totais: @atendimentos_totais, pessoas: @pessoas %>
+<% end %>

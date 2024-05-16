@@ -55,6 +55,9 @@
         <li>
           <%= link_to "Recibos (markdown)", recebimentos_path(@params.merge(format: :zip)), class: 'icon-file-zip' %>
         </li>
+        <li>
+          <%= link_to "Recibos (PDF)", recebimentos_path(@params.merge(format: :zip, filetype: :pdf)), class: "icon-file-zip" %>
+        </li>
       </ul>
     </li>
 
@@ -69,6 +72,7 @@
         </li>
         <li>
           <%= link_to "Recibos (markdown)", recebimentos_path(@params.merge format: :zip, de: Date.today.beginning_of_month, ate: Date.today.end_of_month), class: 'icon-file-zip' %>
+          <%= link_to "Recibos (PDF)", recebimentos_path(@params.merge format: :zip, de: Date.today.beginning_of_month, ate: Date.today.end_of_month, filetype: :pdf), class: 'icon-file-zip' %>
         </li>
       </ul>
     </li>
@@ -84,6 +88,7 @@
         </li>
         <li>
           <%= link_to "Recibos (markdown)", recebimentos_path(@params.merge format: :zip, de: (Date.today - 1.month).beginning_of_month, ate: (Date.today - 1.month).end_of_month), class: 'icon-file-zip' %>
+          <%= link_to "Recibos (PDF)", recebimentos_path(@params.merge format: :zip, de: (Date.today - 1.month).beginning_of_month, ate: (Date.today - 1.month).end_of_month, filetype: :pdf), class: 'icon-file-zip' %>
         </li>
       </ul>
     </li>

@@ -89,8 +89,15 @@ class ApplicationController < ActionController::Base
   end
 
   # 403 que parece 404
-  def erro403
+  def erro403 mensagem = ""
+    # NavegacaoErro.create(remote_ip: request.remote_ip, data: Date.current, horario: Time.current, request_url: request.original_url, error_code: 403, mensagem: mensagem.to_s)
+    criar_erro_de_navegacao
     render file: "#{Rails.root}/public/404.html", status: 403
+  end
+
+  def criar_erro_de_navegacao **kwargs
+    mensagem = kwargs[:mensagem].presence || "Tentativa de requisição de #{usuario_atual&.username&.insert(-1, " (id: #{usuario_atual&.id})") || "usuário não identificado"}."
+    NavegacaoErro.create(remote_ip: request.remote_ip, data: Date.current, horario: Time.current, request_url: request.path, error_code: kwargs[:error_code] || 403, mensagem: mensagem.to_s)
   end
 
   def nome_do_site
@@ -107,7 +114,7 @@ class ApplicationController < ActionController::Base
   def checar *condicoes
     condicoes.each do |condicao|
       if condicao then return true end
-      end
+    end
     return false
   end
 
@@ -133,8 +140,7 @@ class ApplicationController < ActionController::Base
     else
       @atendimentos = usuario_atual.profissional.atendimentos.da_semana(semana: @start_date.to_date.all_week)
     end
-    @atendimentos_hoje = Atendimento.de_hoje.or(Atendimento.where(data_reagendamento: Date.today))
-    # @atendimentos_reagendados_hoje = Atendimento.reagendados_de_hoje
+    @atendimentos_hoje = Atendimento.de_hoje.or(Atendimento.where(data_reagendamento: Date.today)).sort_by(&:horario_inicio_verdadeiro)
   end
 
   def database_exists?

@@ -16,7 +16,7 @@ class AcompanhamentoDeclaracaoPdf < BasePdf
 
   def title
     font @header_font, style: :bold
-    text "Declaração", align: :center, size: 32
+    text "Declaração", align: :center, size: 32, style: :bold
   end
 
   def body

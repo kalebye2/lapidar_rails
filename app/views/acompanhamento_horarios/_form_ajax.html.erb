@@ -13,11 +13,11 @@
 
   <br>
   <label for="acompanhamento_horario[horario]">Horário (início)</label>
-  <input type="time" name="acompanhamento_horario[horario]" id="acompanhamento_horario[horario]" value="<%= if !ultimo_atendimento.nil? then ultimo_atendimento.horario.strftime("%H:%M") end %>">
+  <input type="time" name="acompanhamento_horario[horario]" id="acompanhamento_horario[horario]" value="<%= ultimo_atendimento&.horario.strftime("%H:%M") %>">
 
   <br>
   <label for="acompanhamento_horario[horario_fim]">Horário (fim)</label>
-  <input type="time" name="acompanhamento_horario[horario_fim]" id="acompanhamento_horario[horario_fim]" value="<%= if !ultimo_atendimento.nil? then ultimo_atendimento.horario_fim.strftime("%H:%M") end %>">
+  <input type="time" name="acompanhamento_horario[horario_fim]" id="acompanhamento_horario[horario_fim]" value="<%= ultimo_atendimento&.horario_fim_verdadeiro&.strftime("%H:%M") %>">
 
   <button type="submit">
     Registrar

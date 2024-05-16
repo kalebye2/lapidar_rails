@@ -21,8 +21,8 @@ class Acompanhamento < ApplicationRecord
 
   # scopes
   default_scope { includes(:pessoa, :pessoa_responsavel, :profissional, :acompanhamento_tipo, :acompanhamento_finalizacao_motivo) }
-  scope :em_andamento, -> { where(data_final: nil, acompanhamento_finalizacao_motivo: nil, suspenso: [nil, false, 0]) }
-  scope :finalizados, -> { where.not(data_final: nil, acompanhamento_finalizacao_motivo: nil) }
+  scope :em_andamento, -> { where(acompanhamento_finalizacao_motivo: nil, suspenso: [nil, false, 0]) }
+  scope :finalizados, -> { where.not(acompanhamento_finalizacao_motivo: nil) }
   scope :do_profissional, -> (profissional) { profissional.nil? ? all : where(profissional: profissional) }
   scope :do_profissional_com_id, -> (id) { id.nil? ? all : where(profissional_id: id) }
   scope :do_tipo, -> (tipo) { tipo.nil? ? all : where(acompanhamento_tipo: tipo) }
@@ -92,11 +92,11 @@ class Acompanhamento < ApplicationRecord
     upper ? t.upcase : titulo ? t.titleize : lower ? t.downcase : t
   end
 
-  def instrumentos_aplicados_ate(data = Date.today)
+  def instrumentos_aplicados_ate(data = Date.current)
     instrumentos_aplicados.where("atendimentos.data" => [..data])
   end
 
-  def numero_de_sessoes(inicio: "1900-01-01".to_date, final: Date.today)
+  def numero_de_sessoes(inicio: "1900-01-01".to_date, final: Date.current)
     atendimentos.where(data: [inicio..final]).count
   end
 
@@ -134,12 +134,38 @@ class Acompanhamento < ApplicationRecord
     atendimentos.order(data: :desc, horario: :desc).first
   end
 
+  def primeira_data
+    data_inicio || primeiro_atendimento&.data
+  end
+
+  def ultima_data
+    data_final || ultimo_atendimento&.data
+  end
+
   def infantojuvenil?
     menor_de_idade
   end
 
   def faixa_etaria
     infantojuvenil? ? "Infantojuvenil" : "Adulto"
+  end
+
+  # financeiro
+  
+  def valor_liquido(periodo=Date.today.all_month)
+    atendimento_valores.soma_liquidos(periodo)
+  end
+
+  def valor_bruto(periodo=Date.today.all_month)
+    atendimento_valores.soma_brutos(periodo)
+  end
+
+  def valor_a_cobrar_ate_mes_passado
+    atendimento_valores.where(atendimentos: {data: [..(Date.current - 1.month).end_of_month]}).sum("valor - desconto") - recebimentos.sum(:valor)
+  end
+
+  def valor_a_cobrar(periodo=..Date.current.end_of_month)
+    (atendimento_valores.do_periodo(periodo).sum("valor - desconto") - recebimentos.do_periodo(periodo).sum(:valor)).to_i
   end
 
   def para_csv formato_data: "%Y-%m-%d"

@@ -56,7 +56,7 @@ Data: <%= render_data_brasil @recebimento.data %>
 
 Pcte: <%= @recebimento.beneficiario.nome_completo %>
 
-<%= responsavel ? "Pagante: #{@recebimento.pagante.nome_completo}" : "" %>
+<%= "Pagante: #{@recebimento.pagante.nome_completo}" if responsavel %>
 
 CPF Pagante: <%= @recebimento.pagante.render_cpf %>
 

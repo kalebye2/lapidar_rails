@@ -320,9 +320,11 @@ class PessoasController < ApplicationController
   end
 
   def recebimentos
-    @de = params[:de]&.to_date || @pessoa.recebimentos.order(data: :asc).first&.data || Date.today.beginning_of_month
-    @ate = params[:ate]&.to_date || @pessoa.recebimentos.order(data: :desc).first&.data || Date.today.end_of_month
+    @de = params[:de]&.to_date || Date.today.beginning_of_year
+    @ate = params[:ate]&.to_date || Date.today.end_of_year
     @recebimentos = @pessoa.recebimentos.where(data: @de..@para)
+    @pagamentos  = @pessoa.recebimentos_pagante.do_periodo(@de..@para)
+
     respond_to do |format|
       format.html
 
@@ -336,7 +338,7 @@ class PessoasController < ApplicationController
 
       format.zip do
         compressed_filestream = Zip::OutputStream.write_buffer do |zos|
-          @pessoa.recebimentos.each do |recebimento|
+          @recebimentos.each do |recebimento|
             zos.put_next_entry "recibo_#{@pessoa.nome_completo.parameterize}_#{recebimento.data}_#{recebimento.id}.md"
             zos.print recebimento.recibo_markdown
           end

@@ -1,12 +1,39 @@
 <% usuario = usuario_atual.secretaria? || usuario_atual.profissional == acompanhamento.profissional %>
+<% acompanhamento = acompanhamento || nil %>
+<% atendimentos = atendimentos || acompanhamento&.atendimentos %>
 <% if acompanhamento != nil %>
   <table class="tabela" id="tabela-caso-resumo">
     <caption>
       Informações do acompanhamento<br />
       <!--span style="font-size:.7em;"><%#= link_to "Baixar", { controller: :acompanhamentos, action: :caso_detalhes, id: acompanhamento.id, format: :pdf }, { target: :blank } %>
     </span>-->
+
+    <form <%= hx_set get: acompanhamento_path, target: "#tabela-caso-resumo", select: "#tabela-caso-resumo", swap: "outerHTML", replace_url: true %> style="font-size: 1rem;">
+      <label for="de">De</label>
+      <input type="date" name="de" id="de" value="<%= @de %>">
+      <label for="ate">Até</label>
+      <input type="date" name="ate" id="ate" value="<%= @ate %>">
+
+      <br>
+      <label for="n_items">Atendimentos por página</label>
+      <input type="number" name="n_items" id="n_items" value="<%= @n_items %>">
+
+      <br>
+      <%# <button style="color:white;border-color:white;font-size:1rem;">Atualizar</button> %>
+      <input type="submit" style="font-size:1rem;">
+      <br>
+    </form>
+
+
     <span style="font-size:.7em;">
-      <%= link_to "Baixar prontuário (Markdown)", { controller: :acompanhamentos, action: :prontuario, id: acompanhamento.id, format: :md }, { style: "color:pink;" } %>
+      <%# <%= link_to "Baixar prontuário (Markdown)", { controller: :acompanhamentos, action: :prontuario, id: acompanhamento.id, format: :md }, { style: "color:pink;" } %1> %>
+      <%= deixar_no_plural contagem_atendimentos, "atendimento", "atendimentos" %>
+      <% hx_options = {class: "button", style: "border: 1px solid var(--caption-color);", select: "#tabela-caso-resumo", target: "#tabela-caso-resumo", swap: "outerHTML", replace_url: true} %>
+      <br>
+      (página <%= @pagy.page %>/<%= @pagy.pages %>)
+      <br>
+      <%= hx_link "<", acompanhamento_path(@params.merge page: @pagy.page - 1), **hx_options unless @pagy.page < 2 %>
+      <%= hx_link ">", acompanhamento_path(@params.merge page: @pagy.page + 1), **hx_options unless @pagy.page >= @pagy.pages %>
     </span>
     </caption>
     <thead>
@@ -23,9 +50,19 @@
       </tr>
     </thead>
     <tbody>
-    <% acompanhamento.atendimentos.includes(:atendimento_valor, :instrumento_relatos).order(data: :desc, horario: :desc).each do |a| %>
+    <% atendimentos.includes(:atendimento_valor, :instrumento_relatos).order(data: :desc, horario: :desc).each do |a| %>
       <%= render 'atendimentos/atendimento-tabela-form', atendimento: a %>
     <% end %>
+    <tr>
+      <td colspan="100%" class="text-center">
+        <button <%= hx_set get: acompanhamento_path(@params.merge page: @pagy.page - 1), select: "#tabela-caso-resumo", target: "#tabela-caso-resumo", swap: "outerHTML", replace_url: true %> <%= "disabled" unless @pagy.page > 1 %>>
+          Anterior
+        </button>
+        <button <%= hx_set get: acompanhamento_path(@params.merge(page: @pagy.page + 1)), select: "#tabela-caso-resumo", target: "#tabela-caso-resumo", swap: "outerHTML", replace_url: true %> <%= "disabled" unless @pagy.page < @pagy.pages %>>
+          Próxima
+        </button>
+      </td>
+    </tr>
     </tbody>
   </table>
 <% end %>

@@ -9,7 +9,9 @@
     <h4 class="icon-profile"><%= acompanhamento.acompanhamento_tipo.tipo.to_s.upcase %></h4>
     <h2 class="icon-user"><%= "#{p.nome_abreviado} #{p.render_sexo_sigla}" %></h2>
     <h3 class="icon-user-tie"><%= pro.nome_abreviado %> <span style="font-size:.8em;font-weight:normal;"><%= pro.documento %></span></h3>
-    <p class="icon-calendar"><%= render_data_brasil acompanhamento.data_inicio %> - <%= (render_data_brasil acompanhamento.data_final) || "#{acompanhamento.status}" %> <%= acompanhamento.data_final ? "(#{acompanhamento.motivo_da_finalizacao&.upcase})" : "" %></p>
+    <p class="icon-calendar">
+    <%= [render_data_brasil(acompanhamento.primeira_data), acompanhamento.em_andamento? ? "Em andamento" : render_data_brasil(acompanhamento.ultima_data)].compact.join(" - ") %>
+    </p>
     <p class="icon-bubbles"><%= deixar_no_plural acompanhamento.atendimentos.count, 'sessão', 'sessões' %></p>
     <p class="icon-calendar"><%= acompanhamento.acompanhamento_horarios.map { |horario| "#{horario.semana_dia.nome.upcase} às #{render_hora_brasil horario.horario}" }.join("; ").presence || "Sem horário fixo" %></p>
   </div>

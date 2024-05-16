@@ -1,10 +1,14 @@
 class Profissional < ApplicationRecord
   belongs_to :pessoa
   belongs_to :profissional_funcao
+
   has_one :usuario
+  has_many :usuario_logins, through: :usuario
+
   has_many :profissional_especializacao_juncoes, foreign_key: :profissional_id
   has_many :profissional_especializacoes, through: :profissional_especializacao_juncoes
   alias especializacoes profissional_especializacoes
+
   has_many :profissional_horarios
   accepts_nested_attributes_for :profissional_horarios
 
@@ -36,7 +40,7 @@ class Profissional < ApplicationRecord
   has_many :profissional_folgas
 
   scope :ordem_alfabetica, -> { includes(:pessoa).order("pessoas.nome" => :asc, "pessoas.nome_do_meio" => :asc, "pessoas.sobrenome" => :asc) }
-  scope :com_atendimentos_futuros, -> { includes(:atendimentos).where("atendimentos.data" => Date.today.. )}
+  scope :com_atendimentos_futuros, -> { includes(:atendimentos).where("atendimentos.data" => Date.current.. )}
 
   scope :contagem_de_acompanhamentos, -> (profissionais=all) { group(:acompanhamento).count }
 
@@ -155,10 +159,10 @@ class Profissional < ApplicationRecord
 
   def atendimentos_futuros
     #atendimentos.where("DATEDIFF(data, CURRENT_DATE) > 0 OR (DATEDIFF(data, CURRENT_DATE) = 0 AND HOUR(horario) > HOUR(CURRENT_TIME))").order(data: :asc, horario: :asc)
-    atendimentos.where(data: Date.today..)
+    atendimentos.where(data: Date.current..)
   end
 
-  def financeiro_soma_atendimentos de: Date.today.beginning_of_month, ate: Date.today.end_of_month
+  def financeiro_soma_atendimentos de: Date.current.beginning_of_month, ate: Date.current.end_of_month
     atendimento_valores.joins(:atendimento).where(atendimento: { data: de.to_date..ate.to_date }).sum(:valor)
   end
 
@@ -170,7 +174,7 @@ class Profissional < ApplicationRecord
     atendimento_valores.sum("valor - (valor * taxa_porcentagem_externa / 10000) - (valor * taxa_porcentagem_interna / 10000)")
   end
 
-  def financeiro_soma_taxa_clinica de: Date.today.beginning_of_month, ate: Date.today.end_of_month
+  def financeiro_soma_taxa_clinica de: Date.current.beginning_of_month, ate: Date.current.end_of_month
     atendimento_valores.joins(:atendimento).where(atendimento: {data: de.to_date..ate.to_date}).sum("valor * taxa_porcentagem_interna / 10000")
   end
 
@@ -178,7 +182,7 @@ class Profissional < ApplicationRecord
     atendimento_valores.sum("valor * taxa_porcentagem_interna / 10000")
   end
 
-  def financeiro_soma_taxa_externa de: Date.today.beginning_of_month, ate: Date.today.end_of_month
+  def financeiro_soma_taxa_externa de: Date.current.beginning_of_month, ate: Date.current.end_of_month
     atendimento_valores.joins(:atendimento).where(atendimento: {data: de.to_date..ate.to_date}).sum("valor * taxa_porcentagem_externa / 10000")
   end
 
@@ -186,7 +190,7 @@ class Profissional < ApplicationRecord
     atendimento_valores.sum("valor * taxa_porcentagem_externa / 10000")
   end
 
-  def financeiro_soma_liquida_atendimentos de: Date.today.beginning_of_month, ate: Date.today.end_of_month
+  def financeiro_soma_liquida_atendimentos de: Date.current.beginning_of_month, ate: Date.current.end_of_month
     atendimento_valores.joins(:atendimento).where(atendimento: { data: de.to_date..ate.to_date }).sum("valor - (valor * taxa_porcentagem_externa / 10000) - (valor * taxa_porcentagem_interna / 10000)")
   end
 

@@ -1,5 +1,6 @@
 <div id="<%= dom_id(acompanhamento) %>_dados">
   <% if @usuario_acompanhamento %>
+    <%= hx_form do %>
     <div class="field">
       <label for="acompanhamento-tipo">Tipo de acompanhamento</label>
       <% curr_id = "acompanhamento-tipo" %>
@@ -21,6 +22,16 @@
     </div>
 
     <div class="field">
+      <label for="acompanhamento[objetivo]">Objetivo</label>
+      <input type="text" name="acompanhamento[objetivo]" id="acompanhamento[objetivo]" value="<%= @acompanhamento.objetivo %>" placeholder="Objetivo" hx-patch="<%= acompanhamento_path(@acompanhamento, authenticity_token: form_authenticity_token.to_s) %>">
+    </div>
+
+    <div class="field">
+      <label for="acompanhamento[prognostico]">Prognóstico</label>
+      <input type="text" name="acompanhamento[prognostico]" id="acompanhamento[prognostico]" value="<%= @acompanhamento.prognostico %>" placeholder="Prognóstico" hx-patch="<%= acompanhamento_path(@acompanhamento, authenticity_token: form_authenticity_token.to_s) %>">
+    </div>
+
+    <div class="field">
       <label>Status</label>
       <% curr_id = "acompanhamento-status" %>
       <select id="<%= curr_id %>" name="acompanhamento[finalizacao_motivo_id]"
@@ -32,12 +43,12 @@
       </select>
     </div>
 
-    <form id="acompanhamento_suspensao_form" <%== hx_set patch: @caminho, swap: "outerHTML", target: "#acompanhamento_suspensao_form", select: "#acompanhamento_suspensao_form" %>>
-      <input type="hidden" name="acompanhamento[suspenso]" id="acompanhamento[suspenso]" value="<%= @acompanhamento.suspenso? ? 0 : 1 %>">
-      <button>
-        <%== @acompanhamento.suspenso? ? "Retomar" : "Suspender" %>
-      </button>
-    </form>
+    <div class="field">
+      <label for="acompanhamento[suspenso]">Suspenso</label>
+      <%= hx_select patch: @caminho, name: "acompanhamento[suspenso]", value: @acompanhamento.suspenso, options: [["Não", 0], ["Sim", 1]] %>
+    </div>
+
+    <% end %>
   <% else %>
     <table>
       <caption>Dados do acompanhamento</caption>

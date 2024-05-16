@@ -3,7 +3,7 @@
 
 <% if @database_exists && Usuario.count > 0 %>
   <!-- atendimentos de hoje -->
-  <%= render "atendimentos-hoje-tabela", atendimentos: @atendimentos_hoje, atendimentos_reagendados: @atendimentos_reagendados_hoje %>
+  <%= render "atendimentos-hoje-tabela", atendimentos: @atendimentos_hoje %>
 
   <% if !usuario_atual.nil? %>
     <% if !@reajustes_futuros.empty? %>

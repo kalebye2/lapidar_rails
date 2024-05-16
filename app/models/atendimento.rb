@@ -25,36 +25,38 @@ class Atendimento < ApplicationRecord
 
   scope :realizados, -> { where(presenca: true) }
   scope :nao_realizados, -> { where(presenca: [false, nil]) }
-  scope :futuros, -> { where(data: Date.today + 1.day..).or(self.where(data: Date.today, horario: Time.now..)).or(self.where(data_reagendamento: Date.today, horario_reagendamento: [Time.now..])).or(self.where(data_reagendamento: [Date.today + 1.day..])) }
-  scope :passados, -> { where(data: Date.today, horario: ..Time.now).or(self.where data_reagendamento: Date.today, horario: ..Time.now).or(self.where data: ..Date.today - 1.day).or(self.where data_reagendamento: ..Date.today - 1.day) }
+  scope :futuros, -> { where(data: Date.current + 1.day..).or(self.where(data: Date.current, horario: Time.current..)).or(self.where(data_reagendamento: Date.current, horario_reagendamento: [Time.current..])).or(self.where(data_reagendamento: [Date.current + 1.day..])) }
+  scope :passados, -> { where(data: Date.current, horario: ..Time.current).or(self.where data_reagendamento: Date.current, horario: ..Time.current).or(self.where data: ..Date.current - 1.day).or(self.where data_reagendamento: ..Date.current - 1.day) }
   # scope :a_ocorrer, -> { where("COALESCE(data_reagendamento, data) > CURRENT_DATE").or self.where("COALESCE(data_reagendamento, data) >= CURRENT_DATE AND COALESCE(horario_reagendamento, horario) > CURRENT_TIME") }
 
   scope :do_periodo, -> (periodo = Atendimento.minimum(:data)..Atendimento.maximum(:data), ordem = :asc) { where(data: periodo).order(data: ordem, horario: ordem) }
-  scope :ate_hoje, -> { where(data: ..Date.today).or(self.where(data_reagendamento: ..Date.today)) }
+  scope :ate_hoje, -> { where(data: ..Date.current).or(self.where(data_reagendamento: ..Date.current)) }
   scope :ate_agora, -> { where(id: map{ |atendimento| if atendimento.horario_passado then atendimento.id end }.compact) }
-  scope :reagendados_ate_hoje, -> { where(data_reagendamento: ..Date.today) }
-  scope :de_hoje, -> (ordem = :asc) { where(data: Date.today).order(horario: ordem, horario_reagendamento: ordem) }
-  scope :reagendados_de_hoje, -> (ordem = :asc) { where(data_reagendamento: Date.today).em_ordem(ordem) }
-  scope :da_semana, -> (semana: Date.today.all_week, ordem_data: :asc, ordem_horario: :asc) { where(data: semana).em_ordem }
+  scope :reagendados_ate_hoje, -> { where(data_reagendamento: ..Date.current) }
+  scope :de_hoje, -> (ordem = :asc) { where(data: Date.current).order(horario: ordem, horario_reagendamento: ordem) }
+  scope :reagendados_de_hoje, -> (ordem = :asc) { where(data_reagendamento: Date.current).em_ordem(ordem) }
+  scope :de_hoje_com_reagendados, -> (ordem = :asc) { where(data: Date.current).or(self.where data_reagendamento: Date.current).em_ordem ordem }
+  scope :da_semana, -> (semana: Date.current.all_week, ordem_data: :asc, ordem_horario: :asc) { where(data: semana).em_ordem }
   scope :desta_semana, -> { da_semana }
-  scope :da_semana_passada, -> { da_semana semana: (Date.today - 1.week).all_week }
-  scope :reagendados_da_semana, -> (semana: Date.today.all_week, ordem_data: :asc, ordem_horario: :asc) { where(data_reagendamento: semana).em_ordem(ordem_data) }
-  scope :do_mes_atual, -> { where(data: Date.today.all_month).em_ordem }
-  scope :reagendados_do_mes_atual, -> { where(data_reagendamento: Date.today.all_month).em_ordem }
+  scope :da_semana_passada, -> { da_semana semana: (Date.current - 1.week).all_week }
+  scope :reagendados_da_semana, -> (semana: Date.current.all_week, ordem_data: :asc, ordem_horario: :asc) { where(data_reagendamento: semana).em_ordem(ordem_data) }
+  scope :do_mes_atual, -> { where(data: Date.current.all_month).em_ordem }
+  scope :reagendados_do_mes_atual, -> { where(data_reagendamento: Date.current.all_month).em_ordem ordem }
   scope :deste_mes, -> { do_mes_atual }
   scope :reagendados_deste_mes, -> { reagendados_do_mes_atual }
-  scope :do_mes_passado, -> { where(data: (Date.today - 1.month).all_month).em_ordem }
-  scope :reagendados_do_mes_passado, -> { where(data_reagendamento: (Date.today - 1.month).all_month).em_ordem }
-  scope :do_ano_atual, -> { where(data: Date.today.all_year) }
-  scope :reagendados_do_ano_atual, -> { where(data_reagendamento: Date.today.all_year) }
+  scope :do_mes_passado, -> { where(data: (Date.current - 1.month).all_month).em_ordem }
+  scope :reagendados_do_mes_passado, -> { where(data_reagendamento: (Date.current - 1.month).all_month).em_ordem ordem }
+  scope :do_ano_atual, -> { where(data: Date.current.all_year) }
+  scope :reagendados_do_ano_atual, -> { where(data_reagendamento: Date.current.all_year) }
   scope :deste_ano, -> { do_ano_atual }
   scope :reagendados_deste_ano, -> { reagendados_do_ano_atual }
-  scope :do_ano_passado, -> { where(data: (Date.today - 1.year).all_year).em_ordem }
-  scope :reagendados_do_ano_passado, -> { where(data_reagendamento: (Date.today - 1.year).all_year).em_ordem }
+  scope :do_ano_passado, -> { where(data: (Date.current - 1.year).all_year).em_ordem }
+  scope :reagendados_do_ano_passado, -> { where(data_reagendamento: (Date.current - 1.year).all_year).em_ordem ordem }
   scope :reagendados, -> { where.not(data_reagendamento: nil) }
 
   # ordenados
   scope :em_ordem, -> (ordem = :asc) { order(data: ordem, horario: ordem, data_reagendamento: ordem, horario_reagendamento: ordem) }
+  scope :em_ordem_considerando_reagendamentos, -> (ordem = :asc) { em_ordem.sort_by(&:data_inicio_verdadeira) }
 
   scope :sem_anotacoes, -> { where(anotacoes: [nil, ""]) }
   scope :com_anotacoes, -> { where.not(anotacoes: [nil, ""]) }
@@ -70,6 +72,9 @@ class Atendimento < ApplicationRecord
   scope :de_menores_de_idade, -> { joins(:acompanhamento).where(acompanhamento: {menor_de_idade: true}) }
   scope :de_maiores_de_idade, -> { joins(:acompanhamento).where(acompanhamento: {menor_de_idade: [false, nil]}) }
 
+  # acompanhamento
+  scope :de_acompanhamentos_em_andamento, -> { where acompanhamento: {acompanhamento_finalizacao_motivo: nil} }
+  scope :de_acompanhamentos_finalizados, -> { where.not acompanhamento: {acompanhamento_finalizacao_motivo: nil} }
 
   # agrupamentos
   scope :contagem_por_dia, -> (periodo = "1900-01-01".."2999-12-31", ordem = nil) do
@@ -112,6 +117,8 @@ class Atendimento < ApplicationRecord
   scope :query_like_tipo, -> (like) { where(atendimento_tipo: AtendimentoTipo.where("LOWER(tipo) LIKE '%#{like}%'")) }
   scope :do_tipo, -> (tipo) { where(atendimento_tipo: tipo) }
   scope :do_tipo_com_id, -> (id) { where(atendimento_tipo_id: id) }
+  scope :da_pessoa, -> (pessoa) { joins(:acompanhamento).where(acompanhamento: {pessoa: pessoa}) }
+  scope :da_pessoa_com_id, -> (id) { joins(:acompanhamento).where(acompanhamento: {pessoa_id: id}) }
 
   scope :query_pessoa_like_nome, -> (like = "") do
     like = like.to_s
@@ -227,33 +234,24 @@ class Atendimento < ApplicationRecord
     h = horario_fim_verdadeiro
     dh = h.change(day: d.day, month: d.month, year: d.year)
     dh.past?
-    # data_inicio_verdadeira < Date.today || (data_inicio_verdadeira == Date.today && horario_fim_verdadeiro < t)
-    # if !horario_reagendamento.nil?
-    #   return data < Date.today || (data == Date.today && horario_reagendamento_fim < Time.now)
-    # end
-    # if !horario.nil?
-    #   data < Date.today || (data == Date.today && horario_final < Time.now)
-    # end
   end
 
   def em_andamento
     if !horario.nil?
-      data == Date.today && horario_inicial < Time.now && horario_final > Time.now && pessoa_presente
+      data == Date.current && horario_inicial < Time.current && horario_final > Time.current && pessoa_presente
     end
   end
 
   def no_horario
-    if !horario.nil?
-      data == Date.today && horario_inicial < Time.now && horario_final > Time.now
-    end
+    data_inicio_verdadeira == Date.current && horario_inicial < Time.current && horario_final > Time.current
   end
 
   def horario_final
-    (horario_fim_verdadeiro.nil? ? horario_inicio_verdadeiro + 1.hour : horario_fim_verdadeiro).strftime("%H:%M").to_time
+    (horario_fim_verdadeiro || horario_inicio_verdadeiro + 1.hour).strftime("%H:%M").to_time
   end
 
   def horario_inicial
-    horario.strftime("%H:%M").to_time
+    horario_inicio_verdadeiro.strftime("%H:%M").to_time
   end
 
   def no_futuro
@@ -262,7 +260,7 @@ class Atendimento < ApplicationRecord
     dh = h.change(day: d.day, month: d.month, year: d.year)
     dh.future?
     # if !horario.nil?
-    #   data > Date.today || (data == Date.today && horario_final > Time.now.hour)
+    #   data > Date.current || (data == Date.current && horario_final > Time.current.hour)
     # end
   end
 
@@ -273,7 +271,7 @@ class Atendimento < ApplicationRecord
 
   def em_breve
     if !horario_inicio_verdadeiro.nil?
-      data_inicio_verdadeira == Date.today && horario_inicio_verdadeiro.hour == Time.now.hour + 1
+      data_inicio_verdadeira == Date.current && horario_inicio_verdadeiro.hour == Time.current.hour + 1
     end
   end
 
@@ -295,7 +293,7 @@ class Atendimento < ApplicationRecord
       "\n" \
       "SUMMARY:#{tipo.downcase.capitalize} - #{paciente.nome_completo}" \
       "\n" \
-      "DTSTAMP:#{Time.now.strftime("%Y%m%dT%H%M%SZ")}" \
+      "DTSTAMP:#{Time.current.strftime("%Y%m%dT%H%M%SZ")}" \
       "\n" \
       "DTSTART:#{data.strftime("%Y%m%d")}T#{horario.strftime("%H%M%S")}Z" \
       "\n" \

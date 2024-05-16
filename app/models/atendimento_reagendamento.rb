@@ -5,6 +5,5 @@ class AtendimentoReagendamento < ApplicationRecord
   has_one :pessoa, through: :acompanhamento
   has_one :pessoa_responsavel, through: :acompanhamento
 
-  scope :de_hoje, -> { where(data: Date.today) }
-
+  scope :de_hoje, -> { where(data: Date.current) }
 end

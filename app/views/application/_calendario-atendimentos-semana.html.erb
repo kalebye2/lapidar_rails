@@ -4,7 +4,7 @@
       <div class="day">
         <%= date.day %>
       </div>
-      <% atendimentos.each do |atendimento| %>
+      <% atendimentos.sort_by(&:horario_inicio_verdadeiro).each do |atendimento| %>
         <%= render "atendimentos/atendimento-card", atendimento: atendimento %>
       <% end %>
     <% end %>

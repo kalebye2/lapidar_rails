@@ -6,8 +6,8 @@ class AcompanhamentoReajuste < ApplicationRecord
   has_one :pessoa, through: :acompanhamento
   has_one :pessoa_responsavel, through: :acompanhamento
 
-  scope :ajustes_futuros, -> { where(data_ajuste: Date.today..) }
-  scope :negociacoes_futuras, -> { where(data_negociacao: Date.today..) }
+  scope :ajustes_futuros, -> { where(data_ajuste: Date.current..) }
+  scope :negociacoes_futuras, -> { where(data_negociacao: Date.current..) }
   scope :nao_aplicados, -> { where(id: map{ |acompanhamento_reajuste| if acompanhamento_reajuste.valor_novo != acompanhamento_reajuste.acompanhamento.valor_sessao then acompanhamento_reajuste.id end }.compact) }
   scope :ajustes_no_periodo, -> (periodo) { where(data_ajuste: periodo) }
   scope :negociacoes_no_periodo, -> (periodo) { where(data_negociacao: periodo) }

@@ -1,0 +1,56 @@
+<% titulo "Recebimentos #{@profissional.descricao_completa}" %>
+
+<h1>
+  Recebimentos
+  <%= @profissional.descricao_completa %>
+</h1>
+
+<%= render "navbar", profissional: @profissional %>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "" %>
+    </li>
+  </ul>
+</nav>
+
+<nav class="navbar navcenter" style="display:block;margin:auto;">
+  <div class="text-center">
+    <%= hx_form get: recebimentos_profissional_path(@params), select: "##{dom_id @profissional}-recebimentos-tabela", target: "##{dom_id @profissional}-recebimentos-tabela", replace_url: true do %>
+      <label for="de">De</label>
+      <input type="date" name="de" id="de" value="<%= @de %>">
+      <label for="ate">Até</label>
+      <input type="date" name="ate" id="ate" value="<%= @ate %>">
+
+      <br>
+      <label for="n_itens">Itens por página</label>
+      <input type="number" name="n_itens" id="n_itens" value="<%= @num_itens %>">
+
+      <br>
+      <input type="submit" value="Atualizar">
+      </br>
+    <% end %>
+  </div>
+
+  <br>
+
+  <div class="text-center" id="recebimentos-page-select">
+    <%= deixar_no_plural @recebimentos_totais.count, "recebimento", "recebimentos" %>
+    -
+    <%= render_dinheiro_centavos @recebimentos_totais.sum(:valor) %>
+    <% hx_options = {class: "button", style: "border: 1px solid var(--caption-color);", select: "##{dom_id @profissional}-recebimentos-tabela", target: "##{dom_id @profissional}-recebimentos-tabela", swap: "outerHTML", replace_url: true} %>
+    <br>
+    Página
+    <%= @pagy.page %>
+    /
+    <%= @pagy.pages %>
+    <br>
+    <br>
+    <%= hx_link "<", recebimentos_profissional_path(@params.merge page: @pagy.page - 1), **hx_options unless @pagy.page < 2 %>
+    <%= hx_link ">", recebimentos_profissional_path(@params.merge page: @pagy.page + 1), **hx_options unless @pagy.page >= @pagy.pages %>
+    <br>
+  </div>
+</nav>
+
+<%= render "recebimentos-tabela", profissional: @profissional, recebimentos: @recebimentos, recebimentos_totais: @recebimentos_totais %>

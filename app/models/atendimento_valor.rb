@@ -14,17 +14,18 @@ class AtendimentoValor < ApplicationRecord
   scope :em_ordem, -> (crescente = true) { order(data: crescente ? :asc : :desc) }
   scope :de_atendimentos_realizados, -> { where(atendimento: {presenca: true}) }
   scope :de_atendimentos_nao_realizados, -> { where(atendimento: {presenca: [false, nil]}) }
-  scope :do_periodo, -> (periodo = Date.today.all_month, ordem: :asc) { includes(:atendimento).where("atendimentos.data" => periodo).order("atendimentos.data" => ordem, "atendimentos.horario" => ordem) }
+  scope :do_periodo, -> (periodo = Date.current.all_month, ordem: :asc) { includes(:atendimento).where("atendimentos.data" => periodo).order("atendimentos.data" => ordem, "atendimentos.horario" => ordem) }
   scope :do_mes_atual, -> { do_periodo }
   scope :deste_mes, -> { do_mes_atual }
-  scope :do_mes_passado, -> { do_periodo((Date.today - 1.month).all_month) }
+  scope :do_mes_passado, -> { do_periodo((Date.current - 1.month).all_month) }
 
-  scope :soma_liquidos, -> (de: Date.today.beginning_of_month, ate: Date.today.end_of_month) { joins(:atendimento).where(atendimento: { data: de.to_date..ate.to_date}).sum("valor - (valor * taxa_porcentagem_externa / 10000) - (valor * taxa_porcentagem_interna / 10000)") }
-  scope :soma_liquidos_externos, -> (de: Date.today.beginning_of_month, ate: Date.today.end_of_month) { joins(:atendimento).where(atendimento: { data: de.to_date..ate.to_date}).sum("valor - (valor * taxa_porcentagem_externa / 10000)") }
-  scope :soma_liquidos_internos, -> (de: Date.today.beginning_of_month, ate: Date.today.end_of_month) { joins(:atendimento).where(atendimento: { data: de.to_date..ate.to_date}).sum("valor - (valor * taxa_porcentagem_interna / 10000)") }
-  scope :soma_taxas, -> (de: Date.today.beginning_of_month, ate: Date.today.end_of_month) { joins(:atendimento).where(atendimento: { data: de.to_date..ate.to_date }).sum("(valor * taxa_porcentagem_externa / 10000) + (valor * taxa_porcentagem_interna / 10000)") }
-  scope :soma_taxas_externas, -> (de: Date.today.beginning_of_month, ate: Date.today.end_of_month) { joins(:atendimento).where(atendimento: { data: de.to_date..ate.to_date }).sum("valor * taxa_porcentagem_externa / 10000") }
-  scope :soma_taxas_internas, -> (de: Date.today.beginning_of_month, ate: Date.today.end_of_month) { joins(:atendimento).where(atendimento: { data: de.to_date..ate.to_date }).sum("valor * taxa_porcentagem_interna / 10000") }
+  scope :soma_brutos, -> (periodo = Date.today.all_month) { joins(:atendimento).where(atendimento: {data: periodo}).sum(:valor) }
+  scope :soma_liquidos, -> (periodo = Date.today.all_month) { joins(:atendimento).where(atendimento: { data: periodo}).sum("valor - (valor * taxa_porcentagem_externa / 10000) - (valor * taxa_porcentagem_interna / 10000)") }
+  scope :soma_liquidos_externos, -> (periodo = Date.today.all_month) { joins(:atendimento).where(atendimento: { data: periodo}).sum("valor - (valor * taxa_porcentagem_externa / 10000)") }
+  scope :soma_liquidos_internos, -> (periodo = Date.today.all_month) { joins(:atendimento).where(atendimento: { data: periodo}).sum("valor - (valor * taxa_porcentagem_interna / 10000)") }
+  scope :soma_taxas, -> (periodo = Date.today.all_month) { joins(:atendimento).where(atendimento: { data: periodo }).sum("(valor * taxa_porcentagem_externa / 10000) + (valor * taxa_porcentagem_interna / 10000)") }
+  scope :soma_taxas_externas, -> (periodo = Date.today.all_month) { joins(:atendimento).where(atendimento: { data: periodo }).sum("valor * taxa_porcentagem_externa / 10000") }
+  scope :soma_taxas_internas, -> (periodo = Date.today.all_month) { joins(:atendimento).where(atendimento: { data: periodo }).sum("valor * taxa_porcentagem_interna / 10000") }
 
   scope :query_pessoa_like_nome, -> (like = "") do
     like = like.to_s

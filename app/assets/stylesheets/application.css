@@ -134,6 +134,7 @@
 	--doc-input-border-color: blue;
 	--doc-input-border-highlight-color: darkblue;
 
+	background-color: var(--alt-color);
 	--button-bg-color: var(--button-light-color);
 	--button-bg-alt-color: var(--button-light-color-2);
 
@@ -853,6 +854,11 @@ dt {
 	& a {
 		color: white;
 	}
+}
+
+.card-destaque {
+	background-color: var(--doc-bg-color);
+	color: var(--doc-text-color);
 }
 
 .button {

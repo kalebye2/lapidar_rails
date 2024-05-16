@@ -5,6 +5,7 @@ class Instrumento < ApplicationRecord
   has_many :psicologia_funcoes, through: :psicologia_subfuncoes
 
   scope :query_like_nome, -> (nome) { where("LOWER(nome) LIKE LOWER('%#{nome}%')") }
+  scope :query_like_sigla, -> (sigla) { where("LOWER(sigla) LIKE LOWER('%#{sigla}%')") }
   scope :query_like_indicacao, -> (indicacao) { where("LOWER(indicacao) LIKE LOWER('%#{indicacao}%')") }
 
   scope :disponivel_na_clinica, -> { where(tem_na_clinica: true) }

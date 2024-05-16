@@ -2,19 +2,84 @@
 
 <h1>Estatísticas</h1>
 
-<div id="estatistica-atendimentos">
-  <h2>Atendimentos <%= render_data_brasil @atendimentos.first.data %> a <%= @atendimentos.last.data %></h2>
+<%= render "navbar" %>
 
-  <form>
+<div id="estatisticas-gerais" class="text-center">
+  <h2>Estatísticas gerais</h2>
+  <div class="grid-3">
+    <div class="card">
+      <h2>Atendimentos</h2>
+
+      <% contagem_atendimentos_totais = Atendimento.count %>
+      <b><%= contagem_atendimentos_totais %></b> <%= contagem_atendimentos_totais != 1 ? "atendimentos registrados" : "atendimento registrado" %>
+
+      <br>
+      <% contagem_atendimentos_passados = Atendimento.passados.count %>
+      <b><%= contagem_atendimentos_passados %></b> <%= contagem_atendimentos_passados != 1 ? "atendimentos" : "atendimento" %> no passado
+
+      <br>
+      <% contagem_atendimentos_realizados = Atendimento.realizados.count %>
+      <% contagem_atendimentos_nao_realizados = Atendimento.nao_realizados.passados.count %>
+      <b><%= contagem_atendimentos_realizados %></b> <%= contagem_atendimentos_realizados != 1 ? "atendimentos realizados" : "atendimento realizado" %>,
+      <b><%= contagem_atendimentos_nao_realizados %></b> <%= contagem_atendimentos_nao_realizados != 1 ? "atendimentos não realizados" : "atendimento não realizado" %>
+
+      <br>
+      <% contagem_atendimentos_futuros = Atendimento.futuros.count %>
+      <b><%= contagem_atendimentos_futuros %></b> <%= contagem_atendimentos_futuros != 1 ? "atendimentos futuros" : "atendimento futuro" %>
+      <br>
+
+      <% contagem_atendimentos_de_hoje = Atendimento.de_hoje.count %>
+      <b><%= contagem_atendimentos_de_hoje %></b> <%= contagem_atendimentos_de_hoje != 1 ? "atendimentos" : "atendimento" %> hoje
+    </div>
+
+    <div class="card">
+      <h2>Acompanhamentos</h2>
+      <% contagem_acompanhamentos_gerais = Acompanhamento.count %>
+      <b><%= contagem_acompanhamentos_gerais %></b> <%= contagem_acompanhamentos_gerais != 1 ? "acompanhamentos registrados" : "acompanhamento registrado" %>
+
+      <br>
+      <% contagem_acompanhamentos_em_andamento = Acompanhamento.em_andamento.count %>
+      <b><%= contagem_acompanhamentos_em_andamento %></b> <%= contagem_acompanhamentos_em_andamento != 1 ? "acompanhamentos" : "acompanhamento" %> em andamento
+
+      <br>
+      <% contagem_acompanhamentos_finalizados = Acompanhamento.finalizados.count %>
+      <b><%= contagem_acompanhamentos_finalizados %></b> <%= contagem_acompanhamentos_finalizados != 1 ? "acompanhamentos finalizados" : "acompanhamento finalizado" %>
+    </div>
+
+    <div class="card">
+      <h2>Clínica</h2>
+      <b><%= contagem_profissionais = Profissional.count %></b> <%= contagem_profissionais == 1 ? "profissional" : "profissionais" %>
+      <br>
+      <b><%= contagem_locais = AtendimentoLocal.count %></b> <%= contagem_locais == 1 ? "local" : "locais" %> de atendimento
+      <br>
+      <b><%= contagem_laudos = Laudo.count %></b> <%= contagem_laudos == 1 ? "laudo" : "laudos" %>
+      <br>
+      <b><%= contagem_devolutivas = PessoaDevolutiva.count %></b> <%= contagem_devolutivas == 1 ? "devolutiva" : "devolutivas" %>
+      <br>
+      <b><%= contagem_anamneses = InfantojuvenilAnamnese.count + AdultoAnamnese.count %></b> <%= contagem_anamneses == 1 ? "anamnese" : "anamneses" %>
+    </diV>
+  </div>
+</div>
+
+<div id="estatisticas-atendimentos">
+  <h2>Atendimentos <%= render_data_brasil params[:atendimentos_desde] %> a <%= render_data_brasil params[:atendimentos_ate] %></h2>
+
+  <form <%= hx_set get: estatisticas_path, select: "#estatisticas-atendimentos", target: "#estatisticas-atendimentos", swap: "outerHTML" %>>
     <input type="date" value="<%= params[:atendimentos_desde] %>" name="atendimentos_desde">
     <input type="date" value="<%= params[:atendimentos_ate] %>" name="atendimentos_ate">
+    <input type="submit" value="Atualizar">
   </form>
 
-  <%= column_chart @atendimentos.group(:data).count %>
+  <%= column_chart @atendimentos.group(:data).count.map { |k,v| [render_data_brasil(k), v] }, title: "Atendimentos #{render_data_brasil params[:atendimentos_desde]} a #{render_data_brasil params[:atendimentos_ate]}", xtitle: "Data", ytitle: "Nº de atendimentos", download: {filename: "lapidar_estatisticas_atendimentos_#{params[:atendimentos_desde]}_#{params[:atendimentos_ate]}", background: "#FFFFFF"} %>
 
   <div id="estatisticas-atendimentos-tipos">
     <h3>Tipos de atendimento realizados</h3>
-    <%= pie_chart @atendimentos.contagem_por_tipo.map { |a| [a.first.tipo.upcase, a.last] } %>
+    <%= pie_chart @atendimentos.contagem_por_tipo.map { |a| [a.first.tipo.upcase, a.last] }, title: "Tipos de atendimentos realizados entre #{render_data_brasil params[:atendimentos_desde]} e #{render_data_brasil params[:atendimentos_ate]}", download: "miau" %>
+  </div>
+
+  <div id="estatisticas-atendimentos-profissionais">
+    <h3>Atendimentos por profissional</h3>
+    <%= pie_chart @atendimentos.contagem_por_profissional.map { |k,v| [k.descricao_completa, v] } %>
   </div>
 </div>
 
@@ -49,16 +114,23 @@
 <div id="estatisticas-financeiro">
   <h2>Financeiro</h2>
 
-  <form>
-    <input type="date" value="<%= params[:financeiro_desde] %>" name="fiannceiro_desde">
+  <form <%= hx_set get: estatisticas_path, select: "#estatisticas-financeiro", target: "#estatisticas-financeiro", swap: "outerHTML" %>>
+    <input type="date" value="<%= params[:financeiro_desde] %>" name="financeiro_desde">
     <input type="date" value="<%= params[:financeiro_ate] %>" name="financeiro_ate">
+    <input type="submit" value="Atualizar">
   </form>
 
   <h3>Recebimentos</h3>
-  <%= column_chart @recebimentos.group(:data).sum("valor / 100.0"), prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true %>
+  Total: <b><%= render_dinheiro_centavos @recebimentos.sum(:valor) %></b>
+  <%= column_chart @recebimentos.group(:data).sum("valor / 100.0").map { |k,v| [render_data_brasil(k), v] }, prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true, title: "Recebimentos #{render_data_brasil params[:financeiro_desde]} a #{render_data_brasil params[:financeiro_ate]}", xtitle: "Data", ytitle: "Total em R$" %>
 
   <h3>Repasses aos profissionais</h3>
+  Total: <b><%= render_dinheiro_centavos @repasses.sum(:valor) %></b>
   <%= pie_chart @repasses.group(:profissional).sum("valor / 100.0").map { |r| [r[0].descricao_completa, r.last] }, prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true %>
+
+  <h3>Valores de atendimentos</h3>
+  Total: <b><%= render_dinheiro_centavos @atendimento_valores.sum(:valor) %>
+  <%= column_chart @atendimento_valores.group(:data).sum("valor / 100.0").map { |k,v| [render_data_brasil(k.to_date), v] }, prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true %>
 </div>
 
 <div id="estatisticas-cadastros">

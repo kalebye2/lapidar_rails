@@ -1,4 +1,4 @@
-<%= form_with(model: instrumento) do |form| %>
+<%= form_with(model: instrumento, local: true) do |form| %>
   <% if instrumento.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(instrumento.errors.count, "error") %> prohibited this instrumento from being saved:</h2>
@@ -17,8 +17,13 @@
   </div>
 
   <div>
+    <%= form.label :sigla, style: "display: block" %>
+    <%= form.text_field :sigla %>
+  </div>
+
+  <div>
     <%= form.label :instrumento_tipo_id, style: "display: block" %>
-    <%= form.text_field :instrumento_tipo_id %>
+    <%= form.select :instrumento_tipo_id, InstrumentoTipo.all.map { |instrumento_tipo| [instrumento_tipo.tipo.upcase, instrumento_tipo.id] } %>
   </div>
 
   <div>

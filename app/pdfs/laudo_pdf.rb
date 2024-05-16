@@ -8,9 +8,11 @@ class LaudoPdf < BasePdf
     body
     local_assinatura @laudo.profissional.descricao_completa.gsub(" - ", "\n")
     footer
+    number_pages "Página <page> / <total>", at: [bounds.left, -10], align: :center
   end
 
   def header
+    gerar_cabecalho "Laudo #{@laudo.profissional.profissional_funcao.adjetivo_masc}".upcase
   end
 
   def title
@@ -50,7 +52,7 @@ class LaudoPdf < BasePdf
     # markup_atributo_textual "Análise", :analise
     # markup_atributo_textual "Conclusão", :conclusao
 
-    markup(markdown_to_html(@laudo.texto_completo), text: {align: :justify, leading: 5})
+    markup(markdown_to_html(@laudo.texto_completo), text: {align: :justify, leading: 5, indent_paragraphs: 24}, heading1: {align: :left, indent_paragraphs: 0, style: :bold, size: 24})
   end
 
   def signature
@@ -76,13 +78,5 @@ class LaudoPdf < BasePdf
     move_down 14
     font @body_font
     markup(markdown_to_html(@laudo.substituir_template_por_dados(atributo)), text: { align: :justify, leading: 5 })
-  end
-
-  def markup_tabela_lado_a_lado dados = []
-    dados_tabela = ""
-    dados.each do |dado|
-      dados_tabela += "<tr><th><b>#{dado[0]}</b></th><td>#{dado[1]}</td>"
-    end
-    markup "<table>#{dados_tabela}</table>"
   end
 end

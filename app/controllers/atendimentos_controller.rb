@@ -3,15 +3,28 @@ class AtendimentosController < ApplicationController
   before_action :validar_usuario
   before_action :validar_edicao, only: %i[ show edit update destroy reagendar_para_proxima_semana gerar_atendimento_valor ]
 
+  include Pagy::Backend
+
   def index
     @de = params[:de] || Date.today.beginning_of_month
     @ate = params[:ate] || Date.today.end_of_month
 
     @atendimentos = usuario_atual.secretaria? ? Atendimento.em_ordem.do_periodo(@de..@ate) : usuario_atual.profissional.atendimentos.em_ordem.do_periodo(@de..@ate)
+    @pessoas = @atendimentos.map(&:pessoa).uniq
 
     if params[:tipo].present?
       @atendimentos = @atendimentos.do_tipo_com_id(params[:tipo])
     end
+
+    if params[:pessoa].present?
+      @atendimentos = @atendimentos.da_pessoa_com_id(params[:pessoa])
+    end
+
+    @num_itens = params[:num_itens] || 10
+    @atendimentos_totais = @atendimentos
+    @pagy, @atendimentos = pagy(@atendimentos, items: @num_itens)
+
+    @params = params.permit %i[ de ate pessoa tipo atendimento ]
 
     if hx_request?
       render partial: "atendimentos-container", locals: { atendimentos: @atendimentos }
@@ -155,6 +168,7 @@ class AtendimentosController < ApplicationController
   end
 
   def status_update
+    @params = params.permit %i[ de ate pessoa tipo atendimento ]
     if @atendimento.update(atendimento_params)
       #status
       if params.has_key?(:main)
@@ -230,7 +244,7 @@ class AtendimentosController < ApplicationController
     respond_to do |format|
       format.html do
         if hx_request?
-          render 'acompanhamentos/caso-resumo', acompanhamento: @atendimento.acompanhamento
+          render partial: 'acompanhamentos/caso-resumo', acompanhamento: @atendimento.acompanhamento
         else
           redirect_to root_path, notice: "Atendimento removido com sucesso"
         end

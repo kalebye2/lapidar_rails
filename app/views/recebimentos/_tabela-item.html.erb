@@ -7,10 +7,14 @@
   <td style="text-align:center;"><%= recebimento.profissional.descricao_completa %></td>
   <td style="text-align:center;"><%= recebimento.acompanhamento.tipo.upcase %></td>
   <td style="text-align:center;">
+    <%= link_to "Mostrar", recebimento_url(recebimento) unless !(usuario_atual.financeiro? || usuario_atual.profissional == @acompanhamento&.profissional) %>
+    <br>
     <%= link_to "Editar", edit_recebimento_url(recebimento) unless !(usuario_atual.financeiro? || usuario_atual.profissional == @acompanhamento&.profissional) %>
-    <br />
-    <%= link_to "Recibo (Markdown)", recebimento_path(recebimento, format: 'md'), {target: :blank } %>
-    <br />
+    <hr>
+      <%= link_to "Recibo (MD)", recebimento_path(recebimento, format: :md), {target: :blank } %>
+      <br>
+      <%= link_to "Recibo (PDF)", recebimento_path(recebimento, format: :pdf), {target: :blank} %>
+    <hr>
     <%#= link_to "Excluir", recebimento_path(recebimento), method: :delete, data: { confirm: "Tem certeza?" } %>
     <% if usuario_atual.financeiro? || usuario_atual.profissional == @acompanhamento&.profissional %>
       <a href="javascript:void(0);" hx-confirm="Tem certeza?" rel="nofollow" hx-delete="<%= recebimento_path(recebimento, authenticity_token: form_authenticity_token.to_s, ajax: true) %>" hx-swap="outerHTML" hx-target="#tabela-recebimentos">Excluir</a>

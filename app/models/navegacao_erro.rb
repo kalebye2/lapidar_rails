@@ -1,0 +1,2 @@
+class NavegacaoErro < ApplicationRecord
+end

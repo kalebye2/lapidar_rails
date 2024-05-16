@@ -107,6 +107,8 @@ class AcompanhamentosController < ApplicationController
         if hx_request?
           format.html do
             show
+            # render :show
+            return
           end
         else
         format.html { redirect_to acompanhamento_url(@acompanhamento), notice: "acompanhamento was successfully updated." }
@@ -255,8 +257,11 @@ class AcompanhamentosController < ApplicationController
   end
 
   def contrato
+    @params = params.permit %i[ contrato_modelo id format tamanho_papel assinatura_paciente assinatura_profissional assinatura_responsavel ]
     if params[:contrato_modelo].presence
       @profissional_contrato_modelo = ProfissionalContratoModelo.find(params[:contrato_modelo])
+      nome_documento = "#{@profissional_contrato_modelo.titulo.parameterize}_#{@acompanhamento.paciente.nome_completo.parameterize}_#{@acompanhamento.data_inicio}"
+
       respond_to do |format|
         if hx_request?
           format.html { render partial: "contrato_individual", locals: {acompanhamento: @acompanhamento, profissional_contrato_modelo: @profissional_contrato_modelo} }
@@ -265,10 +270,15 @@ class AcompanhamentosController < ApplicationController
         end
         format.md do
           response.headers['Content-Type'] = 'text/markdown'
-          response.headers['Content-Disposition'] = "attachment; filename=#{@profissional_contrato_modelo.titulo.parameterize}_#{@acompanhamento.paciente.nome_completo.parameterize}_#{@acompanhamento.data_inicio}.md"
+          response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.md"
           render :contrato_individual
         end
         format.pdf do
+          pdf = AcompanhamentoContratoPdf.new([@acompanhamento, @profissional_contrato_modelo], page_size: params[:tamanho_papel], options: @params)
+          send_data pdf.render,
+            filename: "#{nome_documento}.pdf",
+            type: "application/pdf",
+            disposition: :inline
         end
       end
     end

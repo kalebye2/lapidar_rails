@@ -25,16 +25,16 @@
         <td><%= profissional.nome_abreviado %> - <%= profissional.documento %></td>
         <td style="text-align:right;"><%= profissional.acompanhamentos.em_andamento.count %></td>
         <td class="dinheiro"><%= render_dinheiro_centavos profissional.acompanhamentos.em_andamento.sum("valor_sessao * num_sessoes") %></td>
-        <td class="dinheiro"><%= render_dinheiro_centavos profissional.atendimento_valores.where("atendimentos.data" => mes_passado).sum(:valor) %></td>
-        <td class="dinheiro"><%= render_dinheiro_centavos profissional.atendimento_valores.where("atendimentos.data" => mes_atual).sum(:valor) %></td>
+        <td class="dinheiro"><%= render_dinheiro_centavos profissional.atendimento_valores.do_mes_passado.sum("valor - desconto") %></td>
+        <td class="dinheiro"><%= render_dinheiro_centavos profissional.atendimento_valores.deste_mes.sum("valor - desconto") %></td>
         <td class="dinheiro"><%= render_dinheiro_centavos profissional.recebimentos.where(data: mes_passado).sum(:valor) %></td>
         <td class="dinheiro"><%= render_dinheiro_centavos profissional.recebimentos.where(data: mes_atual).sum(:valor) %></td>
       </tr>
     <% end %>
     <% if usuario_atual.financeiro? %>
       <tr>
-        <% total_mes_passado = AtendimentoValor.joins("JOIN atendimentos ON atendimento_valores.atendimento_id = atendimentos.id").where(atendimentos: {data: mes_passado}).sum(:valor) %>
-        <% total_mes_atual = AtendimentoValor.joins("JOIN atendimentos ON atendimento_valores.atendimento_id = atendimentos.id").where(atendimentos: {data: mes_atual}).sum(:valor) %>
+        <% total_mes_passado = AtendimentoValor.joins("JOIN atendimentos ON atendimento_valores.atendimento_id = atendimentos.id").where(atendimentos: {data: mes_passado}).sum("valor - desconto") %>
+        <% total_mes_atual = AtendimentoValor.joins("JOIN atendimentos ON atendimento_valores.atendimento_id = atendimentos.id").where(atendimentos: {data: mes_atual}).sum("valor - desconto") %>
         <% total_recebimentos_mes_passado = Recebimento.where(data: mes_passado).sum(:valor) %>
         <% total_recebimentos_mes_atual = Recebimento.where(data: mes_atual).sum(:valor) %>
         <td colspan="2" class="resultado">Total</td>

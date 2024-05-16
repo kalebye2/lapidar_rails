@@ -2,14 +2,29 @@ class PessoaProntuarioPdf < BasePdf
   def initialize(pessoa=Pessoa.new)
     super()
     @pessoa = pessoa
+    @markup_options = {
+      text: {
+        align: :justify,
+        # indent_paragraphs: 24,
+        leading: 5,
+      },
+      heading1: {
+        align: :left,
+        style: :bold,
+        indent_paragraphs: 0,
+      }
+    }
+
     header
     title
     move_down 7
     body
     footer
+    number_pages "<page>", at: [bounds.left, -10], align: :center
   end
 
   def header
+    gerar_cabecalho "Prontuário multiprofissional - #{@pessoa.nome_completo}".upcase
   end
 
   def title
@@ -27,7 +42,7 @@ class PessoaProntuarioPdf < BasePdf
   end
   
   def dados_cadastrais
-    markup "<h1>Dados cadastrais</h1>"
+    markup "<h1>Dados cadastrais</h1>", @markup_options
 
     move_down 7
 
@@ -38,7 +53,7 @@ class PessoaProntuarioPdf < BasePdf
       "#{if @pessoa.usa_telegram? then " | <a href='#{@pessoa.render_telegram_link}'>Telegram</a>" end}" \
         ""
     dados[:email] = "<a href='mailto:#{@pessoa.email.downcase}'>#{@pessoa.email}</a>"
-    dados[:toma_medicação] = dados[:toma_medicação] || "Sem informações de medicação"
+    dados[:medicação] = dados[:medicação]
 
     markup dados.map { |k,v| "<b>#{k&.to_s&.humanize}</b>: #{v&.upcase}" }.join("\n<br>\n")
   end
@@ -46,9 +61,9 @@ class PessoaProntuarioPdf < BasePdf
   def atendimentos
     @pessoa.atendimentos.em_ordem.each_with_index do |atendimento, index|
       start_new_page
-      markup "<h1>Atendimento nº #{index + 1}</h1>"
+      markup "<h1>Atendimento nº #{index + 1}</h1>", @markup_options
       move_down 1.cm
-      markup atendimento.dados_do_atendimento(true).compact.map { |k,v| "<b>#{k.to_s.humanize}</b>: #{v}" }.join("\n<br>\n")
+      markup atendimento.dados_do_atendimento(true).compact.map { |k,v| "<b>#{k.to_s.humanize}</b>: #{v}" }.join("\n<br>\n"), @markup_options
       move_down 7
     end
   end

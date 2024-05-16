@@ -1,6 +1,6 @@
 <%= titulo "#{@acompanhamento.tipo(titulo: true)}: #{@acompanhamento.pessoa.nome_completo}"%>
 <% @usuario_acompanhamento = usuario_atual == @acompanhamento.profissional.usuario %>
-<% @caminho = acompanhamento_path(@acompanhamento, authenticity_token: form_authenticity_token.to_s) %>
+<% @caminho = acompanhamento_path(@params.merge authenticity_token: form_authenticity_token.to_s) %>
 
 <%= link_to "Voltar", acompanhamentos_path %>
 <% p = @acompanhamento.pessoa %>
@@ -134,4 +134,4 @@
   <%= render "acompanhamento_dados_show", acompanhamento: @acompanhamento %>
 </div>
 
-<%= render "caso-resumo", acompanhamento: @acompanhamento %>
+<%= render "caso-resumo", acompanhamento: @acompanhamento, atendimentos: @atendimentos, contagem_atendimentos: @contagem_atendimentos %>

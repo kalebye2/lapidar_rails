@@ -1,0 +1,20 @@
+<% opcoes = ["Acompanhamento",  acompanhamento.status, acompanhamento.motivo_da_finalizacao] %>
+<% classes = ["acompanhamento-card", opcoes[..1].join(' ').parameterize, opcoes.join(' ').parameterize] %>
+<%= link_to acompanhamento, class: classes do %>
+<div>
+  <% p = acompanhamento.pessoa %>
+  <% pro = acompanhamento.profissional %>
+  <% prop = pro.pessoa %>
+
+  <h4 class="icon-profile"><%= acompanhamento.tipo.upcase %></h4>
+  <h2 class="icon-user"><%= "#{p.nome_abreviado} #{p.render_sexo_sigla}" %></h2>
+  <p class="icon-calendar">
+  <%= [render_data_brasil(acompanhamento.primeira_data), acompanhamento.em_andamento? ? "Em andamento" : render_data_brasil(acompanhamento.ultima_data)].compact.join(" - ") %>
+  </p>
+  <p class="icon-bubbles"><%= deixar_no_plural acompanhamento.atendimentos.count, "atendimento", "atendimentos" %></p>
+  <p class="icon-calendar">
+  <%= acompanhamento.acompanhamento_horarios.map { |horario| "#{horario.semana_dia.nome.upcase} às #{render_hora_brasil horario.horario}" }.join("; ").presence || "Sem horário fixo" %>
+  </p>
+
+</div>
+<% end %>
