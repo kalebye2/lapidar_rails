@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :biblioteca_autores
   resources :pessoa_medicacoes
   scope :estatisticas do
     get '/', to: 'estatisticas#index', as: "estatisticas"
@@ -86,6 +87,12 @@ Rails.application.routes.draw do
         get :atendimento_valores
         get :financeiro_repasses
         get :recebimentos
+        scope :folgas do
+          get "/", as: :folgas, action: :folgas
+          get "/new", as: :new_folga, action: :new_folga
+          get "/edit/:profissional_folga_id", as: :edit_folga, action: :edit_folga
+          delete ":profissional_folga_id", as: :destroy_folga, action: :destroy_folga
+        end
       end
     end
 
@@ -96,6 +103,8 @@ Rails.application.routes.draw do
         get :atendimentos
       end
     end
+
+    resources :profissional_folgas
   end
 
   # Documentos
@@ -182,7 +191,6 @@ Rails.application.routes.draw do
   resources :continentes
 
   resources :acompanhamentos do
-
     get 'em-andamento', on: :collection, action: :index, em_andamento: true
 
     member do
@@ -197,8 +205,11 @@ Rails.application.routes.draw do
       get :new_atendimento
       get :recebimentos
       get :new_recebimento
+      get :declaracao_ir
+      get :declaracao_finalizacao
     end
   end
+
   resources :atendimentos do
     member do
       post :reagendar_para_proxima_semana
@@ -244,6 +255,9 @@ Rails.application.routes.draw do
 
   root to: "application#index"
   get '/configurar', to: "application#configurar"
+  post "/primeira_pessoa_cadastro", to: "application#registrar_pessoa"
+  post "/primeiro_profissional_cadastro", to: "application#registrar_profissional"
+  post "/primeiro_usuario_cadastro", to: "application#registrar_usuario"
 
   get '/ajuda', to: "application#ajuda"
   get '/financeiro', to: "financeiro#index"

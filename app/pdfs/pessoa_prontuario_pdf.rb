@@ -1,5 +1,5 @@
 class PessoaProntuarioPdf < BasePdf
-  def initialize(pessoa=Pessoa.new)
+  def initialize(pessoa=Pessoa.new, instrumentos: true)
     super()
     @pessoa = pessoa
     @markup_options = {
@@ -12,15 +12,29 @@ class PessoaProntuarioPdf < BasePdf
         align: :left,
         style: :bold,
         indent_paragraphs: 0,
+      },
+      heading2: {
+        style: :bold,
+        size: 16,
+      },
+      heading3: {
+        style: :italic,
+        size: 12,
+      },
+      table: {
+        header: {
+          style: :bold,
+        }
       }
     }
 
+    @instrumentos = instrumentos
     header
     title
     move_down 7
     body
     footer
-    number_pages "<page>", at: [bounds.left, -10], align: :center
+    number_pages "<page>", at: [bounds.left, -10], align: :right
   end
 
   def header
@@ -58,12 +72,20 @@ class PessoaProntuarioPdf < BasePdf
     markup dados.map { |k,v| "<b>#{k&.to_s&.humanize}</b>: #{v&.upcase}" }.join("\n<br>\n")
   end
 
-  def atendimentos
+  def atendimentos instrumentos: @instrumentos
     @pessoa.atendimentos.em_ordem.each_with_index do |atendimento, index|
       start_new_page
       markup "<h1>Atendimento nº #{index + 1}</h1>", @markup_options
       move_down 1.cm
       markup atendimento.dados_do_atendimento(true).compact.map { |k,v| "<b>#{k.to_s.humanize}</b>: #{v}" }.join("\n<br>\n"), @markup_options
+
+      if instrumentos && atendimento.instrumento_relatos.presence
+        markup "<h2>Relatos de instrumentos aplicados</h2>", {heading2: {style: :bold, size: 16}}
+        atendimento.instrumento_relatos.map do |instrumento_relato|
+          markup "<h3>#{instrumento_relato.instrumento.nome}</h3>", {heading3: {style: :italic, size: 14}}
+          markup instrumento_relato.dados(nome_instrumento: false).compact.map { |k,v| "<b>#{k.to_s.humanize}</b>: #{v}" }.join("\n<br>\n")
+        end
+      end
       move_down 7
     end
   end
@@ -72,5 +94,6 @@ class PessoaProntuarioPdf < BasePdf
   end
 
   def footer
+    number_pages "#{titulo_da_aplicacao}", at: [bounds.left, -10], align: :center
   end
 end

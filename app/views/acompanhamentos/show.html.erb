@@ -54,76 +54,13 @@
           (<%= anamnese.acompanhamento.tipo.upcase %>)
         </li>
       <% end %>
+      [<%= link_to "PDF", infantojuvenil_anamnese_path(anamnese, format: :pdf), target: :blank %>]
       [<%= link_to "Markdown", infantojuvenil_anamnese_path(anamnese, format: :md) %>]
     <% end %>
   </ul>
 <% end %>
 
-<nav class="navbar navcenter">
-  <ul>
-    <% if @usuario_acompanhamento %>
-      <li>
-        <%= link_to "Editar", edit_acompanhamento_path(@acompanhamento), class: 'icon-quill' %>
-      </li>
-
-    <li>
-      <%= link_to "Declaração", declaracao_acompanhamento_path(@acompanhamento), class: 'icon-file-text2' %>
-      <ul>
-        <li>
-          <%= link_to "Markdown", declaracao_acompanhamento_path(@acompanhamento, format: :md) %>
-        </li>
-        <li>
-          <%= link_to "PDF", declaracao_acompanhamento_path(@acompanhamento, format: :pdf), target: :blank %>
-        </li>
-      </ul>
-    </li>
-
-      <li>
-        <%= link_to "Contrato", contrato_acompanhamento_path(@acompanhamento), class: 'icon-drawer' %>
-      </li>
-    <% end %>
-
-    <li>
-      <%= link_to "Prontuário", prontuario_acompanhamento_path(@acompanhamento), class: 'icon-profile' %>
-      <ul>
-        <li>
-          <%= link_to "Markdown", prontuario_acompanhamento_path(@acompanhamento, format: :md) %>
-        </li>
-        <li>
-          <%= link_to "PDF", prontuario_acompanhamento_path(@acompanhamento, format: :pdf), target: :blank %>
-        </li>
-      </ul>
-    </li>
-
-    <% if usuario_atual.financeiro? || usuario_atual.profissional == @acompanhamento.profissional %>
-      <li>
-        <%= link_to "Financeiro", financeiro_acompanhamento_path(@acompanhamento), class: 'icon-coin-dollar' %>
-        <ul>
-          <li>
-            <%= link_to "Recebimentos", recebimentos_acompanhamento_path(@acompanhamento) %>
-          </li>
-          <li>
-            <%= link_to "Reajustes", acompanhamento_reajustes_acompanhamento_path(@acompanhamento) %>
-          </li>
-          <li>
-            <%= link_to "Valores de atendimentos", atendimento_valores_acompanhamento_path(@acompanhamento) %>
-          </li>
-        </ul>
-      </li>
-    <% end %>
-
-    <% if @acompanhamento.em_andamento? && @usuario_acompanhamento %>
-      <li>
-        <%= link_to "Novo atendimento", new_atendimento_acompanhamento_path(@acompanhamento), class: "icon-plus" %>
-        <ul>
-          <li>
-            <%= button_to "Gerar atendimento para a próxima semana", new_atendimento_proxima_semana_acompanhamento_path(@acompanhamento), class: 'icon-plus' %>
-          </li>
-        </ul>
-      </li>
-    <% end %>
-  </ul>
-</nav>
+<%= render "navbar", acompanhamento: @acompanhamento, usuario_acompanhamento: @usuario_acompanhamento %>
 
 <%== "<br>" * 3 %>
 <div class="grid-2">
@@ -134,4 +71,4 @@
   <%= render "acompanhamento_dados_show", acompanhamento: @acompanhamento %>
 </div>
 
-<%= render "caso-resumo", acompanhamento: @acompanhamento, atendimentos: @atendimentos, contagem_atendimentos: @contagem_atendimentos %>
+<%= render "caso-resumo", acompanhamento: @acompanhamento, atendimentos: @atendimentos, contagem_atendimentos: @contagem_atendimentos, contagem_atendimentos_realizados: @contagem_atendimentos_realizados, contagem_atendimentos_futuros: @contagem_atendimentos_futuros %>

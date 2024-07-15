@@ -1,5 +1,5 @@
 class InstrumentoRelatosController < ApplicationController
-  before_action :set_instrumento_relato, only: %i[ show edit update delete ]
+  before_action :set_instrumento_relato, only: %i[ show edit update destroy ]
 
   def index
     @instrumento_relatos = InstrumentoRelato.joins(:atendimento).order("atendimentos.data" => :desc)
@@ -59,6 +59,21 @@ class InstrumentoRelatosController < ApplicationController
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @instrumento_relato.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def destroy
+    atendimento = @instrumento_relato.atendimento
+    @instrumento_relato.destroy
+
+    respond_to do |format|
+      format.html do
+        if hx_request?
+          render partial: "atendimentos/instrumentos_usados", locals: {atendimento: atendimento, instrumento_relatos: atendimento.instrumento_relatos}
+        else
+          redirect_to index
+        end
       end
     end
   end

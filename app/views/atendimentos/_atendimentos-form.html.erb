@@ -1,5 +1,5 @@
 <nav class="navbar navcenter" id="atendimentos-form" <%== "hx-swap-oob=true" unless !hx_request? %>>
-  <%= hx_form get: atendimentos_path, target: "#atendimentos-container", replace_url: true, trigger: "change", swap: "outerHTML" do %>
+  <%= hx_form get: atendimentos_path, target: "#atendimentos-container", replace_url: true, swap: "outerHTML" do %>
     <label for="de">De</label>
     <input type="date" name="de" id="de" value="<%= @de %>">
     <label for="ate">Até</label>
@@ -11,7 +11,7 @@
     <select name="tipo">
       <option value="">Todos</option>
       <% AtendimentoTipo.all.each do |atendimento_tipo| %>
-          <option value="<%= atendimento_tipo.id %>" <%= "selected" unless atendimento_tipo.id != params[:tipo] %>><%= atendimento_tipo.tipo.upcase %></option>
+          <option value="<%= atendimento_tipo.id %>" <%= "selected" unless atendimento_tipo.id != @params[:tipo] %>><%= atendimento_tipo.tipo.upcase %></option>
       <% end %>
     </select>
 
@@ -21,7 +21,7 @@
     <select name="pessoa" id="pessoa">
       <option value="">Todos</option>
       <% pessoas.each do |pessoa| %>
-        <option value="<%= pessoa.id %>"><%= pessoa.nome_abreviado %> (<%= pessoa.render_idade %>)</option>
+        <option value="<%= pessoa.id %>" <%= "selected" if pessoa.id == @params[:pessoa] %>><%= pessoa.nome_abreviado %> (<%= pessoa.render_idade %>)</option>
       <% end %>
     </select>
 
@@ -29,12 +29,21 @@
     <label for="num_itens">Itens por página</label>
     <input type="number" value="<%= @num_itens %>">
 
+    <input type="submit" value="Atualizar">
+
     <br>
     <br>
 
     <p class="text-center"><%= deixar_no_plural atendimentos_totais.count, "atendimento", "atendimentos" %></p>
+
     <div class="text-center">
-      Página
+      <%== pagy_nav @pagy %>
     </div>
+    <%# <div class="text-center"> %>
+    <%#   Página <%= @pagy.page %1> / <%= @pagy.pages %1> %>
+    <%# <br> %>
+    <%# <%= link_to "Anterior", atendimentos_path(@params.merge(page: @pagy.page - 1)) unless @pagy.page <= 1 %1> %>
+    <%# <%= link_to "Próxima", atendimentos_path(@params.merge(page: @pagy.page + 1)) unless @pagy.page >= @pagy.pages %1> %>
+    <%# </div> %>
   <% end %>
 </nav>

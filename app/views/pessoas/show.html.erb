@@ -71,6 +71,9 @@
       <p class="endereco icon-location">
       <%= @pessoa.endereco_completo_com_cep %>
       </p>
+
+      <p>Preferência de contato: <%= @pessoa.preferencia_contato %></p>
+
       <div id="pessoa-parentes" class="pessoa-parentes" style="text-align:justify;">
         <%= render "pessoas/parentes", pessoa: @pessoa %>
       </div>

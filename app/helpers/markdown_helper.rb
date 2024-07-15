@@ -15,11 +15,11 @@ module MarkdownHelper
       </script>".html_safe
   end
 
-  def markdown_to_html valor, default = "Sem informação"
+  def markdown_to_html valor, default = ""
     valor.nil? ? default : Kramdown::Document.new(valor.to_s).to_html.html_safe
   end
 
-  def markdown valor, default = "Sem informação"
+  def markdown valor, default = ""
     valor.nil? ? default : Kramdown::Document.new(valor.to_s).to_kramdown
   end
 end

@@ -1,0 +1,43 @@
+<%= form_with(model: profissional_folga, local: true) do |form| %>
+  <% if profissional_folga.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(profissional_folga.errors.count, "error") %> prohibited this profissional_folga from being saved:</h2>
+
+      <ul>
+        <% profissional_folga.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if !@profissional %>
+    <div class="field">
+      <%= form.label :profissional_id %>
+      <%# <%= Profissional.all.map &:descricao_completa %1> %>
+      <%= form.select :profissional_id, Profissional.all.map { |profissional| [profissional.descricao_completa, profissional.id] } %>
+    </div>
+  <% else %>
+    <input type="hidden" name="profissional_id" value="1">
+    <input type="hidden" name="profissional" value="true">
+  <% end %>
+
+  <div class="field">
+    <%= form.label :data_inicio, "Início" %>
+    <%= form.date_field :data_inicio %>
+  </div>
+
+  <div class="field">
+    <%= form.label :data_final, "Final" %>
+    <%= form.date_field :data_final %>
+  </div>
+
+  <div class="field">
+    <%= form.label :profissional_folga_motivo_id %>
+    <%= form.select :profissional_folga_motivo_id, ProfissionalFolgaMotivo.all.map { |folga_motivo| [folga_motivo.motivo.upcase, folga_motivo.id] } %>
+  </div>
+
+  <div>
+    <%= form.submit profissional_folga.id ? "Atualizar" : "Registrar"%>
+  </div>
+<% end %>

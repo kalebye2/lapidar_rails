@@ -29,7 +29,7 @@ class Acompanhamento < ApplicationRecord
   scope :do_tipo_com_id, -> (id) { id.nil? ? all : where(acompanhamento_tipo_id: id) }
   scope :valor_aproximado_mensal, -> { sum("num_sessoes * valor_sessao") }
   scope :valor_aproximado_semanal, -> { sum(:valor_sessao) }
-  scope :do_periodo, -> (de: Acompanhamento.minimum(:data_inicio), ate: Acompanhamento.maximum(:data_final)) { where(data_inicio: de.., data_final: ..ate) }
+  scope :do_periodo_de_ate, -> (de: Acompanhamento.minimum(:data_inicio), ate: Acompanhamento.maximum(:data_final)) { where(data_inicio: de.., data_final: ..ate) }
   scope :por_paciente_em_ordem_alfabetica, -> { includes(:pessoa).order("pessoas.nome" => :asc, "pessoas.nome_do_meio" => :asc, "pessoas.sobrenome" => :asc) }
   scope :suspensos, -> { where(suspenso: [true, 1..]) }
 
@@ -152,12 +152,12 @@ class Acompanhamento < ApplicationRecord
 
   # financeiro
   
-  def valor_liquido(periodo=Date.today.all_month)
-    atendimento_valores.soma_liquidos(periodo)
+  def valor_liquido
+    atendimento_valores.soma_liquidos
   end
 
-  def valor_bruto(periodo=Date.today.all_month)
-    atendimento_valores.soma_brutos(periodo)
+  def valor_bruto
+    atendimento_valores.soma_brutos
   end
 
   def valor_a_cobrar_ate_mes_passado
@@ -168,46 +168,115 @@ class Acompanhamento < ApplicationRecord
     (atendimento_valores.do_periodo(periodo).sum("valor - desconto") - recebimentos.do_periodo(periodo).sum(:valor)).to_i
   end
 
-  def para_csv formato_data: "%Y-%m-%d"
-    "\"#{pessoa.nome_completo}\"," \
-      "\"#{pessoa.render_sexo}\"," \
-      "\"#{pessoa.render_idade}\"," \
-      "\"#{pessoa.render_fone_link}\"," \
-      "\"#{pessoa.email}\"," \
-      "\"#{faixa_etaria.upcase}\"," \
-      "\"#{responsavel_legal&.nome_completo}\"," \
-      "\"#{responsavel_legal&.render_fone_link}\"," \
-      "\"#{responsavel_legal&.email}\"," \
-      "\"#{pessoa.grau_parentesco(responsavel_legal)&.parentesco&.upcase}\"," \
-      "\"#{tipo.upcase}\"," \
-      "\"#{data_inicio.strftime(formato_data)}\"," \
-      "\"#{ultimo_atendimento.data.strftime(formato_data)}\"," \
-      "\"#{acompanhamento_finalizacao_motivo&.motivo}\"," \
-      "\"#{profissional.descricao_completa}\"," \
-      "\"#{atendimentos.count}\"," \
-      "\"#{valor_sessao / 100.0}\"," \
-      "\"#{num_sessoes}\"," \
-      "\"#{suspenso.nil? || suspenso == 0 ? 'NÃO' : 'SIM'}\"," \
-      ""
+  def valor_recebido_no_periodo periodo = (Date.today - 1.year).all_year
+    recebimentos.do_periodo(periodo).sum(:valor).to_i
   end
 
-  def self.para_csv collection=all, formato_data: "%Y-%m-%d"
-    header = "PACIENTE,SEXO DO PACIENTE,IDADE DO PACIENTE,TELEFONE DO PACIENTE,EMAIL DO PACIENTE," \
-      "FAIXA ETÁRIA," \
-      "RESPONSÁVEL LEGAL,TELEFONE RESPONSÁVEL LEGAL, EMAIL RESPONSÁVEL LEGAL," \
-      "PARENTESCO DO RESPONSÁVEL," \
-      "TIPO," \
-      "DATA DE INÍCIO," \
-      "DATA FINAL," \
-      "MOTIVO DA FINALIZAÇÃO," \
-      "PROFISSIONAL," \
-      "NÚMERO DE ATENDIMENTOS," \
-      "VALOR DA SESSÃO," \
-      "SESSÕES MENSAIS (4 SEMANAS = 1 MÊS)," \
-      "SUSPENSO," \
-      "\n"
-    content = collection.each.map { |a| a.para_csv(formato_data: formato_data) }.join("\n")
-    header + content
+  def para_csv col_sep: ",", formato_data: "%Y-%m-%d"
+    # "\"#{pessoa.nome_completo}\"," \
+    #   "\"#{pessoa.render_sexo}\"," \
+    #   "\"#{pessoa.render_idade}\"," \
+    #   "\"#{pessoa.render_fone_link}\"," \
+    #   "\"#{pessoa.email}\"," \
+    #   "\"#{faixa_etaria.upcase}\"," \
+    #   "\"#{responsavel_legal&.nome_completo}\"," \
+    #   "\"#{responsavel_legal&.render_fone_link}\"," \
+    #   "\"#{responsavel_legal&.email}\"," \
+    #   "\"#{pessoa.grau_parentesco(responsavel_legal)&.parentesco&.upcase}\"," \
+    #   "\"#{tipo.upcase}\"," \
+    #   "\"#{data_inicio.strftime(formato_data)}\"," \
+    #   "\"#{ultimo_atendimento&.data&.strftime(formato_data)}\"," \
+    #   "\"#{acompanhamento_finalizacao_motivo&.motivo}\"," \
+    #   "\"#{profissional.descricao_completa}\"," \
+    #   "\"#{atendimentos.count}\"," \
+    #   "\"#{valor_sessao / 100.0}\"," \
+    #   "\"#{num_sessoes}\"," \
+    #   "\"#{suspenso.nil? || suspenso == 0 ? 'NÃO' : 'SIM'}\"," \
+    #   ""
+
+    CSV.generate(col_sep: col_sep) do |csv|
+      csv << [
+        pessoa.nome_completo,
+        pessoa.render_sexo,
+        pessoa.render_idade,
+        pessoa.render_fone_link,
+        pessoa.email,
+        faixa_etaria.upcase,
+        responsavel_legal&.nome_completo,
+        responsavel_legal&.render_fone_link,
+        responsavel_legal&.email,
+        pessoa.grau_parentesco(responsavel_legal)&.parentesco&.upcase,
+        tipo.upcase,
+        data_inicio.strftime(formato_data),
+        ultimo_atendimento&.data&.strftime(formato_data),
+        acompanhamento_finalizacao_motivo&.motivo,
+        profissional.descricao_completa,
+        atendimentos.count,
+        valor_sessao / 100.0,
+        num_sessoes,
+        suspenso.nil? || suspenso == 0 ? 'NÃO' : 'SIM',
+      ]
+    end
+  end
+
+  def self.para_csv collection=all, formato_data: "%Y-%m-%d", col_sep: ","
+    header = [
+      "PACIENTE",
+      "SEXO DO PACIENTE",
+      "IDADE DO PACIENTE",
+      "TELEFONE DO PACIENTE",
+      "EMAIL DO PACIENTE",
+      "FAIXA ETÁRIA",
+      "RESPONSÁVEL LEGAL",
+      "TELEFONE RESPONSÁVEL LEGAL",
+      "EMAIL RESPONSÁVEL LEGAL",
+      "PARENTESCO DO RESPONSÁVEL",
+      "TIPO",
+      "DATA DE INÍCIO",
+      "DATA FINAL",
+      "MOTIVO DA FINALIZAÇÃO",
+      "PROFISSIONAL",
+      "NÚMERO DE ATENDIMENTOS",
+      "VALOR DA SESSÃO",
+      "SESSÕES MENSAIS (4 SEMANAS = 1 MÊS)",
+      "SUSPENSO",
+      "PLATAFORMA",
+      "ATENDIMENTOS REALIZADOS",
+      "ATENDIMENTOS NÃO REALIZADOS",
+      "PROPORÇÃO DE ATENDIMENTOS REALIZADOS/NÃO REALIZADOS",
+    ]
+    # content = collection.each.map { |a| a.para_csv(formato_data: formato_data) }.join("\n")
+
+    CSV.generate(col_sep: col_sep) do |csv|
+      csv << header
+      collection.each do |a|
+        csv << [
+          a.pessoa.nome_completo,
+          a.pessoa.render_sexo,
+          a.pessoa.render_idade,
+          a.pessoa.render_fone_link,
+          a.pessoa.email,
+          a.faixa_etaria.upcase,
+          a.responsavel_legal&.nome_completo,
+          a.responsavel_legal&.render_fone_link,
+          a.responsavel_legal&.email,
+          a.pessoa.grau_parentesco(a.responsavel_legal)&.parentesco&.upcase,
+          a.tipo.upcase,
+          a.data_inicio.strftime(formato_data),
+          a.ultimo_atendimento&.data&.strftime(formato_data),
+          a.acompanhamento_finalizacao_motivo&.motivo,
+          a.profissional.descricao_completa,
+          a.atendimentos.count,
+          a.valor_sessao / 100.0,
+          a.num_sessoes,
+          a.suspenso.nil? || a.suspenso == 0 ? 'NÃO' : 'SIM',
+          a.atendimento_plataforma&.nome,
+          a.atendimentos.realizados.count,
+          a.atendimentos.passados.nao_realizados.count,
+          (a.atendimentos.realizados.count.to_f / (a.atendimentos.passados.count == 0 ? 1 : a.atendimentos.passados.count).to_f),
+        ]
+      end
+    end
   end
 
   def self.filter(attributes)

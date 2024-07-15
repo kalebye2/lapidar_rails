@@ -3,8 +3,10 @@ class PessoaDevolutiva < ApplicationRecord
   alias paciente pessoa
   alias cliente pessoa
   belongs_to :profissional
-  belongs_to :pessoa_responsavel, class_name: "Pessoa", foreign_key: :pessoa_responsavel_id
-  alias responsavel pessoa_responsavel
+  belongs_to :pessoa_interessada, class_name: "Pessoa", foreign_key: :pessoa_interessada_id
+  alias interessado pessoa_interessada
+  alias responsavel pessoa_interessada
+  alias pessoa_responsavel pessoa_interessada
 
   scope :cronologico, -> (ordem: :asc) { order(data: ordem) }
   scope :da_pessoa, -> (pessoa) { where(pessoa: pessoa) }
@@ -30,8 +32,8 @@ class PessoaDevolutiva < ApplicationRecord
     {
       profissional: profissional.descricao_completa,
       paciente: paciente.nome_completo,
-      responsável: pessoa_responsavel.nome_completo,
+      interessado: pessoa_interessada&.nome_completo,
       data: data.strftime("%d/%m/%Y"),
-    }
+    }.compact
   end
 end

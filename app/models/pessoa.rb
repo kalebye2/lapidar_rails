@@ -26,6 +26,12 @@ class Pessoa < ApplicationRecord
   scope :homens, -> { do_sexo_masculino }
   scope :contagem_por_sexo, -> (collection=all) { group(:feminino).count }
   scope :profissionais, -> { joins(:profissional) }
+  scope :nao_profissionais, -> do
+    p_arel = self.arel_table
+    pro_arel = Profissional.arel_table
+    join = p_arel.join(pro_arel, Arel::Nodes::OuterJoin).on(p_arel[:id].eq(pro_arel[:pessoa_id])).join_sources
+    self.joins(join).where(pro_arel[:id].eq(nil))
+  end
   scope :atendidas_hoje, -> { joins(:atendimentos).where("atendimentos.data" => Date.current) }
   scope :ordem_alfabetica, -> { order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc) }
   scope :em_ordem_alfabetica, -> { ordem_alfabetica }
@@ -39,17 +45,19 @@ class Pessoa < ApplicationRecord
   
   scope :query_like_nome, -> (like = "") do
     like = like.to_s
-    query = "LOWER(nome || ' ' || COALESCE(nome_do_meio, '') || ' '|| sobrenome) LIKE ?", "%#{like}%"
+    query = "LOWER(nome || ' ' || COALESCE(nome_do_meio, '') || ' '|| sobrenome) LIKE LOWER(?)", "%#{like}%"
     if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
-      query = "LOWER(CONCAT(nome, ' ', COALESCE(nome_do_meio, ''), ' ', sobrenome)) LIKE ?", "%#{like}%"
+      query = "LOWER(CONCAT(nome, ' ', COALESCE(nome_do_meio, ''), ' ', sobrenome)) LIKE LOWER(?)", "%#{like}%"
     end
     where(query)
   end
 
+  scope :presente_na_clinica_no_periodo, -> (periodo=Date.current.all_month) { joins(:atendimentos).where(atendimentos: Atendimento.do_periodo(periodo)).distinct }
+
   # has associations
   # quando o cadastro for de um profissional
   has_one :profissional
-  has_many :profissional_acompanhamento, through: :profissional, source: :acompanhamento
+  has_many :profissional_acompanhamentos, through: :profissional, source: :acompanhamentos
 
   # parentes
   has_many :pessoa_parentesco_juncoes
@@ -77,6 +85,7 @@ class Pessoa < ApplicationRecord
   has_many :profissionais_acompanhando, class_name: "Profissional", through: :acompanhamentos, source: :profissional
   has_many :devolutivas, class_name: "PessoaDevolutiva", foreign_key: :pessoa_id
   has_many :laudos, through: :acompanhamentos
+
   # quando o cadastro for de um resopnsável
   has_many :acompanhamentos_responsavel, class_name: "Acompanhamento", foreign_key: :pessoa_responsavel_id
   has_many :profissionais_a_quem_responde, class_name: "Profissional", through: :acompanhamento_responsavel, source: :profissional
@@ -99,9 +108,6 @@ class Pessoa < ApplicationRecord
   end
 
   def nome_abreviado_meio
-    #nome_abrev = (nome + ' ' + nome_do_meio).split.map { |n| n[0] == n[0].upcase ? n[0] : '' }
-    #nome_abrev = abreviar(nome + ' ' + nome_do_meio, '. ')
-    #[nome_abrev.reject(&:empty?) || nome_abrev, sobrenome].join('. ')
     if nome_do_meio
       abreviar(nome + ' ' + nome_do_meio.to_s, '. ') + '. ' + sobrenome
     else
@@ -129,6 +135,7 @@ class Pessoa < ApplicationRecord
   end
 
   def render_cpf
+    return nil if cpf.blank?
     cr = cpf.to_s
     # padding zeros
     cr = ("00000000000" + cr).delete(" ").chars.last(11).join("").to_s
@@ -136,6 +143,7 @@ class Pessoa < ApplicationRecord
   end
 
   def render_rg
+    return nil if rg.blank?
     rr = rg.to_s
     rr = ("000000000" + rr).delete(" ").chars.last(9).join("").to_s
     rr.at(0..1) + "." + rr.at(2..4) + "." + rr.at(5..7) + "-" + rr.at(-1)
@@ -281,7 +289,7 @@ class Pessoa < ApplicationRecord
   end
 
   def render_endereco
-    if endereco_logradouro == nil then return "Endereço não informado" end
+    if endereco_logradouro == nil then return nil end
     num = endereco_numero || "Sem número"
     complemento = endereco_complemento || ""
     cpostal = render_cep || "Código postal não informado"
@@ -380,7 +388,6 @@ class Pessoa < ApplicationRecord
     {
       nome_completo: nome_completo,
       data_de_nascimento: render_data_nascimento,
-      idade: render_idade,
       sexo: render_sexo,
       estado_civil: estado_civil,
       grau_de_instrução: grau_de_instrucao,
@@ -394,7 +401,8 @@ class Pessoa < ApplicationRecord
       cidade: endereco_cidade,
       estado: endereco_estado,
       país: pais.nome,
-      medicação: pessoa_medicacoes.map { |medicacao| "#{medicacao.medicacao}#{medicacao.dose&.insert(0, " (")&.insert(-1, ")")}"}.join(", ").presence }.presence || ""
+      # medicação: pessoa_medicacoes.em_andamento.map { |medicacao| "#{medicacao.descricao}" }.join(", ").presence 
+    }.presence || ""
   end
 
   def para_csv incluir_trans: false, incluir_orientacao_sexual: false
@@ -442,11 +450,11 @@ class Pessoa < ApplicationRecord
   end
   alias para_linha_csv para_csv
 
-  def self.para_csv collection=ordem_alfabetica, incluir_trans: false, incluir_orientacao_sexual: false
+  def self.para_csv collection=ordem_alfabetica, incluir_trans: false, incluir_orientacao_sexual: false, col_sep: ","
     # header = "nome,nome do meio,sobrenome,sexo,data de nascimento,cpf,fone,e-mail,natural de,cep,endereço,cidade,estado,país,profissão,preferência de contato,#{incluir_orientacao_sexual ? "orientação sexual," : ""}pronome de tratamento,nome preferido#{incluir_trans ? ",transexual" : ""}".upcase
     # "#{header}\n" \
     #   "#{collection.each.map {|pessoa| "#{pessoa.para_csv}"}.join("\n")}"
-    CSV.generate(col_sep: ',') do |csv|
+    CSV.generate(col_sep: col_sep) do |csv|
       csv << [
         "NOME",
         "NOME DO MEIO",
@@ -465,7 +473,7 @@ class Pessoa < ApplicationRecord
         "PROFISSÃO",
         "PREFERÊNCIA DE CONTATO",
         "PRONOME DE TRATAMENTO",
-      ].compact
+      ]
 
       collection.each do |p|
         csv << [
@@ -478,14 +486,15 @@ class Pessoa < ApplicationRecord
           p.render_fone || "-",
           p.email || "-",
           p.nascimento_pais&.nome || "-",
-          "#{p.endereco_logradouro}#{p.endereco_numero&.to_s&.insert(0, "nº ")}#{p.endereco_complemento&.insert(0, " ")}" || "-",
+          p.endereco_cep,
+          "#{p.endereco_logradouro} #{p.endereco_numero&.to_s&.insert(0, "nº ")} #{p.endereco_complemento&.insert(0, " ")}" || "-",
           p.endereco_cidade || "-",
           p.endereco_estado || "-",
           p.pais&.nome || "-",
-          p.profissao || "-",
-          p.preferencia_contato || "-",
+          p.profissao&.upcase || "-",
+          p.preferencia_contato&.upcase || "-",
           p.pronome_tratamento || " - ",
-        ].compact
+        ]
       end
     end
   end

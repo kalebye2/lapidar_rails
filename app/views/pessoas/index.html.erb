@@ -18,7 +18,10 @@
 
 <nav class="navbar">
   <%= hx_form get: pessoas_path, target: "#cadastros-container", trigger: "change", replace_url: true, trigger: "keyup delay:500ms changed, change" do %>
-    <input name="nome" type="text" placeholder="Pesquisar por nome..." style="width:70%;margin:1em;">
+    <div>
+      <label for="nome">Nome</label>
+      <input name="nome" type="text" placeholder="Pesquisar por nome..." style="width:70%;margin:1em;">
+    </diV>
 
     <div>
       <label for="sexo">Sexo</label>
@@ -29,6 +32,17 @@
       </select>
     </div>
 
+    <br>
+    <div>
+      <label for="profissionais">Pacientes ou profissionais?</label>
+      <select name="profissionais" id="profissionais">
+        <option value="">AMBOS</option>
+        <option value="true">PROFISSIONAIS</option>
+        <option value="false">PACIENTES</option>
+      </select>
+    </div>
+
+    <br>
     <div>
       <label for="pais">País</label>
       <select name="pais" id="pais">

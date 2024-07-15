@@ -1,3 +1,48 @@
+<% titulo "Estatísticas: Clínica" %>
+
 <h1>Estatísticas: Clínica</h1>
 
 <%= render "navbar" %>
+
+<div class="grid-2">
+  <div class="card">
+    <h2>Profissionais</h2>
+    <ul>
+      <li>
+        <%= deixar_no_plural Profissional.count, "profissional cadastrado", "profissionais cadastrados" %>
+      </li>
+      <li>
+        <%= deixar_no_plural Profissional.ativos.count, "ativo", "ativos" %>, <%= deixar_no_plural Profissional.inativos.count, "inativo", "inativos" %>
+      </li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>Locais</h2>
+    <ul>
+      <li>
+        <%= deixar_no_plural Atendimento.com_local_definido.realizados.count, "atendimento realizado", "atendimentos realizados" %> em <%= deixar_no_plural AtendimentoLocal.com_atendimentos_realizados.count, "local", "locais" %>
+      </li>
+      <li>
+        <%= deixar_no_plural Atendimento.sem_local_definido.realizados.count, "atendimento realizado", "atendimentos realizados" %> sem local definido.
+      </li>
+    </ul>
+  </div>
+</div>
+
+<h2>Profissionais</h2>
+<div class="grid-3">
+  <%= pie_chart @contagem_atendimentos_por_profissional.map { |k,v| [k.descricao_completa, v] }.to_h, title: "Contagem de atendimentos por profissional" %>
+  <%= pie_chart Profissional.group(:ativo).count.map { |k,v| [k ? "Ativo(s)" : "Inativo(s)", v] }, title: "Profissionais ativos e inativos" %>
+  <%= pie_chart Profissional.group(:profissional_funcao).count.map { |k,v| [k.funcao, v] }, title: "Profissionais por função" %>
+</div>
+
+<h2>Locais</h2>
+<div class="grid-3">
+  <%= pie_chart @contagem_atendimentos_por_local.map { |k,v| [k&.descricao&.upcase || "SEM LOCAL", v] }, title: "Atendimentos por local" %>
+</div>
+
+<h2>Atendimentos</h2>
+<div class="grid-2">
+  <%= pie_chart Atendimento.realizados.contagem_por_tipo.map { |k,v| [k.tipo.upcase, v] }, title: "Atendimentos prestados por tipo" %>
+  <%= line_chart Atendimento.realizados.deste_ano.contagem_por_mes.map { |k,v| [t('date.month_names')[k.first.month].upcase,v] }, title: "Atendimentos deste ano por mês" %>
+</div>

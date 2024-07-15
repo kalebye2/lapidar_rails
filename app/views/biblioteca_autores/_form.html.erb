@@ -1,0 +1,52 @@
+<%= form_with(model: biblioteca_autor) do |form| %>
+  <% if biblioteca_autor.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(biblioteca_autor.errors.count, "error") %> prohibited this biblioteca_autor from being saved:</h2>
+
+      <ul>
+        <% biblioteca_autor.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :nome, style: "display: block" %>
+    <%= form.text_field :nome %>
+  </div>
+
+  <div>
+    <%= form.label :nome_do_meio, style: "display: block" %>
+    <%= form.text_field :nome_do_meio %>
+  </div>
+
+  <div>
+    <%= form.label :sobrenome, style: "display: block" %>
+    <%= form.text_field :sobrenome %>
+  </div>
+
+  <div>
+    <%= form.label :ordem, style: "display: block" %>
+    <%= form.number_field :ordem %>
+  </div>
+
+  <div>
+    <%= form.label :feminino, style: "display: block" %>
+    <%= form.check_box :feminino %>
+  </div>
+
+  <div>
+    <%= form.label :link, style: "display: block" %>
+    <%= form.text_field :link %>
+  </div>
+
+  <div>
+    <%= form.label :bio, style: "display: block" %>
+    <%= form.text_area :bio %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -35,7 +35,7 @@
       <label for="responsavel">Responsável</label>
       <select name="responsavel">
         <option value="">Todos</option>
-        <% total_devolutivas.joins(:pessoa_responsavel).map(&:pessoa_responsavel).uniq.each do |responsavel| %>
+        <% total_devolutivas.joins(:pessoa_interessada).map(&:pessoa_interessada).uniq.each do |responsavel| %>
           <option value="<%= responsavel.id %>" <%= "selected" unless params[:responsavel] != responsavel.id %>><%= responsavel.nome_completo %> (<%= responsavel.render_idade %>)</option>
         <% end %>
       </select>

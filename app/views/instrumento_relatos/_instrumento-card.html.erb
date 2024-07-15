@@ -3,7 +3,7 @@
     <%= instrumento_relato.instrumento.nome %>
   </h1>
   <%== hx_link "editar", edit_instrumento_relato_path(instrumento_relato, ajax: true, pessoa: instrumento_relato.pessoa.id, atendimento: instrumento_relato.atendimento.id), "hx-target" => "##{dom_id(instrumento_relato)}", "hx-select" => "##{dom_id(instrumento_relato)}" %>
-  <%== hx_link "excluir", instrumento_relato_path(instrumento_relato), verb: :delete %>
+  <%== hx_link "excluir", instrumento_relato_path(instrumento_relato, authenticity_token: form_authenticity_token.to_s), verb: :delete, select: "#instrumento-relatos", target: "#instrumento-relatos", swap: "outerHTML" %>
 
 <h2>Breve relato</h2>
 

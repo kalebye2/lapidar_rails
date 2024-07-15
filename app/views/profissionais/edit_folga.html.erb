@@ -1,0 +1,7 @@
+<% titulo "Editar folga" %>
+
+<h1>Editar folga de <%= @profissional.nome_abreviado %></h1>
+
+<%= render "navbar", profissional: @profissional %>
+
+<%= render "profissional_folgas/form", profissional_folga: @profissional_folga %>

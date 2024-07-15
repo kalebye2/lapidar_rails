@@ -1,0 +1,40 @@
+<% titulo "Folgas dos profissionais" %>
+<p style="color: green"><%= notice %></p>
+
+<h1>Folgas dos profissionais</h1>
+
+<nav class="navbar navcenter">
+  <%= hx_form get: profissional_folgas_path, target: "#profissional_folgas", select: "#profissional_folgas", swap: "outerHTML", replace_url: true do %>
+    <h3>Data de início da folga</h3>
+    <%= inputs_de_ate @de, @ate %>
+
+    <br>
+    <label for="profissional">Profissional</label>
+    <select id="profissional" name="profissional">
+      <option value="">TODOS</option>
+      <% Profissional.all.each do |profissional| %>
+        <option value="<%= profissional.id %>"><%= profissional.descricao_completa %></option>
+      <% end %>
+    </select>
+
+    <br>
+    <label for="motivo">Motivo</label>
+    <select id="motivo" name="motivo">
+      <option value="">TODOS</option>
+      <% ProfissionalFolgaMotivo.all.each do |motivo| %>
+        <option value="<%= motivo.id %>"><%= motivo.motivo.upcase %></option>
+      <% end %>
+    </select>
+
+    <br>
+
+      <input type="submit" value="Atualizar">
+    <% end %>
+</nav>
+
+<br>
+<nav class="navbar navcenter">
+  <%= link_to "Adicionar", new_profissional_folga_path, class: "icon-plus button" %>
+</nav>
+
+<%= render "profissional_folgas_container", profissional_folgas: @profissional_folgas, profissional_folgas_totais: @profissional_folgas_totais %>

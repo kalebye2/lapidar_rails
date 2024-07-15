@@ -17,8 +17,8 @@
 
 :root {
 	/* principais cores do tema */
-	--main-color: darkred;
-	--secondary-color: #aa1111;
+	--main-color: #ba0515;
+	--secondary-color: #54131b;
 	--light-color: #ff7777;
 	--main-light-color: white;
 	--main-dark-color: black;
@@ -40,77 +40,103 @@
 	--doc-shade-color: #111;
 	--doc-a-color: var(--main-color);
 
-	--table-dark-color: #333;
-	--table-medium-color: #777;
+	--table-dark-color: #333344;
+	--table-medium-color: yellow;
 	--table-light-color: #fff;
-	--table-dark-alt-color: #111;
-	--table-light-alt-color: #eee;
-	--table-medium-alt-color: #7b7b7b;
-	--table-dark-highlight-color: #000;
-	--table-light-highlight-color: #fee;
+	--table-dark-alt-color: #222224;
+	--table-light-alt-color: #fee5e9;
+	--table-medium-alt-color: blue;
+	--table-dark-highlight-color: #222244;
+	--table-light-highlight-color: #fcadb7;
+
+	/* paleta de cores */
+	--doc-blue-light: #9cc0e5;
+	--doc-blue-medium-light: #79aadb;
+	--doc-blue-medium: #0a4d9d;
+	--doc-blue-dark: #191354;
+	--doc-red-light: #e59c9f;
+	--doc-red-medium-light: #dd6a7b;
+	--doc-red-medium: #c12c42;
+	--doc-red-dark: #541319;
+	--doc-yellow-light: #e5ce9c;
+	--doc-yellow-medium-light: #e0bd5a;
+	--doc-yellow-medium: #c1982c;
+	--doc-yellow-dark: #542813;
+	--doc-green-light: #b0e59c;
+	--doc-green-medium-light: #6dcb82;
+	--doc-green-medium: #2a8338;
+	--doc-green-dark: #13541e;
+	--doc-purple-light: #e09ce5;
+	--doc-purple-medium-light: #b855e9;
+	--doc-purple-medium: #7824a0;
+	--doc-purple-dark: #2e1354;
+	--doc-cyan-light: #cdfaf8;
+	--doc-cyan-medium-light: #6ee8c1;
+	--doc-cyan-medium: #2ab37a;
+	--doc-cyan-dark: #135445;
 
 	/* para cadastros no geral */
-	--male-light-color: lightblue;
-	--male-medium-color: darkcyan;
-	--male-dark-color: #005588;
-	--female-light-color: pink;
-	--female-medium-color: firebrick;
-	--female-dark-color: darkred;
+	--male-light-color: var(--doc-blue-light);
+	--male-medium-color: var(--doc-blue-medium);
+	--male-dark-color: var(--doc-blue-dark);
+	--female-light-color: var(--doc-red-light);
+	--female-medium-color: var(--doc-red-medium);
+	--female-dark-color: var(--doc-red-dark);
 	
-	--profissional-light-color: lightyellow;
-	--profissional-medium-color: orange;
-	--profissional-dark-color: darkgoldenrod;
+	--profissional-light-color: var(--doc-yellow-light);
+	--profissional-medium-color: var(--doc-yellow-medium);
+	--profissional-dark-color: var(--doc-yellow-dark);
 
 	/* cores de acompanhamentos */
-	--acompanhamento-em-andamento-light-color: lightcyan;
-	--acompanhamento-em-andamento-dark-color: darkslateblue;
+	--acompanhamento-em-andamento-light-color: var(--doc-green-light);
+	--acompanhamento-em-andamento-dark-color: var(--doc-green-dark);
 	--acompanhamento-finalizado-opacity: .7;
-	--acompanhamento-finalizado-alta-light-color: lightgreen;
-	--acompanhamento-finalizado-alta-dark-color: darkgreen;
-	--acompanhamento-finalizado-encaminhamento-light-color: lightblue;
-	--acompanhamento-finalizado-encaminhamento-dark-color: darkcyan;
-	--acompanhamento-finalizado-questoes-financeiras-light-color: lightyellow;
-	--acompanhamento-finalizado-questoes-financeiras-dark-color: darkgoldenrod;
-	--acompanhamento-finalizado-desistencia-light-color: pink;
-	--acompanhamento-finalizado-desistencia-dark-color: darkred;
+	--acompanhamento-finalizado-alta-light-color: var(--doc-blue-light);
+	--acompanhamento-finalizado-alta-dark-color: var(--doc-blue-dark);
+	--acompanhamento-finalizado-encaminhamento-light-color: var(--doc-purple-light);
+	--acompanhamento-finalizado-encaminhamento-dark-color: var(--doc-purple-dark);
+	--acompanhamento-finalizado-questoes-financeiras-light-color: var(--doc-yellow-light);
+	--acompanhamento-finalizado-questoes-financeiras-dark-color: var(--doc-yellow-dark);
+	--acompanhamento-finalizado-desistencia-light-color: var(--doc-red-light);
+	--acompanhamento-finalizado-desistencia-dark-color: var(--doc-red-dark);
 
 	/* cores de atendimentos */
 	--atendimento-default-bg-color: white;
 	--atendimento-default-text-color: black;
 	--atendimento-default-shade-color: gray;
 	--atendimento-default-highlight-color: lightgray;
-	--atendimento-a-ocorrer-light-color: lightblue;
-	--atendimento-a-ocorrer-medium-color: #3406cc;
-	--atendimento-a-ocorrer-medium-light-color: #ddddff;
-	--atendimento-a-ocorrer-dark-color: darkblue;
-	--atendimento-realizado-light-color: lightgreen;
-	--atendimento-realizado-medium-color: green;
-	--atendimento-realizado-medium-light-color: #ddffdd;
-	--atendimento-realizado-dark-color: darkgreen;
-	--atendimento-nao-realizado-light-color: pink;
-	--atendimento-nao-realizado-medium-color: darkred;
-	--atendimento-nao-realizado-medium-light-color: #ffdddd;
-	--atendimento-nao-realizado-dark-color: #400;
-	--atendimento-em-andamento-light-color: #ddd;
-	--atendimento-em-andamento-medium-color: #777;
-	--atendimento-em-andamento-medium-light-color: #ccc;
-	--atendimento-em-andamento-dark-color: #333;
-	--atendimento-em-breve-light-color: #ffffde;
-	--atendimento-em-breve-medium-color: orange;
-	--atendimento-em-breve-medium-light-color: #ffffcc;
-	--atendimento-em-breve-dark-color: darkorange;
-	--atendimento-na-hora-light-color: #EEA7A9;
-	--atendimento-na-hora-medium-color: #CD2367;
-	--atendimento-na-hora-medium-light-color: #DD6499;
-	--atendimento-na-hora-dark-color: #420021;
+	--atendimento-a-ocorrer-light-color: var(--doc-blue-light);
+	--atendimento-a-ocorrer-medium-color: var(--doc-blue-medium);
+	--atendimento-a-ocorrer-medium-light-color: var(--doc-blue-medium-light);
+	--atendimento-a-ocorrer-dark-color: var(--doc-blue-dark);
+	--atendimento-realizado-light-color: var(--doc-green-light);
+	--atendimento-realizado-medium-color: var(--doc-green-medium);
+	--atendimento-realizado-medium-light-color: var(--doc-green-medium-light);
+	--atendimento-realizado-dark-color: var(--doc-green-dark);
+	--atendimento-nao-realizado-light-color: var(--doc-red-light);
+	--atendimento-nao-realizado-medium-color: var(--doc-red-medium);
+	--atendimento-nao-realizado-medium-light-color: var(--doc-red-medium-light);
+	--atendimento-nao-realizado-dark-color: var(--doc-red-dark);
+	--atendimento-em-andamento-light-color: var(--doc-cyan-light);
+	--atendimento-em-andamento-medium-color: var(--doc-cyan-medium);
+	--atendimento-em-andamento-medium-light-color: var(--doc-cyan-medium-light);
+	--atendimento-em-andamento-dark-color: var(--doc-cyan-dark);
+	--atendimento-em-breve-light-color: var(--doc-yellow-light);
+	--atendimento-em-breve-medium-color: var(--doc-yellow-medium);
+	--atendimento-em-breve-medium-light-color: var(--doc-yellow-medium-light);
+	--atendimento-em-breve-dark-color: var(--doc-yellow-dark);
+	--atendimento-na-hora-light-color: var(--doc-purple-light);
+	--atendimento-na-hora-medium-color: var(--doc-purple-medium);
+	--atendimento-na-hora-medium-light-color: var(--doc-purple-medium-light);
+	--atendimento-na-hora-dark-color: var(--doc-purple-dark);
 
 	/* cores do financeiro */
-	--financeiro-row-odd-bg-light: white;
-	--financeiro-row-odd-bg-dark: #222;
-	--financeiro-row-even-bg-light: #ddffdd;
-	--financeiro-row-even-bg-dark: darkgreen;
-	--financeiro-highlight-bg-light: lightgreen;
-	--financeiro-highlight-bg-dark: green;
+	--financeiro-row-odd-bg-light: #d5fdd0;
+	--financeiro-row-odd-bg-dark: #344433;
+	--financeiro-row-even-bg-light: #ffffff;
+	--financeiro-row-even-bg-dark: #222222;
+	--financeiro-highlight-bg-light: #9cfb8e;
+	--financeiro-highlight-bg-dark: #264422;
 
 
 	/* fontes (talvez alterar com temas?) */
@@ -131,8 +157,8 @@
 	--doc-a-color: var(--main-color);
 	--doc-input-bg-color: lightgray;
 	--doc-input-bg-focus-color: white;
-	--doc-input-border-color: blue;
-	--doc-input-border-highlight-color: darkblue;
+	--doc-input-border-color: var(--doc-blue-dark);
+	--doc-input-border-highlight-color: var(--doc-blue-light);
 
 	background-color: var(--alt-color);
 	--button-bg-color: var(--button-light-color);
@@ -208,8 +234,8 @@
 	--doc-a-color: var(--light-color);
 	--doc-input-bg-color: #222;
 	--doc-input-bg-focus-color: #000;
-	--doc-input-border-color: gold;
-	--doc-input-border-highlight-color: yellow;
+	--doc-input-border-color: var(--doc-blue-light);
+	--doc-input-border-highlight-color: var(--doc-blue-medium-light);
 
 	--button-bg-color: var(--button-dark-color);
 	--button-bg-alt-color: var(--button-dark-color-2);
@@ -245,29 +271,29 @@
 	--acompanhamento-finalizado-desistencia-text-color: var(--acompanhamento-finalizado-desistencia-light-color);
 
 	/* cores de atendimentos */
-	--atendimento-a-ocorrer-bg-color: var(--atendimento-a-ocorrer-medium-color);
+	--atendimento-a-ocorrer-bg-color: var(--atendimento-a-ocorrer-dark-color);
 	--atendimento-a-ocorrer-shade-color: var(--atendimento-a-ocorrer-dark-color);
-	--atendimento-a-ocorrer-highlight-color: var(--atendimento-a-ocorrer-dark-color);
+	--atendimento-a-ocorrer-highlight-color: var(--atendimento-a-ocorrer-medium-color);
 	--atendimento-a-ocorrer-text-color: var(--atendimento-a-ocorrer-light-color);
-	--atendimento-realizado-bg-color: var(--atendimento-realizado-medium-color);
+	--atendimento-realizado-bg-color: var(--atendimento-realizado-dark-color);
 	--atendimento-realizado-shade-color: var(--atendimento-realizado-dark-color);
-	--atendimento-realizado-highlight-color: var(--atendimento-realizado-dark-color);
+	--atendimento-realizado-highlight-color: var(--atendimento-realizado-medium-color);
 	--atendimento-realizado-text-color: var(--atendimento-realizado-light-color);
-	--atendimento-nao-realizado-bg-color: var(--atendimento-nao-realizado-medium-color);
+	--atendimento-nao-realizado-bg-color: var(--atendimento-nao-realizado-dark-color);
 	--atendimento-nao-realizado-shade-color: var(--atendimento-nao-realizado-dark-color);
-	--atendimento-nao-realizado-highlight-color: var(--atendimento-nao-realizado-dark-color);
+	--atendimento-nao-realizado-highlight-color: var(--atendimento-nao-realizado-medium-color);
 	--atendimento-nao-realizado-text-color: var(--atendimento-nao-realizado-light-color);
-	--atendimento-em-andamento-bg-color: var(--atendimento-em-andamento-medium-color);
+	--atendimento-em-andamento-bg-color: var(--atendimento-em-andamento-dark-color);
 	--atendimento-em-andamento-shade-color: var(--atendimento-em-andamento-dark-color);
-	--atendimento-em-andamento-highlight-color: var(--atendimento-em-andamento-dark-color);
+	--atendimento-em-andamento-highlight-color: var(--atendimento-em-andamento-medium-color);
 	--atendimento-em-andamento-text-color: var(--atendimento-em-andamento-light-color);
-	--atendimento-em-breve-bg-color: var(--atendimento-em-breve-medium-color);
+	--atendimento-em-breve-bg-color: var(--atendimento-em-breve-dark-color);
 	--atendimento-em-breve-shade-color: var(--atendimento-em-breve-dark-color);
-	--atendimento-em-breve-highlight-color: var(--atendimento-em-breve-dark-color);
+	--atendimento-em-breve-highlight-color: var(--atendimento-em-breve-medium-color);
 	--atendimento-em-breve-text-color: var(--atendimento-em-breve-light-color);
-	--atendimento-na-hora-bg-color: var(--atendimento-na-hora-medium-color);
+	--atendimento-na-hora-bg-color: var(--atendimento-na-hora-dark-color);
 	--atendimento-na-hora-shade-color: var(--atendimento-na-hora-dark-color);
-	--atendimento-na-hora-highlight-color: var(--atendimento-na-hora-dark-color);
+	--atendimento-na-hora-highlight-color: var(--atendimento-na-hora-medium-color);
 	--atendimento-na-hora-text-color: var(--atendimento-na-hora-light-color);
 
 	--financeiro-row-odd-bg: var(--financeiro-row-odd-bg-dark);
@@ -292,7 +318,7 @@
   }
 
   .wday-0 {
-	  background-color: pink;
+	  background-color: var(--doc-red-light);
   }
   .wday-1 {}
   .wday-2 {}

@@ -1,0 +1,9 @@
+<% @params = @params || {} %>
+<div id="<%= dom_id profissional_folga %>" class="card">
+  <h2 class="icon-user-tie"><%= profissional_folga.profissional.descricao_completa %></h2>
+  <h3 class="icon-calendar"><%= render_data_periodo_brasil profissional_folga.data_inicio, profissional_folga.data_final %></h3>
+  <p><%= profissional_folga.profissional_folga_motivo&.motivo&.upcase %></p>
+
+  <%= link_to "Editar", edit_profissional_folga_path(profissional_folga), class: "icon-pencil" %>
+  <%= hx_link "Excluir", profissional_folga_path(profissional_folga, authenticity_token: form_authenticity_token.to_s, **@params), verb: :delete, class: "icon-bin", select: "#profissional_folgas", target: "#profissional_folgas", swap: "outerHTML" %>
+</div>

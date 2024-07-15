@@ -30,7 +30,7 @@ CPF <%= @recebimento.pagante.render_cpf %>,
 a quantia de
 **<%= render_dinheiro_centavos @recebimento.valor %>**
 referente ao serviço de
-<%= @recebimento.profissional.servico %><%= responsavel ? " para **#{@recebimento.beneficiario.nome_completo}**#{@recebimento.beneficiario.cpf? ? ", CPF #{@recebimento.beneficiario.render_cpf}" : ""}" : "" %>.
+<%= @recebimento.acompanhamento.tipo.upcase %><%= responsavel ? " para **#{@recebimento.beneficiario.nome_completo}**#{@recebimento.beneficiario.cpf? ? ", CPF #{@recebimento.beneficiario.render_cpf}" : ""}" : "" %>.
 
 \vspace{5em}
 

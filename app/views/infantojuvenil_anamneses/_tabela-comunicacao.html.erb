@@ -33,7 +33,7 @@
 <% end %>
 
 <% dict_text.each do |k,v| %>
-  <%== hx_tr_text patch: caminho_ajax, name: "comunicacao[#{k}]", th: (h v), value: (html_escape comunicacao.attributes[k]), id: "#{id = "#{cl}-#{k}"}", target: "##{id}", select: "##{id}", swap: "outerHTML", placeholder: "Descreva...", html_class: cl %>
+  <%== hx_tr_text patch: caminho_ajax, name: "comunicacao[#{k}]", th: (h v), value: (html_escape comunicacao.attributes[k]), id: "#{id = "#{cl}-#{k}"}", target: "##{id}", select: "##{id}", swap: "outerHTML", placeholder: "Descreva...", html_class: cl, value: comunicacao.attributes[k.to_s] %>
 <% end %>
 
 <% dict_textarea.each do |k,v| %>

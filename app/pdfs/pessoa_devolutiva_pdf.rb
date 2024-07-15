@@ -34,7 +34,7 @@ class PessoaDevolutivaPdf < BasePdf
     markup_tabela_lado_a_lado @pessoa_devolutiva.dados_principais.compact.map { |k,v| [k&.to_s&.humanize, v] }
     move_down 10
 
-    markup "<h1>Feedback do responsável</h1>", @markup_options
+    markup "<h1>Feedback</h1>", @markup_options
     markup markdown_to_html(@pessoa_devolutiva.substituir_template_por_dados :feedback_responsavel), @markup_options
     move_down 7
 

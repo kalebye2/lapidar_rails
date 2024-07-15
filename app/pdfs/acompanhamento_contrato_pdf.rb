@@ -12,6 +12,7 @@ class AcompanhamentoContratoPdf < BasePdf
     move_down 10
     body
     footer
+    number_pages "Página <page> de <total>", at: [bounds.left, -10], align: :center
   end
 
   def title

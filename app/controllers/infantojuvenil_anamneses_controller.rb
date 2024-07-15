@@ -6,12 +6,11 @@ class InfantojuvenilAnamnesesController < ApplicationController
   include Pagy::Backend
 
   def index
-    @infantojuvenil_anamneses = InfantojuvenilAnamnese.all
+    # @infantojuvenil_anamneses = InfantojuvenilAnamnese.all
 
-    @de = params[:de]&.to_date || @infantojuvenil_anamneses.joins(:atendimento).minimum("atendimentos.data")
-    @ate = params[:ate]&.to_date || @infantojuvenil_anamneses.joins(:atendimento).maximum("atendimentos.data")
+    set_de_ate Date.current.beginning_of_year, Date.current.end_of_year
 
-    @infantojuvenil_anamenses = @infantojuvenil_anamneses.do_periodo(@de..@ate)
+    @infantojuvenil_anamneses = InfantojuvenilAnamnese.do_periodo(@de..@ate)
 
     if params[:pessoa].present?
       @infantojuvenil_anamneses = @infantojuvenil_anamneses.query_pessoa_like_nome(params[:pessoa])
@@ -30,11 +29,20 @@ class InfantojuvenilAnamnesesController < ApplicationController
   end
 
   def show
+    nome_documento = "anamnese-infantojuvenil_#{@infantojuvenil_anamnese.pessoa.nome_completo.parameterize}_#{@infantojuvenil_anamnese.atendimento.data}"
     respond_to do |format|
       format.html
+
       format.md do
         response.headers["Content-Type"] = "text/markdown"
-        response.headers["Content-Disposition"] = "attachment; filename=anamnese-infantojuvenil_#{@infantojuvenil_anamnese.pessoa.nome_completo.parameterize}_#{@infantojuvenil_anamnese.atendimento.data}.md"
+        response.headers["Content-Disposition"] = "attachment; filename=#{nome_documento}.md"
+      end
+
+      format.pdf do
+        send_data InfantojuvenilAnamnesePdf.new(@infantojuvenil_anamnese).render,
+          filename: "#{nome_documento}.pdf",
+          type: "application/pdf",
+          disposition: :inline
       end
       # format.md do
       #   response.headers['Content-Type'] = "text/markdown"

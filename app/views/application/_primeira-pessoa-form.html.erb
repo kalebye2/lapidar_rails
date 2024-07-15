@@ -1,0 +1,198 @@
+<h2>Registrar cadastro principal<h2>
+<%= hx_form post: primeira_pessoa_cadastro_path, target: "#configurar-aplicacao" do %>
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+
+  <% if pessoa.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(pessoa.errors.count, "error") %> prohibited this pessoa from being saved:</h2>
+
+      <ul>
+      <% pessoa.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid-3 pessoa-nome">
+    <div class="field">
+      <label for="pessoa[nome]">Nome</label>
+      <input type="text" name="pessoa[nome]" id="pessoa[nome]">
+    </div>
+
+    <div class="field">
+      <label for="pessoa[nome_do_meio]">Nome do meio</label>
+      <input type="text" name="pessoa[nome_do_meio]" id="pessoa[nome_do_meio]">
+    </div>
+
+    <div class="field">
+      <label for="pessoa[sobrenome]">Sobrenome</label>
+      <input type="text" name="pessoa[sobrenome]" id="pessoa[sobrenome]">
+    </div>
+  </div>
+
+  <div class="grid-2 pessoa-documentos">
+    <div class="field">
+      <label for="pessoa[cpf]" class="icon-profile">CPF</label>
+      <input type="text" name="pessoa[cpf]" id="pessoa[cpf]">
+    </div>
+
+    <div class="field">
+      <label for="pessoa[rg]" class="icon-profile">RG</label>
+      <input type="text" name="pessoa[rg]" id="pessoa[rg]">
+    </div>
+  </div>
+
+  <div class="grid-3 pessoa-telefone">
+    <div class="field">
+      <label for="pessoa[fone_cod_pais]" class="icon-phone">Fone código do país</label>
+      <input type="text" name="pessoa[fone_cod_pais]" id="pessoa[fone_cod_pais]">
+    </div>
+
+    <div class="field">
+      <label for="pessoa[fone_cod_area]" class="icon-phone">Fone código área</label>
+      <input type="text" name="pessoa[fone_cod_area]" id="pessoa[fone_cod_area]">
+    </div>
+
+    <div class="field">
+      <label for="pessoa[fone_num]" class="icon-phone">Número de telefone</label>
+      <input type="text" name="pessoa[fone_num]" id="pessoa[fone_num]">
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="pessoa[feminino]" class="icon-man-woman">Sexo</label>
+    <select name="pessoa[feminino]" id="pessoa[feminino]">
+      <option value="0">Masculino</option>
+      <option value="1">Feminino</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="pessoa[civil_estado_id]" class="icon-heart">Estado Civil</label>
+    <select name="pessoa[civil_estado_id]" id="pessoa[civil_estado_id]">
+      <option value=""></option>
+      <% CivilEstado.all.each do |civil_estado| %>
+        <option value="<%= civil_estado.id %>"><%= civil_estado.estado.upcase %></option>
+      <% end %>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="pessoa[instrucao_grau_id]" class="icon-library">Grau de instrução</label>
+    <select name="pessoa[instrucao_grau_id]" id="pessoa[instrucao_grau_id]">
+      <option value=""></option>
+      <% InstrucaoGrau.all.each do |instrucao_grau| %>
+        <option value="<%= instrucao_grau.id %>"><%= instrucao_grau.grau.upcase %></option>
+      <% end %>
+    </select>
+  </div>
+
+  <div class="grid-3 pessoa-nascimento">
+    <div class="field">
+      <label for="pessoa[data_nascimento]" class="icon-cake">Data de nascimento</label>
+      <input type="date" name="pessoa[data_nascimento" id="pessoa[data_nascimento]">
+    </div>
+
+    <div class="field">
+      <label for="pessoa[nascimento_cidade]" class="icon-cake">Cidade de nascimento</label>
+      <input type="text" name="pessoa[nascimento_cidade" id="pessoa[nascimento_cidade]">
+    </div>
+
+    <div class="field">
+      <label for="pessoa[nascimento_estado]" class="icon-cake">Estado de nascimento</label>
+      <input type="text" name="pessoa[nascimento_estado" id="pessoa[nascimento_estado]">
+    </div>
+
+    <div class="field">
+      <label for="pessoa[nascimento_pais_id]">País natal</label>
+      <select name="pessoa[nascimento_pais_id]" id="pessoa[nascimento_pais_id]">
+        <option value=""></option>
+        <% Pais.order(nome: :asc).each do |pais| %>
+          <option value="<%= pais.id %>"><%= pais.nome %></option>
+        <% end %>
+      </select>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="pessoa[email]" class="icon-mail">E-mail</label>
+    <input type="email" name="pessoa[email]" id="pessoa[email]">
+  </div>
+
+  <div class="grid-3 pessoa-endereco">
+    <div class="field">
+      <label for="pessoa[pais_id]" class="icon-location">País</label>
+      <select name="pessoa[pais_id]" id="pessoa[pais_id]">
+        <option value=""></option>
+        <% Pais.order(nome: :asc).each do |pais| %>
+          <option value="<%= pais.id %>"><%= pais.nome %></option>
+        <% end %>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="pessoa[endereco_estado]" class="icon-location">Estado</label>
+      <input type="text" name="pessoa[endereco_estado]" id="pessoa[endereco_estado]">
+    </div>
+
+    <div class="field">
+      <label for="pessoa[endereco_cidade]" class="icon-location">Cidade</label>
+      <input type="text" name="pessoa[endereco_cidade]" id="pessoa[endereco_cidade]">
+    </div>
+
+    <div class="field">
+      <label for="pessoa[endereco_bairro]" class="icon-location">Bairro</label>
+      <input type="text" name="pessoa[endereco_bairro]" id="pessoa[endereco_bairro]">
+    </div>
+
+    <div class="field">
+      <label for="pessoa[endereco_cep]" class="icon-location">CEP</label>
+      <input type="text" name="pessoa[endereco_cep]" id="pessoa[endereco_cep]">
+    </div>
+
+    <div class="field">
+      <label for="pessoa[endereco_logradouro]" class="icon-location">Logradouro</label>
+      <input type="text" name="pessoa[endereco_logradouro]" id="pessoa[endereco_logradouro]">
+    </div>
+
+    <div class="field">
+      <label for="pessoa[endereco_numero]" class="icon-location">Número</label>
+      <input type="text" name="pessoa[endereco_numero]" id="pessoa[endereco_numero]">
+    </div>
+
+    <div class="field">
+      <label for="pessoa[endereco_complemento]" class="icon-location">Complemento</label>
+      <input type="text" name="pessoa[endereco_complemento]" id="pessoa[endereco_complemento]">
+    </div>
+  </div>
+
+  <div class="field">
+      <label for="pessoa[profissao]" class="icon-user-tie">Profissão</label>
+      <input type="text" name="pessoa[profissao]" id="pessoa[profissao]">
+  </div>
+
+  <div class="field">
+      <label for="pessoa[preferencia_contato]" class="icon-user-tie">Preferência de contato</label>
+      <input type="text" name="pessoa[preferencia_contato]" id="pessoa[preferencia_contato]">
+  </div>
+
+  <div class="field">
+    <label for="pessoa[pessoa_tratamento_pronome_id]" class="">Pronome de tratamento</label>
+    <select name="pessoa[pessoa_tratamento_pronome_id]" id="pessoa[pessoa_tratamento_pronome_id]">
+      <option value=""></option>
+      <% PessoaTratamentoPronome.all.each do |pessoa_tratamento_pronome| %>
+        <option value="<%= pessoa_tratamento_pronome.id %>"><%= pessoa_tratamento_pronome.pronome_masculino %>/<%= pessoa_pronome_tratamento.pronome_feminino %></option>
+      <% end %>
+    </select>
+  </div>
+
+  <input type="checkbox" name="pessoa[usa_whatsapp]" id="pessoa[usa_whatsapp]">
+  <label for="pessoa[usa_whatsapp]">Usa Whatsapp</label>
+  <input type="checkbox" name="pessoa[usa_telegram]" id="pessoa[usa_telegram]">
+  <label for="pessoa[usa_telegram]">Usa Telegram</label>
+
+  <div class="actions">
+    <input type="submit" value="Confirmar">
+  </div>
+<% end %>

@@ -5,7 +5,7 @@
     <%= render_data_brasil ultima_data %>
     <%= ultima_data.end_of_month == (Date.today - 1.month).end_of_month ? "(mês passado)" : "" %>
     <%= if ultima_data == Date.today then "(hoje)" end %>
-    </caption>
+  </caption>
     </thead>
     <tr>
       <th>Paciente</th>
@@ -28,6 +28,7 @@
           <tr>
             <td class="center">
               <%= acompanhamento.pessoa.nome_abreviado %>
+              <%= acompanhamento.pessoa_responsavel.nome_abreviado.insert(0, "(resp.: ").insert(-1, ")") unless acompanhamento.pessoa_responsavel.blank? %>
             </td>
             <td>
               <%= acompanhamento.tipo.upcase %>

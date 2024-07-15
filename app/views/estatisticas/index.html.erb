@@ -70,7 +70,7 @@
     <input type="submit" value="Atualizar">
   </form>
 
-  <%= column_chart @atendimentos.group(:data).count.map { |k,v| [render_data_brasil(k), v] }, title: "Atendimentos #{render_data_brasil params[:atendimentos_desde]} a #{render_data_brasil params[:atendimentos_ate]}", xtitle: "Data", ytitle: "Nº de atendimentos", download: {filename: "lapidar_estatisticas_atendimentos_#{params[:atendimentos_desde]}_#{params[:atendimentos_ate]}", background: "#FFFFFF"} %>
+  <%= line_chart @atendimentos.group(:data).count.map { |k,v| [render_data_brasil(k), v] }, title: "Atendimentos #{render_data_brasil params[:atendimentos_desde]} a #{render_data_brasil params[:atendimentos_ate]}", xtitle: "Data", ytitle: "Nº de atendimentos", download: {filename: "lapidar_estatisticas_atendimentos_#{params[:atendimentos_desde]}_#{params[:atendimentos_ate]}", background: "#FFFFFF"} %>
 
   <div id="estatisticas-atendimentos-tipos">
     <h3>Tipos de atendimento realizados</h3>
@@ -122,7 +122,7 @@
 
   <h3>Recebimentos</h3>
   Total: <b><%= render_dinheiro_centavos @recebimentos.sum(:valor) %></b>
-  <%= column_chart @recebimentos.group(:data).sum("valor / 100.0").map { |k,v| [render_data_brasil(k), v] }, prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true, title: "Recebimentos #{render_data_brasil params[:financeiro_desde]} a #{render_data_brasil params[:financeiro_ate]}", xtitle: "Data", ytitle: "Total em R$" %>
+  <%= line_chart @recebimentos.group(:data).sum("valor / 100.0").map { |k,v| [render_data_brasil(k), v] }, prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true, title: "Recebimentos #{render_data_brasil params[:financeiro_desde]} a #{render_data_brasil params[:financeiro_ate]}", xtitle: "Data", ytitle: "Total em R$" %>
 
   <h3>Repasses aos profissionais</h3>
   Total: <b><%= render_dinheiro_centavos @repasses.sum(:valor) %></b>
@@ -130,7 +130,7 @@
 
   <h3>Valores de atendimentos</h3>
   Total: <b><%= render_dinheiro_centavos @atendimento_valores.sum(:valor) %>
-  <%= column_chart @atendimento_valores.group(:data).sum("valor / 100.0").map { |k,v| [render_data_brasil(k.to_date), v] }, prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true %>
+  <%= line_chart @atendimento_valores.group(:data).sum("valor / 100.0").map { |k,v| [render_data_brasil(k.to_date), v] }, prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true %>
 </div>
 
 <div id="estatisticas-cadastros">

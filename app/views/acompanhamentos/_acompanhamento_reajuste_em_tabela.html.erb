@@ -9,6 +9,9 @@
         <%= link_to "Ver", acompanhamento_reajuste, class: "icon-eye" %>
       </li>
       <li>
+        <%= link_to "PDF", acompanhamento_reajuste_path(acompanhamento_reajuste, format: :pdf), class: "icon-file-pdf", target: :blank %>
+      </li>
+      <li>
         <%= link_to "Markdown", acompanhamento_reajuste_path(acompanhamento_reajuste, format: :md), class: "icon-file-empty" %>
       </li>
     </ul>

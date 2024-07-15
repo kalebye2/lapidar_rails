@@ -7,6 +7,11 @@
     <% if !usuario_atual.nil? && (usuario_atual.corpo_clinico? || usuario_atual.secretaria?)%>
       <li>
         <%= link_to "Cadastros", pessoas_path, class: "icon-user" %>
+        <ul>
+          <li>
+            <%= link_to "Novo cadastro", new_pessoa_path, class: "icon-plus" %>
+          </li>
+        </ul>
       </li>
     <% end %>
 
@@ -27,6 +32,10 @@
           </li>
           <li>
             <%= link_to "Estatísticas", estatisticas_path, class: "icon-chart3" %>
+          </li>
+
+          <li>
+            <%= link_to "Folgas", profissional_folgas_path, class: "icon-lifebuoy" %>
           </li>
         <% end %>
       </ul>
@@ -88,7 +97,7 @@
         </li>
       <% end %>
     <% end %>
-    <% if BibliotecaObra.count > 1 || usuario_atual.secretaria? %>
+    <% if BibliotecaObra.count > 1 || usuario_atual&.secretaria? %>
       <li>
         <%= link_to "Biblioteca", biblioteca_path, class: "icon-books" %>
       </li>
@@ -119,6 +128,11 @@
         <% end %>
       </li>
     <% end %>
+    <li class="navbar-li" style="float:right;color:white;">
+      <button id="btn-theme-switch" class="button">
+        Mudar tema
+      </button>
+    </li>
   </ul>
 </nav>
 

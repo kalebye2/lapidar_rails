@@ -105,6 +105,14 @@
 	}
 }
 
+.atendimento-em-andamento {
+	--bg-color: var(--atendimento-em-andamento-bg-color);
+	--border-color: var(--atendimento-em-andamento-shade-color);
+	--shade-color: var(--atendimento-em-andamento-shade-color);
+	--highlight-color: var(--atendimento-em-andamento-highlight-color);
+	--text-color: var(--atendimento-em-andamento-text-color);
+}
+
 .tabela-atendimentos {
 	--header-bg: var(--acompanhamento-em-andamento-bg-color);
 	--header-color: var(--acompanhamento-em-andamento-color);
@@ -159,6 +167,11 @@
 .tr-atendimento-na-hora {
 	--bg-color: var(--atendimento-na-hora-bg-color);
 	--text-color: var(--atendimento-na-hora-text-color);
+}
+
+.tr-atendimento-em-andamento {
+	--bg-color: var(--atendimento-em-andamento-bg-color);
+	--text-color: var(--atendimento-em-andamento-text-color);
 }
 
 textarea {

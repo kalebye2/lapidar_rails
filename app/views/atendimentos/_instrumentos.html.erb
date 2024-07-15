@@ -16,7 +16,12 @@
     <button id="<%= dom_id(atendimento) %>_new_instrumento_relato" style="width:80%;" <%== hx_set get: new_instrumento_relato_atendimento_path(id: atendimento.id, ajax: true, table: true), target: "##{dom_id(atendimento)}_new_instrumento_relato", swap: "outerHTML", select: "##{dom_id(atendimento)}_new_instrumento_relato" %>>
       +
     </button>
-    <%= link_to "ver todos", instrumentos_usados_atendimento_path(atendimento) %>
+    <%= link_to "ver todos", instrumentos_usados_atendimento_path(atendimento), class: "text-center" %>
   </center>
   <%#== hx_select options: Instrumento.order(nome: :asc).map { |instrumento| [instrumento.nome, instrumento.id]}, post: instrumento_relatos_path(ajax: true, authenticity_token: form_authenticity_token.to_s) %>
+
+  <% if atendimento.infantojuvenil_anamnese %>
+    <hr>
+    <%= link_to "Anamnese infantojuvenil", infantojuvenil_anamnese_path(atendimento.infantojuvenil_anamnese) %>
+  <% end %>
 <% end %>

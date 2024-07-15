@@ -1,0 +1,37 @@
+<h2>Registrar profissional administrador - <%= @profissional.pessoa.nome_completo %></h2>
+<div class="profissional-form">
+  <%= hx_form post: primeiro_profissional_cadastro_path, target: "#configurar-aplicacao" do %>
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+    <input type="hidden" name="profissional[pessoa_id]" value="<%= @profissional.pessoa.id %>">
+    <input type="hidden" name="profissional[admin]" value="true">
+    <input type="hidden" name="profissional[desligado]" value="false">
+    <input type="hidden" name="profissional[ativo]" value="true">
+    <input type="hidden" name="profissional[realiza_atendimentos]" value="true">
+
+    <div class="field">
+      <label for="profissional[funcao_id]">Função</label>
+      <select name="profissional[funcao_id]" id="profissional[funcao_id]">
+        <% ProfissionalFuncao.all.order(funcao: :asc).each do |profissional_funcao| %>
+          <option value="<%= profissional_funcao.id %>"><%= profissional_funcao.funcao.upcase %></option>
+        <% end %>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="profissional[documento_regiao_id]">Região do documento (número)</label>
+      <input type="text" name="profissional[documento_regiao_id]" id="profissional[documento_regiao_id]">
+    </div>
+
+    <div class="field">
+      <label for="profissional[documento_valor]">Nº do registro</label>
+      <input type="text" name="profissional[documento_valor]" id="profissional[documento_valor]">
+    </div>
+
+    <div class="field">
+      <label for="profissional[chave_pix_01]">Chave PIX principal</label>
+      <input type="text" name="profissional[chave_pix_01]" id="profissional[chave_pix_01]">
+    </div>
+
+    <input type="submit" value="Confirmar">
+  <% end %>
+</div>

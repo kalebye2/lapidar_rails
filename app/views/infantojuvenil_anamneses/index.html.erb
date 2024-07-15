@@ -10,13 +10,9 @@
 </nav>
 
 <nav class="navbar navcenter">
-  <%= hx_form get: infantojuvenil_anamneses_path, target: "#infantojuvenil-anamneses-container", select: "#infantojuvenil-anamneses-container", swap: "outerHTML", trigger: "change", replace_url: true do %>
-    <div>
-      <label for="periodo">Período</label>
-      <input name="de" type="date" value="<%= params[:de]&.to_date %>">
-      a
-      <input name="ate" type="date" value="<%= params[:ate]&.to_date %>">
-    </div>
+  <%= hx_form get: infantojuvenil_anamneses_path, target: "#infantojuvenil-anamneses-container", select: "#infantojuvenil-anamneses-container", swap: "outerHTML", replace_url: true do %>
+
+    <%= inputs_de_ate @de, @ate %>
 
     <div>
       <label for="pessoa">Paciente</label>
@@ -36,6 +32,10 @@
         <% end %>
       </select>
     </div>
+
+    <p class="text-center">
+    <input type="submit" value="Atualizar">
+    </p>
   <% end %>
 </nav>
 

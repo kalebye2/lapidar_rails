@@ -1,0 +1,11 @@
+<div id="adulto_anamneses">
+  <div class="grid-3">
+  <% @adulto_anamneses.each do |adulto_anamnese| %>
+    <%= render adulto_anamnese %>
+  <% end %>
+  </div>
+</div>
+
+<% if hx_request? %>
+  <%= render "navbar_query" %>
+<% end %>

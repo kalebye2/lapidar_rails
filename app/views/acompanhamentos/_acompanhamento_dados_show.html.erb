@@ -41,6 +41,11 @@
             <option value="<%= motivo.id %>" <%= if @acompanhamento.finalizacao_motivo_id == motivo.id then "selected" end %>> Finalizado por <%= motivo.motivo.downcase %></option>
             <% end %>
       </select>
+      <% if @acompanhamento.finalizado? %>
+        Declaração de finalização:
+        <%= link_to "[PDF]", declaracao_finalizacao_acompanhamento_path(@acompanhamento, format: :pdf), class: "icon-file-pdf" %>
+        <%= link_to "[Markdown]", declaracao_finalizacao_acompanhamento_path(@acompanhamento, format: :md), class: "icon-file-empty" %>
+      <% end %>
     </div>
 
     <div class="field">

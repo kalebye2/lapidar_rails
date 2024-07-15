@@ -1,0 +1,9 @@
+<div id="<%= dom_id profissional_folga %>" class="card">
+  <h2><%= profissional_folga.motivo.upcase %></h2>
+  <p class="icon-calendar">
+  <%= render_data_periodo_brasil profissional_folga.data_inicio, profissional_folga.data_final %>
+  (<%= calcular_tempo (profissional_folga.data_inicio - 1.day), profissional_folga.data_final %>)
+  </p>
+
+  <%= link_to "visualizar", profissional_folga_path(profissional_folga), class: "icon-eye" %>
+</div>

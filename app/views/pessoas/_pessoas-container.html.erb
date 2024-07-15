@@ -1,5 +1,12 @@
 <!-- onde as pessoas ficam -->
 <div id="cadastros-container">
+  <nav class="navbar navcenter">
+    <ul>
+      <li>
+        <%= link_to "CSV", pessoas_path(@params.merge(format: :csv)), class: "icon-file-empty" %>
+      </li>
+    </ul>
+  </nav>
   <div class="pessoas-container">
     <% if !pessoas.empty? %>
       <% pessoas.each do |p| %>

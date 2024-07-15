@@ -1,0 +1,14 @@
+*[hx-swap] {
+	animation: hx-in 250ms ease-out;
+}
+
+@keyframes hx-in {
+	0% {
+		opacity: .8;
+		transform: translateY(.1em);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}

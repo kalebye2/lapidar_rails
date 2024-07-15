@@ -39,7 +39,7 @@
 <% end %>
 
 <% dict_number.each do |k,v| %>
-  <%== hx_tr_number patch: caminho_ajax, name: "manipulacao[#{k}]", th: (h v), value: (html_escape manipulacao.attributes[k]), id: "#{id = "#{cl}-#{k}"}", target: "##{id}", select: "##{id}", swap: "outerHTML", html_class: cl %>
+  <%== hx_tr_number patch: caminho_ajax, name: "manipulacao[#{k}]", th: (h v), value: (html_escape manipulacao.attributes[k]), id: "#{id = "#{cl}-#{k}"}", target: "##{id}", select: "##{id}", swap: "outerHTML", html_class: cl, value: manipulacao.attributes[k.to_s] %>
 <% end %>
 
 <% dict_text.each do |k,v| %>

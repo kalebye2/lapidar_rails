@@ -1,0 +1,29 @@
+<div class="profissional-agenda">
+  <h3>Registrar novo horário</h3>
+  <% dias_da_semana = SemanaDia.all %>
+
+  <div id="profissional-agenda-horarios-disponiveis">
+    <%= hx_form post: profissional_horarios_path(de_profissional: true), swap: "outerHTML", target: "##{dom_id profissional}_agenda" do %>
+      <input type="hidden" value="<%= form_authenticity_token.to_s %>" name="authenticity_token">
+      <input type="hidden" value="<%= profissional.id %>" name="profissional_horario[profissional_id]">
+
+      <div class="field">
+        <label for="profissional_horario[semana_dia_id]">
+          Dia da semana
+        </label>
+        <select name="profissional_horario[semana_dia_id]">
+          <% SemanaDia.all.each do |semana_dia| %>
+            <option value="<%= semana_dia.id %>"><%= semana_dia.nome.upcase %></option>
+          <% end %>
+        </select>
+
+        <label for="profissional_horario[horario]">
+          Horário
+        </label>
+        <input type="time" name="profissional_horario[horario]">
+      </div>
+
+      <input type="submit" value="Registrar horário">
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,54 @@
+<% titulo "#{@profissional.nome_abreviado} - Folgas" %>
+
+<h1><%= @profissional.descricao_completa %> - Folgas</h1>
+
+<%= render "navbar", profissional: @profissional %>
+
+<% id = "#{dom_id @profissional}_folgas" %>
+<nav class="navbar navcenter">
+  <%= hx_form get: folgas_profissional_path, target: "##{id}", select: "##{id}", swap: "outerHTML", replace_url: true do %>
+    Data de início da folga - 
+    <%= inputs_de_ate @de, @ate %>
+
+    <br>
+    <label for="motivo">Motivo</label>
+    <select id="motivo" name="motivo">
+      <option value="">TODOS</option>
+      <% ProfissionalFolgaMotivo.all.each do |motivo| %>
+        <option value="<%= motivo.id %>"><%= motivo.motivo.upcase %></option>
+      <% end %>
+    </select>
+
+    <br>
+
+    <p class="text-center">
+    <input type="submit" value="Atualizar">
+    </p>
+  <% end %>
+</nav>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Adicionar Folga", new_folga_profissional_path(@profissional), class: "icon-plus" %>
+    </li>
+  </ul>
+</nav>
+
+<div id="<%= dom_id @profissional %>_folgas">
+  <div class="grid-3">
+    <% @profissional_folgas.each do |folga| %>
+      <%= render "folga-card", profissional_folga: folga %>
+    <% end %>
+  </div>
+
+  <p class="text-center">Página <%= @pagy.page %> de <%= @pagy.pages %> (<%= deixar_no_plural @profissional_folgas_totais, "registro", "registros" %>)</p>
+  <p class="text-center">
+  <button <%= hx_set get: folgas_profissional_path(@params.merge page: @pagy.page - 1), select: "##{id}", target: "##{id}", swap: "outerHTML", replace_url: true %> <%= "disabled" unless @pagy.page > 1 %> class="button">
+    Anterior
+  </button>
+  <button <%= hx_set get: folgas_profissional_path(@params.merge(page: @pagy.page + 1)), select: "##{id}", target: "##{id}", swap: "outerHTML", replace_url: true %> <%= "disabled" unless @pagy.page < @pagy.pages %> class="button">
+    Próxima
+  </button>
+  </p>
+</div>

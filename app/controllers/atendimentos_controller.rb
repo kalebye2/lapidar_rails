@@ -20,14 +20,22 @@ class AtendimentosController < ApplicationController
       @atendimentos = @atendimentos.da_pessoa_com_id(params[:pessoa])
     end
 
-    @num_itens = params[:num_itens] || 10
-    @atendimentos_totais = @atendimentos
-    @pagy, @atendimentos = pagy(@atendimentos, items: @num_itens)
-
     @params = params.permit %i[ de ate pessoa tipo atendimento ]
 
-    if hx_request?
-      render partial: "atendimentos-container", locals: { atendimentos: @atendimentos }
+    respond_to do |format|
+      format.html do
+        @num_itens = params[:num_itens] || 10
+        @atendimentos_totais = @atendimentos
+        @pagy, @atendimentos = pagy(@atendimentos, items: @num_itens)
+
+        if hx_request?
+          render partial: "atendimentos-container", locals: { atendimentos: @atendimentos }
+        end
+      end
+
+      format.csv do
+        send_data @atendimentos.para_csv, filename: "atendimentos_#{@params.to_h.compact.map { |k,v| "#{k&.to_s}=#{v&.to_s}" }}.csv"
+      end
     end
   end
 
@@ -236,15 +244,19 @@ class AtendimentosController < ApplicationController
   end
 
   def destroy
+    return if @atendimento.anotacoes || @atendimento.avancos || @atendimento.limitacoes
+
     if !@atendimento.atendimento_valor.nil?
       @atendimento.atendimento_valor.destroy
     end
+
     @atendimento.destroy
 
     respond_to do |format|
       format.html do
         if hx_request?
-          render partial: 'acompanhamentos/caso-resumo', acompanhamento: @atendimento.acompanhamento
+          # render partial: 'acompanhamentos/caso-resumo', acompanhamento: @atendimento.acompanhamento
+          redirect_to acompanhamento_url(@atendimento.acompanhamento)
         else
           redirect_to root_path, notice: "Atendimento removido com sucesso"
         end

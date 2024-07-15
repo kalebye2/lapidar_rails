@@ -30,7 +30,7 @@ class Recebimento < ApplicationRecord
       ate.nil? ? where(data: de).order(data: ordem) : where(data: [de..ate]).order(data: ordem)
     end
   end
-  scope :do_periodo, -> (periodo) { where(data: periodo) }
+  scope :do_periodo, -> (periodo=Date.current.all_month) { where(data: periodo) }
 
   scope :do_profissional, -> (profissional) { joins(:profissional).where(profissional: profissional) }
   scope :do_profissional_com_id, -> (id) { joins(:profissional).where(profissional: {id: id}) }
@@ -79,6 +79,24 @@ class Recebimento < ApplicationRecord
     "#{pagante.nome_completo},#{pagante.cpf},#{beneficiario.nome_completo},#{beneficiario.cpf},#{data},#{modalidade},#{valor},#{acompanhamento.acompanhamento_tipo.tipo}" + "\n"
   end
   alias para_csv para_linha_csv
+
+  def dados formato_data: "%d/%m/%Y", cidade_do_profissional: false
+    {
+      data: data.strftime(formato_data),
+      valor: valor,
+      beneficiário: beneficiario.nome_completo,
+      cpf_beneficiario: beneficiario.render_cpf,
+      pagante: pagante.nome_completo,
+      cpf_pagante: pagante.render_cpf,
+      profissional: profissional.nome_completo,
+      registro_profissional: profissional.documento,
+      cpf_profissional: profissional.pessoa.render_cpf,
+      #TODO
+      cidade_do_profissional: cidade_do_profissional ? profissional.pessoa.endereco_cidade : nil,
+      serviço_prestado: servico_prestado,
+      modalidade_de_pagamento: modalidade,
+    }
+  end
 
   def html
     

@@ -37,7 +37,7 @@
       </button>
       <button <%= hx_set get: profissional_financeiro_repasses_path, swap: "outerHTML", target: "#new_profissional_financeiro_repasse", select: "#novo-repasse" %>>Cancelar</button>
     <% else %>
-      <button <%== hx_set patch: profissional_financeiro_repasse_path(repasse, tabela: true, authenticity_token: form_authenticity_token.to_s), includes: "closest tr", target: "##{dom_id(repasse)}", swap: "outerHTML" %>>Confirmar</button>
+      <button <%== hx_set patch: profissional_financeiro_repasse_path(repasse, tabela: true, authenticity_token: form_authenticity_token.to_s), include: "closest tr", target: "##{dom_id(repasse)}", swap: "outerHTML" %>>Confirmar</button>
       <br>
       <button <%== hx_set get: profissional_financeiro_repasse_path(repasse, tabela: true), swap: "outerHTML", target: "##{dom_id(repasse)}" %>>Cancelar</button>
     <% end %>

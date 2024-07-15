@@ -40,35 +40,6 @@
 </div>
 
 <% if usuario_atual&.secretaria? || usuario_atual&.profissional == @profissional %>
-  <div class="profissional-agenda">
-    <h3>Atualizar agenda</h3>
-    <% dias_da_semana = SemanaDia.all %>
-
-    <div id="profissional-agenda-horarios-disponiveis">
-      <form action="<%= profissional_horarios_path %>" method="post">
-        <input type="hidden" value="<%= form_authenticity_token.to_s %>" name="authenticity_token">
-        <input type="hidden" value="<%= @profissional.id %>" name="profissional_horario[profissional_id]">
-
-        <div class="field">
-          <label for="profissional_horario[semana_dia_id]">
-            Dia da semana
-          </label>
-          <select name="profissional_horario[semana_dia_id]">
-            <% SemanaDia.all.each do |semana_dia| %>
-              <option value="<%= semana_dia.id %>"><%= semana_dia.nome %></option>
-            <% end %>
-          </select>
-
-          <label for="profissional_horario[horario]">
-            Horário
-          </label>
-          <input type="time" name="profissional_horario[horario]">
-        </div>
-
-        <input type="submit" value="Registrar horário">
-      </form>
-      <hr>
-    </div>
 
     <div class="profissional-acompanhamentos">
       <h3>Casos</h3>

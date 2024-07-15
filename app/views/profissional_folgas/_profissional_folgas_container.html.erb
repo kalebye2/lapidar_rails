@@ -1,0 +1,24 @@
+<div id="profissional_folgas">
+  <div class="grid-3">
+    <% profissional_folgas.each do |profissional_folga| %>
+      <%= render profissional_folga %>
+    <% end %>
+  </div>
+
+  <p class="text-center">Página <%= @pagy.page %> de <%= @pagy.pages %> (<%= deixar_no_plural profissional_folgas_totais, "registro", "registros" %>)</p>
+
+  <p class="text-center">
+  <button <%= hx_set get: profissional_folgas_path(@params.merge page: @pagy.page - 1), select: "#profissional_folgas", target: "#profissional_folgas", swap: "outerHTML", replace_url: true %> <%= "disabled" unless @pagy.page > 1 %> class="button">
+    Anterior
+  </button>
+  <button <%= hx_set get: profissional_folgas_path(@params.merge(page: @pagy.page + 1)), select: "#profissional_folgas", target: "#profissional_folgas", swap: "outerHTML", replace_url: true %> <%= "disabled" unless @pagy.page < @pagy.pages %> class="button">
+    Próxima
+  </button>
+  </p>
+</div>
+
+<% if hx_request? %>
+  <div id="notice" hx-swap-oob=true>
+    Folgas atualizadas!
+  </div>
+<% end %>

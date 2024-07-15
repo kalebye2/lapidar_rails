@@ -1,0 +1,9 @@
+<% titulo "Termo de autorização - #{@acompanhamento.render_info_padrao}" %>
+
+<%= render "navbar" %>
+
+<div class="documento">
+  <h1 id="main-title">
+    Termo de autorização para menores
+    em atendimento <%= @acompanhamento.profissional.profissional_funcao.adjetivo_masc %>
+</div>

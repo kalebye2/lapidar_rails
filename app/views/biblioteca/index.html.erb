@@ -3,6 +3,18 @@
 <div class="biblioteca-resumo">
   <p><strong>Obras registradas</strong>: <%= BibliotecaObra.count %></p>
 </div>
+
+<div class="grid-2">
+  <% caminhos = {biblioteca_obras_path => "Obras", biblioteca_autores_path => "Autores" } %>
+  <% caminhos.each do |k,v| %>
+    <%= link_to k do %>
+      <div class="card">
+        <h2 class="text-center"><%= v %></h2>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+
 <div class="biblioteca-obras-container">
 <% @obras.each do |obra| %>
   <%= render "obra-card", obra: obra %>

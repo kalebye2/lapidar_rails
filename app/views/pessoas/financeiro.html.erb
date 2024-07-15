@@ -15,7 +15,7 @@
     <tr>
       <% periodo_total = @pessoa.atendimentos.minimum(:data)..@pessoa.atendimentos.maximum(:data) %>
       <td>Valor total dos atendimentos</td>
-      <td class="dinheiro"><%= render_dinheiro_centavos @pessoa.atendimento_valores.soma_brutos periodo_total %></td>
+      <td class="dinheiro"><%= render_dinheiro_centavos @pessoa.atendimento_valores.soma_brutos %></td>
     </tr>
 
     <tr>
@@ -39,7 +39,7 @@
 
     <tr>
       <td>Taxa total</td>
-      <td class="dinheiro"><%= render_dinheiro_centavos @pessoa.atendimento_valores.soma_taxas periodo_total %></td>
+      <td class="dinheiro"><%= render_dinheiro_centavos @pessoa.atendimento_valores.soma_taxas %></td>
     </tr>
 
     <tr>

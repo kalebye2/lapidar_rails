@@ -30,11 +30,22 @@ class ProfissionaisController < ApplicationController
     end
 
     @contagem = @profissionais.count
-    @pagy, @profissionais = pagy(@profissionais, items: 9)
-    @params = params.permit(:nome, :sexo, :funcao)
 
-    if hx_request?
-      render partial: "profissionais/profissionais-container", locals: {profissionais: @profissionais}
+    @params = params.permit %i[nome sexo funcao pais local_atendimento]
+
+    respond_to do |format|
+      format.html do
+        @pagy, @profissionais = pagy(@profissionais, items: 9)
+        @params = params.permit(:nome, :sexo, :funcao)
+
+        if hx_request?
+          render partial: "profissionais/profissionais-container", locals: {profissionais: @profissionais}
+        end
+      end
+
+      format.csv do
+        send_data @profissionais.para_csv, filename: "profissionais_#{@params.to_h.compact.map { |k,v| "#{k&.to_s}=#{v&.to_s}"}.join "_"}.csv"
+      end
     end
   end
 
@@ -171,6 +182,40 @@ class ProfissionaisController < ApplicationController
 
     if hx_request?
       render partial: "recebimentos-tabela", locals: {profissional: @profissional, recebimentos: @recebimentos, recebimentos_totais: @recebimentos_totais }
+    end
+  end
+
+  def folgas
+    set_de_ate Date.current.beginning_of_year, Date.current.end_of_year
+    @profissional_folgas = @profissional.profissional_folgas.com_inicio_no_periodo @de..@ate
+
+    if params[:motivo].presence
+      @profissional_folgas = @profissional_folgas.do_motivo_com_id params[:motivo]
+    end
+
+    @profissional_folgas_totais = @profissional_folgas.count
+    @params = params.permit %i[ de ate motivo ]
+
+    @pagy, @profissional_folgas = pagy(@profissional_folgas, items: 6)
+  end
+
+  def new_folga
+    @profissional_folga = ProfissionalFolga.new profissional: @profissional, data_inicio: Date.current, data_final: Date.current
+    # render json: @profissional_folga
+  end
+
+  def edit_folga
+    @profissional_folga = ProfissionalFolga.find params[:profissional_folga_id]
+  end
+
+  def destroy_folga
+    @profissional_folga = ProfissionalFolga.find params[:profissional_folga_id]
+
+    @profissional_folga.destroy
+
+    respond_to do |format|
+      format.html { redirect_to folgas_profissional_path(@profissional), notice: "Folga excluída com sucesso." }
+      format.json { head :no_content }
     end
   end
 

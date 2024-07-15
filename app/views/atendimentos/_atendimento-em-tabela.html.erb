@@ -43,7 +43,7 @@
         <%= "#{render_hora_brasil atendimento.horario_inicio_verdadeiro}#{if !atendimento.horario_fim_verdadeiro.nil? then ' até '.concat(render_hora_brasil atendimento.horario_fim_verdadeiro) end }" %>
       <% end %>
     <% else %>
-      <%= "#{render_hora_brasil atendimento.horario}#{if !atendimento.horario_fim.nil? then ' até '.concat(render_hora_brasil atendimento.horario_fim) end}" %>
+      <%= "#{render_hora_brasil atendimento.horario_inicio_verdadeiro}#{if !atendimento.horario_fim_verdadeiro.nil? then ' até '.concat(render_hora_brasil atendimento.horario_fim_verdadeiro) end}" %>
     <% end %>
   </td>
 
@@ -73,6 +73,7 @@
           <li>
             <% ultimo_atendimento = atendimento.acompanhamento.atendimentos.realizados.em_ordem.last %>
             <%= ultimo_atendimento.presence ? link_to("Modelo de relato Markdown (último atendimento)", modelo_relato_atendimento_path(ultimo_atendimento, format: :md)) : "" %>
+            <%= link_to "Prontuário (PDF)", prontuario_acompanhamento_path(atendimento.acompanhamento, format: :pdf), target: :blank %>
           </li>
         <% end %>
         <li>

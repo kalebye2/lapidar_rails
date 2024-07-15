@@ -16,12 +16,18 @@
     <nav class="navbar navcenter">
       <ul>
         <li>
+          <%= link_to "PDF", acompanhamento_reajuste_path(acompanhamento_reajuste, format: :pdf), class: "icon-file-pdf", target: :blank %>
+        </li>
+        <li>
+          <%= link_to "Markdown", acompanhamento_reajuste_path(acompanhamento_reajuste, format: :md), class: "icon-file-empty", target: :blank %>
+        </li>
+        <li>
           <%= link_to "Editar", edit_acompanhamento_reajuste_path(acompanhamento_reajuste), class: 'icon-pencil' %>
         </li>
         <li>
           <%= link_to "Ver", acompanhamento_reajuste, class: 'icon-eye' %>
         </li>
-        <% if acompanhamento_reajuste.data_ajuste >= Date.today %>
+        <% if acompanhamento_reajuste.data_ajuste >= Date.current %>
           <li>
             <%= button_to "Aplicar", aplicar_ajuste_acompanhamento_reajuste_path(acompanhamento_reajuste), class: 'icon-drawer', style: 'width:10%;' %>
           </li>

@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Biblioteca autores</h1>
+
+<div id="biblioteca_autores">
+  <% @biblioteca_autores.each do |biblioteca_autor| %>
+    <%= render biblioteca_autor %>
+    <p>
+      <%= link_to "Show this biblioteca autor", biblioteca_autor %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New biblioteca autor", new_biblioteca_autor_path %>

@@ -1,5 +1,5 @@
 <% titulo "Anamnese infantojuvenil" %>
-<h1>Anamnese infantojuvenil</h1>
+<h1>Anamnese infantojuvenil <%= @infantojuvenil_anamnese.identificador %></h1>
 <%#= link_to "editar", edit_infantojuvenil_anamnese_path(@infantojuvenil_anamnese) %>
 
 <nav class="navbar navcenter">
@@ -8,7 +8,10 @@
       <a href="javascript:void(0).", class="icon-download3">Baixar</a>
       <ul>
         <li>
-          <%= link_to "Markdown", infantojuvenil_anamnese_path(@infantojuvenil_anamnese, format: :md) %>
+          <%= link_to "PDF", infantojuvenil_anamnese_path(@infantojuvenil_anamnese, format: :pdf), class: "icon-file-pdf", target: :blank %>
+        </li>
+        <li>
+          <%= link_to "Markdown", infantojuvenil_anamnese_path(@infantojuvenil_anamnese, format: :md), class: "icon-file-empty" %>
         </li>
       </ul>
     </li>

@@ -5,8 +5,8 @@ class BasePdf < Prawn::Document
   include ActionView::Helpers::NumberHelper
 
   # margins are margin[top, right, bottom, left]
-  def initialize(model = nil, page_size: 'A4', margin: [70, 70, 70, 70], options: {})
-    super(page_size: page_size, margin: margin)
+  def initialize(model = nil, page_size: 'A4', margin: [70, 70, 70, 70], options: {}, info: {}, **kwargs)
+    super(page_size: page_size, margin: margin, **kwargs)
     font_families.update(
     "Liberation Sans" => {
       normal: Rails.root.join("public/assets/fonts/liberation/LiberationSans-Regular.ttf"),
@@ -53,6 +53,16 @@ class BasePdf < Prawn::Document
         stroke_horizontal_rule
         move_down size
       end
+  end
+
+  def gerar_rodape_nome_clinica align: :center, size: 10, style: :normal, displace: @margin[0] / 2
+    repeat :all do
+      # text_box "#{titulo_da_aplicacao}", size: size, align: align, style: style, at: [bounds.left, 0]
+      # bounding_box [bounds.left, bounds.bottom + size],
+      #   width: bounds.width do
+      #     text "#{titulo_da_aplicacao}", size: size, align: align, style: style
+      #   end
+    end
   end
 
   def numerar_paginas_simples

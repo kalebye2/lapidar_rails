@@ -30,6 +30,9 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 pt:
+  errors:
+    messages:
+      blank: ": campo obrigatório"
   hello: "Olá mundo!"
   simple_calendar:
     previous: "Anterior"
@@ -58,8 +61,12 @@ pt:
             - qui
             - sex
             - sáb
-
-    activerecord:
-        errors:
-                messages:
-                        record_invalid: "Tudo errado"
+  activerecord:
+    errors:
+      models:
+        header:
+          one: "1 erro impediu que %{model} fosse salvo"
+          other: "%{count} erros impediram que %{model} fosse salvo"
+        body: "Houve problema com os seguintes campos:"
+        messages:
+          blank: " não pode estar vazio."

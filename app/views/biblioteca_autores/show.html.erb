@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @biblioteca_autor %>
+
+<div>
+  <%= link_to "Edit this biblioteca autor", edit_biblioteca_autor_path(@biblioteca_autor) %> |
+  <%= link_to "Back to biblioteca autores", biblioteca_autores_path %>
+
+  <%= button_to "Destroy this biblioteca autor", @biblioteca_autor, method: :delete %>
+</div>

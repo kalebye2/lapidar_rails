@@ -40,20 +40,31 @@ class AcompanhamentosController < ApplicationController
       @acompanhamentos = @acompanhamentos.query_responsavel_like_nome(like)
     end
 
-    @pagy, @acompanhamentos = pagy(@acompanhamentos, items: 9)
-    @params = params.permit(:tipo, :status, :profissional, :paciente)
+    @params = params.permit(:tipo, :status, :profissional, :pessoa, :responsavel)
 
-    if hx_request?
-      render partial: "acompanhamentos-container", locals: { acompanhamentos: @acompanhamentos }
+    respond_to do |format|
+      format.html do
+        @pagy, @acompanhamentos = pagy(@acompanhamentos, items: 9)
+        if hx_request?
+          render partial: "acompanhamentos-container", locals: { acompanhamentos: @acompanhamentos }
+          return
+        end
+      end
+
+      format.csv do
+        send_data @acompanhamentos.para_csv, filename: "acompanhamentos_#{@params.to_h.compact.map { |k,v| "#{k.to_s}=#{v&.to_s}" }.join "_"}.csv", type: "text/csv"
+      end
     end
   end
 
   def show
-    @de = params[:de] || @acompanhamento.atendimentos.minimum(:data) || Date.today.beginning_of_month
-    @ate = params[:ate] || @acompanhamento.atendimentos.maximum(:data) || Date.today.end_of_month
+    @de = params[:de] || @acompanhamento.atendimentos.minimum(:data) || Date.current.beginning_of_month
+    @ate = params[:ate] || @acompanhamento.atendimentos.maximum(:data) || Date.current.end_of_month
     @n_items = params[:n_items] || 5
-    @atendimentos = @acompanhamento.atendimentos.do_periodo(@de..@ate, :desc)
+    @atendimentos = @acompanhamento.atendimentos.do_periodo(@de..@ate).em_ordem :desc
     @contagem_atendimentos = @atendimentos.count
+    @contagem_atendimentos_realizados = @atendimentos.realizados.count
+    @contagem_atendimentos_futuros = @atendimentos.futuros.count
 
     @pagy, @atendimentos = pagy(@atendimentos, items: @n_items)
     @params = params.permit(:de, :ate, :n_items, *acompanhamento_params_soft)
@@ -132,28 +143,24 @@ class AcompanhamentosController < ApplicationController
 
 
   def prontuario
+    hoje = Time.now.strftime("%Y%m%d")
+    hoje_formatado = Time.now.strftime("%d/%m/%Y")
+    nome_documento = "prontuario_#{@acompanhamento.pessoa.nome_completo.parameterize}_#{@acompanhamento.tipo.parameterize}_#{@acompanhamento.profissional.descricao_completa.parameterize}_#{hoje}_#{Time.now.strftime "%H%M%S"}"
+
     respond_to do |format|
       format.html
 
       format.md do
-        hoje = Time.now.strftime("%Y-%m-%d")
-        hoje_formatado = Time.now.strftime("%d/%m/%Y")
-        nome_documento = "#{@acompanhamento.pessoa.nome_completo.parameterize}_prontuario-#{@acompanhamento.tipo.parameterize}_#{hoje}"
-        
         response.headers['Content-Type'] = 'text/markdown'
         response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.md"
       end
 
       format.pdf do
-        hoje = Time.now.strftime("%Y-%m-%d")
-        hoje_formatado = Time.now.strftime("%d/%m/%Y")
-        nome_documento = "#{@acompanhamento.pessoa.nome_completo}_caso-detalhes_#{hoje}"
-
         prontuario_options = {
           trans: params[:trans],
           orientacao_sexual: params[:orientacao_sexual],
         }
-        pdf = AcompanhamentoDetalhesPdf.new(@acompanhamento, options: prontuario_options)
+        pdf = AcompanhamentoProntuarioPdf.new(@acompanhamento, options: prontuario_options)
 
         send_data(pdf.render,
                   filename: "#{nome_documento}.pdf",
@@ -161,7 +168,6 @@ class AcompanhamentosController < ApplicationController
                   disposition: "inline"
                  )
       end
-
     end
   end
   alias caso_detalhes prontuario
@@ -209,8 +215,8 @@ class AcompanhamentosController < ApplicationController
     auvalor = au.atendimento_valor
     avalor = atendimento.build_atendimento_valor
 
-    proxima_semana = (Date.today + semanas_pra_passar.week).all_week.map { |d| {d.wday => d} }
-    proxima_data = proxima_semana[au.data_inicio_verdadeira.wday].values.first
+    proxima_semana = (Date.current + semanas_pra_passar.week).all_week.map { |d| {d.wday => d} }
+    proxima_data = proxima_semana[au.data.wday].values.first
     
     # atendimento.data = au.data + semanas_pra_passar.week
     atendimento.data = proxima_data
@@ -328,10 +334,16 @@ class AcompanhamentosController < ApplicationController
       end
 
       format.zip do
+        filetype = params[:filetype]
         compressed_filestream = Zip::OutputStream.write_buffer do |zos|
           @recebimentos.each do |recebimento|
-            zos.put_next_entry "recibo_#{recebimento.pessoa.nome_completo.parameterize}_#{recebimento.data}_#{recebimento.id}.md"
-            zos.print recebimento.recibo_markdown
+            zos.put_next_entry "recibo_#{recebimento.pessoa.nome_completo.parameterize}_#{recebimento.data}_#{recebimento.id}.#{filetype}"
+            case filetype.to_sym
+            when :md
+              zos.print recebimento.recibo_markdown
+            when :pdf
+              zos.print RecebimentoReciboPdf.new(recebimento).render
+            end
           end
         end
         compressed_filestream.rewind
@@ -345,8 +357,8 @@ class AcompanhamentosController < ApplicationController
   end
 
   def atendimento_valores
-    @de = params[:de]&.to_date || Date.today.beginning_of_month
-    @ate = params[:ate]&.to_date || Date.today.end_of_month
+    @de = params[:de]&.to_date || Date.current.beginning_of_month
+    @ate = params[:ate]&.to_date || Date.current.end_of_month
 
     @atendimento_valores = @acompanhamento.atendimento_valores.do_periodo(@de..@ate)
     @params = params.permit(:de, :ate)
@@ -360,6 +372,44 @@ class AcompanhamentosController < ApplicationController
 
       format.xlsx do
         response.headers['Content-Disposition'] = "attachment; filename=#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@de}-#{@ate}#{@acompanhamento.profissional.nome_completo.parameterize.insert(0, "_")}#{@acompanhamento.pessoa.nome_completo.parameterize.insert(0, "_")}#{@acompanhamento.pessoa_responsavel&.nome_completo&.parameterize&.insert(0, "_")}_#{@acompanhamento.tipo.parameterize}.xlsx"
+      end
+    end
+  end
+
+  def declaracao_ir
+    ano = params[:ano]&.to_i || (Date.current - 1.year).year
+    nome_documento = "recibo_#{@acompanhamento.pessoa.nome_completo.parameterize}_ir_#{@acompanhamento.tipo.downcase}_#{ano}"
+
+    respond_to do |format|
+      format.html
+
+      format.md do
+      end
+
+      format.pdf do
+        pdf = AcompanhamentoDeclaracaoIrPdf.new(@acompanhamento, ano: ano)
+        send_data pdf.render,
+          filename: "#{nome_documento}.pdf",
+          type: "application/pdf",
+          disposition: :inline
+      end
+    end
+  end
+
+  def declaracao_finalizacao
+    if !@acompanhamento.finalizado?
+      show
+      return
+    end
+
+    respond_to do |format|
+      format.html do
+      end
+
+      format.pdf do
+      end
+
+      format.md do
       end
     end
   end

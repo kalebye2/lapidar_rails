@@ -1,0 +1,23 @@
+<% titulo "Declaração de finalização - #{@acompanhamento.tipo} #{@acompanhamento.pessoa.nome_abreviado}" %>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Voltar", acompanhamento_path(@acompanhamento), class: "icon-previous" %>
+    </li>
+  </ul>
+</nav>
+
+<div class="documento">
+  <h1 id="titulo-principal" class="titulo-principal">Declaração de finalização de acompanhamento</h1>
+  <p>
+  Declaro que o acompanhamento
+  em <%= @acompanhamento.tipo.upcase %>
+  realizado a
+  <%= @acompanhamento.pessoa.nome_completo.upcase %>
+  com início em <%= render_data_brasil @acompanhamento.primeira_data %>
+  por <%= @acompanhamento.profissional.nome_completo.upcase %>,
+  com <%= deixar_no_plural @acompanhamento.atendimentos.realizados.count, "atendimento realizado", "atendimentos realizados" %>,
+  foi finalizado em <%= render_data_brasil @acompanhamento.ultima_data %>.
+  </p>
+</div>

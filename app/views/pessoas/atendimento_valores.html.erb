@@ -21,6 +21,10 @@
     <li>
       <%= link_to 'Financeiro', financeiro_pessoa_path(@pessoa), class: 'icon-coin-dollar' %>
     </li>
+
+    <li>
+      <%= link_to "CSV", atendimento_valores_pessoa_path(@params.merge format: :csv), class: "icon-table" %>
+    </li>
   </ul>
 </nav>
 

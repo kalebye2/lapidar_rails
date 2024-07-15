@@ -216,8 +216,9 @@
       <form hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax:true) %>" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML" hx-trigger="change delay:250ms">
         <input name="authenticity_token" value="<%= form_authenticity_token.to_s %>" type="hidden">
         <select name="gestacao[mae_diabetes]">
-          <option <%== gestacao.mae_diabetes? ? "selected" : "" %> value="1">Sim</option>
-          <option <%== !gestacao.mae_diabetes? ? "selected" : "" %> value="0">Não</option>
+          <option value="">Não informado</option>
+          <option <%== gestacao.mae_diabetes != 0 ? "selected" : "" %> value="1">Sim</option>
+          <option <%== gestacao.mae_diabetes == 0 ? "selected" : "" %> value="0">Não</option>
         </select>
       </form>
     <% else %>
@@ -234,8 +235,9 @@
       <form hx-patch="<%= infantojuvenil_anamnese_path(gestacao.infantojuvenil_anamnese, ajax:true) %>" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML" hx-trigger="change delay:250ms">
         <input name="authenticity_token" value="<%= form_authenticity_token.to_s %>" type="hidden">
         <select name="gestacao[mae_diabetes]">
-          <option <%== gestacao.mae_diabetes? ? "selected" : "" %> value="1">Sim</option>
-          <option <%== !gestacao.mae_diabetes? ? "selected" : "" %> value="0">Não</option>
+          <option value="">Não informado</option>
+          <option <%== gestacao.mae_diabetes != 0 ? "selected" : "" %> value="1">Sim</option>
+          <option <%== gestacao.mae_diabetes == 0 ? "selected" : "" %> value="0">Não</option>
         </select>
       </form>
     <% else %>

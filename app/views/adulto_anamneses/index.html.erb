@@ -4,14 +4,9 @@
 
 <h1>Anamneses adultas</h1>
 
-<div id="adulto_anamneses">
-  <% @adulto_anamneses.each do |adulto_anamnese| %>
-    <%= render adulto_anamnese %>
-    <p>
-      <%= link_to "Show this  adulto anamnese", adulto_anamnese %>
-    </p>
-  <% end %>
-</div>
+<%= render "navbar_query" %>
+
+<%= render "adulto_anamneses_container", adulto_anamneses: @adulto_anamneses %>
 
 <nav class="navbar navcenter">
   <ul>

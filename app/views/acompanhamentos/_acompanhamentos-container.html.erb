@@ -1,4 +1,7 @@
 <div id="acompanhamentos-container">
+  <div id="acompanhamentos-links" class="text-center">
+    <%= link_to "CSV", acompanhamentos_path(@params.merge format: :csv), class: "button icon-table" %>
+  </div>
   <div class="acompanhamentos-container">
     <% acompanhamentos.each do |a| %>
       <%= render "acompanhamento-card", acompanhamento: a %>

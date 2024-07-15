@@ -18,7 +18,7 @@
     <select id="contrato_modelo" name="contrato_modelo">
       <% ProfissionalContratoModelo.where(profissional: @acompanhamento.profissional).each_with_index do |modelo, index| %>
         <option value="<%= modelo.id %>" <%== hx_set get: contrato_acompanhamento_path(@acompanhamento, contrato_modelo: modelo.id, ajax: true), target: "#documento-container", trigger: ["click", index == 0 ? "load" : ""].delete_if {|a| a.empty? }.join(',') %>>
-        <%= modelo.titulo %>
+        <%= modelo.attributes["titulo"] %>
         <%= modelo.descricao&.insert(0, "(")&.insert(-1, ")") %>
         </option>
       <% end %>

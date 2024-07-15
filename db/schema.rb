@@ -66,8 +66,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.index ["motivo"], name: "ix_acompanhamentos_motivo"
   end
 
-  create_table "adulto_anamneses", id: false, force: :cascade do |t|
-    t.integer "atendimento_id", null: false
+  create_table "adulto_anamneses", primary_key: "atendimento_id", force: :cascade do |t|
     t.integer "escolaridade_anos"
     t.text "historico_profissional"
     t.text "aspectos_psicoemocionais"
@@ -83,11 +82,11 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "alimentacao"
     t.text "sono"
     t.text "habilidades_afetadas"
-    t.string "quem_encaminhou"
+    t.text "quem_encaminhou"
     t.text "motivo_encaminhamento"
-    t.string "diagnostico_preliminar", limit: 1000
-    t.string "plano_tratamento", limit: 1000
-    t.string "prognostico", limit: 1000
+    t.text "diagnostico_preliminar"
+    t.text "plano_tratamento"
+    t.text "prognostico"
   end
 
   create_table "atendimento_locais", force: :cascade do |t|
@@ -546,6 +545,29 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "mensagem"
   end
 
+  create_table "neuropsicologico_adulto_anamneses", primary_key: "atendimento_id", force: :cascade do |t|
+    t.integer "escolaridade_anos"
+    t.text "historico_profissional"
+    t.text "aspectos_psicoemocionais"
+    t.text "historico_ocupacional"
+    t.text "historico_medico"
+    t.text "aspectos_psicossociais"
+    t.text "antecedentes_familiares"
+    t.text "comorbidades"
+    t.text "desenvolvimento_neuropsicomotor"
+    t.text "medicacoes_em_uso"
+    t.text "uso_drogas_ilicitas"
+    t.text "autonomia_atividades"
+    t.text "alimentacao"
+    t.text "sono"
+    t.text "habilidades_afetadas"
+    t.text "quem_encaminhou"
+    t.text "motivo_encaminhamento"
+    t.text "diagnostico_preliminar"
+    t.text "plano_tratamento"
+    t.text "prognostico"
+  end
+
   create_table "pagamento_modalidades", force: :cascade do |t|
     t.string "modalidade", limit: 50
   end
@@ -574,7 +596,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
 
   create_table "pessoa_devolutivas", force: :cascade do |t|
     t.integer "pessoa_id"
-    t.integer "pessoa_responsavel_id"
+    t.integer "pessoa_interessada_id"
     t.integer "profissional_id"
     t.date "data"
     t.text "pontos_a_abordar"
@@ -685,12 +707,12 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "profissional_funcao_id"
     t.integer "documento_regiao_id"
     t.string "documento_valor", limit: 255
-    t.boolean "desligado", default: false
+    t.integer "desligado", default: 0
     t.text "bio"
     t.string "chave_pix_01", limit: 255
     t.string "chave_pix_02", limit: 255
-    t.boolean "ativo", default: true
-    t.boolean "realiza_atendimentos"
+    t.integer "ativo", default: 1
+    t.integer "realiza_atendimentos"
   end
 
   create_table "profissional_contrato_modelos", force: :cascade do |t|
@@ -832,7 +854,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "acompanhamentos", "atendimento_plataformas", column: "plataforma_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "acompanhamentos", "pessoas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "acompanhamentos", "profissionais", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "adulto_anamneses", "atendimentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "adulto_anamneses", "atendimentos", on_update: :cascade
   add_foreign_key "atendimento_locais", "atendimento_local_tipos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimento_locais", "paises", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimento_reagendamentos", "atendimentos"
@@ -874,7 +896,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "instrumento_subfuncao_juncoes", "psicologia_subfuncoes", on_update: :cascade, on_delete: :cascade
   add_foreign_key "instrumentos", "instrumento_tipos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "laudos", "acompanhamentos", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "pessoa_devolutivas", "pessoas", column: "pessoa_responsavel_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "neuropsicologico_adulto_anamneses", "atendimentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoa_devolutivas", "pessoas", column: "pessoa_interessada_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_devolutivas", "pessoas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_devolutivas", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_emails", "pessoas", on_update: :cascade, on_delete: :cascade

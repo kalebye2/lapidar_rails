@@ -4,7 +4,15 @@ class AdultoAnamnesesController < ApplicationController
 
   # GET /adulto_anamneses or /adulto_anamneses.json
   def index
-    @adulto_anamneses = AdultoAnamnese.all
+    set_de_ate Date.current.beginning_of_year, Date.current.end_of_year
+
+    @adulto_anamneses = AdultoAnamnese.do_periodo @de..@ate
+
+    if params[:profissional].presence
+      @adulto_anamneses = @adulto_anamneses.do_profissional_com_id params[:profissional]
+    end
+
+    @params = params.permit :de, :ate, :profissional
   end
 
   # GET /adulto_anamneses/1 or /adulto_anamneses/1.json

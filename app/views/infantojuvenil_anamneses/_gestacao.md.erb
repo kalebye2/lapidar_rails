@@ -19,7 +19,7 @@ Quanto tempo depois da última gestação a criança foi concebida?
 : <%== render_tempo_meses_resumido gestacao.gestacao_anterior_meses %>
 
 Abortos anteriores (espontâneos e/ou intencionais):
-: <%== gestacao.abortos_anteriores || "Sem informação" %>
+: <%== gestacao.abortos_anteriores || "" %>
 
 Data do pré-natal:
 : <%== render_data_brasil gestacao.data_pre_natal %>

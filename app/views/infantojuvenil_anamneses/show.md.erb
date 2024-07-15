@@ -35,7 +35,7 @@ header-includes:
     % para cabeçalho e rodapé
     \usepackage{fancyhdr}
     \fancyhead[L]{} % coloque aqui cabeçalho à esquerda
-    \fancyhead[R]{Anamnese infantojuvenil}
+    \fancyhead[R]{Anamnese infantojuvenil - <%= @infantojuvenil_anamnese.pessoa.nome_completo %>}
     \fancyfoot[L]{\footnotesize{
     E-mail: \href{mailto:<%= @infantojuvenil_anamnese.profissional.email %>}{<%= @infantojuvenil_anamnese.profissional.email %>}\\
     Fone: \href{tel:<%= @infantojuvenil_anamnese.profissional.pessoa.render_fone_link %>}{<%= @infantojuvenil_anamnese.profissional.pessoa.render_fone_local %>}

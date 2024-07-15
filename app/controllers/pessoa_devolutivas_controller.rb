@@ -16,7 +16,7 @@ class PessoaDevolutivasController < ApplicationController
     end
 
     @contagem = @pessoa_devolutivas.count
-    @pagy, @pessoa_devolutivas = pagy(@pessoa_devolutivas, items: 3)
+    @pagy, @pessoa_devolutivas = pagy(@pessoa_devolutivas, items: 9)
     @params = params.permit(:pessoa, :de, :ate, :responsavel)
 
     if hx_request?

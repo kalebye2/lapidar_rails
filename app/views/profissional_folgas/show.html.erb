@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @profissional_folga %>
+
+<div>
+  <%= link_to "Edit this profissional folga", edit_profissional_folga_path(@profissional_folga) %> |
+  <%= link_to "Back to profissional folgas", profissional_folgas_path %>
+
+  <%= button_to "Destroy this profissional folga", @profissional_folga, method: :delete %>
+</div>

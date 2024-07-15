@@ -31,10 +31,16 @@ module ApplicationHelper
     data.strftime("%d/%m/%Y")
   end
 
+  def render_data_periodo_brasil data1, data2=nil, sep=" a "
+    return data1 if data1.blank?
+    "#{data1.strftime("%d/%m/%Y")}#{data2&.strftime("%d/%m/%Y")&.insert(0, sep) unless data2 == data1}"
+  end
+
   def render_data_extenso data
     if data == nil then return data end
     "#{data.day} de #{t('date.month_names')[data.month].downcase} de #{data.year}"
   end
+  alias render_data_por_extenso render_data_extenso
 
   def render_hora_brasil hora, zona = nil
     if hora == nil then return nil end
@@ -54,15 +60,15 @@ module ApplicationHelper
     number_to_percentage porcentagem_int / 100, precision: 2, delimiter: ".", separator: ","
   end
 
-  def sim_ou_nao valor=false
+  def sim_ou_nao valor=false, fallback = ""
     if valor.class.name == "TrueClass"
       valor ? "Sim" : "Não"
     else
-      !valor.nil? ? valor.to_i > 0 ? "Sim" : "Não" : "Sem informação"
+      !valor.nil? ? valor.to_i > 0 ? "Sim" : "Não" : fallback
     end
   end
 
-  def calcular_tempo data1, data2 = Date.today
+  def calcular_tempo data1, data2 = Date.current, default=""
     if data1 == nil || data1.class.to_s != "Date" then return "data não informada" end
     if data2.class.to_s != "Date" then return "" end
     ultima_data = data2
@@ -116,7 +122,7 @@ module ApplicationHelper
 
     return "#{ano_dif} #{plural_anos}#{tem_meses}"
 
-    return "Não foi possível calcular"
+    return default
   end
 
   def informar valor, default = "Sem informações"
@@ -131,11 +137,26 @@ module ApplicationHelper
     numero.nil? ? default : "#{number_to_currency(numero, precision: casas_decimais, delimiter: ".", unit: "")}#{medida}"
   end
 
-  def data_por_extenso data=Date.today
+  def data_por_extenso data=Date.current
     return nil if data.class.to_s != "Date"
     "#{data.day} de #{t('date.month_names')[data.month].downcase} de #{data.year}"
   end
 
   def montar_sentenca
+  end
+
+  def inputs_de_ate de = Date.current, ate = Date.current, label_de: "de", label_ate: "ate"
+    "
+    <label for=\"#{label_de}\">De</label>
+    <input type=\"date\" name=\"#{label_de}\" id=\"#{label_de}\" value=\"#{de}\">
+    <label for=\"#{label_ate}\">Até</label>
+    <input type=\"date\" name=\"#{label_ate}\" id=\"#{label_ate}\" value=\"#{ate}\">
+    ".html_safe
+  end
+
+  def navegador_paginas_simples
+  end
+
+  def navegador_carregar_mais_paginas
   end
 end

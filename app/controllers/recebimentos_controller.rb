@@ -73,7 +73,7 @@ class RecebimentosController < ApplicationController
         compressed_filestream = Zip::OutputStream.write_buffer do |zos|
           @recebimentos.each do |recebimento|
             titulo = "recibo_#{recebimento.pessoa.nome_completo.parameterize}_#{recebimento.data}_#{recebimento.id}"
-            if params[:filetype].to_sym == :pdf
+            if params[:filetype]&.to_sym == :pdf
               zos.put_next_entry "#{titulo}.pdf"
               pdf = RecebimentoReciboPdf.new(recebimento)
               zos.print pdf.render
@@ -84,7 +84,16 @@ class RecebimentosController < ApplicationController
           end
         end
         compressed_filestream.rewind
-        send_data compressed_filestream.read, filename: "#{Rails.application.class.module_parent.to_s}_recibos-markdown_#{@de}_#{@ate}_#{usuario_atual.hash}.zip"
+        send_data compressed_filestream.read, filename: "#{Rails.application.class.module_parent.to_s}_recibos-#{params[:filetype] || "pdf"}_#{@de}_#{@ate}_#{usuario_atual.hash}.zip"
+      end
+
+      format.pdf do
+        nome_documento = "recebimentos_#{@de}_#{@ate}"
+        pdf = RecebimentosPdf.new(@recebimentos)
+        send_data pdf.render,
+          filename: "#{nome_documento}.pdf",
+          type: "application/pdf",
+          disposition: :inline
       end
     end
   end

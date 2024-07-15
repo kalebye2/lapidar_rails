@@ -1,6 +1,9 @@
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
   after_initialize :test
+
+  # include ApplicationHelper
+  include ActionView::Helpers
   
   MAX_TRIES_RANDOM = 3
 
@@ -38,10 +41,6 @@ class ApplicationRecord < ActiveRecord::Base
     
   end
 
-  def para_csv propriedades=[]
-    propriedades.map { |p| "\"#{p}\"" }.join(',') + "\n"
-  end
-
   # para localizar um endereço
 
   def self.concat(*args)
@@ -55,42 +54,4 @@ class ApplicationRecord < ActiveRecord::Base
     end
   end
 
-  def self.aleatorio num_try = 0
-    begin
-      order("RANDOM()").first
-    rescue ActiveRecord::RecordNotFound
-      if num_try > MAX_TRIES_RANDOM
-        first
-      else
-        aleatorio num_try + 1
-      end
-    rescue Exception
-      raise
-    end
-  end
-
-  def self.aleatorios num_records = 1, num_try = 0
-    begin
-      order("RANDOM()").limit(num_records)
-    rescue Exception
-      raise
-    end
-  end
-
-  def self.random_group num_records = 1
-    aleatorios num_records
-  end
-
-  def self.random
-    aleatorio
-  end
-
-  def self.para_csv collection=all,header=[]
-    CSV.generate(col_sep: ',') do |csv|
-      csv << header
-      collection.each do |c|
-        csv << c.para_csv
-      end
-    end
-  end
 end

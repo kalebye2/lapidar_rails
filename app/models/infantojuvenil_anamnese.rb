@@ -1,4 +1,6 @@
 class InfantojuvenilAnamnese < ApplicationRecord
+  include ApplicationHelper
+
   has_one :infantojuvenil_anamnese_alimentacao
   has_one :infantojuvenil_anamnese_comunicacao
   has_one :infantojuvenil_anamnese_escola_historico
@@ -14,6 +16,7 @@ class InfantojuvenilAnamnese < ApplicationRecord
   belongs_to :atendimento
   has_one :acompanhamento, through: :atendimento
   has_one :pessoa, through: :acompanhamento
+  alias paciente pessoa
   has_one :profissional, through: :acompanhamento
   has_one :pessoa_responsavel, through: :acompanhamento
 
@@ -49,24 +52,8 @@ class InfantojuvenilAnamnese < ApplicationRecord
 
   after_create -> (anamnese) { anamnese.criar_anamnese_completa }
 
-  def acompanhamento
-    atendimento.acompanhamento
-  end
-
-  def profissional
-    acompanhamento.profissional
-  end
-
-  def pessoa
-    acompanhamento.pessoa
-  end
-
-  def paciente
-    pessoa
-  end
-
-  def pessoa_responsavel
-    acompanhamento.pessoa_responsavel
+  def identificador
+    "#{data.strftime "%Y%m%d"}#{acompanhamento.id}#{pessoa.id}#{pessoa_responsavel&.id}#{profissional.id}#{id}"
   end
 
   def data
@@ -74,49 +61,27 @@ class InfantojuvenilAnamnese < ApplicationRecord
   end
 
   #
-  def alimentacao
-    infantojuvenil_anamnese_alimentacao
-  end
+  alias alimentacao infantojuvenil_anamnese_alimentacao
 
-  def comunicacao
-    infantojuvenil_anamnese_comunicacao
-  end
+  alias comunicacao infantojuvenil_anamnese_comunicacao
 
-  def escola_historico
-    infantojuvenil_anamnese_escola_historico
-  end
+  alias escola_historico infantojuvenil_anamnese_escola_historico
 
-  def familia_historico
-    infantojuvenil_anamnese_familia_historico
-  end
+  alias familia_historico infantojuvenil_anamnese_familia_historico
 
-  def gestacao
-    infantojuvenil_anamnese_gestacao
-  end
+  alias gestacao infantojuvenil_anamnese_gestacao
 
-  def manipulacao
-    infantojuvenil_anamnese_manipulacao
-  end
+  alias manipulacao infantojuvenil_anamnese_manipulacao
 
-  def psicomotricidade
-    infantojuvenil_anamnese_psicomotricidade
-  end
+  alias psicomotricidade infantojuvenil_anamnese_psicomotricidade
 
-  def saude_historico
-    infantojuvenil_anamnese_saude_historico
-  end
+  alias saude_historico infantojuvenil_anamnese_saude_historico
 
-  def sexualidade
-    infantojuvenil_anamnese_sexualidade
-  end
+  alias sexualidade infantojuvenil_anamnese_sexualidade
 
-  def socioafetividade
-    infantojuvenil_anamnese_socioafetividade
-  end
+  alias socioafetividade infantojuvenil_anamnese_socioafetividade
   
-  def sono
-    infantojuvenil_anamnese_sono
-  end
+  alias sono infantojuvenil_anamnese_sono
 
   def criar_anamnese_completa
     if infantojuvenil_anamnese_alimentacao.nil? then build_infantojuvenil_anamnese_alimentacao.save! end
@@ -130,5 +95,49 @@ class InfantojuvenilAnamnese < ApplicationRecord
     if infantojuvenil_anamnese_sexualidade.nil? then build_infantojuvenil_anamnese_sexualidade.save! end
     if infantojuvenil_anamnese_socioafetividade.nil? then build_infantojuvenil_anamnese_socioafetividade.save! end
     if infantojuvenil_anamnese_sono.nil? then build_infantojuvenil_anamnese_sono.save! end
+  end
+
+  def dados
+    {
+      identificação: {
+        nome_completo: pessoa.nome_completo,
+        data_de_nascimento: render_data_brasil(pessoa.data_nascimento),
+        idade: pessoa.render_idade(data),
+        sexo: pessoa.render_sexo,
+        responsável_legal: "#{pessoa_responsavel&.nome_completo} #{pessoa_responsavel&.render_sexo_sigla}",
+        serviço_procurado: acompanhamento.tipo.upcase,
+        profissional: profissional.descricao_completa,
+        data_da_consulta: data&.strftime("%d/%m/%Y"),
+        motivo_da_consulta: motivo_consulta,
+      },
+      gestação: gestacao&.dados,
+      alimentação: alimentacao&.dados,
+      psicomotricidade: psicomotricidade&.dados,
+      sono: sono&.dados,
+      socioafetividade: socioafetividade&.dados,
+      comunicação: comunicacao&.dados,
+      manipulação: manipulacao&.dados,
+      histórico_de_saúde: saude_historico&.dados,
+      histórico_escolar: escola_historico&.dados,
+      sexualidade: sexualidade&.dados,
+      histórico_familiar: familia_historico&.dados,
+      anotações_do_profissional: {
+        hipótese_diagnóstica: diagnostico_preliminar,
+        plano_de_tratamento: plano_tratamento,
+        prognóstico: prognostico,
+      },
+    }
+  end
+
+  def itens_nao_respondidos
+    dados.map { |k,v| v.map { |k,v| k if v.blank? }.compact }.flatten
+  end
+
+  def itens_respondidos
+    dados.map { |k,v| v.map { |k,v| k unless v.blank? }.compact }.flatten
+  end
+
+  def dados_respondidos
+    dados.map { |k,v| [k,v.map { |k,v| [k, v]}.to_h.compact] }.to_h
   end
 end

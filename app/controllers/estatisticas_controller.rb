@@ -18,12 +18,17 @@ class EstatisticasController < ApplicationController
   end
 
   def clinica
+    @atendimentos = Atendimento.em_ordem.ate_hoje
+    @contagem_atendimentos_por_profissional = @atendimentos.contagem_por_profissional
+    @contagem_atendimentos_por_local = @atendimentos.contagem_por_local
   end
 
   def acompanhamentos
   end
 
   def atendimentos
+    set_de_ate Date.current.beginning_of_month, Date.current.end_of_month
+    @atendimentos = Atendimento.do_periodo @de..@ate
   end
 
   def profissionais
@@ -36,6 +41,10 @@ class EstatisticasController < ApplicationController
   end
 
   def financeiro
+    de_ate_params
+
+    @recebimentos = Recebimento.do_periodo(@de..@ate)
+    @atendimento_valores = AtendimentoValor.do_periodo(@de..@ate)
   end
 
   private

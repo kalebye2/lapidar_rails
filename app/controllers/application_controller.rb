@@ -16,17 +16,87 @@ class ApplicationController < ActionController::Base
 
   def configurar
     case params[:p]
-    when 'tabelas'
-      render html: "<h1>Tabelas</h1>"
+    when 'pessoa'
+      if Pessoa.count > 0
+        redirect_to configurar_path(p: "profissional")
+      else
+        @pessoa = Pessoa.new
+        render partial: "primeira-pessoa-form", locals: { pessoa: @pessoa }
+      end
+    when "profissional"
+      @profissional = Profissional.new(pessoa: Pessoa.first)
+
+      if !@profissional
+        redirect_to configurar_path(p: "pessoa")
+      else
+        render partial: "primeiro-profissional-form", locals: { profissional: @profissional }
+      end
+    when "usuario"
+      @usuario = Usuario.new(profissional: Profissional.first)
+
+      if !@usuario
+        redirect_to configurar_path(p: "profissional")
+      else
+        render partial: "primeiro-usuario-form", locals: { usuario: @usuario }
+      end
+    end
+  end
+
+  def registrar_pessoa
+    return if Pessoa.count > 0
+    @pessoa = Pessoa.new pessoa_params
+    if @pessoa.save
+      redirect_to configurar_path(p: "profissional")
+    else
+      render partial: "primeira-pessoa-form", status: :unprocessable_entity, locals: { pessoa: @pessoa }
+    end
+  end
+
+  def registrar_profissional
+    return if Profissional.count > 0
+    @profissional = Profissional.new profissional_params
+    if @profissional.save
+      redirect_to configurar_path(p: "profissional")
+    else
+      render partial: "primeiro-profissional-form", status: :unprocessable_entity, locals: { profissional: @profissional }
+    end
+  end
+
+  def registrar_usuario
+    return if Usuario.count > 0
+    @usuario = Usuario.new usuario_params
+    if @usuario.save
+      redirect_to configurar_path(p: "usuario")
+    else
+      render partial: "primeiro-usuario-form", status: :unprocessable_entity, locals: { usuario: @usuario }
     end
   end
 
   def ajuda
+    charset = "charset=utf-8"
+
     if usuario_atual.nil?
       # request.headers["Content-Type"] = "text/markdown ; charset=utf-8"
       render file: "#{Rails.root}/public/404.html", status: 403
     else
       @texto = File.read("#{Rails.root}/public/ajuda.md")
+    end
+
+    respond_to do |format|
+      format.html
+
+      format.md do
+        headers["Content-Type"] = "text/html; charset=utf-8"
+        render html: "Hi"
+      end
+
+      format.pdf do
+        pdf = AjudaPdf.new
+        send_data pdf.render,
+          filename: "Lapidar_ajuda_aplicacao.pdf",
+          type: "application/pdf",
+          disposition: :inline
+      end
     end
   end
 
@@ -157,5 +227,23 @@ class ApplicationController < ActionController::Base
 
   def set_ajustes_futuros_usuario
     @reajustes_futuros = usuario_atual&.profissional&.acompanhamento_reajustes&.ajustes_futuros&.nao_aplicados&.order(data_ajuste: :desc)
+  end
+
+  def set_de_ate de = Date.current.beginning_of_month, ate = Date.current.end_of_month
+    @de = params[:de]&.to_date || de
+    @ate = params[:ate]&.to_date || ate
+  end
+  alias de_ate_params set_de_ate
+
+  def pessoa_params
+    params.require(:pessoa).permit *Pessoa.attribute_names
+  end
+
+  def profissional_params
+    params.require(:profissional).permit *Profissional.attribute_names
+  end
+
+  def usuario_params
+    params.require(:usuario).permit *Usuario.attribute_names
   end
 end

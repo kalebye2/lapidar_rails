@@ -9,7 +9,7 @@
       <%= link_to "Visualizar", atendimento_path(atendimento), class: 'icon-eye' %>
     </li>
     <li>
-      <%= hx_link "Excluir", atendimento_path(atendimento, @params.merge(authenticity_token: form_authenticity_token.to_s)), confirm: "Tem certeza?", class: "icon-bin", verb: "delete", target: "#tabela-caso-resumo", select: "#tabela-caso-resumo", swap: "outerHTML" %>
+      <%= hx_link "Excluir", atendimento_path(atendimento, authenticity_token: form_authenticity_token.to_s), confirm: "Tem certeza?", class: "icon-bin", verb: "delete", target: "#tabela-caso-resumo", select: "#tabela-caso-resumo", swap: "outerHTML" %>
     </li>
   <% end %>
 

@@ -1,0 +1,17 @@
+<nav class="navbar navcenter" id="navbar_query" <%= "hx-swap-oob=\"true\"" if hx_request? %>>
+  <%= hx_form get: adulto_anamneses_path, swap: "outerHTML", select: "#adulto_anamneses", target: "#adulto_anamneses", replace_url: true do %>
+    <%= inputs_de_ate @de, @ate %>
+
+    <br>
+      <label for="profissional">Profissional</label>
+      <select name="profissional">
+        <option value="">TODOS</option>
+        <% @adulto_anamneses.map(&:profissional).each do |profissional| %>
+          <option value="<%= profissional.id %>"><%= profissional.descricao_completa %></option>
+        <% end %>
+      </select>
+    <br>
+
+    <input type="submit" value="Atualizar">
+  <% end %>
+</nav>

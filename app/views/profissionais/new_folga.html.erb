@@ -1,0 +1,7 @@
+<% titulo "Registrar folga" %>
+
+<h1>Registrar folga para <%= @profissional.nome_completo %></h1>
+
+<%= render "navbar", profissional: @profissional %>
+
+<%= render "profissional_folgas/form", profissional_folga: @profissional_folga %>

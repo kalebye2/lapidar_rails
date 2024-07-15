@@ -27,10 +27,17 @@ class ProfissionalHorariosController < ApplicationController
 
     respond_to do |format|
       if @profissional_horario.save
-        if @profissional
-          format.html { redirect_to profissional_path(@profissional), notice: "Horário registrado" }
-        end
-        format.html { redirect_to profissional_horario_url(@profissional_horario), notice: "Profissional horario was successfully created." }
+          format.html do
+            if params[:de_profissional].presence
+              if hx_request?
+                render partial: "profissionais/tabela-agenda", locals: { profissional: @profissional_horario.profissional, pode_deletar: true }
+              else
+                redirect_to profissional_path(@profissional), notice: "Horário registrado"
+              end
+            else
+              format.html { redirect_to profissional_horario_url(@profissional_horario), notice: "Horário criado com sucesso" }
+            end
+          end
         format.json { render :show, status: :created, location: @profissional_horario }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -57,10 +64,21 @@ class ProfissionalHorariosController < ApplicationController
 
   # DELETE /profissional_horarios/1 or /profissional_horarios/1.json
   def destroy
+    profissional = @profissional_horario.profissional
     @profissional_horario.destroy
 
     respond_to do |format|
-      format.html { redirect_to profissional_horarios_url, notice: "Profissional horario was successfully destroyed." }
+      format.html do
+        if hx_request?
+          if params[:de_profissional].presence
+            render partial: "profissionais/tabela-agenda", locals: { profissional: profissional }
+          else
+          end
+        else
+          redirect_to profissional_horarios_url, notice: "Profissional horario was successfully destroyed."
+        end
+      end
+
       format.json { head :no_content }
     end
   end

@@ -1,5 +1,5 @@
-class AcompanhamentoDetalhesPdf < BasePdf
-  def initialize acompanhamento = Acompanhamento.new, options: {}
+class AcompanhamentoProntuarioPdf < BasePdf
+  def initialize(acompanhamento = Acompanhamento.new, instrumentos: true, options: {})
     super
     @acompanhamento = acompanhamento
     @options = options
@@ -14,9 +14,24 @@ class AcompanhamentoDetalhesPdf < BasePdf
         align: :left,
         style: :bold,
         indent_paragraphs: 0,
+      },
+      heading2: {
+        style: :bold,
+        size: 16,
+      },
+      heading3: {
+        style: :italic,
+        size: 12,
+      },
+      table: {
+        header: {
+          style: :bold,
+        }
       }
     }
 
+    @instrumento_relatos = instrumentos
+    
     header
     title
     move_down 7
@@ -114,9 +129,9 @@ class AcompanhamentoDetalhesPdf < BasePdf
     markup "<b>#{titulo}</b>: #{texto&.to_s&.upcase}"
   end
 
-  def dados_atendimento atendimento
-    dado_cadastral "Data", render_data_brasil(atendimento&.data)
-    dado_cadastral "Horário", render_hora_brasil(atendimento&.horario)
+  def dados_atendimento atendimento, instrumento_relatos: @instrumento_relatos
+    dado_cadastral "Data", render_data_brasil(atendimento&.data_inicio_verdadeira)
+    dado_cadastral "Horário", render_hora_brasil(atendimento&.horario_inicio_verdadeiro)
     dado_cadastral "Status", atendimento&.status
     dado_cadastral "Atividade", atendimento&.tipo
 
@@ -128,6 +143,14 @@ class AcompanhamentoDetalhesPdf < BasePdf
 
     markup "<h3><b>Anotações</b></h3>"
     markup markdown_to_html(atendimento&.anotacoes, nil)
+
+    if instrumento_relatos && atendimento.instrumento_relatos.presence
+        markup "<h2>Relatos de instrumentos aplicados</h2>", {heading2: {style: :bold, size: 16}}
+        atendimento.instrumento_relatos.map do |instrumento_relato|
+          markup "<h3>#{instrumento_relato.instrumento.nome}</h3>", {heading3: {style: :italic, size: 14}}
+          markup instrumento_relato.dados(nome_instrumento: false).compact.map { |k,v| "<b>#{k.to_s.humanize}</b>: #{v}" }.join("\n<br>\n")
+        end
+    end
   end
 
 

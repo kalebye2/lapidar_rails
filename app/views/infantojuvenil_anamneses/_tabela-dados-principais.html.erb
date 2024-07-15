@@ -9,7 +9,7 @@
     <th width="20%">Atendimento</th>
     <td id="<%= curr_id %>">
 
-      <p>Paciente:
+      <p>Paciente
       <strong>
         <%= infantojuvenil_anamnese.paciente.nome_completo %>
       </strong>
@@ -40,7 +40,8 @@
 
       <%#= link_to "editar", infantojuvenil_anamnese_path(infantojuvenil_anamnese) %>
       <% if @usuario %>
-        <button hx-get="<%= edit_infantojuvenil_anamnese_path(infantojuvenil_anamnese) %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML" hx-select="#<%= curr_id %>">editar</button>
+        <%= link_to "Acompanhar", acompanhamento_path(infantojuvenil_anamnese.acompanhamento), class: "button" %>
+        <button hx-get="<%= edit_infantojuvenil_anamnese_path(infantojuvenil_anamnese) %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML" hx-select="#<%= curr_id %>" class="button">editar</button>
       <% end %>
     </td>
   </tr>
@@ -91,6 +92,7 @@
     <% if @usuario %>
       <input type="text" id="acompanhamento_motivo" value="<%= infantojuvenil_anamnese.acompanhamento.motivo %>" name="acompanhamento[motivo]" <%= hx_set patch: infantojuvenil_anamnese_path(infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s), select: "#acompanhamento_motivo", trigger: "change" %>>
     <% else %>
+      <%= infantojuvenil_anamnese.acompanhamento.motivo %>
     <% end %>
   </td>
   </tr>

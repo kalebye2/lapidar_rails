@@ -27,7 +27,11 @@
     </li>
 
     <li>
-      <%= link_to "Recibos (Markdown)", recebimentos_acompanhamento_path(@params.merge(format: :zip)), class: "icon-file-zip" %>
+      <%= link_to "Recibos (Markdown)", recebimentos_acompanhamento_path(@params.merge(format: :zip, filetype: :md)), class: "icon-file-zip" %>
+    </li>
+
+    <li>
+      <%= link_to "Recibos (PDF)", recebimentos_acompanhamento_path(@params.merge(format: :zip, filetype: :pdf)), class: "icon-file-zip" %>
     </li>
   </ul>
 </nav>

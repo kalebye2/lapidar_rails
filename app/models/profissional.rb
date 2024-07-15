@@ -47,6 +47,9 @@ class Profissional < ApplicationRecord
   scope :que_nao_realiza_atendimentos, -> { where realiza_atendimentos: [false, nil] }
   scope :que_realiza_atendimentos, -> { where realiza_atendimentos: true }
 
+  scope :ativos, -> { where ativo: true }
+  scope :inativos, -> { where ativo: [false, nil] }
+
   scope :query_like_nome, -> (like) do
     query = "LOWER(nome || ' ' || COALESCE(nome_do_meio, '') || ' '|| sobrenome) LIKE ?", "%#{like.downcase}%"
     if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
@@ -198,6 +201,10 @@ class Profissional < ApplicationRecord
     repasses.sum(:valor)
   end
 
+  def financeiro_repasse_faltante
+    recebimentos.sum(:valor) - repasses.sum(:valor)
+  end
+
   def financeiro_soma_recebimentos
     recebimentos.sum(:valor)
   end
@@ -231,4 +238,50 @@ class Profissional < ApplicationRecord
     disponivel = profissional_horarios - excluir
   end
   alias agenda_disponivel horarios_disponiveis
+
+  def self.para_csv collection = all
+    CSV.generate(col_sep: ",") do |csv|
+      csv << [
+        "NOME COMPLETO",
+        "SEXO",
+        "DATA NASCIMENTO",
+        "CPF",
+        "FONE",
+        "EMAIL",
+        "NATURAL DE",
+        "CEP",
+        "ENDEREÇO",
+        "PAÍS",
+        "FUNÇÃO",
+        "DOCUMENTO",
+        "ATIVO",
+        "DESLIGADO",
+        "REALIZA ATENDIMENTOS NA CLÍNICA",
+        "CHAVE PIX 01",
+        "CHAVE PIX 02",
+      ]
+
+      collection.each do |p|
+        csv << [
+          p.nome_completo,
+          p.pessoa.render_sexo,
+          p.pessoa.data_nascimento,
+          p.render_cpf,
+          p.render_fone,
+          p.email,
+          p.pessoa.nascimento_pais&.nome,
+          p.pessoa.endereco_cep,
+          p.pessoa.render_endereco,
+          p.pessoa.pais&.nome,
+          p.funcao,
+          p.documento,
+          p.ativo,
+          p.desligado,
+          p.realiza_atendimentos,
+          p.chave_pix_01,
+          p.chave_pix_02,
+        ]
+      end
+    end
+  end
 end

@@ -12,4 +12,13 @@ class InstrumentoRelato < ApplicationRecord
   def self.decrescente
     joins(:atendimento).order("atendimentos.data" => :desc, "atendimentos.horario" => :desc)
   end
+
+  def dados nome_instrumento: true
+    {
+      nome_instrumento: nome_instrumento ? instrumento.nome : nil,
+      relato: Kramdown::Document.new(relato.to_s).to_html.presence,
+      resultados: Kramdown::Document.new(resultados.to_s).to_html.presence,
+      observações: Kramdown::Document.new(observacoes.to_s).to_html.presence,
+    }
+  end
 end

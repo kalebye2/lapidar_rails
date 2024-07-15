@@ -64,9 +64,15 @@
               <li>
                 <%= link_to "Acompanhar", acompanhamento_path(atendimento.acompanhamento), class: "icon-compass" %>
               </li>
+
               <li>
                 <%= link_to "Editar", atendimento_path(atendimento), class: "icon-pencil" %>
               </li>
+
+              <li>
+                <%= link_to "PDF", declaracao_comparecimento_atendimento_path(atendimento, format: :pdf), class: "icon-file-pdf", target: :blank %>
+              </li>
+
               <%= hx_link "Excluir", delete: atendimento_path(atendimento), confirm: "Tem certeza que deseja excluir #{atendimento.tipo} de #{atendimento.pessoa.nome_abreviado} #{render_data_brasil atendimento.data_inicio_verdadeira} às #{render_hora_brasil atendimento.horario_inicio_verdadeiro}?", class: "icon-bin" %>
             </ul>
           </td>

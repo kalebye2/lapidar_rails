@@ -1,6 +1,17 @@
 <% titulo "Ajuda" %>
 <div class="texto-ajuda" style="text-align:justify;">
-  <h1>Ajuda</h1>
+  <h1 id="main-title">Ajuda</h1>
+
+  <nav class="navbar navcenter">
+    <ul>
+      <li>
+        <%= link_to "Markdown", ajuda_path(format: :md) %>
+      </li>
+      <li>
+        <%= link_to "PDF", ajuda_path(format: :pdf) %>
+      </li>
+    </ul>
+  </nav>
 
   <p>Olá, <%= usuario_atual.profissional.funcao.downcase %> <%= usuario_atual.nome_completo %>!</p>
   <p>

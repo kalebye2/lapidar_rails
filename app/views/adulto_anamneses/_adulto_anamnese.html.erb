@@ -1,0 +1,19 @@
+<div id="<%= dom_id adulto_anamnese %>" class="card">
+
+  <h2 class="icon-user"><%= adulto_anamnese.pessoa.nome_completo %></h2>
+  <h3 class="icon-user-tie"><%= adulto_anamnese.profissional.descricao_completa %></h3>
+
+  <p class="icon-calendar"><%= render_data_brasil adulto_anamnese.data %></p>
+  <p>
+  <strong>Encaminhado por</strong>:
+  <%= adulto_anamnese.quem_encaminhou || adulto_anamnese.pessoa.nome_completo %></p>
+  <p>
+
+  <p>
+  <strong>Em</strong>:
+  <%= adulto_anamnese.acompanhamento.tipo.upcase %>
+  </p>
+
+  <%= link_to "Visualizar", adulto_anamnese_path(adulto_anamnese), class: "icon-eye" %>
+
+</div>

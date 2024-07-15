@@ -1,0 +1,6 @@
+<p style="text-align:center;" id="recebimentos-do-periodo" hx-swap-oob="true">
+Recebimentos do período:
+<% @soma_valor_recebimentos = @recebimentos.sum(:valor) %>
+<%= render_dinheiro_centavos @soma_valor_recebimentos %>
+(<%= deixar_no_plural @recebimentos.count, "recebimento", "recebimentos" %>)
+</p>

@@ -1,3 +1,33 @@
-<h1>Estatisticas#atendimentos</h1>
-<p>Find me in app/views/estatisticas/atendimentos.html.erb</p>
+<% titulo "Atendimentos: estatísticas" %>
+<h1>Atendimentos: estatísticas</h1>
 <%= render "navbar" %>
+
+<br>
+
+<nav class="navbar navcenter">
+  <%= hx_form get: atendimentos_estatisticas_path, target: "#estatisticas-atendimentos", select: "#estatisticas-atendimentos", swap: "outerHTML", replace_url: true do%>
+    <%= inputs_de_ate @de, @ate %>
+    <input type="submit">
+  <% end %>
+</nav>
+
+<div id="estatisticas-atendimentos">
+  <div class="card">
+    <h2>Estatísticas de atendimentos</h2>
+    <div class="grid-2">
+      <p><b>Período</b>: <%= render_data_periodo_brasil @de, @ate %></p>
+      <p><b>Total</b>: <%= @atendimentos.count %></p>
+      <p><b>Realizados</b>: <%= @atendimentos.realizados.count %></p>
+      <p><b>Faltantes</b>: <%= @atendimentos.passados.nao_realizados.count %></p>
+      <p><b>Futuros</b>: <%= @atendimentos.futuros.count %></p>
+      <p><b>Pacientes</b>: <%= @atendimentos.map(&:pessoa).uniq.count %></p>
+    </div>
+  </div>
+
+  <%= line_chart @atendimentos.group(:data).count.map { |k,v| [render_data_brasil(k), v] }, title: "Atendimentos por data", xtitle: "Data", ytitle: "Nº de atendimentos" %>
+  <%= line_chart @atendimentos.realizados.group(:data).count.map { |k,v| [render_data_brasil(k), v] }, title: "Atendimentos realizados por data", xtitle: "Data", ytitle: "Nº de atendimentos" %>
+  <%= line_chart @atendimentos.ate_agora.nao_realizados.group(:data).count.map { |k,v| [render_data_brasil(k), v] }, title: "Atendimentos não realizados por data", xtitle: "Data", ytitle: "Nº de atendimentos" %>
+
+  <%= column_chart @atendimentos.contagem_por_profissional.map { |k, v| [k.descricao_completa, v] }, title: "Atendimentos por profissional", xtitle: "Profissional", ytitle: "Nº de atendimentos" %>
+  <%= column_chart @atendimentos.contagem_por_tipo.map { |k,v| [k.tipo.upcase, v] }, title: "Atendimentos por tipo", xtitle: "Tipo", ytitle: "Nº de atendimentos" %>
+</div>

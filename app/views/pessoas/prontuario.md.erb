@@ -1,4 +1,4 @@
-<% titulo_doc = "Prontuário multiprofissional" %>
+<% titulo_doc = "Prontuário multiprofissional - #{@pessoa.nome_completo}".upcase %>
 ---
 # Para ser usado com Pandoc
 # convertendo para LaTeX ou PDF
@@ -54,7 +54,7 @@ header-includes:
     \fancyhead[L]{} % coloque aqui cabeçalho à esquerda
     \fancyhead[R]{<%= titulo_doc %>}
     \fancyfoot[C]{<%= titulo_da_aplicacao %>}
-    %\fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+    \fancyfoot[R]{\thepage}
     \pagestyle{fancy}
     ```
 

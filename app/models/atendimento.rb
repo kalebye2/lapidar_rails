@@ -29,29 +29,30 @@ class Atendimento < ApplicationRecord
   scope :passados, -> { where(data: Date.current, horario: ..Time.current).or(self.where data_reagendamento: Date.current, horario: ..Time.current).or(self.where data: ..Date.current - 1.day).or(self.where data_reagendamento: ..Date.current - 1.day) }
   # scope :a_ocorrer, -> { where("COALESCE(data_reagendamento, data) > CURRENT_DATE").or self.where("COALESCE(data_reagendamento, data) >= CURRENT_DATE AND COALESCE(horario_reagendamento, horario) > CURRENT_TIME") }
 
-  scope :do_periodo, -> (periodo = Atendimento.minimum(:data)..Atendimento.maximum(:data), ordem = :asc) { where(data: periodo).order(data: ordem, horario: ordem) }
+  scope :do_periodo, -> (periodo = Atendimento.minimum(:data)..Atendimento.maximum(:data)) { where(data: periodo).or(self.where(data_reagendamento: periodo)) }
   scope :ate_hoje, -> { where(data: ..Date.current).or(self.where(data_reagendamento: ..Date.current)) }
   scope :ate_agora, -> { where(id: map{ |atendimento| if atendimento.horario_passado then atendimento.id end }.compact) }
+  scope :ate_ontem, -> () { do_periodo(..Date.yesterday) }
   scope :reagendados_ate_hoje, -> { where(data_reagendamento: ..Date.current) }
-  scope :de_hoje, -> (ordem = :asc) { where(data: Date.current).order(horario: ordem, horario_reagendamento: ordem) }
-  scope :reagendados_de_hoje, -> (ordem = :asc) { where(data_reagendamento: Date.current).em_ordem(ordem) }
-  scope :de_hoje_com_reagendados, -> (ordem = :asc) { where(data: Date.current).or(self.where data_reagendamento: Date.current).em_ordem ordem }
-  scope :da_semana, -> (semana: Date.current.all_week, ordem_data: :asc, ordem_horario: :asc) { where(data: semana).em_ordem }
+  scope :de_hoje, -> () { where(data: Date.current) }
+  scope :reagendados_de_hoje, -> () { where(data_reagendamento: Date.current) }
+  scope :de_hoje_com_reagendados, -> () { where(data: Date.current).or(self.where data_reagendamento: Date.current) }
+  scope :da_semana, -> (semana: Date.current.all_week) { where(data: semana) }
   scope :desta_semana, -> { da_semana }
   scope :da_semana_passada, -> { da_semana semana: (Date.current - 1.week).all_week }
-  scope :reagendados_da_semana, -> (semana: Date.current.all_week, ordem_data: :asc, ordem_horario: :asc) { where(data_reagendamento: semana).em_ordem(ordem_data) }
-  scope :do_mes_atual, -> { where(data: Date.current.all_month).em_ordem }
-  scope :reagendados_do_mes_atual, -> { where(data_reagendamento: Date.current.all_month).em_ordem ordem }
+  scope :reagendados_da_semana, -> (semana: Date.current.all_week) { where(data_reagendamento: semana) }
+  scope :do_mes_atual, -> { where(data: Date.current.all_month) }
+  scope :reagendados_do_mes_atual, -> { where(data_reagendamento: Date.current.all_month) }
   scope :deste_mes, -> { do_mes_atual }
   scope :reagendados_deste_mes, -> { reagendados_do_mes_atual }
-  scope :do_mes_passado, -> { where(data: (Date.current - 1.month).all_month).em_ordem }
-  scope :reagendados_do_mes_passado, -> { where(data_reagendamento: (Date.current - 1.month).all_month).em_ordem ordem }
+  scope :do_mes_passado, -> { where(data: (Date.current - 1.month).all_month) }
+  scope :reagendados_do_mes_passado, -> { where(data_reagendamento: (Date.current - 1.month).all_month) }
   scope :do_ano_atual, -> { where(data: Date.current.all_year) }
   scope :reagendados_do_ano_atual, -> { where(data_reagendamento: Date.current.all_year) }
   scope :deste_ano, -> { do_ano_atual }
   scope :reagendados_deste_ano, -> { reagendados_do_ano_atual }
-  scope :do_ano_passado, -> { where(data: (Date.current - 1.year).all_year).em_ordem }
-  scope :reagendados_do_ano_passado, -> { where(data_reagendamento: (Date.current - 1.year).all_year).em_ordem ordem }
+  scope :do_ano_passado, -> { where(data: (Date.current - 1.year).all_year) }
+  scope :reagendados_do_ano_passado, -> { where(data_reagendamento: (Date.current - 1.year).all_year) }
   scope :reagendados, -> { where.not(data_reagendamento: nil) }
 
   # ordenados
@@ -62,10 +63,9 @@ class Atendimento < ApplicationRecord
   scope :com_anotacoes, -> { where.not(anotacoes: [nil, ""]) }
 
   scope :sem_local_definido, -> { where(atendimento_local: nil) }
-  scope :dos_locais, -> (atendimento_local = AtendimentoLocal.all, ordem = nil) do
+  scope :com_local_definido, -> { where.not(atendimento_local: nil) }
+  scope :dos_locais, -> (atendimento_local = AtendimentoLocal.all) do
     relation = group(atendimento_local: atendimento_local)
-    if ordem != nil
-    end
     relation.count
   end
 
@@ -77,18 +77,15 @@ class Atendimento < ApplicationRecord
   scope :de_acompanhamentos_finalizados, -> { where.not acompanhamento: {acompanhamento_finalizacao_motivo: nil} }
 
   # agrupamentos
-  scope :contagem_por_dia, -> (periodo = "1900-01-01".."2999-12-31", ordem = nil) do
-    relation = where(data: periodo).group(:data)
-    if ordem != nil
-      relation.order(count_id: ordem)
-    end
+  scope :contagem_por_dia, -> do
+    relation = group(:data)
     relation.count
   end
-  scope :contagem_por_mes, -> (periodo = "1900-01-01".."2999-12-31", ordem = nil) do
-    contagem_por_dia(periodo, ordem).group_by { |k,v| k.strftime("%m/%Y") }.map { |k,v| [k.to_date.all_month, v.map(&:last).sum] }.to_h
+  scope :contagem_por_mes, -> do
+    contagem_por_dia.group_by { |k,v| k.strftime("%m/%Y") }.map { |k,v| [k.to_date.all_month, v.map(&:last).sum] }.to_h
   end
-  scope :contagem_por_ano, -> (periodo = "1900-01-01".."2999-12-31", ordem = nil) do
-    contagem_por_dia(periodo, ordem).group_by { |k,v| k.strftime("%Y") }.map { |k,v| [k, v.map(&:last).sum] }.to_h
+  scope :contagem_por_ano, -> do
+    contagem_por_dia.group_by { |k,v| k.strftime("%Y") }.map { |k,v| [k, v.map(&:last).sum] }.to_h
   end
   scope :contagem_por_profissional, -> (profissionais = Profissional.all, ordem = nil) do
     relation = joins(:acompanhamento).group(:profissional_id)
@@ -137,7 +134,7 @@ class Atendimento < ApplicationRecord
     joins("JOIN pessoas AS responsaveis ON responsaveis.id = acompanhamentos.pessoa_responsavel_id").where(query)
   end
 
-  scope :valor, -> { includes(:atendimento_valor).sum(:valor) }
+  scope :valor, -> { joins(:atendimento_valor).sum(:valor) }
 
   def consideracoes
     anotacoes

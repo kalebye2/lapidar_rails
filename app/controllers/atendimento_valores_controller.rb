@@ -16,7 +16,7 @@ class AtendimentoValoresController < ApplicationController
 
     if @atendimento_valores.blank?
       if usuario_atual.financeiro?
-        @atendimento_valores = AtendimentoValor.do_periodo(@de..@ate, ordem: :desc)
+        @atendimento_valores = AtendimentoValor.do_periodo(@de..@ate)
       else
         @atendimento_valores = usuario_atual.profissional.atendimento_valores.do_periodo
       end

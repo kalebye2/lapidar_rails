@@ -41,7 +41,7 @@
 <% end %>
 
 <% dict_textarea.each do |k,v| %>
-  <%== hx_tr_textarea patch: caminho_ajax, name: "familia_historico[#{k}]", th: (h v), texto: familia_historico.attributes[k.to_s], placeholder: v, html_class: cl, id: "#{id = "#{cl}-#{k}"}", select: id, target: id %>
+  <%== hx_tr_textarea patch: caminho_ajax, name: "familia_historico[#{k}]", th: (h v), texto: familia_historico.attributes[k.to_s], placeholder: v, html_class: cl, id: "#{id = "#{cl}-#{k}"}", select: "##{id}", target: "##{id}", swap: "outerHTML" %>
 <% end %>
 
 <% else %>

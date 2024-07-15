@@ -54,6 +54,11 @@ class AcompanhamentoReajustesController < ApplicationController
       end
 
       format.pdf do
+        pdf = AcompanhamentoReajusteInformativoPdf.new(@acompanhamento_reajuste)
+        send_data pdf.render,
+          filename: "#{nome_documento}.pdf",
+          type: "application/pdf",
+          disposition: :inline
       end
     end
   end

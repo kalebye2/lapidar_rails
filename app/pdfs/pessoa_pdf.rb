@@ -33,8 +33,8 @@ class PessoaPdf < BasePdf
     move_down 24
 
     text @pessoa.render_sexo
-    text @pessoa.estado_civil.capitalize
-    text @pessoa.instrucao_grau.grau
+    text @pessoa.estado_civil&.capitalize
+    text @pessoa.instrucao_grau&.grau
 
     text "#{@pessoa.endereco_completo_com_cep}"
 

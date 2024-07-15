@@ -4,6 +4,31 @@
 
 <%= render "navbar_financeiro" %>
 
+<h2>Declaração de quitação anual (Imposto de Renda)</h2>
+<form target="_blank" action="<%= declaracao_ir_acompanhamento_path %>">
+  <%# <%= (@acompanhamento.primeiro_atendimento.data.year..(Date.today + 10.years).year).to_a %1> %>
+
+  <div class="field">
+    <label for="ano">Ano</label>
+    <select name="ano" id="ano">
+      <% (@acompanhamento.data_inicio.year..(Date.today - 1.year).year).each do |ano| %>
+        <option value="<%= ano %>"><%= ano %></option>
+      <% end %>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="formato">Formato</label>
+    <select name="format" id="format">
+      <% %i[ pdf ].each do |format| %>
+        <option value="<%= format %>"><%= format.upcase %></option>
+      <% end %>
+    </select>
+  </div>
+
+  <input type="submit" value="Verificar">
+</form>
+
 <table id="tabela-financeiro">
   <thead>
     <tr>
@@ -16,7 +41,7 @@
       <% periodo_total = @acompanhamento.atendimentos.minimum(:data)..@acompanhamento.atendimentos.maximum(:data) %>
       <td>Valor total</td>
       <td class="dinheiro">
-        <%= render_dinheiro_centavos @acompanhamento.valor_bruto periodo_total %>
+        <%= render_dinheiro_centavos @acompanhamento.valor_bruto %>
       </td>
     </tr>
 
@@ -42,12 +67,12 @@
 
     <tr>
       <td>Taxa total</td>
-      <td class="dinheiro"><%= render_dinheiro_centavos @acompanhamento.atendimento_valores.soma_taxas periodo_total %></td>
+      <td class="dinheiro"><%= render_dinheiro_centavos @acompanhamento.atendimento_valores.soma_taxas %></td>
     </tr>
 
     <tr>
       <td>Taxa deste mês</td>
-      <td class="dinheiro"><%= render_dinheiro_centavos @acompanhamento.atendimento_valores.soma_taxas %></td>
+      <td class="dinheiro"><%= render_dinheiro_centavos @acompanhamento.atendimento_valores.deste_mes.soma_taxas %></td>
     </tr>
   </tbody>
 </table>

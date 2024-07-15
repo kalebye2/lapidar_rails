@@ -1,3 +1,4 @@
+<% titulo "Reajuste - #{@acompanhamento_reajuste.pessoa.nome_abreviado}" %>
 <h1>Reajuste - <%= @acompanhamento_reajuste.pessoa.nome_abreviado %></h1>
 <h2>Em <%= @acompanhamento_reajuste.acompanhamento.tipo.upcase %>
 por <%= @acompanhamento_reajuste.profissional.descricao_completa %></h2>
@@ -36,7 +37,7 @@ por atendimento.
       <ul>
         <li>
           <%= link_to "Markdown", acompanhamento_reajuste_path(@acompanhamento_reajuste, format: :md) %>
-          <%= link_to "PDF", acompanhamento_reajuste_path(@acompanhamento_reajuste) %>
+          <%= link_to "PDF", acompanhamento_reajuste_path(@acompanhamento_reajuste, format: :pdf), target: :blank %>
         </li>
       </ul>
     </li>

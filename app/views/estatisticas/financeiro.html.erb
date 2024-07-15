@@ -1,3 +1,25 @@
-<h1>Estatisticas#financeiro</h1>
-<p>Find me in app/views/estatisticas/financeiro.html.erb</p>
+<% titulo "Estatísticas: Financeiro" %>
+<h1>Financeiro</h1>
 <%= render "navbar" %>
+<% id_principal = "estatisticas-recebimentos" %>
+
+<br>
+
+<nav class="navbar navcenter">
+  <%= hx_form get: financeiro_estatisticas_path, swap: "outerHTML", select: "##{id_principal}", target: "##{id_principal}", replace_url: true do %>
+    <%= inputs_de_ate @de, @ate %>
+    <input type="submit">
+  <% end %>
+</nav>
+
+<div id="<%= id_principal %>">
+  <%= line_chart @recebimentos.group(:data).sum(:valor).map { |k,v| [render_data_brasil(k), v / 100.0] }, prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true, title: "Recebimentos do período (#{@recebimentos.count})" %>
+
+  <%= bar_chart @recebimentos.joins(:profissional).group("profissionais.id").sum(:valor).map { |k,v| ["#{Profissional.find(k)&.funcao[..2]} #{Profissional.find(k).nome_abreviado}", v / 100.0] }, prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true, title: "Recebimentos por profissional" %>
+  <%= column_chart @recebimentos.joins(:profissional).group("profissionais.id", :data).sum(:valor).map { |k,v| [[Profissional.find(k[0]).descricao_completa, render_data_brasil(k[1])],v / 100.0] }.to_h, prefix: "R$ ", zeros: 2, decimal: ",", thousands: ".", stacked: true %>
+
+  <%# <%= column_chart @recebimentos.joins(:acompanhamento).group("acompanhamentos.id", :data).sum(:valor).map { |k,v| [["#{Acompanhamento.find(k[0]).pessoa.nome_abreviado} - #{Acompanhamento.find(k[0]).tipo.upcase}", render_data_brasil(k[1])],v / 100.0] }.to_h, stacked: true, prefix: "R$ ", thousands: ".", zeros: 2, decimal: "," %1> %>
+
+  <%= pie_chart @recebimentos.joins(:acompanhamento).group("acompanhamentos.id").sum(:valor).map { |k,v| [Acompanhamento.find(k).render_info_para_profissional, v] }, donut: true %>
+
+</div>
