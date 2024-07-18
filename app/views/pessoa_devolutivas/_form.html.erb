@@ -28,14 +28,14 @@
     </tr>
 
     <tr>
-      <th width="20%">Responsável</th>
+      <th width="20%">Interessado(a)</th>
       <% curr_id = "#{cl}-responsavel" %>
       <td id="<%= curr_id %>">
         <form <%== hx_set patch: caminho_limpo, select: "##{curr_id}", target: "##{curr_id}", swap: "outerHTML" %>>
           <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
-          <select name="pessoa_devolutiva[pessoa_responsavel_id]">
+          <select name="pessoa_devolutiva[pessoa_interessada_id]">
             <% Pessoa.ordem_alfabetica.each do |pessoa| %>
-              <option <%= if devolutiva.pessoa_responsavel_id == pessoa.id then "selected" end %> value="<%= pessoa.id %>">
+              <option <%= if devolutiva.pessoa_interessada_id == pessoa.id then "selected" end %> value="<%= pessoa.id %>">
                 <%= pessoa.nome_completo %>
                 -
                 <%= pessoa.render_idade %>

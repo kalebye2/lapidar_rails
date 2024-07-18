@@ -32,7 +32,7 @@ class PessoaDevolutiva < ApplicationRecord
     {
       profissional: profissional.descricao_completa,
       paciente: paciente.nome_completo,
-      interessado: pessoa_interessada&.nome_completo,
+      "interessado(a)" => pessoa_interessada&.nome_completo,
       data: data.strftime("%d/%m/%Y"),
     }.compact
   end

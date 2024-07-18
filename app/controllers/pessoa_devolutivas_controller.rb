@@ -26,15 +26,16 @@ class PessoaDevolutivasController < ApplicationController
 
   # GET /pessoa_devolutivas/1 or /pessoa_devolutivas/1.json
   def show
+    filename = "devolutiva_#{@pessoa_devolutiva.pessoa.nome_completo.parameterize}_#{@pessoa_devolutiva.data}"
     respond_to do |format|
       format.html
       format.md do
         response.headers["Content-Type"] = "text/markdown"
-        response.headers["Content-Disposition"] = "attachment; filename=devolutiva_#{@pessoa_devolutiva.pessoa.nome_completo.parameterize}_#{@pessoa_devolutiva.data}.md"
+        response.headers["Content-Disposition"] = "attachment; filename=#{filename}.md"
       end
       format.pdf do
         pdf = PessoaDevolutivaPdf.new(@pessoa_devolutiva)
-        send_data pdf.render, filename: "devolutiva.pdf", type: "application/pdf", disposition: :inline
+        send_data pdf.render, filename: "#{filename}.pdf", type: "application/pdf", disposition: :inline
       end
     end
   end
@@ -107,6 +108,6 @@ class PessoaDevolutivasController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def pessoa_devolutiva_params
-      params.require(:pessoa_devolutiva).permit(:pessoa_id, :pessoa_responsavel_id, :profissional_id, :data, :feedback_responsavel, :orientacoes_profissional, :pontos_a_abordar)
+      params.require(:pessoa_devolutiva).permit(:pessoa_id, :pessoa_interessada_id, :profissional_id, :data, :feedback_responsavel, :orientacoes_profissional, :pontos_a_abordar)
     end
 end

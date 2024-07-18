@@ -17,8 +17,8 @@
   </div>
 
   <div class="field">
-    <%= form.label :pessoa_responsavel_id, "Com quem?" %>
-    <%= form.select :pessoa_responsavel_id, Pessoa.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc).map { |p| ["#{p.nome_completo} - #{p.render_idade}", p.id] }, include_blank: "[a própria pessoa]"  %>
+    <%= form.label :pessoa_interessada_id, "Com quem?" %>
+    <%= form.select :pessoa_interessada_id, Pessoa.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc).map { |p| ["#{p.nome_completo} - #{p.render_idade}", p.id] }, include_blank: "[a própria pessoa]"  %>
   </div>
 
   <div class="field">
