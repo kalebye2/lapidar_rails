@@ -13,6 +13,7 @@ class Profissional < ApplicationRecord
   accepts_nested_attributes_for :profissional_horarios
 
   has_many :acompanhamentos
+  has_many :acompanhamento_tipos, through: :profissional_funcao
   has_many :acompanhamento_horarios, through: :acompanhamentos
   has_many :acompanhamento_reajustes, through: :acompanhamentos
   has_many :pacientes, through: :acompanhamentos, source: :pessoa

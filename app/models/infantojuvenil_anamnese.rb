@@ -14,15 +14,14 @@ class InfantojuvenilAnamnese < ApplicationRecord
   has_one :infantojuvenil_anamnese_sono
 
   belongs_to :atendimento
-  has_one :acompanhamento, through: :atendimento
-  has_one :pessoa, through: :acompanhamento
+  belongs_to :pessoa
   alias paciente pessoa
-  has_one :profissional, through: :acompanhamento
-  has_one :pessoa_responsavel, through: :acompanhamento
+  belongs_to :profissional
+  belongs_to :pessoa_responsavel, class_name: "Pessoa", optional: true
+  belongs_to :acompanhamento_tipo
 
   accepts_nested_attributes_for :infantojuvenil_anamnese_gestacao
   accepts_nested_attributes_for :pessoa
-  accepts_nested_attributes_for :acompanhamento
 
   scope :do_periodo, -> (periodo) { joins(:atendimento).where(atendimento: {data: periodo}) }
 
@@ -47,20 +46,15 @@ class InfantojuvenilAnamnese < ApplicationRecord
     if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
       query = "LOWER(CONCAT(responsaveis.nome, ' ', COALESCE(responsaveis.nome_do_meio, ''), ' ', responsaveis.sobrenome)) LIKE ?", "%#{like}%"
     end
-    joins(:acompanhamento).joins("JOIN pessoas AS responsaveis ON responsaveis.id = acompanhamentos.pessoa_responsavel_id").where(query)
+    joins("JOIN pessoas AS responsaveis ON responsaveis.id = infantojuvenil_anamneses.pessoa_responsavel_id").where(query)
   end
 
   after_create -> (anamnese) { anamnese.criar_anamnese_completa }
 
   def identificador
-    "#{data.strftime "%Y%m%d"}#{acompanhamento.id}#{pessoa.id}#{pessoa_responsavel&.id}#{profissional.id}#{id}"
+    "#{data.strftime "%Y%m%d"}#{profissional.documento_valor&.to_s}#{pessoa.id}#{pessoa_responsavel&.id}#{profissional.id}#{id}"
   end
 
-  def data
-    atendimento.data
-  end
-
-  #
   alias alimentacao infantojuvenil_anamnese_alimentacao
 
   alias comunicacao infantojuvenil_anamnese_comunicacao
@@ -105,8 +99,8 @@ class InfantojuvenilAnamnese < ApplicationRecord
         idade: pessoa.render_idade(data),
         sexo: pessoa.render_sexo,
         responsável_legal: "#{pessoa_responsavel&.nome_completo} #{pessoa_responsavel&.render_sexo_sigla}",
-        serviço_procurado: acompanhamento.tipo.upcase,
-        profissional: profissional.descricao_completa,
+        serviço_procurado: acompanhamento_tipo&.tipo&.upcase,
+        profissional: profissional&.descricao_completa,
         data_da_consulta: data&.strftime("%d/%m/%Y"),
         motivo_da_consulta: motivo_consulta,
       },

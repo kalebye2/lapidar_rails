@@ -48,6 +48,8 @@ class AtendimentoValoresController < ApplicationController
       end
     end
 
+    @atendimento_valores = @atendimento_valores.em_ordem
+
     @profissional = @acompanhamento&.profissional || (Profissional.find(params[:profissional]) unless params[:profissional].blank?) || usuario_atual.profissional
     @responsavel = params[:responsavel]
     @params = params.permit(:de, :ate, :profissional, :atendimento_tipo, :realizado, :pessoa, :responsavel)

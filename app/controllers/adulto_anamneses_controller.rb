@@ -13,10 +13,27 @@ class AdultoAnamnesesController < ApplicationController
     end
 
     @params = params.permit :de, :ate, :profissional
+
   end
 
   # GET /adulto_anamneses/1 or /adulto_anamneses/1.json
   def show
+    nome_documento = "anamnese-adulta_#{@adulto_anamnese.pessoa.nome_completo.parameterize}_#{@adulto_anamnese.data}"
+    respond_to do |format|
+      format.html
+
+      format.md do
+        response.headers["Content-Type"] = "text/markdown"
+        response.headers["Content-Disposition"] = "attachment; filename=#{nome_documento}.md"
+      end
+
+      format.pdf do
+        send_data AdultoAnamnesePdf.new(@adulto_anamnese).render,
+          filename: "#{nome_documento}.pdf",
+          type: "application/pdf",
+          disposition: :inline
+      end
+    end
   end
 
   # GET /adulto_anamneses/new
@@ -31,6 +48,7 @@ class AdultoAnamnesesController < ApplicationController
   # POST /adulto_anamneses or /adulto_anamneses.json
   def create
     @adulto_anamnese = AdultoAnamnese.new(adulto_anamnese_params)
+    @adulto_anamnese.profissional = usuario_atual.profissional
 
     respond_to do |format|
       if @adulto_anamnese.save

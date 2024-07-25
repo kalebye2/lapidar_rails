@@ -1,10 +1,49 @@
+<% titulo "Anamnese: #{@adulto_anamnese.pessoa.nome_abreviado} #{render_data_brasil @adulto_anamnese.data}" %>
 <p style="color: green"><%= notice %></p>
 
-<%= render @neuropsicologico_adulto_anamnese %>
+<%# <%= render @adulto_anamnese %1> %>
 
-<div>
-  <%= link_to "Edit this neuropsicologico adulto anamnese", edit_neuropsicologico_adulto_anamnese_path(@neuropsicologico_adulto_anamnese) %> |
-  <%= link_to "Back to neuropsicologico adulto anamneses", neuropsicologico_adulto_anamneses_path %>
+<h1>
+  Anamnese
+  <%= link_to @adulto_anamnese.pessoa.nome_abreviado, @adulto_anamnese.pessoa %>
+</h1>
 
-  <%= button_to "Destroy this neuropsicologico adulto anamnese", @neuropsicologico_adulto_anamnese, method: :delete %>
-</div>
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Voltar", adulto_anamneses_path, class: "icon-previous" %>
+    </li>
+    <li>
+      <%= link_to "Editar", edit_adulto_anamnese_path(@adulto_anamnese), class: "icon-pencil" %>
+    </li>
+    <li>
+      <%= link_to "Excluir", @adulto_anamnese, method: :delete, class: "icon-bin" %>
+    </li>
+
+    <li>
+      <%= link_to "Baixar", "javascript:void(0);", class: "icon-download" %>
+      <ul>
+        <li>
+          <%= link_to "PDF", adulto_anamnese_path(@adulto_anamnese, format: :pdf), class: "icon-file-pdf", target: :blank %>
+        </li>
+          <%= link_to "Markdown", adulto_anamnese_path(@adulto_anamnese, format: :md), class: "icon-file-empty" %>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<table id="<%= dom_id @adulto_anamnese %>">
+  <tbody>
+    <% @adulto_anamnese.dados.each do |k,v| %>
+      <tr>
+        <th colspan="100%" style="font-size:1.5em;"><%= k.to_s.humanize %></th>
+      </tr>
+      <% v.each do |k,v| %>
+        <tr>
+          <th><%= k.to_s.humanize %></th>
+          <td><%= v %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

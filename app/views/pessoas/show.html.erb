@@ -141,16 +141,22 @@
 <% if !@pessoa.infantojuvenil_anamneses.empty? %>
   <div class="pessoa-infantojuvenil-anamneses">
     <h3>Anamneses infantojuvenis</h3>
-    <ul>
-      <% @pessoa.infantojuvenil_anamneses.each do |anamnese| %>
-        <%= link_to anamnese do %>
-          <li>
-            <%= render_data_brasil anamnese.atendimento.data %> - 
-            <%= anamnese.profissional.descricao_completa %>
-          </li>
-        <% end %>
+    <div class="grid-3">
+      <% @pessoa.infantojuvenil_anamneses.first(2).each do |anamnese| %>
+        <%= render "infantojuvenil_anamnese_card", infantojuvenil_anamnese: anamnese %>
       <% end %>
-    </ul>
+    </div>
+  </div>
+<% end %>
+
+<% if !@pessoa.adulto_anamneses.empty? %>
+  <div class="pessoa-adulto-anamneses">
+    <h3>Anamneses adultas</h3>
+    <div class="grid-4">
+      <% @pessoa.adulto_anamneses.first(3).each do |anamnese| %>
+        <%= render "adulto_anamnese_card", adulto_anamnese: anamnese %>
+      <% end %>
+    </div>
   </div>
 <% end %>
 

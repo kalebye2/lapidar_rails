@@ -11,11 +11,31 @@
     </div>
   <% end %>
 
+  <h2>Identificação</h2>
+
   <div class="field">
-    <%= form.label :atendimento_id, style: "display: block" %>
-    <%= form.select :atendimento_id, usuario_atual.profissional.atendimentos.de_maiores_de_idade.query_like_tipo("anamnese").map {
-      |atendimento| ["#{atendimento.pessoa.nome_abreviado} acompanhado por #{atendimento.profissional.nome_abreviado} em #{render_data_brasil atendimento.data}", atendimento.id]
-    } %>
+    <%= form.label :pessoa_id %>
+    <%= form.select :pessoa_id, usuario_atual.profissional.acompanhamentos.map(&:pessoa).uniq.map { |pessoa| ["#{pessoa.nome_completo} (#{[render_data_brasil(pessoa.data_nascimento), pessoa.render_idade].compact.join " - "})", pessoa.id] } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :data %>
+    <%= form.date_field :data, value: adulto_anamnese.data || Date.current %>
+  </div>
+
+  <div class="field">
+    <%= form.label :acompanhamento_tipo_id, "Serviço procurado" %>
+    <%= form.select :acompanhamento_tipo_id, usuario_atual.profissional.acompanhamento_tipos.map { |tipo| [tipo.tipo.upcase, tipo.id] } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :pessoa_responsavel_id, "Responsável" %>
+    <%= form.select :pessoa_responsavel_id, Pessoa.all.map { |pessoa| ["#{pessoa.nome_completo} (#{[render_data_brasil(pessoa.data_nascimento), pessoa.render_idade].join " "})", pessoa.id] }, include_blank: "O próprio" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :motivo_consulta, "Motivo da consulta" %>
+    <%= form.text_area :motivo_consulta %>
   </div>
 
   <div class="field">
@@ -24,13 +44,15 @@
   </div>
 
   <div class="field">
-    <%= form.label :historico_profissional, "Histórico profissional", style: "display: block" %>
-    <%= form.text_area :historico_profissional %>
+    <%= form.label :quem_encaminhou, style: "display: block" %>
+    <%= form.text_field :quem_encaminhou %>
   </div>
 
+  <h2>Histórico</h2>
+
   <div class="field">
-    <%= form.label :aspectos_psicoemocionais, style: "display: block" %>
-    <%= form.text_area :aspectos_psicoemocionais %>
+    <%= form.label :historico_profissional, "Histórico profissional", style: "display: block" %>
+    <%= form.text_area :historico_profissional %>
   </div>
 
   <div class="field">
@@ -44,23 +66,30 @@
   </div>
 
   <div class="field">
-    <%= form.label :aspectos_psicossociais, style: "display: block" %>
-    <%= form.text_area :aspectos_psicossociais %>
-  </div>
-
-  <div class="field">
     <%= form.label :antecedentes_familiares, style: "display: block" %>
     <%= form.text_area :antecedentes_familiares %>
   </div>
 
   <div class="field">
-    <%= form.label :comorbidades, style: "display: block" %>
-    <%= form.text_area :comorbidades %>
+    <%= form.label :desenvolvimento_neuropsicomotor, style: "display: block" %>
+    <%= form.text_area :desenvolvimento_neuropsicomotor %>
+  </div>
+
+  <h2>Condição atual</h2>
+
+  <div class="field">
+    <%= form.label :aspectos_psicoemocionais, style: "display: block" %>
+    <%= form.text_area :aspectos_psicoemocionais %>
   </div>
 
   <div class="field">
-    <%= form.label :desenvolvimento_neuropsicomotor, style: "display: block" %>
-    <%= form.text_area :desenvolvimento_neuropsicomotor %>
+    <%= form.label :aspectos_psicossociais, style: "display: block" %>
+    <%= form.text_area :aspectos_psicossociais %>
+  </div>
+
+  <div class="field">
+    <%= form.label :comorbidades, style: "display: block" %>
+    <%= form.text_area :comorbidades %>
   </div>
 
   <div class="field">
@@ -94,14 +123,11 @@
   </div>
 
   <div class="field">
-    <%= form.label :quem_encaminhou, style: "display: block" %>
-    <%= form.text_field :quem_encaminhou %>
-  </div>
-
-  <div class="field">
     <%= form.label :motivo_encaminhamento, "Motivo do encaminhamento", style: "display: block" %>
     <%= form.text_area :motivo_encaminhamento %>
   </div>
+
+  <h2>Anotações do profissional</h2>
 
   <div class="field">
     <%= form.label :diagnostico_preliminar, "Diagnóstico preliminar", style: "display: block" %>

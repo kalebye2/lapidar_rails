@@ -192,7 +192,7 @@ class PessoasController < ApplicationController
   ### recursos extras
   # devolutivas
   def devolutivas
-    @devolutivas = @pessoa.devolutiva.order(data: :desc)
+    @devolutivas = @pessoa.devolutivas.order(data: :desc)
     respond_to do |format|
       format.html
       format.json

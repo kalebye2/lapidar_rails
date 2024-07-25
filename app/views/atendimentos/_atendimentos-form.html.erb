@@ -5,13 +5,14 @@
     <label for="ate">Até</label>
     <input type="date" name="ate" id="ate" value="<%= @ate %>">
 
+
     <br>
     
     <label for="tipo">Tipo de atendimento</label>
     <select name="tipo">
       <option value="">Todos</option>
       <% AtendimentoTipo.all.each do |atendimento_tipo| %>
-          <option value="<%= atendimento_tipo.id %>" <%= "selected" unless atendimento_tipo.id != @params[:tipo] %>><%= atendimento_tipo.tipo.upcase %></option>
+        <option value="<%= atendimento_tipo.id %>" <%== "selected" unless "#{atendimento_tipo.id}" != @params[:tipo] %>><%= atendimento_tipo.tipo.upcase %></option>
       <% end %>
     </select>
 
@@ -21,7 +22,7 @@
     <select name="pessoa" id="pessoa">
       <option value="">Todos</option>
       <% pessoas.each do |pessoa| %>
-        <option value="<%= pessoa.id %>" <%= "selected" if pessoa.id == @params[:pessoa] %>><%= pessoa.nome_abreviado %> (<%= pessoa.render_idade %>)</option>
+        <option value="<%= pessoa.id %>" <%== "selected" if "#{pessoa.id}" == @params[:pessoa] %>><%= pessoa.nome_abreviado %> (<%= pessoa.render_idade %>)</option>
       <% end %>
     </select>
 

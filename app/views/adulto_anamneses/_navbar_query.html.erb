@@ -15,3 +15,11 @@
     <input type="submit" value="Atualizar">
   <% end %>
 </nav>
+
+<nav class="navbar navcenter" id="navbar_adicionar" <%= "hx-swap-oob=\"true\"" if hx_request? %>>
+  <ul>
+    <li>
+      <%= link_to "Adicionar", new_adulto_anamnese_path, class: "icon-plus" %>
+    </li>
+  </ul>
+</nav>

@@ -29,7 +29,7 @@
 
       <p>Serviço procurado:
       <strong>
-        <%= infantojuvenil_anamnese.acompanhamento.tipo.upcase %>
+        <%= infantojuvenil_anamnese.acompanhamento_tipo&.tipo&.upcase %>
       </strong>
       </p>
 
@@ -40,7 +40,7 @@
 
       <%#= link_to "editar", infantojuvenil_anamnese_path(infantojuvenil_anamnese) %>
       <% if @usuario %>
-        <%= link_to "Acompanhar", acompanhamento_path(infantojuvenil_anamnese.acompanhamento), class: "button" %>
+        <%= link_to "Acompanhar paciente", pessoa_path(infantojuvenil_anamnese.pessoa), class: "button" %>
         <button hx-get="<%= edit_infantojuvenil_anamnese_path(infantojuvenil_anamnese) %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML" hx-select="#<%= curr_id %>" class="button">editar</button>
       <% end %>
     </td>
@@ -90,7 +90,7 @@
   <th>Motivo para acompanhamento</th>
   <td>
     <% if @usuario %>
-      <input type="text" id="acompanhamento_motivo" value="<%= infantojuvenil_anamnese.acompanhamento.motivo %>" name="acompanhamento[motivo]" <%= hx_set patch: infantojuvenil_anamnese_path(infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s), select: "#acompanhamento_motivo", trigger: "change" %>>
+      <input type="text" id="acompanhamento_motivo" value="<% infantojuvenil_anamnese.acompanhamento_tipo %>" name="acompanhamento[motivo]" <%= hx_set patch: infantojuvenil_anamnese_path(infantojuvenil_anamnese, authenticity_token: form_authenticity_token.to_s), select: "#acompanhamento_motivo", trigger: "change" %>>
     <% else %>
       <%= infantojuvenil_anamnese.acompanhamento.motivo %>
     <% end %>

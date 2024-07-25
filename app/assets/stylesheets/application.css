@@ -891,6 +891,7 @@ dt {
 	--bg-color: var(--main-color);
 	--bg-alt-color: var(--secondary-color);
 	padding: .5em;
+	display: inline-block;
 	background-color: var(--bg-color);
 	border-radius: 1em;
 	color: white;

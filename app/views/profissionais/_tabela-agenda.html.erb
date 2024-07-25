@@ -20,7 +20,7 @@
           <td>
             <% profissional.profissional_horarios.where(semana_dia: semana_dia).map { |profissional_horario| [profissional_horario, profissional.acompanhamento_horarios.de_acompanhamentos_em_andamento.where(semana_dia: profissional_horario.semana_dia, horario: profissional_horario.horario)] }.each do |profissional_horario| %>
               <% atendimento_do_horario = [] %>
-              <% profissional.atendimentos.do_periodo(Date.today..Date.today + 1.week).map do |a| %>
+              <% profissional.atendimentos.do_periodo(Date.current..Date.current - 1.day + 1.week).map do |a| %>
                 <% if a.data_inicio_verdadeira.wday == semana_dia.id && a.horario == profissional_horario.first.horario then atendimento_do_horario.append a end %>
                 <% end %>
 

@@ -41,23 +41,14 @@
 <% end %>
 
 <% if p.infantojuvenil_anamneses.count > 0 %>
-  <h3>
-    <%= pluralize p.infantojuvenil_anamneses.count, "Anamnese infantojuvenil", "Anamneses infantojuvenis" %>
-  </h3>
-  <ul>
-    <% p.infantojuvenil_anamneses.each do |anamnese| %>
-      <%= link_to anamnese, class: "anamnese-infantojuvenil" do %>
-        <li>
-          <%= render_data_brasil anamnese.atendimento.data %>
-          - por
-          <%= anamnese.profissional.descricao_completa %>
-          (<%= anamnese.acompanhamento.tipo.upcase %>)
-        </li>
+    <h3>
+      <%= pluralize p.infantojuvenil_anamneses.count, "Anamnese infantojuvenil", "Anamneses infantojuvenis" %>
+    </h3>
+    <div class="grid-3">
+      <% p.infantojuvenil_anamneses.each do |anamnese| %>
+        <%= render "pessoas/infantojuvenil_anamnese_card", infantojuvenil_anamnese: anamnese %>
       <% end %>
-      [<%= link_to "PDF", infantojuvenil_anamnese_path(anamnese, format: :pdf), target: :blank %>]
-      [<%= link_to "Markdown", infantojuvenil_anamnese_path(anamnese, format: :md) %>]
-    <% end %>
-  </ul>
+    </div>
 <% end %>
 
 <%= render "navbar", acompanhamento: @acompanhamento, usuario_acompanhamento: @usuario_acompanhamento %>

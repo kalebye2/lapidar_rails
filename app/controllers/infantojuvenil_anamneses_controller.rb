@@ -29,7 +29,7 @@ class InfantojuvenilAnamnesesController < ApplicationController
   end
 
   def show
-    nome_documento = "anamnese-infantojuvenil_#{@infantojuvenil_anamnese.pessoa.nome_completo.parameterize}_#{@infantojuvenil_anamnese.atendimento.data}"
+    nome_documento = "anamnese-infantojuvenil_#{@infantojuvenil_anamnese.pessoa.nome_completo.parameterize}_#{@infantojuvenil_anamnese.data}"
     respond_to do |format|
       format.html
 
@@ -171,7 +171,12 @@ class InfantojuvenilAnamnesesController < ApplicationController
   def infantojuvenil_anamnese_params
     params.require(:infantojuvenil_anamnese).permit(
       :atendimento_id,
-      :motivo_consulta,
+      :pessoa_id,
+      :pessoa_responsavel_id,
+      :profissional_id,
+      :data,
+      :acompanhamento_motivo,
+      :data_consulta,
       :diagnostico_preliminar,
       :plano_tratamento,
       :prognostico,

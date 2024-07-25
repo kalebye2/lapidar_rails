@@ -26,10 +26,10 @@ class AcompanhamentoDadosPdf < BasePdf
     if @acompanhamento.pessoa_responsavel
       text 'Responsável legal: ' + @acompanhamento.pessoa_responsavel.nome_completo
     end
-    text 'Motivo do acompanhamento: ' + @acompanhamento.motivo
+    text '<b>Motivo do acompanhamento</b>: ' + @acompanhamento.motivo, inline_format: true
     text 'Início em: ' + @acompanhamento.data_inicio.strftime("%d/%m/%Y")
-    text 'Quantidade de sessões: ' + @acompanhamento.atendimento.count.to_s
-    text 'Sessões atendidas: ' + @acompanhamento.atendimento.where(presenca: true).count.to_s
+    text 'Quantidade de sessões: ' + @acompanhamento.atendimentos.passados.count.to_s
+    text 'Sessões atendidas: ' + @acompanhamento.atendimentos.where(presenca: true).count.to_s
     text 'Valor da sessão: ' + helpers.number_to_currency(@acompanhamento.valor_sessao.to_f / 100, unit: "R$ ", separator: ",", delimiter: ".", precision: 2)
   end
 

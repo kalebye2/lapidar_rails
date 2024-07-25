@@ -66,7 +66,14 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.index ["motivo"], name: "ix_acompanhamentos_motivo"
   end
 
-  create_table "adulto_anamneses", primary_key: "atendimento_id", force: :cascade do |t|
+  create_table "adulto_anamneses", force: :cascade do |t|
+    t.integer "pessoa_id"
+    t.integer "profissional_id"
+    t.date "data"
+    t.integer "acompanhamento_tipo_id"
+    t.integer "pessoa_responsavel_id"
+    t.integer "atendimento_id"
+    t.text "motivo_consulta"
     t.integer "escolaridade_anos"
     t.text "historico_profissional"
     t.text "aspectos_psicoemocionais"
@@ -477,7 +484,12 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   end
 
   create_table "infantojuvenil_anamneses", force: :cascade do |t|
-    t.integer "atendimento_id", null: false
+    t.integer "atendimento_id"
+    t.integer "pessoa_id"
+    t.integer "pessoa_responsavel_id"
+    t.integer "profissional_id"
+    t.integer "acompanhamento_tipo_id"
+    t.date "data"
     t.text "motivo_consulta"
     t.string "diagnostico_preliminar", limit: 1000
     t.string "plano_tratamento", limit: 1000
@@ -854,7 +866,11 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "acompanhamentos", "atendimento_plataformas", column: "plataforma_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "acompanhamentos", "pessoas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "acompanhamentos", "profissionais", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "adulto_anamneses", "acompanhamento_tipos", on_update: :cascade
   add_foreign_key "adulto_anamneses", "atendimentos", on_update: :cascade
+  add_foreign_key "adulto_anamneses", "pessoas", column: "pessoa_responsavel_id", on_update: :cascade
+  add_foreign_key "adulto_anamneses", "pessoas", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "adulto_anamneses", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimento_locais", "atendimento_local_tipos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimento_locais", "paises", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimento_reagendamentos", "atendimentos"
@@ -889,7 +905,11 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "infantojuvenil_anamnese_sexualidades", "infantojuvenil_anamneses", on_update: :cascade, on_delete: :cascade
   add_foreign_key "infantojuvenil_anamnese_socioafetividades", "infantojuvenil_anamneses", on_update: :cascade, on_delete: :cascade
   add_foreign_key "infantojuvenil_anamnese_sonos", "infantojuvenil_anamneses", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "infantojuvenil_anamneses", "acompanhamento_tipos", on_update: :cascade, on_delete: :nullify
   add_foreign_key "infantojuvenil_anamneses", "atendimentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "infantojuvenil_anamneses", "pessoas", column: "pessoa_responsavel_id", on_update: :cascade, on_delete: :nullify
+  add_foreign_key "infantojuvenil_anamneses", "pessoas", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "infantojuvenil_anamneses", "profissionais", on_update: :cascade, on_delete: :nullify
   add_foreign_key "instrumento_relatos", "atendimentos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "instrumento_relatos", "instrumentos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "instrumento_subfuncao_juncoes", "instrumentos", on_update: :cascade, on_delete: :cascade

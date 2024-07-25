@@ -3,9 +3,9 @@
 # convertendo para LaTeX ou PDF
 # Caso queira saber mais visite https://pandoc.org
 #
-title: Anamnese infantojuvenil
-author-meta: <%= @infantojuvenil_anamnese.profissional.descricao_completa %>
-date-meta: <%= render_data_brasil @infantojuvenil_anamnese.data %>
+title: Anamnese adulto
+author-meta: <%= @adulto_anamnese.profissional.descricao_completa %>
+date-meta: <%= render_data_brasil @adulto_anamnese.data %>
 
 # Formatação
 # tire o "#" onde quiser mudar valor
@@ -35,10 +35,10 @@ header-includes:
     % para cabeçalho e rodapé
     \usepackage{fancyhdr}
     \fancyhead[L]{} % coloque aqui cabeçalho à esquerda
-    \fancyhead[R]{Anamnese infantojuvenil - <%= @infantojuvenil_anamnese.pessoa.nome_completo %>}
+    \fancyhead[R]{Anamnese adulto - <%= @adulto_anamnese.pessoa.nome_completo %>}
     \fancyfoot[L]{\footnotesize{
-    E-mail: \href{mailto:<%= @infantojuvenil_anamnese.profissional.email %>}{<%= @infantojuvenil_anamnese.profissional.email %>}\\
-    Fone: \href{tel:<%= @infantojuvenil_anamnese.profissional.pessoa.render_fone_link %>}{<%= @infantojuvenil_anamnese.profissional.pessoa.render_fone_local %>}
+    E-mail: \href{mailto:<%= @adulto_anamnese.profissional.email %>}{<%= @adulto_anamnese.profissional.email %>}\\
+    Fone: \href{tel:<%= @adulto_anamnese.profissional.pessoa.render_fone_link %>}{<%= @adulto_anamnese.profissional.pessoa.render_fone_local %>}
     }}
     \fancyfoot[C]{\thepage\ / \pageref{LastPage}}
     \pagestyle{fancy}
@@ -54,7 +54,7 @@ header-includes:
 
 ---
 
-<% @infantojuvenil_anamnese.dados.each do |k,v| %>
+<% @adulto_anamnese.dados.each do |k,v| %>
 # <%= k&.to_s&.humanize %>
 
 <% v.each do |k,v| %>

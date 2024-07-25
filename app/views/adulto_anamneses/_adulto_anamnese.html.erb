@@ -11,9 +11,11 @@
 
   <p>
   <strong>Em</strong>:
-  <%= adulto_anamnese.acompanhamento.tipo.upcase %>
+  <%= adulto_anamnese.acompanhamento_tipo&.tipo&.upcase %>
   </p>
 
-  <%= link_to "Visualizar", adulto_anamnese_path(adulto_anamnese), class: "icon-eye" %>
+  <%= link_to "Visualizar", adulto_anamnese_path(adulto_anamnese), class: "icon-eye button" %>
+  <%= link_to "PDF", adulto_anamnese_path(adulto_anamnese, format: :pdf), class: "icon-file-pdf button", target: :blank %>
+  <%= link_to "Markdown", adulto_anamnese_path(adulto_anamnese, format: :md), class: "icon-file-empty button" %>
 
 </div>
