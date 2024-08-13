@@ -124,8 +124,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "nome", limit: 50, null: false
     t.string "site", limit: 100
     t.string "descricao"
-    t.decimal "taxa_fixa"
-    t.decimal "taxa_atendimento"
+    t.integer "taxa_fixa"
+    t.integer "taxa_atendimento"
   end
 
   create_table "atendimento_reagendamentos", primary_key: "atendimento_id", force: :cascade do |t|
