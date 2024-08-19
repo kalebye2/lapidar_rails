@@ -878,6 +878,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "atendimento_valores", "atendimentos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimentos", "acompanhamentos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimentos", "acompanhamentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "atendimentos", "acompanhamentos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimentos", "atendimento_locais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimentos", "atendimento_modalidades", column: "modalidade_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "atendimentos", "atendimento_tipos", on_update: :cascade, on_delete: :cascade
