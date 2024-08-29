@@ -36,6 +36,7 @@ class Laudo < ApplicationRecord
   def numero_de_sessoes
     acompanhamento.numero_de_sessoes(inicio: data_inicial, final: data_final)
   end
+  alias num_sessoes numero_de_sessoes
 
   def dias_de_avaliacao
     (data_final - data_inicial).to_i
