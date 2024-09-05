@@ -7,7 +7,7 @@ class AcompanhamentoHorario < ApplicationRecord
 
   default_scope { order(semana_dia_id: :asc, horario: :asc, acompanhamento_id: :asc) }
 
-  scope :de_acompanhamentos_em_andamento, -> { joins(:acompanhamento).where(acompanhamento: { acompanhamento_finalizacao_motivo: nil }) }
+  scope :de_acompanhamentos_em_andamento, -> { joins(:acompanhamento).where(acompanhamento: Acompanhamento.em_andamento ) }
 
 
   def descricao

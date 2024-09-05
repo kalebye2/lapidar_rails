@@ -80,6 +80,11 @@
       </div>
 
       <div class="field">
+        <%= form.label "Horário final da primeira consulta (padrão 1h a mais do horário inicial)" %>
+        <input type="time" name="horario_final_primeira_consulta" id="horario_final_primeira_consulta">
+      </div>
+
+      <div class="field">
         <label for="tipo_primeira_consulta">Tipo da primeira consulta</label>
         <select name="tipo_primeira_consulta" id="tipo_primeira_consulta">
           <% AtendimentoTipo.all.each do |atendimento_tipo| %>
@@ -93,8 +98,20 @@
           Modalidade da primeira consulta
         </label>
         <select name="modalidade_primeira_consulta" id="modalidade_primeira_consulta">
+          <option value="">[Escolha]</option>
           <% AtendimentoModalidade.all.each do |atendimento_modalidade| %>
             <option value="<%= atendimento_modalidade.id %>"><%= atendimento_modalidade.modalidade.upcase %></option>
+          <% end %>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="local_primeira_consulta">
+          Local da primeira consulta
+        </label>
+        <select name="local_primeira_consulta" id="local_primeira_consulta">
+          <% AtendimentoLocal.all.each do |atendimento_local| %>
+            <option value="<%= atendimento_local.id %>"><%= atendimento_local.descricao.upcase %></option>
           <% end %>
         </select>
       </div>

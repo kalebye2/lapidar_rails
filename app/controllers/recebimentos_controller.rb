@@ -52,6 +52,11 @@ class RecebimentosController < ApplicationController
 
     @params = params.permit(:de, :ate, :pessoa, :pagante, :modalidade, :profissional)
 
+    @cobrar_ate_mes_passado = valores_a_cobrar(..(Date.current - 1.month).end_of_month)
+    @cobrar_ate_hoje = valores_a_cobrar
+
+    # @cobrar_ate_mes_passado = Acompanhamento.all.map &:valor_a_cobrar
+
     filename = "#{nome_do_site}-relatorio-recebimentos_#{@de}_#{@ate}_#{profissional.funcao.parameterize}_#{profissional.nome_completo.parameterize}#{"_" + pessoa&.parameterize unless pessoa.blank?}#{"_" + pagante&.parameterize unless pagante.blank?}#{"_" + modalidade&.modalidade unless modalidade.blank?}"
 
     respond_to do |format|
@@ -95,6 +100,8 @@ class RecebimentosController < ApplicationController
           type: "application/pdf",
           disposition: :inline
       end
+
+      format.json
     end
   end
 
@@ -115,6 +122,8 @@ class RecebimentosController < ApplicationController
           type: "application/pdf",
           disposition: :inline
       end
+
+      format.json
     end
   end
 
@@ -247,5 +256,18 @@ class RecebimentosController < ApplicationController
     if usuario_atual.nil? || !(usuario_atual.corpo_clinico? || usuario_atual.financeiro?)
       render file: "#{Rails.root}/public/404.html", status: 403
     end
+  end
+
+  def valores_a_cobrar periodo = ..Date.current
+    Acompanhamento.joins(:pessoa).order("pessoas.nome" => :asc, "pessoas.nome_do_meio" => :asc, "pessoas.sobrenome" => :asc).all.map { |acompanhamento|
+
+      acompanhamento.valor_a_cobrar(periodo) > 0 ? {
+        paciente: acompanhamento.pessoa,
+        responsável: acompanhamento.pessoa_responsavel,
+        acompanhamento: acompanhamento,
+        profissional: acompanhamento.profissional,
+        valor: acompanhamento.valor_a_cobrar(periodo),
+      } : nil
+    }.compact
   end
 end

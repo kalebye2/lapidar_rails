@@ -54,6 +54,8 @@ class AcompanhamentosController < ApplicationController
       format.csv do
         send_data @acompanhamentos.para_csv, filename: "acompanhamentos_#{@params.to_h.compact.map { |k,v| "#{k.to_s}=#{v&.to_s}" }.join "_"}.csv", type: "text/csv"
       end
+
+      format.json
     end
   end
 
@@ -66,11 +68,17 @@ class AcompanhamentosController < ApplicationController
     @contagem_atendimentos_realizados = @atendimentos.realizados.count
     @contagem_atendimentos_futuros = @atendimentos.futuros.count
 
-    @pagy, @atendimentos = pagy(@atendimentos, items: @n_items)
+    if params[:anotacoes].presence
+      @atendimentos = params[:anotacoes] == true ? @atendimentos.com_anotacoes : @atendimentos.sem_anotacoes
+    end
+
     @params = params.permit(:de, :ate, :n_items, *acompanhamento_params_soft)
 
     respond_to do |format|
-      format.html
+      format.html do
+        @pagy, @atendimentos = pagy(@atendimentos, items: @n_items)
+      end
+
       format.pdf do
         nome_documento = "dados-acompanhamento_#{@acompanhamento.pessoa.nome_completo.parameterize}_#{@acompanhamento.data_inicio}_#{@acompanhamento.tipo}"
         pdf = AcompanhamentoDadosPdf.new(@acompanhamento)
@@ -100,7 +108,7 @@ class AcompanhamentosController < ApplicationController
 
     respond_to do |format|
       if @acompanhamento.save
-        atendimento = Atendimento.create(acompanhamento: @acompanhamento, data: @acompanhamento.data_inicio, horario: params[:horario_primeira_consulta] || "08:00", atendimento_tipo_id: params[:tipo_primeira_consulta] || AtendimentoTipo.first.id, modalidade_id: params[:modalidade_primeira_consulta] || AtendimentoModalidade.first)
+        atendimento = Atendimento.create(acompanhamento: @acompanhamento, data: @acompanhamento.data_inicio, horario: params[:horario_primeira_consulta] || "08:00", horario_fim: params[:horario_final_primeira_consulta] || params[:horario_primeira_consulta]&.to_time + 1.hour || "09:00", atendimento_tipo_id: params[:tipo_primeira_consulta] || AtendimentoTipo.first.id, modalidade_id: params[:modalidade_primeira_consulta] || AtendimentoModalidade.first.id, atendimento_local_id: params[:local_primeira_consulta])
         format.html { redirect_to acompanhamento_url(@acompanhamento), notice: "Acompanhamento registrado com sucesso!" }
         format.json { render :show, status: :created, location: @acompanhamento }
       else
@@ -160,7 +168,9 @@ class AcompanhamentosController < ApplicationController
           trans: params[:trans],
           orientacao_sexual: params[:orientacao_sexual],
         }
-        pdf = AcompanhamentoProntuarioPdf.new(@acompanhamento, options: prontuario_options)
+
+        tipo = params[:compacto] ? AcompanhamentoProntuarioCompactoPdf : AcompanhamentoProntuarioPdf
+        pdf = tipo.new(@acompanhamento, options: prontuario_options)
 
         send_data(pdf.render,
                   filename: "#{nome_documento}.pdf",
@@ -217,6 +227,50 @@ class AcompanhamentosController < ApplicationController
 
     proxima_semana = (Date.current + semanas_pra_passar.week).all_week.map { |d| {d.wday => d} }
     proxima_data = proxima_semana[au.data.wday].values.first
+    
+    proxima_data = @acompanhamento.proxima_data_de_atendimento_a_partir_de_hoje
+    atendimento.data = proxima_data[:data]
+    atendimento.horario = proxima_data[:horario]
+    atendimento.horario_fim = proxima_data[:horario_fim]
+    atendimento.modalidade_id = au.modalidade_id
+    atendimento.atendimento_local_id = au.atendimento_local_id
+    atendimento.atendimento_tipo_id = au.atendimento_tipo_id
+    avalor.valor = @acompanhamento.valor_sessao
+    avalor.taxa_porcentagem_interna = auvalor.taxa_porcentagem_interna
+    avalor.taxa_porcentagem_externa = @acompanhamento.atendimento_plataforma.taxa_atendimento || auvalor.taxa_porcentagem_externa
+
+
+
+    if atendimento.save!
+      avalor.save!
+      if vem_de_acompanhamento
+        redirect_to @acompanhamento, notice: "Novo atendimento registrado"
+      else
+        redirect_to root_path, notice: "Atendimento registrado para #{@acompanhamento.tipo.upcase} de #{@acompanhamento.pessoa.nome_abreviado} em #{atendimento.data.strftime("%d/%m/%Y")} às #{atendimento.horario.strftime("%Hh%M")}"
+      end
+    else
+      redirect_to @acompanhamento, notice: "Não deu certo"
+    end
+  end
+
+  def new_atendimento_esta_semana
+    if @acompanhamento.profissional != usuario_atual.profissional
+      redirect_to acompanhamento_path(@acompanhamento), notice: "Não senhor!"
+      return
+    end
+    semanas_pra_passar = 4 / @acompanhamento.num_sessoes
+
+    au = @acompanhamento.atendimentos.em_ordem.last
+    atendimento = @acompanhamento.atendimentos.new
+    auvalor = au.atendimento_valor
+    avalor = atendimento.build_atendimento_valor
+
+    # proxima_semana = (Date.current + semanas_pra_passar.week).all_week.map { |d| {d.wday => d} }
+    # proxima_data = proxima_semana[au.data.wday].values.first
+
+    horarios_do_acompanhamento = @acompanhamento.acompanhamento_horarios.order(:semana_dia_id)
+    proximos_dias_desta_semana = (Date.current..(Date.current + 1.week)).map { |day| [day.wday, day] }.to_h
+    proxima_data = Date.current # TODO
     
     # atendimento.data = au.data + semanas_pra_passar.week
     atendimento.data = proxima_data

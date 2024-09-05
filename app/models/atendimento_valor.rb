@@ -11,6 +11,38 @@ class AtendimentoValor < ApplicationRecord
 
   default_scope { includes(:atendimento) }
 
+  before_save do
+    # final_valor = self.valor&.to_s || "0,00"
+    # if !final_valor.include?(",")
+    #   final_valor += ","
+    # end
+    # index_virgula = final_valor.index(",")
+    # valor_inteiros = final_valor[..index_virgula - 1]
+    # valor_decimais = ((final_valor[index_virgula + 1..]) + "00")[..1]
+    # self.valor = "#{valor_inteiros}#{valor_decimais}".gsub(",", "").to_i
+
+    mudar = {
+      valor: self.valor,
+      desconto: self.desconto,
+      taxa_porcentagem_externa: self.taxa_porcentagem_externa,
+      taxa_porcentagem_interna: self.taxa_porcentagem_interna,
+    }
+    mudar = mudar.map { |k,v|
+      final_valor = v&.to_s || "0,00"
+      if !final_valor.include?(",")
+        final_valor += ","
+      end
+      index_virgula = final_valor.index(",")
+      valor_inteiros = final_valor[..index_virgula - 1]
+      valor_decimais = ((final_valor[index_virgula + 1..]) + "00")[..1]
+      [k, "#{valor_inteiros}#{valor_decimais}".gsub(",", "").to_i]
+    }.to_h
+    self.valor = mudar[:valor]
+    self.desconto = mudar[:desconto]
+    self.taxa_porcentagem_externa = mudar[:taxa_porcentagem_externa]
+    self.taxa_porcentagem_interna = mudar[:taxa_porcentagem_interna]
+  end
+
   scope :em_ordem, -> (crescente = true) { order(data: crescente ? :asc : :desc) }
   scope :de_atendimentos_realizados, -> { where(atendimento: {presenca: true}) }
   scope :de_atendimentos_nao_realizados, -> { where(atendimento: {presenca: [false, nil]}) }

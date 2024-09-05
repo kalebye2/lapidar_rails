@@ -20,4 +20,28 @@
       </p>
     </div>
   <% end %>
+
+  <% if usuario_atual&.corpo_clinico? || usuario_atual&.secretaria? %>
+    <%= link_to instrumentos_path do %>
+      <div class="card instrumentos-card">
+        <h2 class="icon-file-empty">Instrumentos</h2>
+        <p>Ver os instrumentos que a clínica registrou
+        para uso dos profissionais</p>
+      </div>
+    <% end %>
+
+    <%= link_to estatisticas_path do %>
+      <div class="card estatisticas-card">
+        <h2 class="icon-chart">Estatísticas</h2>
+        <p>Veja as estatísticas da clínica</p>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%= link_to profissional_folgas_path do %>
+    <div class="card profissional-folgas-card">
+      <h2 class="icon-lifebuoy">Folgas</h2>
+      <p>Visualize as folgas dos profisionais</p>
+    </div>
+  <% end %>
 </div>

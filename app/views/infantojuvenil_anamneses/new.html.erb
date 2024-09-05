@@ -3,9 +3,28 @@
 <h1 id="main-title">Criar anamnese infantojuvenil</h1>
 
 <%= form_for @infantojuvenil_anamnese do |form| %>
+  <%# <div class="field"> %>
+  <%# <%= form.label :atendimento_id, "Atendimento" %1> %>
+  <%# <%= form.select :atendimento_id, usuario_atual.profissional.atendimentos.de_menores_de_idade.query_like_tipo("anamnese").map { |atendimento| [atendimento.informacoes_com_pessoa, atendimento.id] } %1> %>
+  <%# </div> %>
+
   <div class="field">
-  <%= form.label :atendimento_id, "Atendimento" %>
-  <%= form.select :atendimento_id, usuario_atual.profissional.atendimentos.de_menores_de_idade.query_like_tipo("anamnese").map { |atendimento| [atendimento.informacoes_com_pessoa, atendimento.id] } %>
+    <%= form.label :pessoa_id %>
+    <%= form.select :pessoa_id, Pessoa.em_ordem_alfabetica.joins(:acompanhamentos).where(acompanhamentos: {menor_de_idade: 1..}).map { |pessoa| [pessoa.nome_completo, pessoa.id] } %>
+  </div>
+  <div class="field">
+    <%= form.label :pessoa_responsavel_id, "Responsável" %>
+    <%= form.select :pessoa_responsavel_id, Pessoa.em_ordem_alfabetica.map { |pessoa| ["#{pessoa.nome_completo} - CPF #{pessoa.render_cpf} (#{pessoa.email})", pessoa.id] } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :acompanhamento_tipo_id, "Tipo de acompanhamento" %>
+    <%= form.select :acompanhamento_tipo_id, usuario_atual&.profissional&.profissional_funcao&.acompanhamento_tipos&.map { |tipo| [tipo.tipo.upcase, tipo.id] } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :data %>
+    <%= form.date_field :data %>
   </div>
   <%= form.submit "Criar" %>
 <% end %>

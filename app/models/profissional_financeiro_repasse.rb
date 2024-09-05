@@ -5,6 +5,17 @@ class ProfissionalFinanceiroRepasse < ApplicationRecord
   belongs_to :usuario, optional: true
   alias modalidade pagamento_modalidade
 
+  before_save do
+    valor_final = self.valor&.to_s || "0,00"
+    if !valor_final.include?(",")
+      valor_final += ","
+    end
+    index_virgula = valor_final.index(",")
+    valor_inteiros = valor_final[..index_virgula - 1]
+    valor_decimais = ((valor_final[index_virgula + 1..]) + "00")[..1]
+    self.valor = "#{valor_inteiros}#{valor_decimais}".gsub(",", "").to_i
+  end
+
   scope :do_mes, -> (mes = Date.current.all_month, ordem: :asc) { where(data: mes).order(data: ordem) }
   scope :deste_mes, -> {do_mes}
   scope :do_mes_atual, -> {do_mes}
@@ -16,7 +27,7 @@ class ProfissionalFinanceiroRepasse < ApplicationRecord
   scope :do_profissional, -> (profissional) { where(profissional: profissional) }
   scope :do_profissional_com_id, -> (id) { where(profissional_id: id) }
   scope :da_modalidade, -> (modalidade) { where(pagamento_modalidade: modalidade) }
-  scope :da_modalidade_com_id, -> (id) { where(modalidade_id: id) }
+  scope :da_modalidade_com_id, -> (id) { where(pagamento_modalidade_id: id) }
 
   def para_linha_csv
     "#{data},#{valor},#{profissional.nome_completo},#{profissional.pessoa.cpf},#{pagamento_modalidade.modalidade}"

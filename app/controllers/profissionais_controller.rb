@@ -178,10 +178,14 @@ class ProfissionaisController < ApplicationController
 
     @recebimentos = @profissional.recebimentos.do_periodo(@de..@ate)
     @recebimentos_totais = @recebimentos
-    @pagy, @recebimentos = pagy(@recebimentos, items: @num_itens)
+    respond_to do |format|
+      format.html do
+        @pagy, @recebimentos = pagy(@recebimentos, items: @num_itens)
 
-    if hx_request?
-      render partial: "recebimentos-tabela", locals: {profissional: @profissional, recebimentos: @recebimentos, recebimentos_totais: @recebimentos_totais }
+        if hx_request?
+          render partial: "recebimentos-tabela", locals: {profissional: @profissional, recebimentos: @recebimentos, recebimentos_totais: @recebimentos_totais }
+        end
+      end
     end
   end
 

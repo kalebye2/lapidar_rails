@@ -34,7 +34,14 @@
             </span>
           </td>
           <td class="text-center"><%= recebimento.usuario.profissional.descricao_completa %></td>
-          <td></td>
+          <td>
+            Recibo
+            <%= link_to "PDF", recebimento_path(recebimento, format: :pdf), target: :blank, class: "icon-file-pdf" %>
+            |
+            <%= link_to "Markdown", recebimento_path(recebimento, format: :md), class: "icon-file-empty" %>
+            <hr>
+            <%= link_to "Acompanhar", acompanhamento_path(recebimento.acompanhamento) %>
+          </td>
         </tr>
       <% end %>
     </tbody>

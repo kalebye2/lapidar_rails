@@ -17,15 +17,15 @@
 
 <nav class="navbar navcenter" style="display:block;margin:auto;">
   <div class="text-center">
-    <%= hx_form get: recebimentos_profissional_path(@params), select: "##{dom_id @profissional}-recebimentos-tabela", target: "##{dom_id @profissional}-recebimentos-tabela", replace_url: true do %>
+    <%= hx_form get: recebimentos_profissional_path(@params.except(:page)), select: "##{dom_id @profissional}-recebimentos-tabela", target: "##{dom_id @profissional}-recebimentos-tabela", replace_url: true do %>
       <label for="de">De</label>
       <input type="date" name="de" id="de" value="<%= @de %>">
       <label for="ate">Até</label>
       <input type="date" name="ate" id="ate" value="<%= @ate %>">
 
       <br>
-      <label for="n_itens">Itens por página</label>
-      <input type="number" name="n_itens" id="n_itens" value="<%= @num_itens %>">
+      <%# <label for="n_itens">Itens por página</label> %>
+      <%# <input type="number" name="n_itens" id="n_itens" value="<%= @num_itens %1>"> %>
 
       <br>
       <input type="submit" value="Atualizar">

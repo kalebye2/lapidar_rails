@@ -9,20 +9,35 @@
     <% end %>
 <% else %>
   <% if usuario_pode_mudar %>
-         <form <%== hx_set patch: atendimento_path(atendimento, ajax: true, authenticity_token: form_authenticity_token), trigger: "change", swap: "outerHTML", target: "##{dom_id(atendimento)}" %>>
+    <form <%== hx_set patch: atendimento_path(atendimento, ajax: true, authenticity_token: form_authenticity_token), swap: "outerHTML", target: "##{dom_id(atendimento)}" %>>
 
-         <label for="atendimento[atendimento_valor_attributes][valor]">Valor</label>
-         <input type="text" value="<%= atendimento_valor.valor %>" name="atendimento[atendimento_valor_attributes][valor]" data-type="currency">
+      <% valores = atendimento_valor.attributes %>
+      <% valores = valores.map { |k,v| [k.to_sym, "#{v.blank? ? 0 : v / 100},#{(v.blank? ? 0 : v % 100).to_s.insert(-1, "00")[..1]}"] }.to_h %>
 
-         <label for="atendimento[atendimento_valor_attributes][desconto]">Desconto</label>
-         <input type="number" value="<%= atendimento_valor.desconto %>" name="atendimento[atendimento_valor_attributes][desconto]">
+      <div class="field">
+        <label for="atendimento[atendimento_valor_attributes][valor]">Valor (R$)</label>
+        <input type="text" value="<%= valores[:valor] %>" name="atendimento[atendimento_valor_attributes][valor]" data-type="currency">
+      </div>
 
-         <label for="atendimento[atendimento_valor_attributes][taxa_porcentagem_externa]">Taxa externa (%)</label>
-         <input type="number" value="<%= atendimento_valor.taxa_porcentagem_externa %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_externa]">
+      <div class="field">
+        <label for="atendimento[atendimento_valor_attributes][desconto]">Desconto (R$)</label>
+        <input type="number" value="<%= valores[:desconto] %>" name="atendimento[atendimento_valor_attributes][desconto]">
+      </div>
 
-         <label for="atendimento[atendimento_valor_attributes][taxa_porcentagem_interna]">Taxa interna (%)</label>
-         <input type="number" value="<%= atendimento_valor.taxa_porcentagem_interna %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_interna %>">
-         </form>
+      <div class="field">
+        <label for="atendimento[atendimento_valor_attributes][taxa_porcentagem_externa]">Taxa externa (%)</label>
+        <input type="number" value="<%= valores[:taxa_porcentagem_externa] %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_externa]">
+      </div>
+
+      <div class="field">
+        <label for="atendimento[atendimento_valor_attributes][taxa_porcentagem_interna]">Taxa interna (%)</label>
+        <input type="number" value="<%= valores[:taxa_porcentagem_interna] %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_interna]">
+      </div>
+
+      <div class="action">
+        <input type="submit" value="Atualizar">
+      </div>
+    </form>
 <% else %>
   <%= render_dinheiro_centavos atendimento.atendimento_valor.valor %>
 <% end %>

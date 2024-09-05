@@ -1,4 +1,4 @@
-<%= form_with(model: adulto_anamnese) do |form| %>
+<%= form_with(model: adulto_anamnese, local: true) do |form| %>
   <% if adulto_anamnese.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(adulto_anamnese.errors.count, "error") %> prohibited this adulto_anamnese from being saved:</h2>
@@ -15,7 +15,7 @@
 
   <div class="field">
     <%= form.label :pessoa_id %>
-    <%= form.select :pessoa_id, usuario_atual.profissional.acompanhamentos.map(&:pessoa).uniq.map { |pessoa| ["#{pessoa.nome_completo} (#{[render_data_brasil(pessoa.data_nascimento), pessoa.render_idade].compact.join " - "})", pessoa.id] } %>
+    <%= form.select :pessoa_id, usuario_atual.profissional.pacientes.em_ordem_alfabetica.distinct.map { |pessoa| ["#{pessoa.nome_completo} (#{[render_data_brasil(pessoa.data_nascimento), pessoa.render_idade].compact.join " - "})", pessoa.id] } %>
   </div>
 
   <div class="field">

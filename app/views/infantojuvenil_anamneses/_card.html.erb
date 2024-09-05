@@ -20,7 +20,7 @@
   <% if infantojuvenil_anamnese.pessoa_responsavel %>
     <p class="icon-eye"><%= infantojuvenil_anamnese.pessoa_responsavel.nome_abreviado %></p>
   <% end %>
-  <p class="icon-calendar"><%= render_data_brasil infantojuvenil_anamnese.atendimento.data %></p>
+  <p class="icon-calendar"><%= render_data_brasil infantojuvenil_anamnese.data %></p>
   <p class="icon-archive"><%= infantojuvenil_anamnese.acompanhamento_tipo&.tipo&.upcase %></p>
   <%= link_to "Ver", infantojuvenil_anamnese_path(infantojuvenil_anamnese), class: "icon-forward button" %>
   <%= link_to "PDF", infantojuvenil_anamnese_path(infantojuvenil_anamnese, format: :pdf), target: :blank, class: "icon-file-pdf button" %>

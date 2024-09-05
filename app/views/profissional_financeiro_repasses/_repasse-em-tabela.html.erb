@@ -25,3 +25,7 @@
   <% end %>
   </td>
 </tr>
+
+<% if hx_request? %>
+  <%= render "profissionais", profissionais: Profissional.all %>
+<% end %>

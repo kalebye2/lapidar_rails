@@ -13,7 +13,6 @@ class InfantojuvenilAnamnese < ApplicationRecord
   has_one :infantojuvenil_anamnese_socioafetividade
   has_one :infantojuvenil_anamnese_sono
 
-  belongs_to :atendimento
   belongs_to :pessoa
   alias paciente pessoa
   belongs_to :profissional
@@ -23,7 +22,7 @@ class InfantojuvenilAnamnese < ApplicationRecord
   accepts_nested_attributes_for :infantojuvenil_anamnese_gestacao
   accepts_nested_attributes_for :pessoa
 
-  scope :do_periodo, -> (periodo) { joins(:atendimento).where(atendimento: {data: periodo}) }
+  scope :do_periodo, -> (periodo) { where data: periodo }
 
   scope :do_profissional, -> (profissional) { joins(:profissional).where(profissional: { id: profissional.id }) }
   scope :do_profissional_com_id, -> (id) { joins(:profissional).where(profissional: {id: id}) }

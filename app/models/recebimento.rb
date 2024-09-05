@@ -15,6 +15,17 @@ class Recebimento < ApplicationRecord
 
   default_scope { includes(:acompanhamento, :pagamento_modalidade) }
 
+  before_save do
+    valor_final = self.valor&.to_s || "0,00"
+    if !valor_final.include?(",")
+      valor_final += ","
+    end
+    index_virgula = valor_final.index(",")
+    valor_inteiros = valor_final[..index_virgula - 1]
+    valor_decimais = ((valor_final[index_virgula + 1..]) + "00")[..1]
+    self.valor = "#{valor_inteiros}#{valor_decimais}".gsub(",", "").to_i
+  end
+
   scope :do_mes, -> (mes = Date.current.all_month, ordem: :asc) { where(data: mes).order(data: ordem) }
   scope :do_mes_passado, -> { where(data: (Date.current - 1.month).all_month) }
   scope :do_mes_atual, -> { where(data: Date.current.all_month) }

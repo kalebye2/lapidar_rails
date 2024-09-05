@@ -952,6 +952,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "profissional_notas", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "psicologia_subfuncoes", "psicologia_funcoes", on_update: :cascade, on_delete: :cascade
   add_foreign_key "recebimentos", "acompanhamentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "recebimentos", "acompanhamentos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "recebimentos", "pagamento_modalidades", on_update: :cascade, on_delete: :cascade
   add_foreign_key "recebimentos", "pessoas", column: "pessoa_pagante_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "recebimentos", "usuarios", primary_key: "profissional_id", on_update: :nullify, on_delete: :nullify

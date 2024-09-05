@@ -94,8 +94,10 @@ INSERIR CONTATO PARA EMERGÊNCIA
 **Endereço**:
 <%= @pessoa.endereco_completo_com_cep %>
 
+<% if !@pessoa.atendimentos.empty? %>
 **Início dos atendimentos**:
-<%= render_data_brasil @pessoa.atendimentos.order(data: :asc).first.data %>
+<%= render_data_brasil @pessoa.atendimentos.em_ordem.first.data %>
+<% end %>
 
 **Toma medicação**:
 <%= @pessoa.pessoa_medicacoes.map { |medicacao| "#{medicacao.medicacao}#{medicacao.dose&.insert(0, " (")&.insert(-1, ")")}" }.join(", ") %>

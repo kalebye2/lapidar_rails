@@ -83,7 +83,7 @@
     INSERIR CONTATO PARA EMERGÊNCIA
   <% else %>
     <%# <% contatos = @acompanhamento.pessoa.pessoa_parentesco_juncoes.map { |p| "#{p.parente.render_fone.blank? ? "" : "#{p.parente.render_fone} - #{p.parente.nome_completo.upcase} (#{p.parentesco.parentesco.upcase})"}"} %1> %>
-    <% contatos = @acompanhamento.pessoa.parentescos_registrados.parentes.map { |parente| "#{link_to parente.parente.nome_completo.upcase, pessoa_path(parente.parente)}: #{link_to parente.parente.render_fone, 'tel:' + parente.parente.render_fone_link}" unless parente.parente.render_fone.empty? } %>
+    <% contatos = @acompanhamento.pessoa.parentescos_registrados.parentes.map { |parente| "#{link_to parente.parente.nome_completo.upcase, pessoa_path(parente.parente)}: #{link_to parente.parente.render_fone, 'tel:' + parente.parente.render_fone_link}" unless parente.parente.render_fone.blank? } %>
     <%= contatos.join(" | ").html_safe %>
   <% end %>
   </p>

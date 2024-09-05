@@ -17,7 +17,7 @@
 
   <td>
     <%#== hx_input type:"number", name: "profissional_financeiro_repasse[valor]", value: repasse.valor %>
-    <input type="number" name="profissional_financeiro_repasse[valor]" value="<%= repasse.valor %>">
+    <input type="number" name="profissional_financeiro_repasse[valor]" value="<%= "#{repasse.valor / 100},#{(repasse.valor % 100).to_s.insert(-1, "00")[..1]}" %>">
   </td>
 
   <td class="text-center">

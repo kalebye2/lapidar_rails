@@ -219,6 +219,37 @@ class Acompanhamento < ApplicationRecord
     end
   end
 
+  def proxima_data_de_atendimento_a_partir_de_hoje
+    semanas_pra_passar = 4 / num_sessoes
+    horarios_do_acompanhamento = acompanhamento_horarios.order(:semana_dia_id)
+    primeiro_dia = Date.current + (semanas_pra_passar - 1).week
+    proximos_dias_desta_semana = (primeiro_dia..(primeiro_dia + 1.week)).map { |dia| [dia.wday, dia] }.to_h
+
+
+    au = atendimentos.em_ordem.last
+
+    proxima_semana = (Date.current + semanas_pra_passar.week).all_week.map { |d| {d.wday => d} }
+
+    proximo_dia = nil
+    proximo_horario = nil
+    proximo_horario_fim = nil
+    proximos_dias_desta_semana.each do |k,v|
+      horarios_do_acompanhamento.each do |horario|
+        if k == horario.semana_dia_id && proximo_dia.blank?
+          proximo_dia = v
+          proximo_horario = horario.horario
+          proximo_horario_fim = horario.horario_fim
+        end
+      end
+    end
+
+    {
+      data: proximo_dia || au.data + 1.week,
+      horario: proximo_horario || au.horario,
+      horario_fim: proximo_horario_fim || au.horario_fim,
+    }
+  end
+
   def self.para_csv collection=all, formato_data: "%Y-%m-%d", col_sep: ","
     header = [
       "PACIENTE",

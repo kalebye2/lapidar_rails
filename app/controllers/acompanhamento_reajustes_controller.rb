@@ -34,11 +34,18 @@ class AcompanhamentoReajustesController < ApplicationController
     @acompanhamento_reajustes = @acompanhamento_reajustes.ajustes_no_periodo(@ajuste_de..@ajuste_ate)
     @acompanhamento_reajustes = @acompanhamento_reajustes.negociacoes_no_periodo(@negociacao_de..@negociacao_ate)
     @contagem = @acompanhamento_reajustes.count
-    @pagy, @acompanhamento_reajustes = pagy(@acompanhamento_reajustes, items: 9)
     @params = params.permit(:ajuste_de, :ajuste_ate, :negociacao_de, :negociacao_ate)
 
-    if hx_request?
-      render partial: "acompanhamento_reajustes/acompanhamento_reajustes-container", locals: { acompanhamento_reajustes: @acompanhamento_reajustes }
+    respond_to do |format|
+      @pagy, @acompanhamento_reajustes = pagy(@acompanhamento_reajustes, items: 9)
+      format.html do
+        if hx_request?
+          render partial: "acompanhamento_reajustes/acompanhamento_reajustes-container", locals: { acompanhamento_reajustes: @acompanhamento_reajustes }
+        end
+      end
+      format.csv do
+        #TODO
+      end
     end
   end
 

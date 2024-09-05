@@ -52,7 +52,8 @@ class AdultoAnamnesesController < ApplicationController
 
     respond_to do |format|
       if @adulto_anamnese.save
-        format.html { redirect_to adulto_anamnese_url(@adulto_anamnese), notice: " adulto anamnese was successfully created." }
+        # format.html { redirect_to adulto_anamnese_url(@adulto_anamnese), notice: " adulto anamnese was successfully created." }
+        format.html { redirect_to adulto_anamneses_url, notice: "Anamnese criada com sucesso!" }
         format.json { render :show, status: :created, location: @adulto_anamnese }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -100,6 +101,6 @@ class AdultoAnamnesesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def adulto_anamnese_params
-    params.require(:adulto_anamnese).permit(:atendimento_id, :escolaridade_anos, :historico_profissional, :aspectos_psicoemocionais, :historico_ocupacional, :historico_medico, :aspectos_psicossociais, :antecedentes_familiares, :comorbidades, :desenvolvimento_neuropsicomotor, :medicacoes_em_uso, :uso_drogas_ilicitas, :autonomia_atividades, :alimentacao, :sono, :habilidades_afetadas, :quem_encaminhou, :motivo_encaminhamento, :diagnostico_preliminar, :plano_tratamento, :prognostico)
+    params.require(:adulto_anamnese).permit(:pessoa_id, :data, :acompanhamento_tipo_id, :pessoa_responsavel_id, :motivo_consulta, :atendimento_id, :escolaridade_anos, :historico_profissional, :aspectos_psicoemocionais, :historico_ocupacional, :historico_medico, :aspectos_psicossociais, :antecedentes_familiares, :comorbidades, :desenvolvimento_neuropsicomotor, :medicacoes_em_uso, :uso_drogas_ilicitas, :autonomia_atividades, :alimentacao, :sono, :habilidades_afetadas, :quem_encaminhou, :motivo_encaminhamento, :diagnostico_preliminar, :plano_tratamento, :prognostico)
   end
 end

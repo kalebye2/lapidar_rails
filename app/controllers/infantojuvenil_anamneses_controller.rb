@@ -56,7 +56,9 @@ class InfantojuvenilAnamnesesController < ApplicationController
   end
 
   def create
+    validar_clinico
     @infantojuvenil_anamnese = InfantojuvenilAnamnese.new(infantojuvenil_anamnese_params)
+    @infantojuvenil_anamnese.profissional = usuario_atual.profissional
     respond_to do |format|
       if @infantojuvenil_anamnese.save
         format.html do
@@ -161,6 +163,16 @@ class InfantojuvenilAnamnesesController < ApplicationController
     end
   end
 
+  def validar_clinico
+    if !usuario_atual.corpo_clinico
+      nome_de_usuario = usuario_atual&.username || "visitante da plataforma"
+      funcao_de_usuario = usuario_atual&.profissional&.funcao || "Visitante"
+      id_do_usuario = usuario_atual&.id || "null"
+      erro403 "Tentativa de criação de anamnese bloqueada para #{nome_de_usuario} (função: #{funcao_de_usuario}, id: #{id_do_usuario})"
+      return
+    end
+  end
+
   def validar_edicao
     if usuario_atual.nil? || !(usuario_atual.secretaria? || usuario_atual.profissional == @infantojuvenil_anamnese.profissional)
       render file: "#{Rails.root}/public/404.html", status: 403
@@ -175,8 +187,10 @@ class InfantojuvenilAnamnesesController < ApplicationController
       :pessoa_responsavel_id,
       :profissional_id,
       :data,
+      :acompanhamento_tipo_id,
       :acompanhamento_motivo,
       :data_consulta,
+      :motivo_consulta,
       :diagnostico_preliminar,
       :plano_tratamento,
       :prognostico,

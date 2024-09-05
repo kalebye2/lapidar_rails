@@ -13,4 +13,9 @@ json.num_sessoes acompanhamento.num_sessoes
 json.valor_sessao_contrato acompanhamento.valor_sessao_contrato
 json.num_sessoes_contrato acompanhamento.num_sessoes_contrato
 json.financeiro_reajustes acompanhamento.acompanhamento_reajustes.as_json(except: [:id, :acompanhamento_id, :acompanhamento_reajuste_motivo_id], methods: [:motivo])
+json.atendimentos_totais acompanhamento.atendimentos.count
+json.atendimentos_realizados acompanhamento.atendimentos.realizados.count
+json.atendimentos_futuros acompanhamento.atendimentos.futuros.count
+json.data_ultimo_atendimento_realizado acompanhamento.atendimentos.em_ordem(:desc).realizados.first&.data_inicio_verdadeira
+json.data_proximo_atendimento acompanhamento.atendimentos.do_periodo(Date.current..).limit(2).last&.data_inicio_verdadeira
 json.url acompanhamento_url(acompanhamento, format: :json)

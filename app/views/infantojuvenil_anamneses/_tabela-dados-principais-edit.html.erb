@@ -6,20 +6,43 @@
 
   <tr>
     <% curr_id = "tabela-dados-principais-atendimento" %>
-    <th width="20%">Atendimento</th>
+    <th width="20%">Dados pessoais</th>
     <td id="<%= curr_id %>">
       <form hx-patch="<%= infantojuvenil_anamnese_path(infantojuvenil_anamnese) %>" hx-select="#tabela-dados-principais-atendimento" hx-target="#tabela-dados-principais-atendimento" hx-swap="outerHTML">
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
-        <select name="infantojuvenil_anamnese[atendimento_id]">
-          <% Atendimento.where(atendimento_tipo: AtendimentoTipo.find_by(tipo: "anamnese")).em_ordem(:desc).each do |atendimento| %>
-            <option value="<%= atendimento.id %>" <%== atendimento.id == infantojuvenil_anamnese.atendimento.id ? "selected" : "" %>>
-            <%= render_data_brasil atendimento.data %>
-            às
-            <%= render_hora_brasil atendimento.horario %> -
-            <%= atendimento.paciente.nome_abreviado %>
-            </option>
-          <% end %>
-        </select>
+        <div class="field">
+          <label for="pessoa_id">Pessoa</label>
+          <select name="infantojuvenil_anamnese[pessoa_id]" id="infantojuvenil_anamnese[pessoa_id]">
+            <% Pessoa.em_ordem_alfabetica.joins(:acompanhamentos).where(acompanhamentos: {menor_de_idade: 1..}).each do |pessoa| %>
+              <% primeiro_parente = pessoa.parentescos_registrados.parentes.first %>
+              <option value="<%= pessoa.id %>" <%== "selected" if pessoa.id == infantojuvenil_anamnese.pessoa.id %>><%= pessoa.nome_completo %> <%= primeiro_parente&.parentesco&.upcase&.insert(0, "(")&.insert(-1, ": ")&.insert(-1, primeiro_parente&.parente&.nome_abreviado)&.insert(-1, ")") %></option>
+            <% end %>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="infantojuvenil_anamnese[pessoa_responsavel_id]">Responsável</label>
+          <select name="infantojuvenil_anamnese[pessoa_responsavel_id]" id="infantojuvenil_anamnese[pessoa_responsavel_id]">
+            <% Pessoa.em_ordem_alfabetica.each do |pessoa| %>
+              <option value="<%= pessoa.id %>" <%== "selected" if pessoa.id == infantojuvenil_anamnese.pessoa_responsavel.id %>><%= pessoa.nome_completo %></option>
+            <% end %>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="infantojuvenil_anamnese[acompanhamento_tipo_id]">Serviço procurado</label>
+          <select name="infantojuvenil_anamnese[acompanhamento_tipo_id]" id="infantojuvenil_anamnese[acompanhamento_tipo_id]">
+            <% AcompanhamentoTipo.all.each do |tipo| %>
+              <option value="<%= tipo.id %>" <%== "selected" if tipo.id == infantojuvenil_anamnese.acompanhamento_tipo_id %>><%= tipo.tipo.upcase %></option>
+            <% end %>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="infantojuvenil_anamnese[data]">Data</label>
+          <input type="date" name="infantojuvenil_anamnese[data]" value="<%= infantojuvenil_anamnese.data %>" id="infantojuvenil_anamnese[data]">
+        </div>
+
         <button>Confirmar</button>
         <button hx-get="<%= infantojuvenil_anamnese_path(infantojuvenil_anamnese) %>" hx-target="#tabela-dados-principais-atendimento" hx-swap="outerHTML" hx-select="#tabela-dados-principais-atendimento">Cancelar</button>
       </form>
@@ -40,7 +63,7 @@
 
   <tr>
     <th>Idade na anamnese</th>
-    <td><%= infantojuvenil_anamnese.pessoa.render_idade(infantojuvenil_anamnese.atendimento.data) %></td>
+    <td><%= infantojuvenil_anamnese.pessoa.render_idade(infantojuvenil_anamnese.data) %></td>
   </tr>
 
   <tr>

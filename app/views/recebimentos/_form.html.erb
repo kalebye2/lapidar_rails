@@ -54,7 +54,8 @@
 
     <div class="field">
       <%= form.label "Valor" %>
-      <%= form.number_field :valor %>
+      <%# <%= form.number_field :valor %1> %>
+      <input type="number" value="<%= "#{recebimento.valor / 100},#{(recebimento.valor % 100).to_s.insert(-1, "00")[..1]}" %>" name="recebimento[valor]" id="recebimento[valor]" min=0 step=".1">
     </div>
 
     <div class="field">

@@ -21,7 +21,7 @@ class RecebimentosPdf < BasePdf
     "<table>
     <thead>
     <tr>
-    #{@recebimentos.first&.dados.map { |k,v| "<th>#{k&.to_s&.humanize&.upcase}</th>" }.join ""}
+    #{@recebimentos.first&.dados&.map { |k,v| "<th>#{k&.to_s&.humanize&.upcase}</th>" }&.join ""}
     </tr>
     </thead>
     <tbody>

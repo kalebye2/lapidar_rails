@@ -20,7 +20,7 @@ class AtendimentosController < ApplicationController
       @atendimentos = @atendimentos.da_pessoa_com_id(params[:pessoa])
     end
 
-    @params = params.permit %i[ de ate pessoa tipo atendimento ]
+    @params = params.permit %i[ de ate pessoa tipo atendimento num_itens ]
 
     respond_to do |format|
       format.html do
@@ -32,6 +32,8 @@ class AtendimentosController < ApplicationController
           render partial: "atendimentos-container", locals: { atendimentos: @atendimentos }
         end
       end
+
+      format.json
 
       format.csv do
         send_data @atendimentos.para_csv, filename: "atendimentos_#{@params.to_h.compact.map { |k,v| "#{k&.to_s}=#{v&.to_s}" }}.csv"
@@ -84,12 +86,12 @@ class AtendimentosController < ApplicationController
     if @atendimento.nil? then return end
     valor = @atendimento.build_atendimento_valor
     if !@atendimento.acompanhamento.atendimento_valores.last.nil?
-      valor.taxa_porcentagem_externa = @atendimento.acompanhamento.atendimento_valores.last.taxa_porcentagem_externa
-      valor.taxa_porcentagem_interna = @atendimento.acompanhamento.atendimento_valores.last.taxa_porcentagem_interna
+      valor.taxa_porcentagem_externa = @atendimento.acompanhamento.atendimento_valores.em_ordem.last.taxa_porcentagem_externa
+      valor.taxa_porcentagem_interna = @atendimento.acompanhamento.atendimento_valores.em_ordem.last.taxa_porcentagem_interna
       valor.valor = @atendimento.acompanhamento.valor_sessao
       valor.save
     else
-      valor.taxa_porcentagem_externa = 0
+      valor.taxa_porcentagem_externa = @atendimento.acompanhamento.atendimento_plataforma.taxa_atendimento
       valor.taxa_porcentagem_interna = 0
       valor.valor = @atendimento.acompanhamento.valor_sessao
       valor.save
@@ -322,8 +324,37 @@ class AtendimentosController < ApplicationController
     @atendimento = Atendimento.find(params[:id])
   end
 
+  def permitted_params
+    [
+      :data,
+      :horario,
+      :horario_fim,
+      :modalidade_id,
+      :acompanhamento_id,
+      :presenca,
+      :atendimento_tipo_id,
+      :anotacoes,
+      :remarcado,
+      :atendimento_local_id,
+      :data_reagendamento,
+      :horario_reagendamento,
+      :horario_reagendamento_fim,
+      atendimento_valor_attributes: [:atendimento_id,
+                                     :valor,
+                                     :desconto,
+                                     :taxa_porcentagem_externa,
+                                     :taxa_porcentagem_interna,
+                                     :id],
+                                     instrumento_relato_attributes: [:atendimento_id,
+                                                                     :instrumento_id,
+                                                                     :relato,
+                                                                     :resultados,
+                                                                     :observacoes]
+    ]
+  end
+
   def atendimento_params
-    params.require(:atendimento).permit(:data, :horario, :horario_fim, :modalidade_id, :acompanhamento_id, :presenca, :atendimento_tipo_id, :anotacoes, :remarcado, :atendimento_local_id, :data_reagendamento, :horario_reagendamento, :horario_reagendamento_fim, atendimento_valor_attributes: [:atendimento_id, :valor, :desconto, :taxa_porcentagem_externa, :taxa_porcentagem_interna, :id], instrumento_relato_attributes: [:atendimento_id, :instrumento_id, :relato, :resultados, :observacoes])
+    params.require(:atendimento).permit(permitted_params)
   end
 
   def instrumento_relato_params

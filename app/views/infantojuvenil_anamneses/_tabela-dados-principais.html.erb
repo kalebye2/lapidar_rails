@@ -6,10 +6,10 @@
 
   <tr>
     <% curr_id = "tabela-dados-principais-atendimento" %>
-    <th width="20%">Atendimento</th>
+    <th width="20%">Dados pessoais</th>
     <td id="<%= curr_id %>">
 
-      <p>Paciente
+      <p>Paciente:
       <strong>
         <%= infantojuvenil_anamnese.paciente.nome_completo %>
       </strong>
@@ -34,8 +34,9 @@
       </p>
 
       <p>Data:
-      <%= render_data_brasil infantojuvenil_anamnese.atendimento.data %> às
-      <%= render_hora_brasil infantojuvenil_anamnese.atendimento.horario %>
+      <strong>
+        <%= render_data_brasil infantojuvenil_anamnese.data %>
+      </strong>
       </p>
 
       <%#= link_to "editar", infantojuvenil_anamnese_path(infantojuvenil_anamnese) %>
@@ -65,7 +66,7 @@
   <tr>
     <% curr_id = "tabela-dados-principais-idade" %>
     <th>Idade na anamnese</th>
-    <td id="<%= curr_id %>" hx-swap-oob="true"><%= infantojuvenil_anamnese.pessoa.render_idade(infantojuvenil_anamnese.atendimento.data) %></td>
+    <td id="<%= curr_id %>" hx-swap-oob="true"><%= infantojuvenil_anamnese.pessoa.render_idade(infantojuvenil_anamnese.data) %></td>
   </tr>
 
   <tr>
