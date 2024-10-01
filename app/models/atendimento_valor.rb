@@ -32,15 +32,16 @@ class AtendimentoValor < ApplicationRecord
       if !final_valor.include?(",")
         final_valor += ","
       end
+      final_valor.gsub!(".", "")
       index_virgula = final_valor.index(",")
       valor_inteiros = final_valor[..index_virgula - 1]
       valor_decimais = ((final_valor[index_virgula + 1..]) + "00")[..1]
       [k, "#{valor_inteiros}#{valor_decimais}".gsub(",", "").to_i]
     }.to_h
-    self.valor = mudar[:valor]
-    self.desconto = mudar[:desconto]
-    self.taxa_porcentagem_externa = mudar[:taxa_porcentagem_externa]
-    self.taxa_porcentagem_interna = mudar[:taxa_porcentagem_interna]
+    self.valor = mudar[:valor] if self.valor_changed?
+    self.desconto = mudar[:desconto] if self.desconto_changed?
+    self.taxa_porcentagem_externa = mudar[:taxa_porcentagem_externa] if self.taxa_porcentagem_externa_changed?
+    self.taxa_porcentagem_interna = mudar[:taxa_porcentagem_interna] if self.taxa_porcentagem_interna_changed?
   end
 
   scope :em_ordem, -> (crescente = true) { order(data: crescente ? :asc : :desc) }

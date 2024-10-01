@@ -39,7 +39,7 @@ class AtendimentoDeclaracaoPdf < BasePdf
   private
 
   def local_e_data
-    "#{@atendimento.profissional.cidade}, " \
+    "#{@atendimento.cidade}, " \
       "#{data_por_extenso}."
   end
 end

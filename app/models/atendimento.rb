@@ -280,6 +280,10 @@ class Atendimento < ApplicationRecord
     atendimento_local.nil? ? padrao_nulo : atendimento_local.descricao
   end
 
+  def cidade padrao_nulo="Brasília"
+    atendimento_local&.endereco_cidade || profissional&.endereco_cidade || padrao_nulo
+  end
+
   def reagendado?
     !data_reagendamento.nil?
   end

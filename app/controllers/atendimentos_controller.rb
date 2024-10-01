@@ -86,14 +86,14 @@ class AtendimentosController < ApplicationController
     if @atendimento.nil? then return end
     valor = @atendimento.build_atendimento_valor
     if !@atendimento.acompanhamento.atendimento_valores.last.nil?
-      valor.taxa_porcentagem_externa = @atendimento.acompanhamento.atendimento_valores.em_ordem.last.taxa_porcentagem_externa
-      valor.taxa_porcentagem_interna = @atendimento.acompanhamento.atendimento_valores.em_ordem.last.taxa_porcentagem_interna
-      valor.valor = @atendimento.acompanhamento.valor_sessao
+      valor.taxa_porcentagem_externa = @atendimento.acompanhamento.atendimento_valores.em_ordem.last.taxa_porcentagem_externa / 100.0
+      valor.taxa_porcentagem_interna = @atendimento.acompanhamento.atendimento_valores.em_ordem.last.taxa_porcentagem_interna / 100.0
+      valor.valor = @atendimento.acompanhamento.valor_sessao / 100.0
       valor.save
     else
-      valor.taxa_porcentagem_externa = @atendimento.acompanhamento.atendimento_plataforma.taxa_atendimento
+      valor.taxa_porcentagem_externa = (@atendimento.acompanhamento.atendimento_plataforma.taxa_atendimento || 0) / 100.0
       valor.taxa_porcentagem_interna = 0
-      valor.valor = @atendimento.acompanhamento.valor_sessao
+      valor.valor = @atendimento.acompanhamento.valor_sessao / 100.0
       valor.save
     end
 
@@ -252,13 +252,20 @@ class AtendimentosController < ApplicationController
       @atendimento.atendimento_valor.destroy
     end
 
+    @acompanhamento = @atendimento.acompanhamento
+
     @atendimento.destroy
 
     respond_to do |format|
       format.html do
         if hx_request?
-          # render partial: 'acompanhamentos/caso-resumo', acompanhamento: @atendimento.acompanhamento
-          redirect_to acompanhamento_url(@atendimento.acompanhamento)
+          @atendimentos = @acompanhamento.atendimentos
+          @num_items = params[:num_items].presence || 10
+          @params = params.permit :num_items
+          @pagy, @atendimentos = pagy(@atendimentos, items: @num_itens)
+
+          # render partial: 'acompanhamentos/caso-resumo', acompanhamento: acompanhamento
+          # redirect_to acompanhamento_url(acompanhamento)
         else
           redirect_to root_path, notice: "Atendimento removido com sucesso"
         end

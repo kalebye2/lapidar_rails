@@ -1,2 +1,5 @@
-<h1>Atendimentos#destroy</h1>
-<p>Find me in app/views/atendimentos/destroy.html.erb</p>
+<h1>Atendimento destruído</h1>
+
+<% if hx_request? %>
+  <%= render "acompanhamentos/caso-resumo", acompanhamento: @acompanhamento %>
+<% end %>

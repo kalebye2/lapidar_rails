@@ -21,17 +21,17 @@
 
       <div class="field">
         <label for="atendimento[atendimento_valor_attributes][desconto]">Desconto (R$)</label>
-        <input type="number" value="<%= valores[:desconto] %>" name="atendimento[atendimento_valor_attributes][desconto]">
+        <input type="text" value="<%= valores[:desconto] %>" name="atendimento[atendimento_valor_attributes][desconto]">
       </div>
 
       <div class="field">
         <label for="atendimento[atendimento_valor_attributes][taxa_porcentagem_externa]">Taxa externa (%)</label>
-        <input type="number" value="<%= valores[:taxa_porcentagem_externa] %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_externa]">
+        <input type="text" value="<%= valores[:taxa_porcentagem_externa] %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_externa]">
       </div>
 
       <div class="field">
         <label for="atendimento[atendimento_valor_attributes][taxa_porcentagem_interna]">Taxa interna (%)</label>
-        <input type="number" value="<%= valores[:taxa_porcentagem_interna] %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_interna]">
+        <input type="text" value="<%= valores[:taxa_porcentagem_interna] %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_interna]">
       </div>
 
       <div class="action">
@@ -43,6 +43,6 @@
 <% end %>
 <% end %>
 
-<script>
-  document.querySelectorAll["input[data-type='currency']").forEach(currency_input_validate);
-</script>
+<%# <script> %>
+<%#   document.querySelectorAll["input[data-type='currency']").forEach(currency_input_validate); %>
+<%# </script> %>
