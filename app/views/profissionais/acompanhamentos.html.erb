@@ -42,6 +42,12 @@
       <input type="text" name="paciente" id="paciente" value="<%= params[:paciente] %>" style="margin:0;">
     </div>
   <% end %>
+
+  <br>
+</nav>
+
+<nav class="navbar navcenter">
+  <%= link_to "CSV", acompanhamentos_profissional_path(@params.merge format: :csv), class: "icon-table button" %>
 </nav>
 
 <br>

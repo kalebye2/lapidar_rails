@@ -15,15 +15,20 @@ class Recebimento < ApplicationRecord
 
   default_scope { includes(:acompanhamento, :pagamento_modalidade) }
 
+  scope :em_ordem, -> (ordem = :asc) { order(data: ordem) }
+
   before_save do
-    valor_final = self.valor&.to_s || "0,00"
-    if !valor_final.include?(",")
-      valor_final += ","
+    if self.valor_changed?
+      valor_final = self.valor&.to_s || "0,00"
+      if !valor_final.include?(",")
+        valor_final += ","
+      end
+      valor_final.gsub!(".", "")
+      index_virgula = valor_final.index(",")
+      valor_inteiros = valor_final[..index_virgula - 1]
+      valor_decimais = ((valor_final[index_virgula + 1..]) + "00")[..1]
+      self.valor = "#{valor_inteiros}#{valor_decimais}".gsub(",", "").to_i
     end
-    index_virgula = valor_final.index(",")
-    valor_inteiros = valor_final[..index_virgula - 1]
-    valor_decimais = ((valor_final[index_virgula + 1..]) + "00")[..1]
-    self.valor = "#{valor_inteiros}#{valor_decimais}".gsub(",", "").to_i
   end
 
   scope :do_mes, -> (mes = Date.current.all_month, ordem: :asc) { where(data: mes).order(data: ordem) }
@@ -113,21 +118,21 @@ class Recebimento < ApplicationRecord
     
   end
 
-  def self.para_csv(collection: all, formato_data: "%Y-%m-%d")
-    CSV.generate(col_sep: ',') do |csv|
+  def self.para_csv(collection: all, formato_data: "%Y-%m-%d", col_sep: ",")
+    CSV.generate(col_sep: col_sep) do |csv|
       csv << [
-        "DATA",
-        "VALOR",
-        "BENEFICIÁRIO",
-        "CPF BENEFICIÁRIO",
-        "PAGANTE",
-        "CPF PAGANTE",
-        "PROFISSIONAL",
-        "REGISTRO PROFISSIONAL",
-        "CPF PROFISSIONAL",
-        "CIDADE PROFISSIONAL",
-        "SERVIÇO PRESTADO",
-        "MODALIDADE DE PAGAMENTO"
+        "data",
+        "valor",
+        "beneficiario",
+        "cpf_beneficiario",
+        "pagante",
+        "cpf_pagante",
+        "profissional",
+        "registro_profissional",
+        "cpf_profissional",
+        "cidade_profissional",
+        "servico_prestado",
+        "modalidade_de_pagamento"
       ]
       collection.each do |r|
         csv << [

@@ -10,13 +10,13 @@
   </p>
 
   <p>
-    <strong>Biblioteca obra tipo:</strong>
-    <%= biblioteca_obra.biblioteca_obra_tipo_id %>
+    <strong>Tipo de obra</strong>
+    <%= biblioteca_obra.biblioteca_obra_tipo&.tipo&.upcase %>
   </p>
 
   <p>
-    <strong>Biblioteca editora:</strong>
-    <%= biblioteca_obra.biblioteca_editora_id %>
+    <strong>Editora</strong>
+    <%= biblioteca_obra.biblioteca_editora&.nome&.upcase %>
   </p>
 
   <p>
@@ -65,8 +65,7 @@
   </p>
 
   <p>
-    <strong>Periodico:</strong>
-    <%= biblioteca_obra.periodico_id %>
+    <strong>Biblioteca periodico:</strong>
+    <%= biblioteca_obra.biblioteca_periodico&.titulo&.upcase %>
   </p>
-
 </div>

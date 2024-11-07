@@ -57,7 +57,7 @@ class RecebimentosController < ApplicationController
 
     # @cobrar_ate_mes_passado = Acompanhamento.all.map &:valor_a_cobrar
 
-    filename = "#{nome_do_site}-relatorio-recebimentos_#{@de}_#{@ate}_#{profissional.funcao.parameterize}_#{profissional.nome_completo.parameterize}#{"_" + pessoa&.parameterize unless pessoa.blank?}#{"_" + pagante&.parameterize unless pagante.blank?}#{"_" + modalidade&.modalidade unless modalidade.blank?}"
+    filename = "#{nome_do_site&.parameterize}-relatorio-recebimentos_#{@de}_#{@ate}_#{profissional.funcao.parameterize}_#{profissional.nome_completo.parameterize}#{"_" + pessoa&.parameterize unless pessoa.blank?}#{"_" + pagante&.parameterize unless pagante.blank?}#{"_" + modalidade&.modalidade unless modalidade.blank?}"
 
     respond_to do |format|
       format.html do
@@ -89,7 +89,7 @@ class RecebimentosController < ApplicationController
           end
         end
         compressed_filestream.rewind
-        send_data compressed_filestream.read, filename: "#{Rails.application.class.module_parent.to_s}_recibos-#{params[:filetype] || "pdf"}_#{@de}_#{@ate}_#{usuario_atual.hash}.zip"
+        send_data compressed_filestream.read, filename: "#{nome_do_site&.parameterize}_recibos-#{params[:filetype] || "pdf"}_#{@de}_#{@ate}_#{usuario_atual.hash}.zip"
       end
 
       format.pdf do
@@ -254,7 +254,7 @@ class RecebimentosController < ApplicationController
 
   def validar_usuario
     if usuario_atual.nil? || !(usuario_atual.corpo_clinico? || usuario_atual.financeiro?)
-      render file: "#{Rails.root}/public/404.html", status: 403
+      erro403
     end
   end
 

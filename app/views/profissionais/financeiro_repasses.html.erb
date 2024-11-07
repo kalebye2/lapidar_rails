@@ -6,6 +6,7 @@
 </h1>
 
 <%= render "navbar", profissional: @profissional %>
+<%= render "financeiro-navbar", profissional: @profissional %>
 
 <nav class="navbar navcenter">
   <% repasses_tabela_id = "#{dom_id @profissional}_repasses_tabela" %>
@@ -17,6 +18,18 @@
 
     <p class="htmx-indicator text-center">Requisitando...</p>
   <% end %>
+</nav>
+
+<nav class="navbar navcenter" id="navbar-downloads" hx-swap-oob="true">
+  <ul>
+    <li>
+      <%= link_to "CSV", financeiro_repasses_profissional_path(@params.merge format: :csv), class: "icon-table" %>
+    </li>
+
+    <li>
+      <%= link_to "Excel", financeiro_repasses_profissional_path(@params.merge format: :xlsx), class: "icon-file-excel" %>
+    </li>
+  </ul>
 </nav>
 
 <br>

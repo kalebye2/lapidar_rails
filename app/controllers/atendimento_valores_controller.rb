@@ -62,11 +62,13 @@ class AtendimentoValoresController < ApplicationController
       end
 
       format.csv do
-        send_data AtendimentoValor.para_csv(@atendimento_valores), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@de}_#{@ate}#{@profissional&.nome_completo&.parameterize&.insert(0, "#{@profissional&.funcao&.parameterize}-")&.insert(0, "_")}#{@pessoa&.parameterize&.insert(0, "_")}#{@responsavel&.parameterize&.insert(0, "_")}#{@acompanhamento&.tipo&.parameterize&.insert(0, "_")}#{params[:acompanhamento]}.csv", type: "text/csv"
+        send_data AtendimentoValor.para_csv(@atendimento_valores), filename: "#{nome_do_site&.parameterize}-relatorio-valores-atendimentos_#{@de}_#{@ate}#{@profissional&.nome_completo&.parameterize&.insert(0, "#{@profissional&.funcao&.parameterize}-")&.insert(0, "_")}#{@pessoa&.parameterize&.insert(0, "_")}#{@responsavel&.parameterize&.insert(0, "_")}#{@acompanhamento&.tipo&.parameterize&.insert(0, "_")}#{params[:acompanhamento]}.csv", type: "text/csv"
       end
       format.xlsx do
         response.headers['Content-Disposition'] = "attachment; filename=#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@de}-#{@ate}#{@profissional&.nome_completo&.parameterize&.insert(0, "_")}#{@pessoa&.parameterize&.insert(0, "_")}#{@responsavel&.parameterize&.insert(0, "_")}.xlsx"
       end
+
+      format.json
     end
   end
 

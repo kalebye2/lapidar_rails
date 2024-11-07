@@ -27,9 +27,9 @@
 
     <span style="font-size:.7em;">
       <%# <%= link_to "Baixar prontuário (Markdown)", { controller: :acompanhamentos, action: :prontuario, id: acompanhamento.id, format: :md }, { style: "color:pink;" } %1> %>
-      <%= deixar_no_plural contagem_atendimentos, "atendimento", "atendimentos" %>
-      (<%= deixar_no_plural contagem_atendimentos_realizados, "realizado", "realizados" %>,
-      <%= deixar_no_plural contagem_atendimentos_futuros, "futuro", "futuros" %>)
+      <%= deixar_no_plural contagem_atendimentos = contagem_atendimentos || acompanhamento.atendimentos.count, "atendimento", "atendimentos" %>
+      (<%= deixar_no_plural contagem_atendimentos_realizados = contagem_atendimentos_realizados || acompanhamento.atendimentos.realizados.count, "realizado", "realizados" %>,
+      <%= deixar_no_plural contagem_atendimentos_futuros = contagem_atendimentos_futuros || acompanhamento.atendimentos.futuros.count, "futuro", "futuros" %>)
       <% hx_options = {class: "button", style: "border: 1px solid var(--caption-color);", select: "#tabela-caso-resumo", target: "#tabela-caso-resumo", swap: "outerHTML", replace_url: true} %>
       <br>
       (página <%= @pagy.page %>/<%= @pagy.pages %>)

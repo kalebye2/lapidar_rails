@@ -6,6 +6,7 @@
 </h1>
 
 <%= render "navbar", profissional: @profissional %>
+<%= render "financeiro-navbar", profissional: @profissional %>
 
 <nav class="navbar navcenter">
   <ul>
@@ -51,6 +52,26 @@
     <%= hx_link ">", recebimentos_profissional_path(@params.merge page: @pagy.page + 1), **hx_options unless @pagy.page >= @pagy.pages %>
     <br>
   </div>
+</nav>
+
+<nav class="navbar navcenter" id="navbar-downloads" hx-swap-oob="true">
+  <ul>
+    <li>
+      <%= link_to "CSV", recebimentos_profissional_path(@params.merge format: :csv), class: "icon-table" %>
+    </li>
+
+    <li>
+      <%= link_to "Excel", recebimentos_profissional_path(@params.merge format: :xlsx), class: "icon-file-excel" %>
+    </li>
+
+    <li>
+      <%= link_to "Recibos (PDF)", recebimentos_profissional_path(@params.merge format: :zip, filetype: :pdf), class: "icon-file-pdf" %>
+    </li>
+
+    <li>
+      <%= link_to "Recibos (Markdown)", recebimentos_profissional_path(@params.merge format: :zip, filetype: :md), class: "icon-file-empty" %>
+    </li>
+  </ul>
 </nav>
 
 <%= render "recebimentos-tabela", profissional: @profissional, recebimentos: @recebimentos, recebimentos_totais: @recebimentos_totais %>

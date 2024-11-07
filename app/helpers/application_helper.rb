@@ -134,7 +134,7 @@ module ApplicationHelper
   end
 
   def numero_com_medida numero, medida = "", default = "Sem informação", casas_decimais: 0
-    numero.nil? ? default : "#{number_to_currency(numero, precision: casas_decimais, delimiter: ".", unit: "")}#{medida}"
+    numero.nil? ? default : "#{number_to_currency(numero, precision: casas_decimais, delimiter: ".", unit: "", separator: ",")}#{medida}"
   end
 
   def data_por_extenso data=Date.current

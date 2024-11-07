@@ -7,9 +7,9 @@ class AcompanhamentoReajustesController < ApplicationController
 
   # GET /acompanhamento_reajustes or /acompanhamento_reajustes.json
   def index
-    @ajuste_de = params[:ajuste_de]&.to_date || AcompanhamentoReajuste.minimum(:data_ajuste)
+    @ajuste_de = params[:ajuste_de]&.to_date || Date.current.beginning_of_year
     @negociacao_de = params[:negociacao_de]&.to_date || AcompanhamentoReajuste.minimum(:data_negociacao)
-    @ajuste_ate = params[:ajuste_ate]&.to_date || AcompanhamentoReajuste.maximum(:data_ajuste)
+    @ajuste_ate = params[:ajuste_ate]&.to_date || Date.current.end_of_year
     @negociacao_ate = params[:negociacao_ate]&.to_date || AcompanhamentoReajuste.maximum(:data_negociacao)
 
     if usuario_atual.financeiro?
@@ -46,6 +46,8 @@ class AcompanhamentoReajustesController < ApplicationController
       format.csv do
         #TODO
       end
+
+      format.json
     end
   end
 

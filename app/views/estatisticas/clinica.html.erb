@@ -31,18 +31,18 @@
 
 <h2>Profissionais</h2>
 <div class="grid-3">
-  <%= pie_chart @contagem_atendimentos_por_profissional.map { |k,v| [k.descricao_completa, v] }.to_h, title: "Contagem de atendimentos por profissional" %>
-  <%= pie_chart Profissional.group(:ativo).count.map { |k,v| [k ? "Ativo(s)" : "Inativo(s)", v] }, title: "Profissionais ativos e inativos" %>
-  <%= pie_chart Profissional.group(:profissional_funcao).count.map { |k,v| [k.funcao, v] }, title: "Profissionais por função" %>
+  <%= bar_chart @contagem_atendimentos_por_profissional.map { |k,v| [k.descricao_completa, v] }.to_h, title: "Contagem de atendimentos por profissional" %>
+  <%= bar_chart Profissional.group(:ativo).count.map { |k,v| [k ? "Ativo(s)" : "Inativo(s)", v] }, title: "Profissionais ativos e inativos" %>
+  <%= bar_chart Profissional.group(:profissional_funcao).count.map { |k,v| [k.funcao, v] }, title: "Profissionais por função" %>
 </div>
 
 <h2>Locais</h2>
 <div class="grid-3">
-  <%= pie_chart @contagem_atendimentos_por_local.map { |k,v| [k&.descricao&.upcase || "SEM LOCAL", v] }, title: "Atendimentos por local" %>
+  <%= bar_chart @contagem_atendimentos_por_local.map { |k,v| [k&.descricao&.upcase || "SEM LOCAL", v] }, title: "Atendimentos por local" %>
 </div>
 
 <h2>Atendimentos</h2>
 <div class="grid-2">
-  <%= pie_chart Atendimento.realizados.contagem_por_tipo.map { |k,v| [k.tipo.upcase, v] }, title: "Atendimentos prestados por tipo" %>
+  <%= bar_chart Atendimento.realizados.contagem_por_tipo.map { |k,v| [k.tipo.upcase, v] }, title: "Atendimentos prestados por tipo" %>
   <%= line_chart Atendimento.realizados.deste_ano.contagem_por_mes.map { |k,v| [t('date.month_names')[k.first.month].upcase,v] }, title: "Atendimentos deste ano por mês" %>
 </div>

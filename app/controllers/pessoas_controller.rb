@@ -48,6 +48,8 @@ class PessoasController < ApplicationController
           filename: "#{nome_do_site&.parameterize}_lapidar_cadastros_#{@params&.to_h&.map { |k,v| "#{k}=#{v}" }&.compact&.join "_"}.csv",
           type: "text/csv"
       end
+
+      format.json
     end
   end
 
@@ -350,6 +352,7 @@ class PessoasController < ApplicationController
       end
 
       format.xlsx do
+        render "recebimentos/index"
         response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.xlsx"
       end
 
@@ -431,6 +434,43 @@ class PessoasController < ApplicationController
   end
 
   def new_acompanhamento
+  end
+
+  def instrumentos
+    @instrumento_relatos = @pessoa.instrumento_relatos.em_ordem
+    nome_documento = "#{Date.current.strftime("%Y%m%d")}_#{@pessoa.nome_completo.parameterize}_instrumentos-aplicados"
+
+    respond_to do |format|
+      format.html
+      format.pdf do
+        pdf = PessoaInstrumentoRelatosPdf.new(@pessoa)
+        send_data pdf.render,
+          filename: "#{nome_documento}.pdf",
+          type: "application/pdf",
+          disposition: :inline
+      end
+      format.md
+      format.csv do
+        send_data @instrumento_relatos.para_csv,
+          format: "text/csv",
+          filename: "#{nome_documento}.csv"
+      end
+    end
+  end
+
+  def instrumento_relato
+    @instrumento_relato = InstrumentoRelato.find(params[:instrumento_relato_id])
+
+    respond_to do |format|
+      format.html do
+        if hx_request?
+          render partial: "instrumento_relatos/instrumento_relato", locals: {instrumento_relato: @instrumento_relato}
+        end
+      end
+      format.pdf
+      format.md
+      format.csv
+    end
   end
 
   private

@@ -17,7 +17,7 @@
 
   <br>
   <label for="acompanhamento_horario[horario_fim]">Horário (fim)</label>
-  <input type="time" name="acompanhamento_horario[horario_fim]" id="acompanhamento_horario[horario_fim]" value="<%= ultimo_atendimento&.horario_fim_verdadeiro&.strftime("%H:%M") %>">
+  <input type="time" name="acompanhamento_horario[horario_fim]" id="acompanhamento_horario[horario_fim]" value="<%= ultimo_atendimento&.horario_fim&.strftime("%H:%M") %>">
 
   <button type="submit">
     Registrar

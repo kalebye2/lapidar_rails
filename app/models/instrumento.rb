@@ -4,6 +4,12 @@ class Instrumento < ApplicationRecord
   has_many :psicologia_subfuncoes, through: :instrumento_subfuncao_juncoes
   has_many :psicologia_funcoes, through: :psicologia_subfuncoes
 
+  has_many :instrumento_relatos
+  has_many :atendimentos, through: :instrumento_relatos
+  has_many :acompanhamentos, through: :atendimentos
+  has_many :pessoas, through: :acompanhamentos
+  has_many :profissionais, through: :acompanhamentos
+
   scope :query_like_nome, -> (nome) { where("LOWER(nome) LIKE LOWER('%#{nome}%')") }
   scope :query_like_sigla, -> (sigla) { where("LOWER(sigla) LIKE LOWER('%#{sigla}%')") }
   scope :query_like_indicacao, -> (indicacao) { where("LOWER(indicacao) LIKE LOWER('%#{indicacao}%')") }
@@ -20,11 +26,8 @@ class Instrumento < ApplicationRecord
 
   scope :em_ordem_alfabetica, -> { order(nome: :asc) }
 
-  has_many :instrumento_relatos
-  has_many :atendimentos, through: :instrumento_relatos
-  has_many :acompanhamentos, through: :atendimentos
-  has_many :pessoas, through: :acompanhamentos
-  has_many :profissionais, through: :acompanhamentos
+  scope :de_aplicacoes, -> { joins :instrumento_relatos }
+  scope :do_periodo, -> (periodo = Date.current.all_month) {  } # TODO
 
   def relatos
     instrumento_relatos
@@ -54,5 +57,16 @@ class Instrumento < ApplicationRecord
 
   def faixa_etaria sep='-'
     [faixa_etaria_inicio, faixa_etaria_final].compact.join(sep)
+  end
+
+  def nome_e_sigla
+    "#{nome}#{sigla&.insert(0, " - ")}"
+  end
+
+  def sigla_e_nome
+    "#{sigla&.insert(-1, " - ")}#{nome}"
+  end
+
+  def dados
   end
 end

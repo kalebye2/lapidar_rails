@@ -12,5 +12,8 @@
     <p class="icon-calendar"><%= render_data_brasil acompanhamento.data_inicio %> - <%= (render_data_brasil acompanhamento.data_final) || "#{acompanhamento.status}" %> <%= acompanhamento.data_final ? "(#{acompanhamento.motivo_da_finalizacao&.upcase})" : "" %></p>
     <p class="icon-bubbles"><%= deixar_no_plural acompanhamento.atendimentos.count, 'sessão', 'sessões' %></p>
     <p class="icon-calendar"><%= acompanhamento.acompanhamento_horarios.map { |horario| "#{horario.semana_dia.nome.upcase} às #{render_hora_brasil horario.horario}" }.join("; ").presence || "Sem horário fixo" %></p>
+    <% if usuario_atual&.financeiro? %>
+      <p class="icon-coin-dollar"><%= render_dinheiro_centavos acompanhamento.valor_sessao %></p>
+    <% end %>
   </div>
 <% end %>

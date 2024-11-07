@@ -1,2 +1,56 @@
 <div id="<%= dom_id instrumento_relato %>">
+  <nav class="navbar navcenter">
+    <ul>
+      <li>
+        <%= link_to "PDF", instrumento_relato_path(instrumento_relato, format: :pdf), class: "icon-file-pdf", target: :blank %>
+      </li>
+    </ul>
+  </nav>
+  <div class="documento">
+    <h1><%= instrumento_relato.instrumento.nome %></h1>
+
+    <table>
+      <tbody>
+        <tr>
+          <th>Paciente</th>
+          <td><%= instrumento_relato.pessoa.nome_completo %></td>
+        </tr>
+        <tr>
+          <th>Idade</th>
+          <td><%= instrumento_relato.pessoa.render_idade(instrumento_relato.atendimento.data_inicio_verdadeira) %></td>
+        </tr>
+        <% if instrumento_relato.atendimento.pessoa_responsavel %>
+          <tr>
+            <th>Responsável</th>
+            <td><%= instrumento_relato.atendimento.pessoa_responsavel.nome_completo %></td>
+          </tr>
+        <% end %>
+        <tr>
+          <th>Aplicador</th>
+          <td><%= instrumento_relato.atendimento.profissional.descricao_completa %></td>
+        </tr>
+        <tr>
+          <th>Contexto da aplicação</th>
+          <td><%= instrumento_relato.acompanhamento.tipo&.upcase %></td>
+        </tr>
+        <tr>
+          <th>Data do atendimento</th>
+          <td><%= render_data_brasil instrumento_relato.atendimento.data_inicio_verdadeira %></td>
+        </tr>
+        <tr>
+          <th>Horário do atendimento</th>
+          <td><%= render_hora_brasil instrumento_relato.atendimento.horario_inicio_verdadeiro %></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Relato</h2>
+    <%= markdown_to_html instrumento_relato.relato %>
+
+    <h2>Resultados</h2>
+    <p><%= markdown_to_html instrumento_relato.resultados %></p>
+
+    <h2>Observações</h2>
+    <%= markdown_to_html instrumento_relato.observacoes %></p>
+  </div>
 </div>

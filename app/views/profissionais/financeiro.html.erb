@@ -3,6 +3,7 @@
 <h1>Financeiro - <%= @profissional.descricao_completa %></h1>
 
 <%= render "navbar", profissional: @profissional %>
+<%= render "financeiro-navbar", profissional: @profissional %>
 
 <div class="grid-2">
   <div>
@@ -23,5 +24,15 @@
     <br>
 
     <%= render "financeiro_repasses_tabela", profissional_financeiro_repasses: @profissional_financeiro_repasses, profissional: @profissional %>
+  </div>
+
+  <div>
+    <h2 class="text-center">Últimos recebimentos</h2>
+    <div class="text-center">
+      <%= link_to "Ver mais", recebimentos_profissional_path, class: "button" %>
+    </div>
+    <br>
+
+    <%= render "recebimentos-tabela", profissional: @profissional, pages: false, recebimentos: @recebimentos, recebimentos_totais: @recebimentos_totais %>
   </div>
 </div>

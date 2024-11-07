@@ -1,3 +1,16 @@
-<h1>Estatisticas#instrumentos</h1>
-<p>Find me in app/views/estatisticas/instrumentos.html.erb</p>
+<h1>Estatísticas de instrumentos</h1>
 <%= render "navbar" %>
+
+<div class="grid-2">
+  <div class="card">
+    <h2>Instrumentos</h2>
+    <p>Instrumentos registrados: <%= Instrumento.count %></p>
+    <p>Contidos na clínica: <%= Instrumento.where(tem_na_clinica: true).count %></p>
+  </div>
+
+  <div class="card">
+    <h2>Aplicações</h2>
+    <p>Aplicações registradas (total): <%= InstrumentoRelato.count %></p>
+    <p>Atendimentos com aplicações: <%= Atendimento.joins(:instrumento_relatos).distinct.count %>
+  </div>
+</div>

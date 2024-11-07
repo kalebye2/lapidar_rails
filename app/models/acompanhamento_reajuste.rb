@@ -6,6 +6,10 @@ class AcompanhamentoReajuste < ApplicationRecord
   has_one :pessoa, through: :acompanhamento
   has_one :pessoa_responsavel, through: :acompanhamento
 
+  before_save do
+    self.valor_novo = centificar_numero(self.valor_novo)
+  end
+
   scope :ajustes_futuros, -> { where(data_ajuste: Date.current..) }
   scope :negociacoes_futuras, -> { where(data_negociacao: Date.current..) }
   scope :nao_aplicados, -> { where(id: map{ |acompanhamento_reajuste| if acompanhamento_reajuste.valor_novo != acompanhamento_reajuste.acompanhamento.valor_sessao then acompanhamento_reajuste.id end }.compact) }

@@ -1,6 +1,6 @@
 <div id="<%= dom_id(acompanhamento) %>_dados">
   <% if @usuario_acompanhamento %>
-    <%= hx_form do %>
+    <%= hx_form patch: @caminho, target: "##{dom_id(acompanhamento)}_dados", select: "##{dom_id(acompanhamento)}_dados", swap: "outerHTML" do %>
     <div class="field">
       <label for="acompanhamento-tipo">Tipo de acompanhamento</label>
       <% curr_id = "acompanhamento-tipo" %>
@@ -34,8 +34,7 @@
     <div class="field">
       <label>Status</label>
       <% curr_id = "acompanhamento-status" %>
-      <select id="<%= curr_id %>" name="acompanhamento[finalizacao_motivo_id]"
-        <%== hx_set patch: @caminho, swap: "outerHTML", target: "##{curr_id}", select: "##{curr_id}" %>>
+      <select id="<%= curr_id %>" name="acompanhamento[finalizacao_motivo_id]">
         <option value="" <%= if @acompanhamento.finalizacao_motivo_id.nil? then "selected" end %>>Em andamento</option>
           <% AcompanhamentoFinalizacaoMotivo.all.each do |motivo| %>
             <option value="<%= motivo.id %>" <%= if @acompanhamento.finalizacao_motivo_id == motivo.id then "selected" end %>> Finalizado por <%= motivo.motivo.downcase %></option>
@@ -43,7 +42,7 @@
       </select>
       <% if @acompanhamento.finalizado? %>
         Declaração de finalização:
-        <%= link_to "[PDF]", declaracao_finalizacao_acompanhamento_path(@acompanhamento, format: :pdf), class: "icon-file-pdf" %>
+        <%= link_to "[PDF]", declaracao_finalizacao_acompanhamento_path(@acompanhamento, format: :pdf), class: "icon-file-pdf", target: :blank %>
         <%= link_to "[Markdown]", declaracao_finalizacao_acompanhamento_path(@acompanhamento, format: :md), class: "icon-file-empty" %>
       <% end %>
     </div>
@@ -52,6 +51,9 @@
       <label for="acompanhamento[suspenso]">Suspenso</label>
       <%= hx_select patch: @caminho, name: "acompanhamento[suspenso]", value: @acompanhamento.suspenso, options: [["Não", 0], ["Sim", 1]] %>
     </div>
+
+    <%= render "input_num_sessoes", attribute: :num_sessoes, label_desc: "Frequência das sessões", acompanhamento: acompanhamento %>
+    <input type="submit" value="Atualizar">
 
     <% end %>
   <% else %>

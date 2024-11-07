@@ -49,7 +49,7 @@
 
     <div class="field">
       <%= form.label "Pagante" %>
-      <%= form.select :pessoa_pagante_id, Pessoa.all.order(nome: :asc, sobrenome: :asc).map { |pessoa| [pessoa.nome_completo, pessoa.id] }, include_blank: true %>
+      <%= form.select :pessoa_pagante_id, Pessoa.all.order(nome: :asc, sobrenome: :asc).map { |pessoa| [pessoa.nome_completo, pessoa.id] }, include_blank: "O próprio" %>
     </div>
 
     <div class="field">

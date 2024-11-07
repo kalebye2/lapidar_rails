@@ -28,7 +28,7 @@
         <td class="text-center">
           <% span_font_size = ".75em" %>
           <%= atendimento_valor.atendimento.tipo %>
-          <%= render_data_brasil atendimento_valor.atendimento.data %>
+          <%= render_data_brasil atendimento_valor.atendimento.data_inicio_verdadeira %>
           às
           <%= render_hora_brasil atendimento_valor.atendimento.horario_inicio_verdadeiro %>
         </td>

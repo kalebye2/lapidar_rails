@@ -2,13 +2,23 @@ class RecebimentosPdf < BasePdf
   def initialize(collection=Recebimento.all)
     super(page_layout: :landscape, margin: [70, 30, 70, 30])
     @recebimentos = collection
+    self.markup_options = {
+      table: {
+        header: {
+          style: :bold,
+          background_color: "AAFFAA",
+        },
+      },
+    }
     header
     body
     footer
+    number_pages "<page>", at: [bounds.left, -10], align: :right, size: 17
   end
 
   def header
     gerar_cabecalho "Relatório de recebimentos - #{render_data_periodo_brasil @recebimentos.minimum(:data), @recebimentos.maximum(:data)}"
+    gerar_cabecalho "#{nome_do_site}", align: :left
   end
 
   def body
@@ -42,5 +52,6 @@ class RecebimentosPdf < BasePdf
   end
 
   def footer
+    gerar_rodape_nome_clinica
   end
 end

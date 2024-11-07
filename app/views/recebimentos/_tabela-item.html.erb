@@ -17,7 +17,7 @@
     <hr>
     <%#= link_to "Excluir", recebimento_path(recebimento), method: :delete, data: { confirm: "Tem certeza?" } %>
     <% if usuario_atual.financeiro? || usuario_atual.profissional == @acompanhamento&.profissional %>
-      <a href="javascript:void(0);" hx-confirm="Tem certeza?" rel="nofollow" hx-delete="<%= recebimento_path(recebimento, authenticity_token: form_authenticity_token.to_s, ajax: true) %>" hx-swap="outerHTML" hx-target="#tabela-recebimentos">Excluir</a>
+      <a href="javascript:void(0);" hx-confirm="Tem certeza que quer excluir o registro de recebimento de <%= recebimento.pagante.nome_abreviado %> em <%= render_data_brasil recebimento.data %>?" rel="nofollow" hx-delete="<%= recebimento_path(recebimento, authenticity_token: form_authenticity_token.to_s, ajax: true) %>" hx-swap="outerHTML" hx-target="#tabela-recebimentos">Excluir</a>
     <% end %>
   </td>
 </tr>

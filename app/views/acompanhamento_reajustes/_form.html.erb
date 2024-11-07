@@ -1,4 +1,4 @@
-<%= form_with(model: acompanhamento_reajuste) do |form| %>
+<%= form_with(model: acompanhamento_reajuste, local: true) do |form| %>
   <% if acompanhamento_reajuste.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(acompanhamento_reajuste.errors.count, "error") %> prohibited this acompanhamento_reajuste from being saved:</h2>
@@ -11,32 +11,33 @@
     </div>
   <% end %>
 
-  <div>
+  <div class="field">
     <%= form.label :acompanhamento_id, style: "display: block" %>
     <%= form.select :acompanhamento_id, Acompanhamento.por_paciente_em_ordem_alfabetica.map { |a| [a.render_info_para_profissional_alt, a.id] } %>
   </div>
 
-  <div>
-    <%= form.label "Data do ajuste", style: "display: block" %>
+  <div class="field">
+    <%= form.label :data_ajuste, "Data do ajuste (quando vai ser aplicado)", style: "display: block" %>
     <%= form.date_field :data_ajuste %>
   </div>
 
-  <div>
-    <%= form.label :valor_negociado, style: "display: block" %>
-    <%= form.number_field :valor_novo %>
+  <div class="field">
+    <%= form.label :valor_negociado, "Valor negociado (R$)", style: "display: block" %>
+    <%# <%= form.number_field :valor_novo %1> %>
+    <input type="text" name="acompanhamento_reajuste[valor_novo]" id="acompanhamento_reajuste[valor_novo]" value="<%= "#{(acompanhamento_reajuste.valor_novo || 0) / 100},#{((acompanhamento_reajuste.valor_novo || 0) % 100).to_s.insert(-1, "00")[..1]}" %>">
   </div>
 
-  <div>
-    <%= form.label "Data da negociação", style: "display: block" %>
+  <div class="field">
+    <%= form.label :data_negociacao, "Data da negociação (quando o paciente foi informado)", style: "display: block" %>
     <%= form.date_field :data_negociacao %>
   </div>
 
-  <div>
+  <div class="field">
     <%= form.label "Motivo do reajuste", style: "display: block" %>
     <%= form.select :acompanhamento_reajuste_motivo_id, AcompanhamentoReajusteMotivo.all.map { |m| [m.motivo.upcase, m.id] } %>
   </div>
 
-  <div>
+  <div class="action">
     <%= form.submit %>
   </div>
 <% end %>

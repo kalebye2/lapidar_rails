@@ -15,6 +15,8 @@
   <p class="icon-calendar">
   <%= acompanhamento.acompanhamento_horarios.map { |horario| "#{horario.semana_dia.nome.upcase} às #{render_hora_brasil horario.horario}" }.join("; ").presence || "Sem horário fixo" %>
   </p>
-
+  <% if usuario_atual&.financeiro? %>
+    <p class="icon-coin-dollar"><%= render_dinheiro_centavos acompanhamento.valor_sessao %></p>
+  <% end %>
 </div>
 <% end %>

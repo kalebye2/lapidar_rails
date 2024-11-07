@@ -74,40 +74,40 @@
 
   <div id="estatisticas-atendimentos-tipos">
     <h3>Tipos de atendimento realizados</h3>
-    <%= pie_chart @atendimentos.contagem_por_tipo.map { |a| [a.first.tipo.upcase, a.last] }, title: "Tipos de atendimentos realizados entre #{render_data_brasil params[:atendimentos_desde]} e #{render_data_brasil params[:atendimentos_ate]}", download: "miau" %>
+    <%= bar_chart @atendimentos.contagem_por_tipo.map { |a| [a.first.tipo.upcase, a.last] }, title: "Tipos de atendimentos realizados entre #{render_data_brasil params[:atendimentos_desde]} e #{render_data_brasil params[:atendimentos_ate]}", download: "miau" %>
   </div>
 
   <div id="estatisticas-atendimentos-profissionais">
     <h3>Atendimentos por profissional</h3>
-    <%= pie_chart @atendimentos.contagem_por_profissional.map { |k,v| [k.descricao_completa, v] } %>
+    <%= bar_chart @atendimentos.contagem_por_profissional.map { |k,v| [k.descricao_completa, v] } %>
   </div>
+
+  
 </div>
 
 <div id="estatisticas-acompanhamentos">
   <h2>Estatísticas dos acompanhamentos</h2>
 
-  <div class="grid-2">
-    <div>
-      <h3>Profissionais</h3>
-      <%= pie_chart @acompanhamentos.contagem_por_profissional.map { |a| [a.first.descricao_completa, a.last] } %>
-    </div>
+  <div>
+    <h3>Profissionais</h3>
+    <%= bar_chart @acompanhamentos.contagem_por_profissional.map { |a| [a.first.descricao_completa, a.last] } %>
+  </div>
+
+  <div>
+    <h3>Status</h3>
+    <%= bar_chart @acompanhamentos.contagem_por_status.map { |a| [a.first&.motivo&.insert(0, "finalizados por ")&.upcase || "Em andamento".upcase, a.last] } %>
 
     <div>
-      <h3>Status</h3>
-      <%= pie_chart @acompanhamentos.contagem_por_status.map { |a| [a.first&.motivo&.insert(0, "finalizados por ")&.upcase || "Em andamento".upcase, a.last] } %>
-
-      <div>
-        <p>
-        <strong>Suspensos</strong>:
-        <%= @acompanhamentos.suspensos.count %>
-        </p>
-      </div>
+      <p>
+      <strong>Suspensos</strong>:
+      <%= @acompanhamentos.suspensos.count %>
+      </p>
     </div>
+  </div>
 
-    <div>
-      <h3>Acompanhamentos por tipo</h3>
-      <%= pie_chart @acompanhamentos.contagem_por_tipo.map { |a| [a.first&.tipo&.upcase, a.last] } %>
-    </div>
+  <div>
+    <h3>Acompanhamentos por tipo</h3>
+    <%= bar_chart @acompanhamentos.contagem_por_tipo.map { |a| [a.first&.tipo&.upcase, a.last] } %>
   </div>
 </div>
 
@@ -126,7 +126,7 @@
 
   <h3>Repasses aos profissionais</h3>
   Total: <b><%= render_dinheiro_centavos @repasses.sum(:valor) %></b>
-  <%= pie_chart @repasses.group(:profissional).sum("valor / 100.0").map { |r| [r[0].descricao_completa, r.last] }, prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true %>
+  <%= bar_chart @repasses.group(:profissional).sum("valor / 100.0").map { |r| [r[0].descricao_completa, r.last] }, prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true %>
 
   <h3>Valores de atendimentos</h3>
   Total: <b><%= render_dinheiro_centavos @atendimento_valores.sum(:valor) %>
@@ -138,17 +138,17 @@
   <div class="grid-2">
     <div>
       <h3>Quantidade cadastrada por sexo</h3>
-      <%= pie_chart Pessoa.contagem_por_sexo.map { |k,v| [k ? :feminino : :masculino, v] } %>
+      <%= bar_chart Pessoa.contagem_por_sexo.map { |k,v| [k ? :feminino : :masculino, v] } %>
     </div>
 
     <div>
       <h3>Acompanhamentos por sexo</h3>
-      <%= pie_chart Pessoa.joins(:acompanhamentos).contagem_por_sexo.map { |k,v| [k ? :feminino : :masculino, v] } %>
+      <%= bar_chart Pessoa.joins(:acompanhamentos).contagem_por_sexo.map { |k,v| [k ? :feminino : :masculino, v] } %>
     </div>
 
     <div>
       <h3>Acompanhamentos em andamento por sexo</h3>
-      <%= pie_chart Pessoa.joins(:acompanhamentos).where(acompanhamentos: { finalizacao_motivo_id: nil }).contagem_por_sexo.map { |k,v| [k ? :feminino : :masculino, v] } %>
+      <%= bar_chart Pessoa.joins(:acompanhamentos).where(acompanhamentos: { finalizacao_motivo_id: nil }).contagem_por_sexo.map { |k,v| [k ? :feminino : :masculino, v] } %>
     </div>
   </div>
 </div>

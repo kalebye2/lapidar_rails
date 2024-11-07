@@ -1,4 +1,4 @@
-<%= form_with(model: civil_estado) do |form| %>
+<%= form_with(model: civil_estado, local: true) do |form| %>
   <% if civil_estado.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(civil_estado.errors.count, "error") %> prohibited this civil_estado from being saved:</h2>

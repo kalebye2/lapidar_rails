@@ -187,9 +187,9 @@ class Pessoa < ApplicationRecord
     data_nascimento&.strftime("%d/%m/%Y")
   end
 
-  def idade_anos(data = Time.current.to_date)
-    if data_nascimento == nil then return "idade não informada" end
-    if data.class.to_s != "Date" then return "" end
+  def idade_anos(data = Time.current.to_date, if_nil = nil)
+    if data_nascimento == nil then return if_nil end
+    if data.class.to_s != "Date" then return if_nil end
 
     dia_dif = data.day - data_nascimento.day
     mes_dif = data.month - data_nascimento.month
@@ -198,9 +198,9 @@ class Pessoa < ApplicationRecord
     mes_dif < 0 || (mes_dif == 0 && dia_dif <= 0) ? ano_dif - 1 : ano_dif
   end
 
-  def idade_meses(data = Time.current.to_date)
-    if data_nascimento == nil then return "idade não informada" end
-    if data.class.to_s != "Date" then return "" end
+  def idade_meses(data = Time.current.to_date, if_nil = nil)
+    if data_nascimento == nil then return if_nil end
+    if data.class.to_s != "Date" then return if_nil end
 
     dia_dif = data.day - data_nascimento.day
     mes_dif = data.month - data_nascimento.month

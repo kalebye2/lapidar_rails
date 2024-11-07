@@ -14,6 +14,7 @@ class Atendimento < ApplicationRecord
   has_many :instrumento_relatos
   has_many :instrumentos, through: :instrumento_relatos
   alias instrumentos_aplicados instrumentos
+  alias instrumentos_usados instrumentos
   has_one :infantojuvenil_anamnese
   has_one :adulto_anamnese
 
@@ -286,6 +287,18 @@ class Atendimento < ApplicationRecord
 
   def reagendado?
     !data_reagendamento.nil?
+  end
+
+  def tempo_atendimento_segundos
+    horario_fim_verdadeiro - horario_inicio_verdadeiro
+  end
+
+  def tempo_atendimento_minutos
+    tempo_atendimento_segundos / 60
+  end
+
+  def tempo_atendimento_horas
+    tempo_atendimento_minutos / 60
   end
 
   # como evento de calendário

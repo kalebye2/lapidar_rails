@@ -11,7 +11,7 @@ class SessoesController < ApplicationController
       redirect_to root_path, notice: "Entrou!"
     else
       criar_erro_de_navegacao error_code: 401, mensagem: "Tentativa de login para usuario #{params[:username]} fracassada."
-      flash.now.alert = "E-mail ou senha incorretos!"
+      flash.now.alert = "Usuário ou senha incorretos!"
       render "new"
     end
   end

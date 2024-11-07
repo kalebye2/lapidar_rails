@@ -4,6 +4,8 @@
 
 <%= render "navbar", profissional: @profissional %>
 
+<%= render "financeiro-navbar", profissional: @profissional %>
+
 <nav class="navbar navcenter">
   <% atendimento_tabela_id = "#{dom_id @profissional}_atendimento_valores_tabela" %>
   <form <%= hx_set get: atendimento_valores_profissional_path, target: "##{atendimento_tabela_id}", select: "##{atendimento_tabela_id}", swap: "outerHTML", replace_url: true, trigger: "change" %>>
@@ -12,6 +14,18 @@
     <label for="ate">Até</label>
     <input type="date" name="ate" id="ate" value="<%= @ate %>">
   </form>
+</nav>
+
+<nav class="navbar navcenter" id="navbar-downloads" hx-swap-oob="true">
+  <ul>
+    <li>
+      <%= link_to "CSV", atendimento_valores_profissional_path(@params.merge format: :csv), class: "icon-table" %>
+    </li>
+
+    <li>
+      <%= link_to "Excel", atendimento_valores_profissional_path(@params.merge format: :xlsx), class: "icon-file-excel" %>
+    </li>
+  </ul>
 </nav>
 
 <br>

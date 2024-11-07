@@ -213,6 +213,21 @@ class ApplicationController < ActionController::Base
     @atendimentos_hoje = Atendimento.de_hoje.or(Atendimento.where(data_reagendamento: Date.today)).sort_by(&:horario_inicio_verdadeiro)
   end
 
+  def centificar_numero numero
+    valor_final = numero&.to_s || "0,00"
+
+    if !valor_final.include?(",")
+      valor_final += ","
+    end
+
+    valor_final.gsub!(".", "")
+    index_virgula = valor_final.index(",")
+    valor_inteiros = valor_final[..index_virgula - 1]
+    valor_decimais = ((valor_final[index_virgula + 1..]) + "00")[..1]
+
+    "#{valor_inteiros}#{valor_decimais}".gsub(",", "").to_i
+  end
+
   def database_exists?
     ActiveRecord::Base.connection
   rescue ActiveRecord::NoDatabaseError

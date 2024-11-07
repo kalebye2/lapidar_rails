@@ -132,32 +132,33 @@ class AtendimentoValor < ApplicationRecord
   end
 
   def liquido
-    valor - taxa_externa - taxa_interna
+    valor - desconto - taxa_externa - taxa_interna
   end
   alias valor_liquido liquido
 
   def liquido_externo
-    valor - taxa_externa
+    valor - desconto - taxa_externa
   end
 
   def liquido_interno
-    valor - taxa_interna
+    valor - desconto - taxa_interna
   end
 
-  def self.para_csv(collection = all, formato_data: "%Y-%m-%d", formato_hora: "%H:%M")
-    CSV.generate(col_sep: ',') do |csv|
+  def self.para_csv(collection = all, formato_data: "%Y-%m-%d", formato_hora: "%H:%M", col_sep: ",")
+    CSV.generate(col_sep: col_sep) do |csv|
       csv << [
-        "DATA",
-        "HORARIO",
-        "PACIENTE",
-        "PROFISSIONAL",
-        "TIPO DE ATENDIMENTO",
-        "STATUS",
-        "VALOR",
-        "DESCONTO",
-        "TAXA EXTERNA",
-        "TAXA INTERNA",
-        "PLATAFORMA PARA TAXA EXTERNA",
+        "data",
+        "horario",
+        "paciente",
+        "profissional",
+        "tipo_de_atendimento",
+        "status",
+        "valor",
+        "desconto",
+        "taxa_externa",
+        "taxa_interna",
+        "liquido",
+        "plataforma_taxa_externa",
       ]
       collection.each do |v|
         csv << [
@@ -171,6 +172,7 @@ class AtendimentoValor < ApplicationRecord
           v.desconto.to_s,
           v.valor * v.taxa_porcentagem_externa / 10000,
           v.valor * v.taxa_porcentagem_interna / 10000,
+          v.liquido,
           v.acompanhamento.atendimento_plataforma.nome
         ]
       end

@@ -54,4 +54,27 @@ class ApplicationRecord < ActiveRecord::Base
     end
   end
 
+  def centificar_numero numero
+    valor_final = numero&.to_s || "0,00"
+
+    if !valor_final.include?(",")
+      valor_final += ","
+    end
+
+    valor_final.gsub!(".", "")
+    index_virgula = valor_final.index(",")
+    valor_inteiros = valor_final[..index_virgula - 1]
+    valor_decimais = ((valor_final[index_virgula + 1..]) + "00")[..1]
+
+    "#{valor_inteiros}#{valor_decimais}".gsub(",", "").to_i
+  end
+
+  def self.como_csv collection=all, col_sep: ","
+    CSV.generate(col_sep: col_sep) do |csv|
+      csv << attribute_names
+      collection.each do |record|
+        csv << record.attributes.values
+      end
+    end
+  end
 end

@@ -2,7 +2,19 @@ class InstrumentoRelatosController < ApplicationController
   before_action :set_instrumento_relato, only: %i[ show edit update destroy ]
 
   def index
+    set_de_ate
     @instrumento_relatos = InstrumentoRelato.joins(:atendimento).order("atendimentos.data" => :desc)
+
+    respond_to do |format|
+      nome_documento = "#{nome_do_site&.parameterize}_#{@instrumento_relatos}"
+      format.html
+
+      format.csv do
+        send_data @instrumento_relatos.para_csv,
+          format: "text/csv",
+          filename: "#{nome_documento}.csv"
+      end
+    end
   end
 
   def show
@@ -11,10 +23,20 @@ class InstrumentoRelatosController < ApplicationController
       return
     end
 
+    nome_documento = "#{@instrumento_relato.atendimento.data_inicio_verdadeira}_#{@instrumento_relato.pessoa.nome_completo.parameterize}_#{@instrumento_relato.instrumento.nome.parameterize}"
+
     respond_to do |format|
       format.html do
         if hx_request
         end
+      end
+
+      format.pdf do
+        pdf = InstrumentoRelatoPdf.new(@instrumento_relato)
+        send_data pdf.render,
+          filename: "#{nome_documento}.pdf",
+          type: "application/pdf",
+          disposition: :inline
       end
     end
   end

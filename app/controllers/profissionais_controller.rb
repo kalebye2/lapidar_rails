@@ -46,6 +46,8 @@ class ProfissionaisController < ApplicationController
       format.csv do
         send_data @profissionais.para_csv, filename: "profissionais_#{@params.to_h.compact.map { |k,v| "#{k&.to_s}=#{v&.to_s}"}.join "_"}.csv"
       end
+
+      format.json
     end
   end
 
@@ -120,8 +122,20 @@ class ProfissionaisController < ApplicationController
     end
 
     @contagem = @acompanhamentos.count
-    @pagy, @acompanhamentos = pagy(@acompanhamentos, items: 9)
     @params = params.permit(:tipo, :status, :paciente)
+
+    respond_to do |format|
+      nome_documento = "#{nome_do_site&.parameterize}_#{@profissional.nome_completo.parameterize}_acompanhamentos_#{@params.to_h.map { |k,v| v&.to_s }.join("_")}"
+      format.html do
+        @pagy, @acompanhamentos = pagy(@acompanhamentos, items: 9)
+      end
+
+      format.csv do
+        send_data @acompanhamentos.para_csv,
+          type: "text/csv",
+          filename: "#{nome_documento}.csv"
+      end
+    end
   end
   
   def new_profissional_horario
@@ -152,6 +166,7 @@ class ProfissionaisController < ApplicationController
 
   def financeiro
     @atendimento_valores = @profissional.atendimento_valores.em_ordem(false).first(5)
+    @recebimentos = @profissional.recebimentos.em_ordem(:desc).first(5)
     @profissional_financeiro_repasses = @profissional.profissional_financeiro_repasses.em_ordem(false).first(5)
   end
 
@@ -160,13 +175,49 @@ class ProfissionaisController < ApplicationController
     @ate = params[:ate]&.to_date || Date.today.end_of_month
 
     @atendimento_valores = @profissional.atendimento_valores.do_periodo(@de..@ate)
+
+    @params = params.permit %i[ de ate ]
+
+    respond_to do |format|
+      nome_documento = "#{nome_do_site&.parameterize}_#{@profissional.nome_completo.parameterize}_atendimento-valores_#{@de}_#{@ate}"
+      format.html
+
+      format.csv do
+        send_data @atendimento_valores.para_csv,
+          format: "text/csv",
+          filename: "#{nome_documento}.csv"
+      end
+
+      format.xlsx do
+        render "atendimento_valores/index"
+        set_xlsx_header "#{nome_documento}.csv"
+      end
+    end
   end
 
   def financeiro_repasses
     @de = params[:de]&.to_date || Date.today.beginning_of_month
     @ate = params[:ate]&.to_date || Date.today.end_of_month
 
+    @params = params.permit %i[ de ate ]
+
     @profissional_financeiro_repasses = @profissional.profissional_financeiro_repasses.do_periodo(@de..@ate)
+
+    respond_to do |format|
+      nome_documento = "#{nome_do_site&.parameterize}_#{@profissional.nome_completo.parameterize}_financeiro-repasses_#{@params.to_h.map{ |k,v| "#{k}=#{v}" }.join("_")}"
+      format.html
+
+      format.csv do
+        send_data @@profissional_financeiro_repasses.para_csv,
+          format: "text/csv",
+          filename: "#{nome_documento}.csv"
+      end
+
+      format.xlsx do
+        render "profissional_financeiro_repasses/index"
+        set_xlsx_header "#{nome_documento}.csv"
+      end
+    end
   end
 
   def recebimentos
@@ -179,12 +230,43 @@ class ProfissionaisController < ApplicationController
     @recebimentos = @profissional.recebimentos.do_periodo(@de..@ate)
     @recebimentos_totais = @recebimentos
     respond_to do |format|
+      nome_documento = "#{nome_do_site&.parameterize}_#{@profissional.nome_completo.parameterize}_recebimentos_#{@params.to_h.except(:num_itens).map { |k,v| v&.to_s }.join "_"}"
+
       format.html do
         @pagy, @recebimentos = pagy(@recebimentos, items: @num_itens)
 
         if hx_request?
           render partial: "recebimentos-tabela", locals: {profissional: @profissional, recebimentos: @recebimentos, recebimentos_totais: @recebimentos_totais }
         end
+      end
+      
+      format.csv do
+        send_data @recebimentos.para_csv,
+          filename: "#{nome_documento}.csv",
+          type: "text/csv"
+      end
+
+      format.xlsx do
+        render "recebimentos/index"
+        set_xlsx_header "#{nome_documento}.csv"
+      end
+
+      format.zip do
+        compressed_filestream = Zip::OutputStream.write_buffer do |zos|
+          @recebimentos.each do |recebimento|
+            titulo = "recibo_#{recebimento.pessoa.nome_completo.parameterize}_#{recebimento.data}_#{recebimento.id}"
+            if params[:filetype]&.to_sym == :pdf
+              zos.put_next_entry "#{titulo}.pdf"
+              pdf = RecebimentoReciboPdf.new(recebimento)
+              zos.print pdf.render
+            else
+              zos.put_next_entry "#{titulo}.md"
+              zos.print recebimento.recibo_markdown
+            end
+          end
+        end
+        compressed_filestream.rewind
+        send_data compressed_filestream.read, filename: "#{nome_do_site&.parameterize}_recibos-#{params[:filetype] || "pdf"}_#{@de}_#{@ate}_#{usuario_atual.hash}.zip"
       end
     end
   end
@@ -237,5 +319,9 @@ class ProfissionaisController < ApplicationController
     if usuario_atual.nil? || !(usuario_atual.corpo_clinico? || usuario_atual.secretaria?)
       render file: "#{Rails.root}/public/404.html", status: 403
     end
+  end
+
+  def set_xlsx_header nome_documento=""
+    response.headers["Content-Disposition"] = "attachment; filename=#{nome_documento}.xlsx"
   end
 end

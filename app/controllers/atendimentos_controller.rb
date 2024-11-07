@@ -36,7 +36,7 @@ class AtendimentosController < ApplicationController
       format.json
 
       format.csv do
-        send_data @atendimentos.para_csv, filename: "atendimentos_#{@params.to_h.compact.map { |k,v| "#{k&.to_s}=#{v&.to_s}" }}.csv"
+        send_data @atendimentos.para_csv, filename: "atendimentos_#{@params.to_h.compact.map { |k,v| "#{k&.to_s}=#{v&.to_s}" }.join("_")}.csv"
       end
     end
   end
@@ -260,8 +260,8 @@ class AtendimentosController < ApplicationController
       format.html do
         if hx_request?
           @atendimentos = @acompanhamento.atendimentos
-          @num_items = params[:num_items].presence || 10
-          @params = params.permit :num_items
+          @num_items = params[:n_items].presence || 5
+          @params = params.permit :n_items
           @pagy, @atendimentos = pagy(@atendimentos, items: @num_itens)
 
           # render partial: 'acompanhamentos/caso-resumo', acompanhamento: acompanhamento

@@ -9,7 +9,7 @@ class InfantojuvenilAnamneseFamiliaHistorico < ApplicationRecord
 
   def dados
     {
-      "há algum antecedente de doença mental na família?" => antecedentes_doenca_mental,
+      "quais os antecedentes de transtorno mental na família?" => antecedentes_doenca_mental,
       "há algum antecedente de dependência química na família?" => antecedentes_dependencia_quimica,
       "como descrevem as condições econômicas do ambiente familiar?" => ambiente_familiar_condicoes_economicas,
       "a criança é consciente da situação econômica da família?" => sim_ou_nao(ambiente_familiar_pessoa_consciente_situacao_economica),

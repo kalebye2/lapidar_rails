@@ -1,0 +1,10 @@
+<div class="field" id="acompanhamento[<%= attribute&.to_s %>]">
+  <label for="acompanhamento[<%= attribute&.to_s %>]"><%= label_desc || "Frequência das sessões" %></label>
+  <select id="acompanhamento[<%= attribute&.to_s %>]" name="acompanhamento[<%= attribute&.to_s %>]">
+    <option value="4" <%== "selected" if acompanhamento[attribute&.to_sym] == 4 %>>Semanal (aprox. 4 mensais)</option>
+    <option value="2" <%== "selected" if acompanhamento[attribute&.to_sym] == 2 %>>Quinzenal (aprox. 2 mensais)</option>
+    <option value="8" <%== "selected" if acompanhamento[attribute&.to_sym] == 8 %>>2 por semana (8 mensais)</option>
+    <option value="1" <%== "selected" if acompanhamento[attribute&.to_sym] == 1 %>>Mensal</option>
+    <option value="0" <%== "selected" if acompanhamento[attribute&.to_sym].blank? || acompanhamento[attribute&.to_sym] <= 0 %>>Esporádico</option>
+  </select>
+</div>

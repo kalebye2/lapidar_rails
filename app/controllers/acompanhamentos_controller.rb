@@ -40,7 +40,7 @@ class AcompanhamentosController < ApplicationController
       @acompanhamentos = @acompanhamentos.query_responsavel_like_nome(like)
     end
 
-    @params = params.permit(:tipo, :status, :profissional, :pessoa, :responsavel)
+    global_params
 
     respond_to do |format|
       format.html do
@@ -72,11 +72,11 @@ class AcompanhamentosController < ApplicationController
       @atendimentos = params[:anotacoes] == true ? @atendimentos.com_anotacoes : @atendimentos.sem_anotacoes
     end
 
-    @params = params.permit(:de, :ate, :n_items, *acompanhamento_params_soft)
+    show_params
 
     respond_to do |format|
       format.html do
-        @pagy, @atendimentos = pagy(@atendimentos, items: @n_items)
+        pagy_atendimentos @n_items
       end
 
       format.pdf do
@@ -119,18 +119,22 @@ class AcompanhamentosController < ApplicationController
   end
 
   def update
+    show_params
+    pagy_atendimentos
     respond_to do |format|
       if !@pessoa.nil? then acompanhamento_params[:pessoa_id] = @pessoa.id end
       if !@profissional.nil? then acompanhamento_params[:profissional_id] == @profissional.id end
       if @acompanhamento.update(acompanhamento_params)
         if hx_request?
           format.html do
-            show
-            # render :show
+            # show
+            render :show
             return
           end
         else
-        format.html { redirect_to acompanhamento_url(@acompanhamento), notice: "acompanhamento was successfully updated." }
+        format.html {
+          redirect_to acompanhamento_url(@acompanhamento), notice: "acompanhamento was successfully updated."
+        }
         format.json { render :show, status: :ok, location: @acompanhamento }
         end
       else
@@ -153,7 +157,7 @@ class AcompanhamentosController < ApplicationController
   def prontuario
     hoje = Time.now.strftime("%Y%m%d")
     hoje_formatado = Time.now.strftime("%d/%m/%Y")
-    nome_documento = "prontuario_#{@acompanhamento.pessoa.nome_completo.parameterize}_#{@acompanhamento.tipo.parameterize}_#{@acompanhamento.profissional.descricao_completa.parameterize}_#{hoje}_#{Time.now.strftime "%H%M%S"}"
+    nome_documento = "#{nome_do_site.parameterize}_prontuario_#{@acompanhamento.pessoa.nome_completo.parameterize}_#{@acompanhamento.tipo.parameterize}_#{@acompanhamento.profissional.descricao_completa.parameterize}_#{hoje}_#{Time.now.strftime "%H%M%S"}"
 
     respond_to do |format|
       format.html
@@ -169,7 +173,7 @@ class AcompanhamentosController < ApplicationController
           orientacao_sexual: params[:orientacao_sexual],
         }
 
-        tipo = params[:compacto] ? AcompanhamentoProntuarioCompactoPdf : AcompanhamentoProntuarioPdf
+        tipo = params[:compacto] ? AcompanhamentoProntuarioCompactoPdf : params[:presenca] ? AcompanhamentoProntuarioPresencaPdf : AcompanhamentoProntuarioPdf
         pdf = tipo.new(@acompanhamento, options: prontuario_options)
 
         send_data(pdf.render,
@@ -177,6 +181,10 @@ class AcompanhamentosController < ApplicationController
                   type: "application/pdf",
                   disposition: "inline"
                  )
+      end
+
+      format.csv do
+        send_data @acompanhamento.prontuario_csv, filename: "#{nome_documento}.csv", type: "text/csv"
       end
     end
   end
@@ -201,9 +209,9 @@ class AcompanhamentosController < ApplicationController
     atendimento.modalidade_id = au.modalidade_id
     atendimento.atendimento_local_id = au.atendimento_local_id
     atendimento.atendimento_tipo_id = au.atendimento_tipo_id
-    avalor.valor = @acompanhamento.valor_sessao
-    avalor.taxa_porcentagem_interna = auvalor.taxa_porcentagem_interna
-    avalor.taxa_porcentagem_externa = auvalor.taxa_porcentagem_externa
+    avalor.valor = @acompanhamento.valor_sessao.to_f / 10000.0
+    avalor.taxa_porcentagem_interna = auvalor.taxa_porcentagem_interna.to_f / 10000.0
+    avalor.taxa_porcentagem_externa = auvalor.taxa_porcentagem_externa.to_f / 10000.0
 
     atendimento.save!
     avalor.save!
@@ -211,6 +219,7 @@ class AcompanhamentosController < ApplicationController
     redirect_to @acompanhamento, notice: "Novo atendimento registrado"
   end
 
+  # é este aqui que tá marcado
   def new_atendimento_proxima_semana
     vem_de_acompanhamento = params[:index].blank?
     # retorna se não for secretária que trabalha o dia inteiro comigo ou o profissional responsável
@@ -227,7 +236,7 @@ class AcompanhamentosController < ApplicationController
 
     proxima_semana = (Date.current + semanas_pra_passar.week).all_week.map { |d| {d.wday => d} }
     proxima_data = proxima_semana[au.data.wday].values.first
-    
+
     proxima_data = @acompanhamento.proxima_data_de_atendimento_a_partir_de_hoje
     atendimento.data = proxima_data[:data]
     atendimento.horario = proxima_data[:horario]
@@ -235,14 +244,12 @@ class AcompanhamentosController < ApplicationController
     atendimento.modalidade_id = au.modalidade_id
     atendimento.atendimento_local_id = au.atendimento_local_id
     atendimento.atendimento_tipo_id = au.atendimento_tipo_id
-    avalor.valor = @acompanhamento.valor_sessao
-    avalor.taxa_porcentagem_interna = auvalor.taxa_porcentagem_interna
-    avalor.taxa_porcentagem_externa = @acompanhamento.atendimento_plataforma.taxa_atendimento || auvalor.taxa_porcentagem_externa
-
+    avalor.valor = @acompanhamento.valor_sessao.to_f / 100.0
+    avalor.taxa_porcentagem_interna = (auvalor.taxa_porcentagem_interna.to_f || 0) / 100.0
+    avalor.taxa_porcentagem_externa = (@acompanhamento.atendimento_plataforma.taxa_atendimento || auvalor.taxa_porcentagem_externa || 0).to_f / 100.0
 
 
     if atendimento.save!
-      avalor.save!
       if vem_de_acompanhamento
         redirect_to @acompanhamento, notice: "Novo atendimento registrado"
       else
@@ -311,6 +318,26 @@ class AcompanhamentosController < ApplicationController
       end
       format.pdf do
         pdf = AcompanhamentoDeclaracaoPdf.new(@acompanhamento)
+        send_data pdf.render, filename: "#{nome_documento}.pdf", type: "application/pdf", disposition: :inline
+      end
+    end
+  end
+
+  def declaracao_detalhada
+    hoje = Time.now.strftime("%Y-%m-%d")
+    hoje_formatado = Time.now.strftime("%d/%m/%Y")
+    nome_documento = "declaracao_detalhada_#{@acompanhamento.tipo}_#{hoje}_#{@acompanhamento.pessoa.nome_completo.parameterize}"
+
+    respond_to do |format|
+      format.html
+
+      format.md do
+        response.headers["Content-Type"] = "text/markdown"
+        response.headers["content-Disposition"] = "attachment; filename=#{nome_documento}.md"
+      end
+
+      format.pdf do
+        pdf = AcompanhamentoDeclaracaoDetalhadaPdf.new(@acompanhamento)
         send_data pdf.render, filename: "#{nome_documento}.pdf", type: "application/pdf", disposition: :inline
       end
     end
@@ -421,11 +448,11 @@ class AcompanhamentosController < ApplicationController
       format.html
 
       format.csv do
-        send_data AtendimentoValor.para_csv(@atendimento_valores), filename: "#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@de}_#{@ate}#{@acompanhamento.profissional.nome_completo.parameterize.insert(0, "_")}#{@acompanhamento.pessoa.nome_completo.parameterize.insert(0, "_")}#{@acompanhamento.pessoa_responsavel&.nome_completo&.parameterize&.insert(0, "_")}_#{@acompanhamento.tipo.parameterize}.csv", type: "text/csv"
+        send_data AtendimentoValor.para_csv(@atendimento_valores), filename: "#{nome_do_site.parameterize}-relatorio-valores-atendimentos_#{@de}_#{@ate}#{@acompanhamento.profissional.nome_completo.parameterize.insert(0, "_")}#{@acompanhamento.pessoa.nome_completo.parameterize.insert(0, "_")}#{@acompanhamento.pessoa_responsavel&.nome_completo&.parameterize&.insert(0, "_")}_#{@acompanhamento.tipo.parameterize}.csv", type: "text/csv"
       end
 
       format.xlsx do
-        response.headers['Content-Disposition'] = "attachment; filename=#{Rails.application.class.module_parent_name.to_s}-relatorio-valores-atendimentos_#{@de}-#{@ate}#{@acompanhamento.profissional.nome_completo.parameterize.insert(0, "_")}#{@acompanhamento.pessoa.nome_completo.parameterize.insert(0, "_")}#{@acompanhamento.pessoa_responsavel&.nome_completo&.parameterize&.insert(0, "_")}_#{@acompanhamento.tipo.parameterize}.xlsx"
+        response.headers['Content-Disposition'] = "attachment; filename=#{nome_do_site.parameterize}-relatorio-valores-atendimentos_#{@de}-#{@ate}#{@acompanhamento.profissional.nome_completo.parameterize.insert(0, "_")}#{@acompanhamento.pessoa.nome_completo.parameterize.insert(0, "_")}#{@acompanhamento.pessoa_responsavel&.nome_completo&.parameterize&.insert(0, "_")}_#{@acompanhamento.tipo.parameterize}.xlsx"
       end
     end
   end
@@ -456,15 +483,55 @@ class AcompanhamentosController < ApplicationController
       return
     end
 
+    nome_documento = "#{@acompanhamento.paciente.nome_completo.parameterize}_#{@acompanhamento.tipo.parameterize}_#{@acompanhamento.profissional.descricao_completa.parameterize}_declaracao_finalizacao"
+
     respond_to do |format|
       format.html do
       end
 
       format.pdf do
+        pdf = AcompanhamentoDeclaracaoFinalizacaoPdf.new(@acompanhamento)
+        send_data pdf.render,
+        filename: "#{nome_documento}.pdf",
+        type: "application/pdf",
+        disposition: "inline"
       end
 
       format.md do
       end
+    end
+  end
+
+  def instrumentos
+    @instrumento_relatos = @acompanhamento.instrumento_relatos
+    nome_documento = "#{@acompanhamento.tipo}_#{@acompanhamento.profissional.descricao_completa.parameterize}_#{@acompanhamento.pessoa.nome_completo.parameterize}"
+
+    respond_to do |format|
+      format.html
+      format.pdf do
+        pdf = AcompanhamentoInstrumentoRelatosPdf.new(@acompanhamento)
+        send_data pdf.render,
+          filename: "#{nome_documento}.pdf",
+          type: "application/pdf",
+          disposition: :inline
+      end
+      format.md
+      format.csv
+    end
+  end
+
+  def instrumento_relato
+    @instrumento_relato = InstrumentoRelato.find(params[:instrumento_relato_id])
+
+    respond_to do |format|
+      format.html do
+        if hx_request?
+          render partial: "instrumento_relatos/instrumento_relato", locals: {instrumento_relato: @instrumento_relato}
+        end
+      end
+      format.pdf
+      format.md
+      format.csv
     end
   end
 
@@ -498,5 +565,20 @@ class AcompanhamentosController < ApplicationController
       render file: "#{Rails.root}/public/404.html", status: 403
       return
     end
+  end
+
+  def global_params
+    @params = params.permit(:de, :ate, :n_items, *acompanhamento_params_soft)
+  end
+
+  def show_params
+    @params = params.permit(:de, :ate, :n_items, *acompanhamento_params_soft)
+  end
+
+  def pagy_atendimentos n_items = 10
+    set_acompanhamento
+    @n_items = n_items
+    @atendimentos = @acompanhamento.atendimentos
+    @pagy, @atendimentos = pagy(@atendimentos, items: @n_items)
   end
 end

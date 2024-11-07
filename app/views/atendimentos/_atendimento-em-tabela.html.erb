@@ -72,13 +72,15 @@
         <% if usuario_atual.profissional == atendimento.profissional %>
           <li>
             <% ultimo_atendimento = atendimento.acompanhamento.atendimentos.realizados.em_ordem.last %>
-            <%= ultimo_atendimento.presence ? link_to("Modelo de relato Markdown (último atendimento)", modelo_relato_atendimento_path(ultimo_atendimento, format: :md)) : "" %>
+            <%= ultimo_atendimento.presence ? link_to("Modelo de relato Markdown (#{render_data_brasil ultimo_atendimento.data_inicio_verdadeira})", modelo_relato_atendimento_path(ultimo_atendimento, format: :md)) : "" %>
             <%= link_to "Prontuário (PDF)", prontuario_acompanhamento_path(atendimento.acompanhamento, format: :pdf), target: :blank %>
           </li>
         <% end %>
-        <li>
-          <%= link_to "registrar atendimento para a próxima semana", new_atendimento_proxima_semana_acompanhamento_path(atendimento.acompanhamento, index: true), method: :post %>
-        </li>
+        <% if atendimento.acompanhamento.atendimentos.em_ordem.last.data_inicio_verdadeira <= Date.current %>
+          <li>
+            <%= link_to "Registrar próximo atendimento", new_atendimento_proxima_semana_acompanhamento_path(atendimento.acompanhamento, index: true), method: :post %>
+          </li>
+        <% end %>
         <%# LEMBRE DE IMPLEMENTAR O "SOLICITAR REAGENDAMENTO" %>
       </ul>
     </td>

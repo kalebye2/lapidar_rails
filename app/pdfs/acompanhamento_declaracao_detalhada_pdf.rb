@@ -1,4 +1,4 @@
-class AcompanhamentoDeclaracaoPdf < BasePdf
+class AcompanhamentoDeclaracaoDetalhadaPdf < BasePdf
   def initialize acompanhamento = Acompanhamento.new
     super
     @acompanhamento = acompanhamento
@@ -44,11 +44,15 @@ class AcompanhamentoDeclaracaoPdf < BasePdf
     if @acompanhamento.acompanhamento_finalizacao_motivo.nil?
       if @acompanhamento.pessoa_responsavel.nil?
         "está sendo submetid#{flexao} a " \
-          "#{@acompanhamento.tipo.downcase} sob meus cuidados profissionais desde " \
+          "#{@acompanhamento.tipo.downcase} " \
+          "#{@acompanhamento.acompanhamento_horarios.map { |horario| "#{if (0 == horario.semana_dia_id || 6 == horario.semana_dia_id) then "aos" else "às" end} #{horario.semana_dia.nome}s às #{horario.horario.strftime("%H:%M")}" }.to_sentence(words_connector: ", ", last_word_connector: " e ")&.insert(-1, " ")}" \
+          "sob meus cuidados profissionais desde " \
           "#{os_meses[primeira_data.month].downcase} de #{primeira_data.year}."
       else
         "está sendo submetid#{flexao} a " \
-          "#{@acompanhamento.tipo.downcase} sob meus cuidados profissionais desde " \
+          "#{@acompanhamento.tipo.downcase} " \
+          "#{@acompanhamento.acompanhamento_horarios.map { |horario| "#{if (0 == horario.semana_dia_id || 6 == horario.semana_dia_id) then "aos" else "às" end} #{horario.semana_dia.nome}s às #{horario.horario.strftime("%H:%M")}" }.to_sentence(words_connector: ", ", last_word_connector: " e ")&.insert(-1, " ")}" \
+          "sob meus cuidados profissionais desde " \
           "#{os_meses[primeira_data.month].downcase} de #{primeira_data.year} " \
           "com autorização de " \
           "#{@acompanhamento.pessoa_responsavel.nome_completo}."

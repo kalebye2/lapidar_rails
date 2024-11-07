@@ -12,14 +12,16 @@
   <% end %>
 </nav>
 
-<div id="<%= id_principal %>">
-  <%= line_chart @recebimentos.group(:data).sum(:valor).map { |k,v| [render_data_brasil(k), v / 100.0] }, prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true, title: "Recebimentos do período (#{@recebimentos.count})" %>
+<% opcoes_dinheiro = { prefix: "R$ ", zeros: 2, decimal: ",", thousands: "." } %>
 
-  <%= bar_chart @recebimentos.joins(:profissional).group("profissionais.id").sum(:valor).map { |k,v| ["#{Profissional.find(k)&.funcao[..2]} #{Profissional.find(k).nome_abreviado}", v / 100.0] }, prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true, title: "Recebimentos por profissional" %>
-  <%= column_chart @recebimentos.joins(:profissional).group("profissionais.id", :data).sum(:valor).map { |k,v| [[Profissional.find(k[0]).descricao_completa, render_data_brasil(k[1])],v / 100.0] }.to_h, prefix: "R$ ", zeros: 2, decimal: ",", thousands: ".", stacked: true %>
+<div id="<%= id_principal %>">
+  <%= line_chart @recebimentos.group(:data).sum(:valor).map { |k,v| [render_data_brasil(k), v / 100.0] }, **opcoes_dinheiro, title: "Recebimentos do período (#{@recebimentos.count})", curve: false %>
+
+  <%= bar_chart @recebimentos.joins(:profissional).group("profissionais.id").sum(:valor).map { |k,v| ["#{Profissional.find(k)&.funcao[..2]} #{Profissional.find(k).nome_abreviado}", v / 100.0] }, **opcoes_dinheiro, title: "Recebimentos por profissional" %>
+  <%= column_chart @recebimentos.joins(:profissional).group("profissionais.id", :data).sum(:valor).map { |k,v| [[Profissional.find(k[0]).descricao_completa, render_data_brasil(k[1])],v / 100.0] }.to_h, stacked: true, **opcoes_dinheiro %>
 
   <%# <%= column_chart @recebimentos.joins(:acompanhamento).group("acompanhamentos.id", :data).sum(:valor).map { |k,v| [["#{Acompanhamento.find(k[0]).pessoa.nome_abreviado} - #{Acompanhamento.find(k[0]).tipo.upcase}", render_data_brasil(k[1])],v / 100.0] }.to_h, stacked: true, prefix: "R$ ", thousands: ".", zeros: 2, decimal: "," %1> %>
 
-  <%= pie_chart @recebimentos.joins(:acompanhamento).group("acompanhamentos.id").sum(:valor).map { |k,v| [Acompanhamento.find(k).render_info_para_profissional, v] }, donut: true %>
+  <%= bar_chart @recebimentos.joins(:acompanhamento).group("acompanhamentos.id").sum(:valor).map { |k,v| [Acompanhamento.find(k).render_info_para_profissional, v / 100.0] }, **opcoes_dinheiro, title: "Recebimentos por acompanhamento" %>
 
 </div>

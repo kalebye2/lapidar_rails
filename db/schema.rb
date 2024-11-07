@@ -203,7 +203,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   end
 
   create_table "biblioteca_obra_tipos", force: :cascade do |t|
-    t.string "tipo", null: false
+    t.string "tipo", limit: 255, null: false
+    t.string "bibtex_key", limit: 255
   end
 
   create_table "biblioteca_obras", force: :cascade do |t|

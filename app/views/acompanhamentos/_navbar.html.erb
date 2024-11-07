@@ -1,5 +1,10 @@
-<nav class="navbar navcenter">
+<nav id = "<%= dom_id(@acompanhamento) %>_navbar"class="navbar navcenter" style="z-index:9999999999;" hx-swap-oob="true">
   <ul>
+    <% if params[:action] != "show" %>
+      <li>
+        <%= link_to "Acompanhamento", acompanhamento_path(@acompanhamento), class: "icon-previous" %>
+      </li>
+    <% end %>
     <% if @usuario_acompanhamento %>
       <li>
         <%= link_to "Editar", edit_acompanhamento_path(@acompanhamento), class: 'icon-quill' %>
@@ -13,6 +18,10 @@
         </li>
         <li>
           <%= link_to "PDF", declaracao_acompanhamento_path(@acompanhamento, format: :pdf), target: :blank %>
+        </li>
+
+        <li>
+          <%= link_to "PDF (detalhada)", declaracao_detalhada_acompanhamento_path(@acompanhamento, format: :pdf), target: :blank %>
         </li>
       </ul>
     </li>
@@ -30,6 +39,16 @@
         </li>
         <li>
           <%= link_to "PDF", prontuario_acompanhamento_path(@acompanhamento, format: :pdf), target: :blank %>
+        </li>
+        <li>
+          <%= link_to "PDF (compacto)", prontuario_acompanhamento_path(@acompanhamento, format: :pdf, compacto: true), target: :blank %>
+        </li>
+        <li>
+          <%= link_to "PDF (presença)", prontuario_acompanhamento_path(@acompanhamento, format: :pdf, presenca: true), target: :blank %>
+        </li>
+
+        <li>
+          <%= link_to "CSV", prontuario_acompanhamento_path(@acompanhamento, format: :csv), class: "icon-table" %>
         </li>
       </ul>
     </li>
@@ -50,6 +69,10 @@
         </ul>
       </li>
     <% end %>
+
+    <li>
+      <%= link_to "Instrumentos", instrumentos_acompanhamento_path(@acompanhamento), class: "icon-file-empty" %>
+    </li>
 
     <% if @acompanhamento.em_andamento? && @usuario_acompanhamento %>
       <li>

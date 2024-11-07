@@ -1,2 +1,14 @@
-<h1>BibliotecaObras#index</h1>
-<p>Find me in app/views/biblioteca_obras/index.html.erb</p>
+<p style="color: green"><%= notice %></p>
+
+<h1>Biblioteca obras</h1>
+
+<div id="biblioteca_obras">
+  <% @biblioteca_obras.each do |biblioteca_obra| %>
+    <%= render biblioteca_obra %>
+    <p>
+      <%= link_to "Show this biblioteca obra", biblioteca_obra %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New biblioteca obra", new_biblioteca_obra_path %>

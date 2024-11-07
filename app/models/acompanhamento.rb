@@ -1,6 +1,27 @@
 class Acompanhamento < ApplicationRecord
   validates :pessoa, :profissional, :data_inicio, :num_sessoes_contrato, presence: true
 
+  before_save do
+    mudar = {
+      valor_sessao: self.valor_sessao,
+      valor_sessao_contrato: self.valor_sessao_contrato,
+    }
+
+    mudar = mudar.map { |k,v|
+      final_valor = v&.to_s || "0,00"
+      if !final_valor.include?(",")
+        final_valor += ","
+      end
+      final_valor.gsub!(".", "")
+      index_virgula = final_valor.index(",")
+      valor_inteiros = final_valor[..index_virgula - 1]
+      valor_decimais = ((final_valor[index_virgula + 1..]) + "00")[..1]
+      [k, "#{valor_inteiros}#{valor_decimais}".gsub(",", "").to_i]
+    }.to_h
+    self.valor_sessao = mudar[:valor_sessao] if self.valor_sessao_changed?
+    self.valor_sessao_contrato = mudar[:valor_sessao_contrato] if self.valor_sessao_contrato_changed?
+  end
+
   belongs_to :profissional
   belongs_to :pessoa
   belongs_to :pessoa_responsavel, class_name: "Pessoa", foreign_key: "pessoa_responsavel_id", optional: true
@@ -172,6 +193,11 @@ class Acompanhamento < ApplicationRecord
     recebimentos.do_periodo(periodo).sum(:valor).to_i
   end
 
+  def cidade padrao_nulo="Brasília"
+    atendimento_final = atendimentos.realizados.em_ordem.last
+    atendimento_final.atendimento_local&.endereco_cidade || profissional.endereco_cidade || padrao_nulo
+  end
+
   def para_csv col_sep: ",", formato_data: "%Y-%m-%d"
     # "\"#{pessoa.nome_completo}\"," \
     #   "\"#{pessoa.render_sexo}\"," \
@@ -199,6 +225,7 @@ class Acompanhamento < ApplicationRecord
         pessoa.nome_completo,
         pessoa.render_sexo,
         pessoa.render_idade,
+        pessoa.idade_anos,
         pessoa.render_fone_link,
         pessoa.email,
         faixa_etaria.upcase,
@@ -216,6 +243,33 @@ class Acompanhamento < ApplicationRecord
         num_sessoes,
         suspenso.nil? || suspenso == 0 ? 'NÃO' : 'SIM',
       ]
+    end
+  end
+
+  def prontuario_csv formato_data: "%Y-%m-%d", col_sep: ","
+    header = [
+      "id",
+      "data",
+      "horario",
+      "status",
+      "atividade",
+      "anotacoes",
+      "instrumentos_usados",
+    ].map(&:upcase)
+
+    CSV.generate(col_sep: col_sep) do |csv|
+      csv << header
+      atendimentos.em_ordem.each_with_index do |atendimento, index|
+        csv << [
+          index + 1,
+          atendimento.data_inicio_verdadeira.strftime(formato_data),
+          atendimento.horario_inicio_verdadeiro.strftime("%H:%M:%S"),
+          atendimento.status&.upcase,
+          atendimento.tipo.upcase,
+          atendimento.anotacoes,
+          atendimento.instrumentos_aplicados.map(&:nome_e_sigla).join(";"),
+        ]
+      end
     end
   end
 
@@ -250,31 +304,52 @@ class Acompanhamento < ApplicationRecord
     }
   end
 
+  def tempo_atendimentos_minutos
+    atendimentos.map &:tempo_atendimento_minutos
+  end
+
+  def tempo_total_atendimentos_minutos
+    tempo_atendimentos_minutos.sum
+  end
+
+  def tempo_total_atendimentos_horas
+    tempo_total_atendimentos_minutos / 60.0
+  end
+
+  def self.tempo_total_atendimentos_minutos collection=all
+    collection.map(&:tempo_total_atendimentos_minutos).sum
+  end
+
+  def self.tempo_total_atendimentos_horas collection=all
+    collection.map(&:tempo_total_atendimentos_horas).sum
+  end
+
   def self.para_csv collection=all, formato_data: "%Y-%m-%d", col_sep: ","
     header = [
-      "PACIENTE",
-      "SEXO DO PACIENTE",
-      "IDADE DO PACIENTE",
-      "TELEFONE DO PACIENTE",
-      "EMAIL DO PACIENTE",
-      "FAIXA ETÁRIA",
-      "RESPONSÁVEL LEGAL",
-      "TELEFONE RESPONSÁVEL LEGAL",
-      "EMAIL RESPONSÁVEL LEGAL",
-      "PARENTESCO DO RESPONSÁVEL",
-      "TIPO",
-      "DATA DE INÍCIO",
-      "DATA FINAL",
-      "MOTIVO DA FINALIZAÇÃO",
-      "PROFISSIONAL",
-      "NÚMERO DE ATENDIMENTOS",
-      "VALOR DA SESSÃO",
-      "SESSÕES MENSAIS (4 SEMANAS = 1 MÊS)",
-      "SUSPENSO",
-      "PLATAFORMA",
-      "ATENDIMENTOS REALIZADOS",
-      "ATENDIMENTOS NÃO REALIZADOS",
-      "PROPORÇÃO DE ATENDIMENTOS REALIZADOS/NÃO REALIZADOS",
+      "paciente",
+      "sexo_do_paciente",
+      "idade_do_paciente",
+      "idade_em_anos",
+      "telefone_do_paciente",
+      "email_do_paciente",
+      "faixa_etária",
+      "responsável_legal",
+      "telefone_responsável_legal",
+      "email_responsável_legal",
+      "parentesco_do_responsável",
+      "tipo",
+      "data_de_início",
+      "data_final",
+      "motivo_da_finalização",
+      "profissional",
+      "número_de_atendimentos",
+      "valor_da_sessão",
+      "sessões_mensais_(4_semanas_= 1_mês)",
+      "suspenso",
+      "plataforma",
+      "atendimentos_realizados",
+      "atendimentos_não_realizados",
+      "proporção_de_atendimentos_realizados/não_realizados",
     ]
     # content = collection.each.map { |a| a.para_csv(formato_data: formato_data) }.join("\n")
 
@@ -285,6 +360,7 @@ class Acompanhamento < ApplicationRecord
           a.pessoa.nome_completo,
           a.pessoa.render_sexo,
           a.pessoa.render_idade,
+          a.pessoa.idade_anos,
           a.pessoa.render_fone_link,
           a.pessoa.email,
           a.faixa_etaria.upcase,
@@ -294,7 +370,7 @@ class Acompanhamento < ApplicationRecord
           a.pessoa.grau_parentesco(a.responsavel_legal)&.parentesco&.upcase,
           a.tipo.upcase,
           a.data_inicio.strftime(formato_data),
-          a.ultimo_atendimento&.data&.strftime(formato_data),
+          a.em_andamento? ? nil : a.ultima_data&.strftime(formato_data),
           a.acompanhamento_finalizacao_motivo&.motivo,
           a.profissional.descricao_completa,
           a.atendimentos.count,

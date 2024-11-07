@@ -14,8 +14,9 @@ class BibliotecaObrasTest < ApplicationSystemTestCase
     visit biblioteca_obras_url
     click_on "New biblioteca obra"
 
-    fill_in "Biblioteca editora", with: @biblioteca_obra.biblioteca_editora_id
+    fill_in "Biblioteca editora id", with: @biblioteca_obra.biblioteca_editora_id_id
     fill_in "Biblioteca obra tipo", with: @biblioteca_obra.biblioteca_obra_tipo_id
+    fill_in "Biblioteca periodico", with: @biblioteca_obra.biblioteca_periodico_id
     fill_in "Caminho", with: @biblioteca_obra.caminho
     fill_in "Data publicacao", with: @biblioteca_obra.data_publicacao
     fill_in "Edicao", with: @biblioteca_obra.edicao
@@ -23,7 +24,6 @@ class BibliotecaObrasTest < ApplicationSystemTestCase
     fill_in "Num paginas", with: @biblioteca_obra.num_paginas
     check "Obra virtual" if @biblioteca_obra.obra_virtual
     fill_in "Ordem", with: @biblioteca_obra.ordem
-    fill_in "Periodico", with: @biblioteca_obra.periodico_id
     fill_in "Resumo", with: @biblioteca_obra.resumo
     fill_in "Subtitulo", with: @biblioteca_obra.subtitulo
     fill_in "Titulo", with: @biblioteca_obra.titulo
@@ -38,8 +38,9 @@ class BibliotecaObrasTest < ApplicationSystemTestCase
     visit biblioteca_obra_url(@biblioteca_obra)
     click_on "Edit this biblioteca obra", match: :first
 
-    fill_in "Biblioteca editora", with: @biblioteca_obra.biblioteca_editora_id
+    fill_in "Biblioteca editora id", with: @biblioteca_obra.biblioteca_editora_id_id
     fill_in "Biblioteca obra tipo", with: @biblioteca_obra.biblioteca_obra_tipo_id
+    fill_in "Biblioteca periodico", with: @biblioteca_obra.biblioteca_periodico_id
     fill_in "Caminho", with: @biblioteca_obra.caminho
     fill_in "Data publicacao", with: @biblioteca_obra.data_publicacao
     fill_in "Edicao", with: @biblioteca_obra.edicao
@@ -47,7 +48,6 @@ class BibliotecaObrasTest < ApplicationSystemTestCase
     fill_in "Num paginas", with: @biblioteca_obra.num_paginas
     check "Obra virtual" if @biblioteca_obra.obra_virtual
     fill_in "Ordem", with: @biblioteca_obra.ordem
-    fill_in "Periodico", with: @biblioteca_obra.periodico_id
     fill_in "Resumo", with: @biblioteca_obra.resumo
     fill_in "Subtitulo", with: @biblioteca_obra.subtitulo
     fill_in "Titulo", with: @biblioteca_obra.titulo

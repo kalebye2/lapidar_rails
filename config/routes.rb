@@ -185,6 +185,9 @@ Rails.application.routes.draw do
       get :edit_medicacao, path: "medicacao/:med_id/edit"
       patch :update_medicacao, path: "medicacao/:med_id/edit"
       delete :destroy_medicacao, path: "medicacao/:med_id/destroy"
+
+      get :instrumentos
+      get :instrumento_relato, path: "instrumento_relato/:instrumento_relato_id"
     end
   end
   resources :paises
@@ -196,6 +199,7 @@ Rails.application.routes.draw do
     member do
       post :new_atendimento_proxima_semana, path: 'novo_atendimento_proxima_semana'
       get :declaracao
+      get :declaracao_detalhada
       get :prontuario
       get :contrato
       get :financeiro
@@ -207,6 +211,9 @@ Rails.application.routes.draw do
       get :new_recebimento
       get :declaracao_ir
       get :declaracao_finalizacao
+
+      get :instrumentos
+      get :instrumento_relato, path: "instrumento_relatos/:instrumento_relato_id"
     end
   end
 

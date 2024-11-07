@@ -15,6 +15,10 @@
         <li>
           <%= link_to "PDF", prontuario_acompanhamento_path(@acompanhamento, format: :pdf), target: :blank, class: 'icon-file-pdf' %>
         </li>
+
+        <li>
+          <%= link_to "CSV", prontuario_acompanhamento_path(@acompanhamento, format: :csv), class: "icon-table" %>
+        </li>
       </ul>
     </li>
   </ul>

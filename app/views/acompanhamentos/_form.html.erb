@@ -125,28 +125,23 @@
 
       <div class="field">
         <%= form.label "Motivo da finalização" %>
-        <%= form.select :finalizacao_motivo_id, AcompanhamentoFinalizacaoMotivo.all.order(motivo: :asc).map { |motivo| [motivo.motivo, motivo.id] }, include_blank: true %>
+        <%= form.select :finalizacao_motivo_id, AcompanhamentoFinalizacaoMotivo.all.order(motivo: :asc).map { |motivo| [motivo.motivo, motivo.id] }, include_blank: "EM ANDAMENTO" %>
       </div>
 
-      <div class="field">
-        <%= form.label "Valor da sessão" %>
-        <%= form.text_field :valor_sessao %>
-      </div>
+      <%= render "acompanhamentos/input_num_sessoes", acompanhamento: acompanhamento, label_desc: "Frequência das sessões", attribute: :num_sessoes %>
 
       <div class="field">
-        <%= form.label "Quantidade de sessões" %>
-        <%= form.number_field :num_sessoes, min: 1, max: 31, value: acompanhamento.num_sessoes || 4 %>
+        <label for="acompanhamento[valor_sessao]">Valor da sessão (R$)</label>
+        <input name="acompanhamento[valor_sessao]" id="acompanhamento[valor_sessao]" value="<%= numero_com_medida (acompanhamento.valor_sessao || 0) / 100, casas_decimais: 2 %>">
       </div>
+
     <% end %>
 
-    <div class="field">
-      <%= form.label acompanhamento.nil? ? "Valor da sessão" : "Valor da sessão no contrato" %>
-      <%= form.text_field :valor_sessao_contrato %>
-    </div>
+    <%= render "acompanhamentos/input_num_sessoes", acompanhamento: acompanhamento, attribute: :num_sessoes_contrato, label_desc: acompanhamento.nil? ? "Frequência das sessões" : "Frequências das sessões no contrato" %>
 
     <div class="field">
-      <%= form.label acompanhamento.nil? ? "Quantidade de sessões mensais" : "Quantidade de sessões mensais no contrato" %>
-      <%= form.number_field :num_sessoes_contrato, min: 1, max: 31, value: acompanhamento.num_sessoes_contrato || 4 %>
+      <label for="acompanhamento[valor_sessao_contrato"><%= acompanhamento.nil? ? "Valor da sessão (R$)" : "Valor da sessão no contrato (R$)" %></label>
+      <input name="acompanhamento[valor_sessao_contrato]" id="acompanhamento[valor_sessao_contrato]" value="<%= numero_com_medida (acompanhamento.valor_sessao_contrato || 0) / 100, casas_decimais: 2 %>">
     </div>
 
     <div class="field">

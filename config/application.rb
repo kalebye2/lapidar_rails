@@ -38,5 +38,7 @@ module Lapidar
     config.clinica_estado = "Paraná"
     config.clinica_pais = "Brasil"
     config.clinica_fone = "(41) 9 9999-9999" # do jeito que vai aparecer na aplicação
+
+    config.clinica_faz_repasses = false
   end
 end

@@ -1,0 +1,27 @@
+<% titulo "Instrumentos aplicados - #{@pessoa.nome_abreviado}" %>
+
+<h1 id="main-title"><%= @pessoa.nome_abreviado %></h1>
+<%= render "navbar", pessoa: @pessoa %>
+
+<h1>Instrumentos aplicados</h1>
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "PDF", instrumentos_pessoa_path(@pessoa, format: :pdf), class: "icon-file-pdf", target: :blank %>
+    </li>
+  </ul>
+</nav>
+<div class="grid-2">
+  <div class="y-overflow">
+    <% @instrumento_relatos.each do |instrumento_relato| %>
+      <ul>
+        <li>
+          <%= hx_link "#{instrumento_relato.instrumento.sigla || instrumento_relato.instrumento.nome} (#{render_data_brasil instrumento_relato.atendimento.data_inicio_verdadeira})", instrumento_relato_pessoa_path(instrumento_relato_id: instrumento_relato.id), target: "#instrumento_relato" %>
+        </li>
+      </ul>
+    <% end %>
+  </div>
+
+  <div id="instrumento_relato" class="y-overflow">
+  </div>
+</div>

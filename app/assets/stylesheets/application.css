@@ -910,6 +910,12 @@ dt {
 	}
 }
 
+.y-overflow {
+	position: relative;
+	max-height: 50em;
+	overflow-y: scroll;
+}
+
 #main-title {
 	font-size: 3em;
 	text-align: center;

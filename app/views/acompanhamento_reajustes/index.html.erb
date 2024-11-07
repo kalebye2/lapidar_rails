@@ -23,9 +23,9 @@
   <%= hx_form get: acompanhamento_reajustes_path, target: "#acompanhamento_reajustes", select: "#acompanhamento_reajustes", replace_url: true, trigger: "change", swap: "outerHTML" do %>
     <div>
       <label for="ajuste_de">Ajuste (data inicial)</label>
-      <input type="date" name="ajuste_de" id="ajuste_de" value="<%= params[:ajuste_de] %>">
+      <input type="date" name="ajuste_de" id="ajuste_de" value="<%= @ajuste_de %>">
       <label for="ajuste_ate">Ajuste (data final)</label>
-      <input type="date" name="ajuste_ate" id="ajuste_ate" value="<%= params[:ajuste_ate] %>">
+      <input type="date" name="ajuste_ate" id="ajuste_ate" value="<%= @ajuste_ate %>">
     </div>
 
     <div>

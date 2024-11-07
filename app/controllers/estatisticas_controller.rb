@@ -1,4 +1,5 @@
 class EstatisticasController < ApplicationController
+  require 'csv'
   before_action :validar_usuario
 
   def index
@@ -15,6 +16,22 @@ class EstatisticasController < ApplicationController
     @atendimento_valores = AtendimentoValor.do_periodo(params[:financeiro_desde]..params[:financeiro_ate]) || AtendimentoValor.do_mes_atual
 
     @finparams = [params[:financeiro_desde], params[:financeiro_ate]]
+
+    nome_documento = "#{nome_do_site&.parameterize}_estatisticas_#{@de}-#{@ate}"
+
+    respond_to do |format|
+      format.html
+
+      format.csv do
+        final = CSV.generate do |csv|
+          csv << [
+            "IMPLEMENTAÇÃO A REALIZAR",
+          ]
+        end
+
+        send_data final, filename: "#{nome_documento}.csv"
+      end
+    end
   end
 
   def clinica
@@ -38,6 +55,7 @@ class EstatisticasController < ApplicationController
   end
 
   def instrumentos
+    set_de_ate Date.current.beginning_of_month, Date.current.end_of_month
   end
 
   def financeiro

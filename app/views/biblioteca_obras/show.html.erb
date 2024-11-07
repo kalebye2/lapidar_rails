@@ -1,41 +1,10 @@
-<% titulo @biblioteca_obra.titulo_completo %>
-<h1><%= @biblioteca_obra.titulo_completo %></h1>
-<h2>
-<% autores_count = @biblioteca_obra.autores.count %>
-<% @biblioteca_obra.autores.map { |a| [a.nome_completo, a] }.each_with_index do |autor, id| %>
-  <%= link_to autor[0], autor[1] %><% if id != autores_count - 1 %>;<% end %>
-<% end %>
-</h2>
-<hr>
+<p style="color: green"><%= notice %></p>
 
-<%= link_to "voltar", biblioteca_path %>
+<%= render @biblioteca_obra %>
 
-<div class="biblioteca-obra-resumo">
-  <%= @biblioteca_obra.resumo || "LOREM IPSUM DOLOR SIT AMET CONSECTETUR" %>
-</div>
+<div>
+  <%= link_to "Edit this biblioteca obra", edit_biblioteca_obra_path(@biblioteca_obra) %> |
+  <%= link_to "Back to biblioteca obras", biblioteca_obras_path %>
 
-<div class="biblioteca-obra-informacoes">
-  <p><%= @biblioteca_obra.tipo %></p>
-  <p><%= @biblioteca_obra.editora.nome %></p>
-  <p><%= @biblioteca_obra.data_formatada %></p>
-  <p>ISBN: <%= @biblioteca_obra.isbn || "Não informado" %></p>
-
-  <% if @biblioteca_obra.obra_virtual %>
-    <%= link_to "Visualizar", @biblioteca_obra.caminho %>
-  <% end %>
-
-  <% if @biblioteca_obra.edicao > 0 %>
-    <p><%= @biblioteca_obra.edicao %>ª edição</p>
-  <% end %>
-
-  <% if @biblioteca_obra.volume > 0 %>
-    <p>Volume <%= @biblioteca_obra.volume %></p>
-  <% end %>
-
-  <% if @biblioteca_obra.periodico %>
-    <p><%= @biblioteca_obra.periodico.nome %></p>
-  <% end %>
-  <p><strong>Tags:</strong>
-  <%= @biblioteca_obra.tags.map { |t| t.nome } %>
-  </p>
+  <%= button_to "Destroy this biblioteca obra", @biblioteca_obra, method: :delete %>
 </div>

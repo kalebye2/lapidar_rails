@@ -17,11 +17,11 @@
 
   <td>
     <%#== hx_input type:"number", name: "profissional_financeiro_repasse[valor]", value: repasse.valor %>
-    <input type="number" name="profissional_financeiro_repasse[valor]" value="<%= "#{repasse.valor / 100},#{(repasse.valor % 100).to_s.insert(-1, "00")[..1]}" %>">
+    <input type="text" style="min-width:10em;max-width:10em;" name="profissional_financeiro_repasse[valor]" value="<%= "#{repasse.valor / 100},#{(repasse.valor % 100).to_s.insert(-1, "00")[..1]}" %>">
   </td>
 
   <td class="text-center">
-    <select name="profissional_financeiro_repasse[pagamento_modalidade_id]">
+    <select name="profissional_financeiro_repasse[pagamento_modalidade_id]" style="min-width:2em;">
       <% PagamentoModalidade.all.each do |modalidade| %>
         <option value="<%= modalidade.id %>" <%= !repasse.pagamento_modalidade_id.nil? && modalidade.id == repasse.pagamento_modalidade_id ? "selected" : "" %>>
         <%= modalidade.modalidade %>
