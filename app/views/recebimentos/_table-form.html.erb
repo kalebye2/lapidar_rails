@@ -40,8 +40,10 @@
 </td>
 
 <td>
-  Pagamento direto
-  <input type="checkbox" name="recebimento[direto_profissional]">
+  <% if !app_config.clinica_recebimentos_diretos %>
+    Pagamento direto
+    <input type="checkbox" name="recebimento[direto_profissional]">
+  <% end %>
 </td>
 
 <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">

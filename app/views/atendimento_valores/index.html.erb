@@ -1,6 +1,7 @@
 <% titulo "Valores de atendimentos" %>
 <h1>Valores de atendimentos</h1>
 
+<%= render "financeiro/navbar" %>
 <nav class="navbar navcenter">
   <form <%= hx_set get: atendimento_valores_path, target: "#tabela-valores", replace_url: true, trigger: "change" %>>
     <label for="de">De</label>

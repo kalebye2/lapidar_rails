@@ -16,15 +16,17 @@
     <%= render "atendimento_valores_tabela", atendimento_valores: @atendimento_valores, profissional: @profissional %>
   </div>
 
-  <div>
-    <h2 class="text-center">Últimos repasses</h2>
-    <div class="text-center">
-    <%= link_to "Ver mais", financeiro_repasses_profissional_path, class: "button" %>
-    </div>
-    <br>
+  <% if !app_config.clinica_recebimentos_diretos %>
+    <div>
+      <h2 class="text-center">Últimos repasses</h2>
+      <div class="text-center">
+        <%= link_to "Ver mais", financeiro_repasses_profissional_path, class: "button" %>
+      </div>
+      <br>
 
-    <%= render "financeiro_repasses_tabela", profissional_financeiro_repasses: @profissional_financeiro_repasses, profissional: @profissional %>
-  </div>
+      <%= render "financeiro_repasses_tabela", profissional_financeiro_repasses: @profissional_financeiro_repasses, profissional: @profissional %>
+    </div>
+<% end %>
 
   <div>
     <h2 class="text-center">Últimos recebimentos</h2>

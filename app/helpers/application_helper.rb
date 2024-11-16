@@ -2,6 +2,7 @@ module ApplicationHelper
   include Pagy::Frontend
 
   @@site_name = Rails.application.config.app_name || Rails.application.class.module_parent_name.to_s
+  @@config = Rails.application.config
 
   def titulo(titulo)
     # nome do site
@@ -15,6 +16,14 @@ module ApplicationHelper
 
   def titulo_da_aplicacao
     site_name = Rails.application.config.app_name || Rails.application.class.module_parent_name.to_s
+  end
+
+  def app_config
+    @@config
+  end
+
+  def nome_da_clinica
+    @@config.clinica_nome
   end
 
   def render_tempo_meses_resumido(tempo_meses = 0)

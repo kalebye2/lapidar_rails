@@ -1,36 +1,22 @@
 <% titulo "Financeiro" %>
 
 <h1>Financeiro</h1>
-<div class="text-center">
-  <nav class="navbar navcenter">
-    <ul>
-      <li>
-        <%= link_to "Recebimentos", recebimentos_path, class: "icon-coins" %>
-      </li>
-      <li>
-        <%= link_to "Valores de atendimentos", atendimento_valores_path, class: "icon-archive" %>
-      </li>
-      <li>
-        <%= link_to "Repasses aos profissionais", profissional_financeiro_repasses_path, class: "icon-forward1" %>
-      </li>
-      <li>
-        <%= link_to "Reajustes", acompanhamento_reajustes_path, class: "icon-abacus" %>
-      </li>
-    </ul>
-  </nav>
-</div>
+<%= render "navbar" %>
 <!-- tabela de profissionais e o quanto ganham no mês -->
 <div class="grid-2">
   <div class="financeiro-tabelas">
     <%= render "tabela-resumo", profissionais: @profissionais, acompanhamentos: @acompanhamentos %>
     <br />
-    <%= render "tabela-repasses", profissionais: @profissionais, acompanhamentos: @acompanhamentos %>
-    <br />
+    <% if !app_config.clinica_recebimentos_diretos %>
+      <%= render "tabela-repasses", profissionais: @profissionais, acompanhamentos: @acompanhamentos %>
+      <br />
+    <% end %>
     <% if usuario_atual.financeiro? %>
       <%= render "tabela-gastos" %>
     <% end %>
   </div>
-  <div class="grid-3">
+
+  <div class="<%= app_config.clinica_recebimentos_diretos ? "grid-2" : "grid-3" %>">
     <div class="card">
       <h2>Últimos Recebimentos</h2>
       <div class="recebimentos-container">
@@ -72,21 +58,23 @@
       </div>
     </div>
 
-    <div class="card">
-      <h2>Últimos repasses</h2>
-      <% @profissional_financeiro_repasses.each do |repasse| %>
-        <div class="card card-destaque">
-          <span class="icon-calendar"><%= render_data_brasil repasse.data %></span>
-        <br>
-        <span class="icon-tie"><%= repasse.profissional.nome_abreviado %>
-        <%= repasse.profissional.documento %></span>
-        <br>
-        <span class="icon-coin-dollar"><%= render_dinheiro_centavos repasse.valor %></span>
+    <% if !app_config.clinica_recebimentos_diretos %>
+      <div class="card">
+        <h2>Últimos repasses</h2>
+        <% @profissional_financeiro_repasses.each do |repasse| %>
+          <div class="card card-destaque">
+            <span class="icon-calendar"><%= render_data_brasil repasse.data %></span>
+            <br>
+            <span class="icon-tie"><%= repasse.profissional.nome_abreviado %>
+            <%= repasse.profissional.documento %></span>
+            <br>
+            <span class="icon-coin-dollar"><%= render_dinheiro_centavos repasse.valor %></span>
+          </div>
+        <% end %>
+        <div class="text-center">
+          <%= link_to "ver mais", profissional_financeiro_repasses_path, class: "button" %>
         </div>
-      <% end %>
-      <div class="text-center">
-        <%= link_to "ver mais", profissional_financeiro_repasses_path, class: "button" %>
       </div>
-    </div>
+    <% end %>
   </div>
 </div>

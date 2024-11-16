@@ -28,17 +28,49 @@ module Lapidar
 
     # nome da aplicação
     config.app_name = "Nossa clínica"
-    config.app_icon = ""
+    config.app_icon = "" # local do ícone da aplicação
 
     # dados da clínica
     config.clinica_nome = "Nossa Clínica"
-    config.clinica_endereco_logradouro = "Rua dos Bobos"
-    config.clinica_endereco_num = "0"
-    config.clinica_cidade = "Curitiba"
-    config.clinica_estado = "Paraná"
-    config.clinica_pais = "Brasil"
+    config.clinica_endereco = {
+      logradouro: "Rua dos Bobos",
+      numero: "0",
+      # complemento: "0",
+      cidade: "Curitiba",
+      estado: "Paraná",
+      pais: "Brasil",
+      cep: "00000-000",
+    }
     config.clinica_fone = "(41) 9 9999-9999" # do jeito que vai aparecer na aplicação
 
-    config.clinica_faz_repasses = false
+    config.clinica_online = {
+      email: {
+        icon: "",
+        host: "mailto:",
+        url: "email@clinica",
+        description: "",
+      },
+      fone: {
+        icon: "",
+        host: "tel:",
+        url: "+9999999999999",
+        description: "(99) 9 9999-9999",
+      }
+      whatsapp: {
+        icon: "",
+        host: "https://wa.me/",
+        url: "+9999999999999",
+        description: "(99) 9 9999-9999",
+      },
+      instagram: {
+        icon: "",
+        host: "https://instagram.com/",
+        url: "",
+        description: "",
+      },
+    }
+
+    # se os recebimentos são recebidos diretamente pelo profissional
+    config.clinica_recebimentos_diretos = true
   end
 end

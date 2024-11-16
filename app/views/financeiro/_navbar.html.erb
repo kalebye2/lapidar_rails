@@ -1,0 +1,25 @@
+<div class="text-center">
+  <nav class="navbar navcenter">
+    <ul>
+      <% if params[:controller]&.to_sym != :financeiro %>
+        <li>
+          <%= link_to "Financeiro", financeiro_path, class: "icon-coin-dollar" %>
+        </li>
+      <% end %>
+      <li>
+        <%= link_to "Recebimentos", recebimentos_path, class: "icon-coins" %>
+      </li>
+      <li>
+        <%= link_to "Valores de atendimentos", atendimento_valores_path, class: "icon-archive" %>
+      </li>
+      <% if !app_config.clinica_recebimentos_diretos %>
+        <li>
+          <%= link_to "Repasses aos profissionais", profissional_financeiro_repasses_path, class: "icon-forward1" %>
+        </li>
+      <% end %>
+      <li>
+        <%= link_to "Reajustes", acompanhamento_reajustes_path, class: "icon-abacus" %>
+      </li>
+    </ul>
+  </nav>
+</div>

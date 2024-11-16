@@ -1,4 +1,4 @@
-<nav class="navbar navcenter" style="z-index:100000000;">
+<nav class="navbar navcenter" style="z-index:12;">
   <ul>
     <% if params[:action].to_sym != :show %>
       <li>
@@ -54,9 +54,11 @@
           <li>
             <%= link_to "Valores de atendimentos", atendimento_valores_profissional_path %>
           </li>
-          <li>
-            <%= link_to "Repasses financeiros", financeiro_repasses_profissional_path %>
-          </li>
+          <% if !app_config.clinica_recebimentos_diretos %>
+            <li>
+              <%= link_to "Repasses financeiros", financeiro_repasses_profissional_path %>
+            </li>
+          <% end %>
           <li>
             <%= link_to "Recebimentos", recebimentos_profissional_path %>
           </li>

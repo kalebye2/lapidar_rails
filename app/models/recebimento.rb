@@ -18,6 +18,7 @@ class Recebimento < ApplicationRecord
   scope :em_ordem, -> (ordem = :asc) { order(data: ordem) }
 
   before_save do
+    # transformar valores de reais em centavos para db
     if self.valor_changed?
       valor_final = self.valor&.to_s || "0,00"
       if !valor_final.include?(",")

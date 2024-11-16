@@ -1,2 +1,29 @@
 <div class="footer">
+  <p class="text-center">
+  <%= nome_da_clinica %>
+  </p>
+
+  <div class="grid-2">
+    <div id="footer-endereco" style="text-align:right;">
+      <ul>
+        <% endereco = app_config.clinica_endereco %>
+        <%== endereco.map { |k,v| "<li>#{v}</li>" }.join "\n" %>
+      </ul>
+    </div>
+    <div id="footer-online" style="text-align:left;">
+      <ul>
+        <% app_config.clinica_online.each do |k,v| %>
+          <% url = v[:url] %>
+          <% if !url.blank? %>
+            <% mostrador = v[:icon].presence || k.to_s.humanize %>
+            <% host = v[:host] %>
+            <li>
+              <% link_completo = "#{host}#{url}" %>
+              <%= mostrador %>: <%= link_to v[:description].presence || v[:url], link_completo, target: :blank %>
+            </li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+  </div>
 </div>

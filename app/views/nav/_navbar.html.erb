@@ -57,7 +57,9 @@
           <ul class="subnav">
             <li><%= link_to "Atendimentos", atendimento_valores_path %></li>
             <li><%= link_to "Recebimentos", recebimentos_path %></li>
-            <li><%= link_to "Repasses", profissional_financeiro_repasses_path %></li>
+            <% if !app_config.clinica_recebimentos_diretos %>
+              <li><%= link_to "Repasses", profissional_financeiro_repasses_path %></li>
+            <% end %>
             <li><%= link_to "Reajustes", acompanhamento_reajustes_path %></li>
           </ul>
         </li>

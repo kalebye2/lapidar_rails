@@ -8,8 +8,10 @@
       <%= link_to "Valores de atendimentos", atendimento_valores_profissional_path(profissional) %>
     </li>
 
-    <li>
-      <%= link_to "Repasses", financeiro_repasses_profissional_path(profissional) %>
-    </li>
+    <% if !app_config.clinica_recebimentos_diretos %>
+      <li>
+        <%= link_to "Repasses", financeiro_repasses_profissional_path(profissional) %>
+      </li>
+    <% end %>
   </ul>
 </nav>
