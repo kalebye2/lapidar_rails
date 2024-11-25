@@ -55,6 +55,11 @@ class ProfissionaisController < ApplicationController
   end
 
   def new
+    @profissional_funcao = ProfissionalFuncao.new
+    if hx_request?
+      render partial: "profissional_funcoes/form-tabela", locals: {profissional_funcao: @profissional_funcao}
+      return
+    end
   end
 
   def edit
