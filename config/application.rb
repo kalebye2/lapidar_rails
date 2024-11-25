@@ -55,7 +55,7 @@ module Lapidar
         host: "tel:",
         url: "+9999999999999",
         description: "(99) 9 9999-9999",
-      }
+      },
       whatsapp: {
         icon: "",
         host: "https://wa.me/",
