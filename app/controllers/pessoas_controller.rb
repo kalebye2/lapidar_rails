@@ -100,6 +100,18 @@ class PessoasController < ApplicationController
 
           zos.put_next_entry "#{fname}/docs/modelo.txt"
           zos.print "Pasta para documentação extra de #{@pessoa.nome_completo}."
+          
+          zos.put_next_entry "#{fname}/relatorios/modelo.txt"
+          zos.print "Pasta para relatórios de #{@pessoa.nome_completo}."
+
+          zos.put_next_entry "#{fname}/laudos/modelo.txt"
+          zos.print "Pasta para laudos de #{@pessoa.nome_completo}."
+          
+          zos.put_next_entry "#{fname}/atestados/modelo.txt"
+          zos.print "Pasta para atestados de #{@pessoa.nome_completo}."
+
+          zos.put_next_entry "#{fname}/devolutivas/modelo.txt"
+          zos.print "Pasta para devolutivas de #{@pessoa.nome_completo}."
         end
 
         compressed_filestream.rewind
