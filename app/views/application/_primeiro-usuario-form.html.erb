@@ -1,5 +1,5 @@
 <h2>Registrar usuário de <%= @usuario.profissional.descricao_completa %></h2>
-<% hx_form post: primeiro_usuario_cadastro_path, target: "#configurar-aplicacao" do %>
+<%= hx_form post: primeiro_usuario_cadastro_path, target: "#configurar-aplicacao" do %>
   <% if usuario.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(usuario.errors.count, "error") %> prohibited this usuario from being saved:</h2>
@@ -12,5 +12,25 @@
     </div>
   <% end %>
 
-  <input type="hidden" name="usuario[profissional_id]" value="<%= @usuario.profissional %>">
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token.to_s %>">
+  <input type="hidden" name="usuario[profissional_id]" value="<%= @usuario.profissional.id %>">
+  <input type="hidden" name="usuario[admin]" value="true">
+
+  <div class="field">
+    <label for="usuario[username]">Nome de usuário</label>
+    <input type="text" name="usuario[username]" value="<%= @usuario.profissional.username_padrao %>">
+  </div>
+
+  <div class="field">
+    <label for="usuario[password]">Senha</label>
+    <input type="password" name="usuario[password]" id="usuario[password]">
+  </div>
+
+  <div class="field">
+    <label for="usuario[password_confirmation]">Confirmar senha</label>
+    <input type="password" name="usuario[password_confirmation]">
+  </div>
+
+  <input type="submit" value="Criar usuário">
+
 <% end %>

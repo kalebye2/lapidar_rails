@@ -1,0 +1,25 @@
+<div class="grid-2">
+  <%= link_to profissionais_path do %>
+    <div class="card">
+      <h2 class="icon-user-tie">Profissionais</h2>
+      <p>Veja os profissionais cadastrados na clínica</p>
+    </div>
+  <% end %>
+
+  <%= link_to atendimento_locais_path do %>
+    <div class="card">
+      <h2 class="icon-office">Locais de atendimento</h2>
+      <p>Veja os locais registrados para atendimentos pelos profissionais</p>
+    </div>
+  <% end %>
+
+  <% if BibliotecaObra.count > 1 %>
+    <%= link_to biblioteca_path do %>
+      <div class="card">
+        <h2 class="icon-library">Biblioteca</h2>
+        <p>Veja os materiais disponíveis na clínica
+        para sua apreciação</p>
+      </div>
+    <% end %>
+  <% end %>
+</div>

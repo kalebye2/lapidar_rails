@@ -43,7 +43,7 @@
       <select name="pais" id="pais">
         <option value="">TODOS</option>
       <% Pessoa.joins(:profissional).group(:pais).count.keys.each do |pais| %>
-        <option value="<%= pais.id %>" <%= "selected" unless params[:pais] != pais.id %>><%= pais.nome %></option>
+        <option value="<%= pais&.id %>" <%= "selected" unless params[:pais] != pais&.id %>><%= pais&.nome || "Qualquer país" %></option>
       <% end %>
       </select>
     </div>

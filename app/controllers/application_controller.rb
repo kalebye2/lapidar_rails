@@ -24,12 +24,16 @@ class ApplicationController < ActionController::Base
         render partial: "primeira-pessoa-form", locals: { pessoa: @pessoa }
       end
     when "profissional"
-      @profissional = Profissional.new(pessoa: Pessoa.first)
-
-      if !@profissional
-        redirect_to configurar_path(p: "pessoa")
+      if Profissional.count > 0
+        redirect_to configurar_path(p: "usuario")
       else
-        render partial: "primeiro-profissional-form", locals: { profissional: @profissional }
+        @profissional = Profissional.new(pessoa: Pessoa.first)
+
+        if !@profissional
+          redirect_to configurar_path(p: "pessoa")
+        else
+          render partial: "primeiro-profissional-form", locals: { profissional: @profissional }
+        end
       end
     when "usuario"
       @usuario = Usuario.new(profissional: Profissional.first)
@@ -66,7 +70,7 @@ class ApplicationController < ActionController::Base
     return if Usuario.count > 0
     @usuario = Usuario.new usuario_params
     if @usuario.save
-      redirect_to configurar_path(p: "usuario")
+      render partial: "application/index-padrao"
     else
       render partial: "primeiro-usuario-form", status: :unprocessable_entity, locals: { usuario: @usuario }
     end
@@ -259,6 +263,6 @@ class ApplicationController < ActionController::Base
   end
 
   def usuario_params
-    params.require(:usuario).permit *Usuario.attribute_names
+    params.require(:usuario).permit %i[ profissional_id username password password_confirmation admin corpo_clinico secretaria financeiro informatica ]
   end
 end

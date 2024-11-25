@@ -2379,7 +2379,63 @@ ProfissionalFuncao.create([
     :servico=>"Gestão financeira",
     :adjetivo_masc=>nil,
     :adjetivo_fem=>nil,
-    :realiza_atendimentos=>nil}
+    :realiza_atendimentos=>nil
+  },
+  {
+    :id=>8,
+    :funcao=>"Profissional de Educação Física",
+    :orgao_responsavel=>"Conselho Federal de Educação Física",
+    :documento_tipo=>"CREF",
+    :flexao_feminino=>"Profissional de Educação Física",
+    :servico=>"Educação Física",
+    :adjetivo_masc=>"físico",
+    :adjetivo_fem=>"física",
+    :realiza_atendimentos=>true,
+  },
+])
+
+AtendimentoModalidade.destroy_all
+AtendimentoModalidade.create([
+  {
+    :modalidade=>"teleconsulta"
+  },
+  {
+    :modalidade=>"presencial"
+  },
+  {
+    :modalidade=>"visita domiciliar"
+  },
+])
+
+AtendimentoLocalTipo.destroy_all
+AtendimentoLocalTipo.create([
+  {
+    :tipo=>"Clínica"
+  },
+  {
+    :tipo=>"Escola"
+  },
+  {
+    :tipo=>"Praça"
+  },
+  {
+    :tipo=>"Parque"
+  },
+  {
+    :tipo=>"Casa"
+  },
+  {
+    :tipo=>"Virtual"
+  },
+  {
+    :tipo=>"Hospital"
+  },
+  {
+    :tipo=>"Igreja"
+  },
+  {
+    :tipo=>"Não especificado"
+  },
 ])
 
 # regioes dos conselhos

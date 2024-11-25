@@ -2,7 +2,7 @@ class ProfissionaisController < ApplicationController
   paginas_que_precisam_de_validacao = %i[ new edit update delete acompanhamentos new_profissional_horarios create_profissional_horarios update_profissional_horarios destroy_profissional_horarios contrato_modelos novo_contrato_modelo agenda ]
   # before_action :set_profissional, only: paginas_que_precisam_de_validacao + [:show] - [:new]
   # before_action :validar_usuario, only: paginas_que_precisam_de_validacao
-  before_action :set_profissional, except: %i[ index new ]
+  before_action :set_profissional, except: %i[ index new create ]
   before_action :validar_usuario, except: %i[ index show ]
 
   include Pagy::Backend
