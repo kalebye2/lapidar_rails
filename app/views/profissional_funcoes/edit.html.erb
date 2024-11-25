@@ -1,2 +1,6 @@
-<h1>ProfissionalFuncoes#edit</h1>
-<p>Find me in app/views/profissional_funcoes/edit.html.erb</p>
+<% titulo "Editar função - #{@profissional_funcao.funcao}" %>
+<h1><%= @profissional_funcao.funcao %> - Editar</h1>
+
+<%= render "navbar" %>
+
+<%= render "form", profissional_funcao: @profissional_funcao %>

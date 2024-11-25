@@ -1,0 +1,44 @@
+<%= form_for(@profissional_funcao, local: true) do |form| %>
+  <div class="field">
+  <%= form.label :funcao, "Função" %>
+  <%= form.text_field :funcao %>
+  </div>
+
+  <div class="field">
+    <%= form.label :orgao_responsavel, "Órgão responsável" %>
+    <%= form.text_field :orgao_responsavel %>
+  </div>
+
+  <div class="field">
+    <%= form.label :documento_tipo, "Tipo de documento" %>
+    <%= form.text_field :documento_tipo %>
+  </div>
+
+  <div class="field">
+    <%= form.label :flexao_feminino, "Flexão no feminino" %>
+    <%= form.text_field :flexao_feminino, placeholder: "Padrão: troca a última letra por \"a\"" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :servico, "Formação" %>
+    <%= form.text_field :servico %>
+  </div>
+
+  <div class="field">
+    <%= form.label :adjetivo_masc, "Adjetivo masculino" %>
+    <%= form.text_field :adjetivo_masc %>
+  </div>
+
+  <div class="field">
+    <%= form.label :adjetivo_fem, "Adjetivo feminino" %>
+    <%= form.text_field :adjetivo_fem %>
+  </div>
+
+  <div class="field">
+    <%= form.label :realiza_atendimentos %>
+    <%= form.check_box :realiza_atendimentos %>
+  </div>
+
+  <%= form.submit %>
+
+<% end %>

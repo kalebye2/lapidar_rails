@@ -1,29 +1,56 @@
-<% if profissional_funcao.presence %>
-  <tr id="<%= dom_id(profissional_funcao) %>">
-    <td><%= profissional_funcao.id %></td>
-    <td>
-      <input type="text" name="profissional_funcao[funcao]" value="<%= profissional_funcao.funcao %>">
-    </td>
-    <td>
-      <input type="text" name="profissional_funcao[orgao_responsavel]" value="<%= profissional_funcao.orgao_responsavel %>">
-    </td>
-    <td>
-      <input type="text" name="profissional_funcao[documento_tipo]" value="<%= profissional_funcao.documento_tipo %>">
-    </td>
-    <td>
-      <input type="text" name="profissional_funcao[flexao_feminino]" value="<%= profissional_funcao.flexao_feminino %>" placeholder="<%= profissional_funcao.funcao[..-2] + 'a' %>">
-    </td>
-    <td>
-      <input type="text" name="profissional_funcao[servico]" value="<%= profissional_funcao.servico %>">
-    </td>
-    <td>
-      <input type="text" name="profissional_funcao[adjetivo_masc]" value="<%= profissional_funcao.adjetivo_masc %>">
-    </td>
-    <td>
-      <input type="text" name="profissional_funcao[adjetivo_fem]" value="<%= profissional_funcao.adjetivo_fem %>">
-    </td>
-    <td>
-      <input type="checkbox" name="profissional_funcao[realiza_atendimentos]" value="<%= profissional_funcao.realiza_atendimentos %>" checked="<%= profissional_funcao.realiza_atendimentos %>">
-    </td>
-  </tr>
-<% end %>
+<% token = form_authenticity_token.to_s %>
+
+<% def botao_singular path="", id="", attr="", token=""
+  if params[:singular].presence
+    htmx_config = hx_set patch: profissional_funcao_path(path, authenticity_token: token), include: "closest tr", target: "##{id}_#{attr}", swap: "outerHTML", select: "##{id}_#{attr}"
+    "<button #{htmx_config}>Confirmar</button><button #{hx_set get: profissional_funcao_path(path, singular: true), target: "##{id}_#{attr}", swap: "outerHTML", select: "##{id}_#{attr}"}>Cancelar</button>"
+  end
+end %>
+
+<tr id="<%= id = profissional_funcao.id == nil ? "new_profissional_funcao" : dom_id(profissional_funcao) %>">
+  <td id = "<%= id %>_id"><%= profissional_funcao.id %></td>
+  <td id="<%= id %>_funcao">
+    <input type="text" style="width:5em;" name="profissional_funcao[funcao]" value="<%= profissional_funcao.funcao %>">
+    <%== botao_singular profissional_funcao, id, "funcao", token %>
+  </td>
+  <td id="<%= id %>_orgao_responsavel">
+    <input type="text" name="profissional_funcao[orgao_responsavel]" value="<%= profissional_funcao.orgao_responsavel %>">
+    <%== botao_singular profissional_funcao, id, "orgao_responsavel", token %>
+  </td>
+  <td id="<%= id %>_documento_tipo">
+    <input type="text" name="profissional_funcao[documento_tipo]" value="<%= profissional_funcao.documento_tipo %>">
+    <%== botao_singular profissional_funcao, id, "documento_tipo", token %>
+  </td>
+  <td id="<%= id %>_flexao_feminino">
+    <input type="text" name="profissional_funcao[flexao_feminino]" value="<%= profissional_funcao.flexao_feminino %>" placeholder="<%= profissional_funcao.funcao.blank? ? "Troca a última letra por \"a\"" : profissional_funcao.funcao[..-2] + 'a' %>">
+    <%== botao_singular profissional_funcao, id, "flexao_feminino", token %>
+  </td>
+  <td id="<%= id %>_servico">
+    <input type="text" name="profissional_funcao[servico]" value="<%= profissional_funcao.servico %>">
+    <%== botao_singular profissional_funcao, id, "servico", token %>
+  </td>
+  <td id="<%= id %>_adjetivo_masc">
+    <input type="text" name="profissional_funcao[adjetivo_masc]" value="<%= profissional_funcao.adjetivo_masc %>">
+    <%== botao_singular profissional_funcao, id, "adjetivo_masc", token %>
+  </td>
+  <td id="<%= id %>_adjetivo_fem">
+    <input type="text" name="profissional_funcao[adjetivo_fem]" value="<%= profissional_funcao.adjetivo_fem %>">
+    <%== botao_singular profissional_funcao, id, "adjetivo_fem", token %>
+  </td>
+  <td id="<%= id %>_realiza_atendimentos">
+    <select name="profissional_funcao[realiza_atendimentos]" id="profissional_funcao[realiza_atendimentos]">
+      <option value="0" <%== "selected" unless profissional_funcao.realiza_atendimentos %>>Não</option>
+      <option value="1" <%== "selected" if profissional_funcao.realiza_atendimentos %>>Sim</option>
+    </select>
+    <%== botao_singular profissional_funcao, id, "realiza_atendimentos", token %>
+
+    <% if !params[:singular].presence %>
+      <button <%= hx_set post: profissional_funcoes_path(authenticity_token: token), include: "closest tr", target: "#tabela-funcoes", swap: "outerHTML", select: "#tabela-funcoes" %>>
+        Confirmar
+      </button>
+      <button <%= hx_set get: profissional_funcoes_path, target: "#tabela-funcoes", swap: "outerHTML", select: "#tabela-funcoes" %>>
+        Cancelar
+      </button>
+    <% end %>
+  </td>
+</tr>

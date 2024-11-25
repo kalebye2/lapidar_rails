@@ -105,7 +105,7 @@ class ProfissionalFolgasController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def profissional_folga_params
-      params.fetch(:profissional_folga, {}).permit %i[ data_inicio data_final profissional_folga_motivo_id profissional_id]
+      params.fetch(:profissional_folga, {}).permit %i[ data_inicio data_final profissional_folga_motivo_id profissional_id ]
     end
 
     def validar_usuario

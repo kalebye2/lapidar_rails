@@ -1,6 +1,6 @@
 <h1>Funções profissionais</h1>
 
-<table>
+<table id="tabela-funcoes">
   <thead>
     <tr>
       <th>ID</th>
@@ -13,26 +13,16 @@
       <th>Adjetivo feminino</th>
       <th>Realiza atendimentos na clínica</th>
     </tr>
-    <tr>
+    <tr id="new_profissional_funcao">
       <td colspan="100%" style="text-align:center;">
-        <button>+ Função</button>
+        <%# <%= link_to "+ função", new_profissional_funcao_path, class: "button" %1> %>
+        <%= hx_link "+ função", new_profissional_path, select: "#new_profissional_funcao", target: "#new_profissional_funcao", swap: "outerHTML", class: "button" %>
       </td>
     </tr>
   </thead>
   <tbody>
     <% @profissional_funcoes.each do |profissional_funcao| %>
-      <tr id="<%= dom_id(profissional_funcao) %>">
-        <td><%= profissional_funcao.id %></td>
-        <td><%= profissional_funcao.funcao %></td>
-        <td><%= profissional_funcao.orgao_responsavel %></td>
-        <td><%= profissional_funcao.documento_tipo %></td>
-        <td><%= profissional_funcao.flexao_feminino %></td>
-        <td><%= profissional_funcao.servico %></td>
-        <td><%= profissional_funcao.adjetivo_masc %></td>
-        <td><%= profissional_funcao.adjetivo_fem %></td>
-        <td><%= sim_ou_nao profissional_funcao.realiza_atendimentos %></td>
-      </tr>
-      <%# <%= render "form-tabela", profissional_funcao: profissional_funcao %1> %>
+      <%= render "profissional_funcao_tabela", profissional_funcao: profissional_funcao %>
     <% end %>
   </tbody>
 </table>

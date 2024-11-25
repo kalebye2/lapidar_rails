@@ -1,0 +1,46 @@
+<% def singular_edit path="", id="", attr=""
+if usuario_atual.admin?
+  htmx_config = hx_link "", edit_profissional_funcao_path(path, singular: true), class: "icon-pencil", target: "##{id}_#{attr}", select: "##{id}_#{attr}", style: "font-size:.7em;"
+end
+end %>
+
+<tr id="<%= id = dom_id(profissional_funcao) %>">
+  <td id="<%= id %>_id">
+    <%= profissional_funcao.id %>
+  </td>
+  <td id="<%= id %>_funcao">
+    <%= profissional_funcao.funcao %>
+    <% if usuario_atual.admin? %>
+      <%= singular_edit profissional_funcao, id, "funcao" %>
+    <% end %>
+  </td>
+  <td id="<%= id %>_orgao_responsavel">
+    <%= profissional_funcao.orgao_responsavel %>
+    <%= singular_edit profissional_funcao, id, "orgao_responsavel" %>
+  </td>
+  <td id="<%= id %>_documento_tipo">
+    <%= profissional_funcao.documento_tipo %>
+    <%= singular_edit profissional_funcao, id, "documento_tipo" %>
+  </td>
+  <td id="<%= id %>_flexao_feminino">
+    <%= profissional_funcao.flexao_feminino %>
+    <%= singular_edit profissional_funcao, id, "flexao_feminino" %>
+  </td>
+  <td id="<%= id %>_servico">
+    <%= profissional_funcao.servico %>
+    <%= singular_edit profissional_funcao, id, "servico" %>
+  </td>
+  <td id="<%= id %>_adjetivo_masc">
+    <%= profissional_funcao.adjetivo_masc %>
+    <%= singular_edit profissional_funcao, id, "adjetivo_masc" %>
+  </td>
+  <td id="<%= id %>_adjetivo_fem">
+    <%= profissional_funcao.adjetivo_fem %>
+    <%= singular_edit profissional_funcao, id, "adjetivo_fem" %>
+  </td>
+  <td id="<%= id %>_realiza_atendimentos">
+    <%= sim_ou_nao profissional_funcao.realiza_atendimentos %>
+    <%= singular_edit profissional_funcao, id, "realiza_atendimentos" %>
+  </td>
+</tr>
+<%# <%= render "form-tabela", profissional_funcao: profissional_funcao %1> %>
