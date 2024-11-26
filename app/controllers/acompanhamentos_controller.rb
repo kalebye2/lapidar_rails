@@ -504,7 +504,7 @@ class AcompanhamentosController < ApplicationController
 
   def instrumentos
     @instrumento_relatos = @acompanhamento.instrumento_relatos
-    nome_documento = "#{@acompanhamento.tipo}_#{@acompanhamento.profissional.descricao_completa.parameterize}_#{@acompanhamento.pessoa.nome_completo.parameterize}"
+    nome_documento = "#{@acompanhamento.tipo}_#{@acompanhamento.profissional.descricao_completa.parameterize}_#{@acompanhamento.pessoa.nome_completo.parameterize}_instrumentos"
 
     respond_to do |format|
       format.html
@@ -515,8 +515,51 @@ class AcompanhamentosController < ApplicationController
           type: "application/pdf",
           disposition: :inline
       end
-      format.md
-      format.csv
+      format.md do
+        response.headers["Content-Type"] = "text/markdown"
+        response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.md"
+      end
+      format.csv do
+        col_sep = ","
+        formato_data = "%d/%m/%Y"
+        formato_hora = "%H:%M"
+        csv_final = CSV.generate(col_sep: col_sep) do |csv|
+          csv << [
+            "nome_instrumento",
+            "sigla_instrumento",
+            "tipo_instrumento",
+            "aplicador",
+            "paciente",
+            "idade_paciente",
+            "responsavel",
+            "data_aplicacao",
+            "horario_aplicacao",
+            "tipo_atendimento",
+            "contexto",
+            "motivo_acompanhamento",
+          ]
+          @instrumento_relatos.each do |relato|
+            csv << [
+              relato.instrumento.nome,
+              relato.instrumento.sigla,
+              relato.instrumento.tipo&.upcase,
+              relato.profissional.descricao_completa,
+              relato.pessoa.nome_completo,
+              relato.pessoa.idade_anos(relato.atendimento.data_inicio_verdadeira),
+              relato.atendimento.responsavel&.nome_completo,
+              relato.atendimento.data_inicio_verdadeira.strftime(formato_data),
+              relato.atendimento.horario_inicio_verdadeiro.strftime(formato_hora),
+              relato.atendimento.tipo.upcase,
+              relato.acompanhamento.tipo.upcase,
+              relato.acompanhamento.motivo.upcase,
+            ]
+          end
+        end
+
+        send_data csv_final,
+          format: "text/csv",
+          filename: "#{nome_documento}.csv"
+      end
     end
   end
 

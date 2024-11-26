@@ -79,7 +79,7 @@ class InstrumentoRelato < ApplicationRecord
           relato.instrumento.tipo&.upcase,
           relato.profissional.descricao_completa,
           relato.pessoa.nome_completo,
-          relato.pessoa.idade_anos,
+          relato.pessoa.idade_anos(relato.atendimento.data_inicio_verdadeira),
           relato.atendimento.responsavel&.nome_completo,
           relato.atendimento.data_inicio_verdadeira.strftime(formato_data),
           relato.atendimento.horario_inicio_verdadeiro.strftime(formato_hora),

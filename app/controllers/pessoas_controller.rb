@@ -463,7 +463,43 @@ class PessoasController < ApplicationController
       end
       format.md
       format.csv do
-        send_data @instrumento_relatos.para_csv,
+        col_sep = ","
+        formato_data = "%d/%m/%Y"
+        formato_hora = "%H:%M"
+        csv_final = CSV.generate(col_sep: col_sep) do |csv|
+          csv << [
+            "nome_instrumento",
+            "sigla_instrumento",
+            "tipo_instrumento",
+            "aplicador",
+            "paciente",
+            "idade_paciente",
+            "responsavel",
+            "data_aplicacao",
+            "horario_aplicacao",
+            "tipo_atendimento",
+            "contexto",
+            "motivo_acompanhamento",
+          ]
+          @instrumento_relatos.each do |relato|
+            csv << [
+              relato.instrumento.nome,
+              relato.instrumento.sigla,
+              relato.instrumento.tipo&.upcase,
+              relato.profissional.descricao_completa,
+              relato.pessoa.nome_completo,
+              relato.pessoa.idade_anos(relato.atendimento.data_inicio_verdadeira),
+              relato.atendimento.responsavel&.nome_completo,
+              relato.atendimento.data_inicio_verdadeira.strftime(formato_data),
+              relato.atendimento.horario_inicio_verdadeiro.strftime(formato_hora),
+              relato.atendimento.tipo.upcase,
+              relato.acompanhamento.tipo.upcase,
+              relato.acompanhamento.motivo.upcase,
+            ]
+          end
+        end
+
+        send_data csv_final,
           format: "text/csv",
           filename: "#{nome_documento}.csv"
       end

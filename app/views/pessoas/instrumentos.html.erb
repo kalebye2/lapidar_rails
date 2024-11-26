@@ -9,6 +9,12 @@
     <li>
       <%= link_to "PDF", instrumentos_pessoa_path(@pessoa, format: :pdf), class: "icon-file-pdf", target: :blank %>
     </li>
+    <li>
+      <%= link_to "Markdown", instrumentos_pessoa_path(@pessoa, format: :md), class: "icon-file-empty" %>
+    </li>
+    <li>
+      <%= link_to "CSV", instrumentos_pessoa_path(@pessoa, format: :csv), class: "icon-table2" %>
+    </li>
   </ul>
 </nav>
 <div class="grid-2">

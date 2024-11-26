@@ -1,0 +1,31 @@
+<%= render "application/markdown-header", titulo: "#{@pessoa.nome_completo} - Instrumentos aplicados" %>
+
+<% @instrumento_relatos.each do |instrumento_relato| %>
+# <%= titulo_simples instrumento_relato %>
+
+<% identificacao = instrumento_relato.dados[:identificação] %>
+<% identificacao[:data] = render_data_brasil identificacao[:data].to_date %>
+
+## Identificação
+
+<%= identificacao.map { |k,v| "#{k.to_s.humanize}:\n#{v.to_s.upcase}" }.join "\n\n" %>
+
+<% if instrumento_relato.relato %>
+## Relato
+
+<%= instrumento_relato.relato %>
+<% end %>
+
+<% if instrumento_relato.resultados %>
+## Resultados
+
+<%= instrumento_relato.resultados %>
+<% end %>
+
+<% if instrumento_relato.observacoes %>
+## Observações
+
+<%= instrumento_relato.observacoes %>
+<% end %>
+
+<% end %>
