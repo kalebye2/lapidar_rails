@@ -15,10 +15,10 @@
 
   <td>
     <% if usuario_atual.nil? %>
-      <%= atendimento.paciente.nome_abreviado %>
+      <%= atendimento.paciente.nome_abreviado_social %>
       <%= atendimento.pessoa_responsavel&.nome_abreviado&.insert(0, " (resp.: ")&.insert(-1, ")") %>
     <% else %>
-      <%= link_to atendimento.paciente.nome_abreviado, atendimento.paciente %>
+      <%= link_to atendimento.paciente.nome_abreviado_social, atendimento.paciente %>
       <%= link_to atendimento.pessoa_responsavel.nome_abreviado.insert(0, " (resp.: ").insert(-1, ")"), atendimento.pessoa_responsavel unless atendimento.pessoa_responsavel.nil? %>
     <% end %>
   </td>

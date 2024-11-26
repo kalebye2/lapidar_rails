@@ -1,5 +1,4 @@
-<% titulo @pessoa.nome_abreviado %>
-<p id="notice"><%= notice %></p>
+<% titulo @pessoa.nome_abreviado_social %>
 
 <% pro = @pessoa.profissional %>
 
@@ -7,7 +6,7 @@
 
   <h1>
     <%= @pessoa.pronome_tratamento %>
-    <%= @pessoa.nome_completo %> <%= @pessoa.render_sexo_sigla %>
+    <%= @pessoa.nome_completo_social %> <%= @pessoa.render_sexo_sigla %>
     <% if !@pessoa.imagem_perfil.nil? %>
       <img class="pessoa-profile-img" style="position:relative;" src="<%= @pessoa.imagem_perfil %>">
     <% end %>

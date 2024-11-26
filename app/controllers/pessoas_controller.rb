@@ -529,7 +529,7 @@ class PessoasController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def pessoa_params
-      params.require(:pessoa).permit(:nome, :nome_do_meio, :sobrenome, :rg, :cpf, :fone_cod_pais, :fone_cod_area, :fone_num, :feminino, :civil_estado_id, :instrucao_grau_id, :data_nascimento, :email, :pais_id, :endereco_estado, :endereco_cidade, :endereco_bairro, :endereco_cep, :endereco_logradouro, :endereco_numero, :endereco_complemento, :profissao, :preferencia_contato, :imagem_perfil, :pessoa_tratamento_pronome_id, :inverter_pronome_tratamento, :nascimento_cidade, :nascimento_estado, :nascimento_pais_id, :nome_preferido, :usa_whatsapp, :usa_telegram, :bio)
+      params.require(:pessoa).permit(:nome, :nome_do_meio, :sobrenome, :rg, :cpf, :fone_cod_pais, :fone_cod_area, :fone_num, :feminino, :civil_estado_id, :instrucao_grau_id, :data_nascimento, :email, :pais_id, :endereco_estado, :endereco_cidade, :endereco_bairro, :endereco_cep, :endereco_logradouro, :endereco_numero, :endereco_complemento, :profissao, :preferencia_contato, :imagem_perfil, :pessoa_tratamento_pronome_id, :inverter_pronome_tratamento, :nascimento_cidade, :nascimento_estado, :nascimento_pais_id, :nome_preferido, :usa_whatsapp, :usa_telegram, :bio, :nome_social)
     end
 
     def parentesco_params

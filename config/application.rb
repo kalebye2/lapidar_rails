@@ -72,5 +72,8 @@ module Lapidar
 
     # se os recebimentos são recebidos diretamente pelo profissional
     config.clinica_recebimentos_diretos = true
+
+    # se a clínica possui biblioteca ou nao
+    config.biblioteca_disponivel = false
   end
 end

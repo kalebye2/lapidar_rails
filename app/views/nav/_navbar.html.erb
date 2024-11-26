@@ -99,7 +99,7 @@
         </li>
       <% end %>
     <% end %>
-    <% if BibliotecaObra.count > 1 || usuario_atual&.secretaria? %>
+    <% if config.biblioteca_disponivel && (BibliotecaObra.count > 1 || usuario_atual&.secretaria?) %>
       <li>
         <%= link_to "Biblioteca", biblioteca_path, class: "icon-books" %>
       </li>

@@ -24,7 +24,8 @@ A pessoa pode verificar a agenda de hoje da clínica,
 bem como verificar os profissionais da clínica e pegar suas informações
 de contato.
 Ela também pode ver o catálogo na [biblioteca](#biblioteca) da clínica
-caso tenha interesse em ler algum material disponível.
+caso tenha interesse em ler algum material disponível
+(só é possível se a configuração tiver habilitado o acesso à biblioteca).
 
 ## Modo Profissional
 A pessoa terá funções dentro da aplicação de acordo com o papel atribuído a ela,
@@ -106,6 +107,7 @@ para cada pessoa que passar pela clínica.
 As informações de cadastro que podem ser registradas são:
 
 - Nome, nome do meio e sobrenome (separados para facilitar leitura)
+- Nome social (se tiver)
 - CPF
 - RG
 - Telefone: Código do país, código de área e número de telefone
@@ -262,6 +264,25 @@ financeiras registradas na aplicação;
 caso seja do [corpo clínico](#corpo-clinico) terá acesso apenas
 às operações que acompanha.
 
+Os valores de atendimentos não são registrados na parte financeira,
+mas apenas na seção do **acompanhamento** do qual faz parte.
+No acesso ao acompanhamento, tanto quem é
+[corpo clínico](#corpo-clinico)
+e é o profissional responsável pelo acompanhamento
+como quem é [financeiro](#financeiro)
+ou da [secretaria](#secretaria)
+tem a opção de gerar um valor de atendimento pro atendimento
+ou editar o que já está ali.
+
+As informações de cada valor são:
+
+- Valor (em R$)
+- Desconto (em R$)
+- Taxa externa (em %), que representa a taxa
+que seria paga numa plataforma externa, por exemplo
+- Taxa interna (em %), que representa a taxa
+que o profissional deve à clínica
+
 ## Recebimentos
 
 Registro dos valores recebidos na clínica.
@@ -273,14 +294,28 @@ de documentos fiscais como *recibos*,
 que podem ser baixados para cada um dos recebimentos registrados
 nos formatos [Markdown](#markdown) e PDF.
 
+Um recebimento possui os seguintes atributos:
+
+- Acompanhamento para o qual o recebimento será registrado
+- Pagante
+- Data de recebimento
+- Valor (em R$)
+- A modalidade de pagamento
+
 ## Gastos
 
-IMPLEMENTE.
+A opção de registrar gastos será implementada
+em atualização posterior da aplicação.
 
 ## Repasses
 
 Aqui são registrados os repasses que a clínica faz aos profissionais.
-Quando um recebimento é registrado com a opção
+Só ficam disponíveis caso a aplicação esteja configurada
+para registrar repasses,
+considerando que a clínica pode receber diretamente os valores
+e então repassar para os profissionais.
+Neste caso,
+quando um recebimento é registrado com a opção
 *direto para o profissional* assinalada automaticamente se registra
 um repasse ao profissional daquele acompanhamento.
 Assim a clínica pode declarar o valor repassado ao profissional
@@ -291,6 +326,24 @@ da clínica.
 
 ## Reajustes
 
+Reajustes são alterações nos valores dos atendimentos
+registradas pelos profissionais
+após um acompanhamento ter iniciado.
+Digamos que um acompanhamento tenha iniciado
+com cada sessão custando R$ 100
+e, em um ano,
+houve um reajuste de R$ 110 por sessão para aquele acompanhamento;
+neste caso, o profissional registra nesta seção da aplicação.
+
+Para registrar um reajuste para um acompanhamento,
+o profissional tem a opção de definir os seguintes atributos:
+
+- Acompanhamento ao qual o reajuste será efetuado
+- Data do reajuste (quando vai ser aplicado)
+- Valor negociado (em R$)
+- Data da negociação (quando o paciente foi informado do reajuste)
+- Motivo do reajuste
+
 # Documentos
 
 Nesta parte os profissionais podem
@@ -299,6 +352,9 @@ elaborar os documentos importantes para uso na aplicação como
 [devolutivas](#devolutivas),
 [anamneses](#anamneses) e
 [modelos de contrato](#modelos-de-contrato).
+Em breve será também implementada
+a possibilidade de geração de relatórios multiprofissionais
+para cada paciente.
 
 É importante ressaltar que os documentos aqui registrados
 *não substituem nenhum dos documentos oficiais dos profissionais*
@@ -324,10 +380,56 @@ Eles ficam ali registrados para pesquisa e download
 de quem tenha interesse, podendo ser baixados em [Markdown](#markdown) ou PDF
 para que o profissional responsável possa elaborar o seu documento oficial.
 
+Um laudo só pode ser editado e fechado
+pelo profissional responsável pelo acompanhamento registrado.
+**Um profissional só pode registrar um laudo
+para os acompanhamentos
+nos quais é o profissional responsável**.
+
+Para o laudo, os atributos editáveis são:
+
+- Acompanhamento
+- Data da avaliação
+- Interessado
+- Finalidade da avaliação
+- Demanda
+- Técnicas utilizadas
+- Análise
+- Conclusão
+- Referências
+- Se está aberto ou fechado
+
+Quando o laudo está fechado, nenhuma opção fica disponível
+para edição e ele fica com o cadeado fechado
+para sinalizar ao profissional responsável
+e aos outros profissionais
+que o laudo está completado e pode ser usado como referência.
+Quando o laudo está aberto
+ele é sinalizado com um cadeado aberto
+para que todos vejam que o laudo não pode ser usado como referência.
+No momento da edição,
+no formato de tabela,
+clicar em cima do texto abre a edição do mesmo.
+
+**Importante**:
+Os instrumentos usados numa avaliação
+**devem ser registrados junto aos atendimentos**.
+A aplicação reconhece os instrumentos utilizados no acompanhamento
+e já os sinaliza quando o acompanhamento for escolhido para o laudo.
+
 ## Devolutivas
 
 Registro das devolutivas do profissional
 aos seus pacientes.
+Os atributos editáveis são:
+
+- Sobre quem?
+- Com quem?
+- Profissional
+- Data
+- Pontos a abordar
+- Feedback de quem está recebendo a devolutiva
+- Orientações do profissional
 
 ## Anamneses
 
@@ -346,12 +448,28 @@ do paciente como a *data de nascimento* e o *sexo*.
 Outros dados pessoais devem ser registrados na parte de
 [cadastros](#cadastros).
 
+Anamneses são documentos completos,
+portanto é importante que os profissionais
+estejam bem atentos às informações que vão colocar nelas.
+
 ### Anamneses infantojuvenis
 
 As anamneses infantojuvenis podem ser registradas
 para atendimentos de anamnese de pacientes
 em acompanhamento que foi registrado como infantojuvenil
 ou cujo paciente tenha menos de 18 anos.
+Para a anamnese infantojuvenil,
+primeiro é necessário registrar:
+
+- A pessoa de quem se faz a anamnese
+- O responsável
+- O tipo de acompanhamento
+- A data da anamnese
+
+Depois de criada a anamnese,
+será dada uma vasta lista de itens
+pro profissional registrar da criança ou adolescente
+que está sendo submetido à anamnese.
 
 ### Anamneses adultas
 
@@ -360,16 +478,174 @@ para atendimentos de anamnese de pacientes
 cujo acompanhamento não foi registrado como infantojuvenil
 ou que tenham 18 anos de idade ou mais.
 
+Os atributos editáveis são:
+
+- Pessoa submetida à anamnese
+- Data
+- Serviço procurado
+- Responsável
+- Motivo da consulta
+- Anos de escolaridade
+- Quem encaminhou
+- Históricos
+	- Profissional
+	- Ocupacional
+	- Médico
+	- Antecedentes familiares
+	- Desenvolvimento neuropsicomotor
+- Condição atual
+	- Aspectos psicoemocionais
+	- Aspectos psicossociais
+	- Comorbidades
+	- Medicações em uso
+	- Se faz ou fez uso de drogas ilícitas
+	- Se possui autonomia nas atividades diárias
+	- Alimentação
+	- Sono
+	- Habilidades afetadas
+	- Motivo do encaminhamento
+- Anotações do profissional
+	- Diagnóstico preliminar
+	- Plano de tratamento
+	- Prognóstico
+
 ### Modelos de contrato
 
-AAAA
+Cada profissional terá seus modelos de contrato
+para os acompanhamentos.
+Todo modelo de contrato tem:
+
+- Título (o que vai aparecer no documento para o paciente)
+- Descrição (para o profissional identificar melhor)
+- Conteúdo
 
 ## Templates
 
 Os templates são partes que possuem *tokens* específicos
 que os permite serem substituídos por informações relacionadas ao documento.
+Todas as opções mencionadas aqui
+devem ser colocadas entre `{%` e `%}`
+e a aplicação irá renderizar o documento
+com a informação solicitada pelo template.
+Ex.:
 
-- {% paciente.nome %}
+> Considerando isto, vemos que
+{% pessoa.nome\_completo %}
+possui dificuldades na aprendizagem
+devido ao seu quadro disléxico.
+
+Se o nome completo do paciente for Mateus Borges Ribeiro,
+a aplicação vai renderizar o template assim:
+
+> Considerando isto, vemos que
+Mateus Borges Ribeiro
+possui dificuldades na aprendizagem
+devido ao seu quadro disléxico.
+
+Abaixo estão as opções dos templates
+(como uma *cheat sheet*):
+
+- Opções para pessoa
+	- pessoa
+	- paciente
+	- cliente
+
+- Opções para pessoa nome completo
+	- pessoa.nome\_completo
+	- paciente.nome\_completo
+	- cliente.nome\_completo
+	- nome completo do paciente
+	- nome completo do cliente
+	- nome\_completo\_pessoa
+	- nome\_completo\_paciente
+	- nome\_completo\_cliente
+
+- Opções para responsavel
+	- responsavel
+	- responsável
+	- responsável legal
+	- pessoa responsável
+
+- Opções para responsavel nome completo
+	- responsavel.nome\_completo
+	- nome completo do responsável
+	- nome completo do responsavel
+	- nome completo do responsável legal
+	- nome\_completo\_responsavel
+
+- Opções para profissional nome completo
+	- profissional\_nome \_completo
+	- profissional.nome\_completo
+	- nome completo do profissional
+	- profissional
+
+- Opções para profissional descricao completa
+	- profissional\_descricao\_completa
+	- profissional.descricao\_completa 
+	- descrição completa do profissional
+
+- Opções para profissional documento
+	- profissional.documento
+\ t- profissional\_documento
+	- documento do profissional
+
+- Opções para profissional documento tipo
+	- profissional.documento\_tipo
+	- profissional\_documento\_t ipo
+	- pro\_documento\_tipo
+
+- Opções para profissional documento valor
+	- profissional.documento\_valor
+	- profissional\_documento
+	- pro\_doc\_valor
+	- pro\_documento\_valor
+
+- Opções para profissional documento re giao
+	- profissional.documento\_regiao
+	- profissional\_documento\_regiao
+	- pro\_doc\_regiao
+	- pro\_do cumento\_regiao
+
+- Opções para profissional email
+	- profissional.email
+	- pro\_email
+
+- Opções para profissional fone
+	- profissional.fone
+	- pro\_fone
+
+- Opções para profissional fone link
+	- profissional.fone\_link
+	- pro\_fone\_link
+
+- Opções para profissional pix
+	- profissional.chave\_pix
+	- pro\_pix
+
+- Opções para data inicio
+	- data\_inicio
+	- data de início
+	- data início
+	- início data
+	- inicio\_data
+	- quando começou
+	- quando\_comecou
+
+- Opções para data inicio extenso
+	- data\_inicio\_extenso
+	- acompanhamento.data\_inicio\_por\_extenso
+	- data de início do acompanhamento por extenso
+	- data\_inicio.extenso
+
+- Opções para valor sessao contrato
+	- valor\_sessoes
+	- valor das sessões
+	- valor da sessão
+
+- Opções para num sessoes
+	- num\_sessoes
+	- número de sessões
+	- sessões
 
 # Markdown
 
@@ -414,3 +690,5 @@ Inclusive este texto de ajuda foi escrito em Markdown
 e convertido dentro da aplicação para o formato de visualização da web.
 
 # Biblioteca
+
+Será implementada em breve.

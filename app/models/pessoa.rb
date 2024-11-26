@@ -108,12 +108,20 @@ class Pessoa < ApplicationRecord
     [nome, nome_do_meio, sobrenome].compact.join(' ')
   end
 
+  def nome_completo_social
+    [nome_social, nome_completo].compact.join(" | ")
+  end
+
   def nome_abreviado_meio
     if nome_do_meio
       abreviar(nome + ' ' + nome_do_meio.to_s, '. ') + '. ' + sobrenome
     else
       abreviar(nome, '. ') + '. ' + sobrenome
     end
+  end
+
+  def nome_abreviado_meio_social
+    [nome_social, nome_abreviado_meio].compact.join " | "
   end
 
   def nome_abreviado
@@ -125,6 +133,10 @@ class Pessoa < ApplicationRecord
     else
       nome + ' ' + sobrenome
     end
+  end
+
+  def nome_abreviado_social
+    [nome_social, nome_abreviado].compact.join " | "
   end
 
   def nome_sigla

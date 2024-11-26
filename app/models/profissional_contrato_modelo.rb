@@ -96,6 +96,10 @@ class ProfissionalContratoModelo < ApplicationRecord
     acompanhamento.send("pessoa.nome_completo")
   end
 
+  def opcoes_substituicao
+    @@opcoes_substituicao
+  end
+
   def conteudo_para_acompanhamento acompanhamento=nil
     return nil if acompanhamento.blank? || acompanhamento.class.to_s != "Acompanhamento"
     texto_final = conteudo
