@@ -97,3 +97,6 @@ gem 'chartkick'
 
 # for maps
 gem 'leaflet-rails'
+
+# for statistics
+gem 'enumerable-statistics'
