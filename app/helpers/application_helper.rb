@@ -69,6 +69,10 @@ module ApplicationHelper
     number_to_percentage porcentagem_int / 100, precision: 2, delimiter: ".", separator: ","
   end
 
+  def render_decimal decimal = 0
+    number_to_currency decimal, precision: 1, delimiter: ".", separator: ",", unit: ""
+  end
+
   def sim_ou_nao valor=false, fallback = ""
     if valor.class.name == "TrueClass"
       valor ? "Sim" : "Não"

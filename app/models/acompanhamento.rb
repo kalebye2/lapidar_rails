@@ -195,7 +195,7 @@ class Acompanhamento < ApplicationRecord
 
   def cidade padrao_nulo="Brasília"
     atendimento_final = atendimentos.realizados.em_ordem.last
-    atendimento_final.atendimento_local&.endereco_cidade || profissional.endereco_cidade || padrao_nulo
+    atendimento_final&.atendimento_local&.endereco_cidade || profissional.endereco_cidade || padrao_nulo
   end
 
   def para_csv col_sep: ",", formato_data: "%Y-%m-%d"

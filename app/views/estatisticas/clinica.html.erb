@@ -4,15 +4,20 @@
 
 <%= render "navbar" %>
 
-<div class="grid-2">
+<div class="grid-3">
   <div class="card">
     <h2>Profissionais</h2>
     <ul>
       <li>
         <%= deixar_no_plural Profissional.count, "profissional cadastrado", "profissionais cadastrados" %>
       </li>
+
       <li>
         <%= deixar_no_plural Profissional.ativos.count, "ativo", "ativos" %>, <%= deixar_no_plural Profissional.inativos.count, "inativo", "inativos" %>
+      </li>
+
+      <li>
+        <%= ProfissionalFuncao.joins(:profissionais).distinct.map { |funcao| "#{deixar_no_plural funcao.profissionais.count, "profissional", "profissionais"} de #{funcao.servico}" }.to_sentence(last_word_connector: " e ") %>
       </li>
     </ul>
   </div>
@@ -24,6 +29,30 @@
       </li>
       <li>
         <%= deixar_no_plural Atendimento.sem_local_definido.realizados.count, "atendimento realizado", "atendimentos realizados" %> sem local definido.
+      </li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Tempo de atuação</h2>
+    <ul>
+      <% tempo_total_atendimentos =
+        Atendimento.realizados.map(&:tempo_atendimento_horas).sum
+      %>
+      <li>
+        <%= number_to_currency tempo_total_atendimentos,
+          separator: ",", delimiter: ".", unit: "" %> <%=
+        tempo_total_atendimentos != 1.0 ? "horas" :
+          "hora" %>
+        de atendimento
+      </li>
+
+      <li>
+        <% tempo_este_mes_atendimentos = Atendimento.realizados.deste_mes.map(&:tempo_atendimento_horas).sum %>
+        <%= number_to_currency tempo_este_mes_atendimentos,
+          separator: ",", delimiter: ".", unit: "" %>
+        <%= tempo_este_mes_atendimentos != 1.0 ? "horas" : "hora" %>
+          este mês
       </li>
     </ul>
   </div>
@@ -45,4 +74,13 @@
 <div class="grid-2">
   <%= bar_chart Atendimento.realizados.contagem_por_tipo.map { |k,v| [k.tipo.upcase, v] }, title: "Atendimentos prestados por tipo" %>
   <%= line_chart Atendimento.realizados.deste_ano.contagem_por_mes.map { |k,v| [t('date.month_names')[k.first.month].upcase,v] }, title: "Atendimentos deste ano por mês" %>
+</div>
+
+<h2>Pacientes</h2>
+<div class="grid-2">
+  <% pessoas_atendidas_total = Pessoa.joins(:atendimentos).distinct %>
+  <% pessoas_atendidas_total.group(:feminino).count.map { |k,v| [k, v] } %>
+  <%= bar_chart pessoas_atendidas_total.group(:feminino).count.map { |k,v| [k ? "Feminino" : "Masculino", v] }, title: "Pacientes atendidos por sexo", ytitle: "Sexo", xtitle: "Nº de pacientes" %>
+  <% acompanhamentos_por_menor = Acompanhamento.all.group(:menor_de_idade).count.map { |k,v| [k ? :menor_de_idade : :maior_de_idade, v] } %>
+  <%= bar_chart acompanhamentos_por_menor.map { |k,v| [k.to_s.humanize, v] }, title: "Pacientes por faixa de maioridade", ytitle: "Faixa", xtitle: "Nº de pacientes" %>
 </div>

@@ -1,3 +1,87 @@
-<h1>Estatisticas#acompanhamentos</h1>
-<p>Find me in app/views/estatisticas/acompanhamentos.html.erb</p>
+<% titulo "Estatísticas: Acompanhamentos" %>
+<h1>Estatísticas: Acompanhamentos</h1>
 <%= render "navbar" %>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Todos", "javascript:void(0);", class: "icon-download3" %>
+      <ul>
+        <li>
+          <%= link_to "Baixar CSV", acompanhamentos_path(format: :csv), class: "icon-table2" %>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <%= link_to "Em andamento", "javascript:void(0);", class: "icon-download3" %>
+      <ul>
+        <li>
+          <%= link_to "Baixar CSV", acompanhamentos_path(format: :csv, status: :em_andamento), class: "icon-table2" %>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <%= link_to "Finalizados", "javascript:void(0);", class: "icon-download3" %>
+      <ul>
+        <li>
+          <%= link_to "Baixar CSV", acompanhamentos_path(format: :csv, status: :finalizado), class: "icon-table2" %>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<div class="grid-3">
+  <div class="card">
+    <h2>Estatísticas gerais</h2>
+    <ul>
+      <li>
+        <%= deixar_no_plural Acompanhamento.count, "acompanhamento registrado", "acompanhamentos registrados" %>
+      </li>
+      <li>
+        <%= deixar_no_plural Acompanhamento.em_andamento.count, "acompanhamento", "acompanhamentos" %> em andamento
+      </li>
+      <li>
+        <%= deixar_no_plural Acompanhamento.finalizados.count, "acompanhamento finalizado", "acompanhamentos finalizados" %>
+      </li>
+      <li>
+        <%= deixar_no_plural Acompanhamento.suspensos.count, "acompanhamento suspenso", "acompanhamentos suspensos" %>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Contagem por tipo de acompanhamento</h2>
+    <ul>
+        <% Acompanhamento.group(:acompanhamento_tipo).count.each do |k,v| %>
+          <li>
+            <%= k.tipo.upcase %>: <%= v %>
+          </li>
+        <% end %>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Números gerais</h2>
+    <ul>
+      <li>
+        Média de acompanhamentos por profissional: <%= number_to_currency Acompanhamento.count / Profissional.count, unit: "", delimiter: ".", separator: "," %>
+      </li>
+      <li>
+        Média de acompanhamentos em andamento por profissional: <%= number_to_currency Acompanhamento.em_andamento.count / Profissional.count, unit: "", delimiter: ".", separator: "," %>
+      </li>
+      <li>
+        Quantidade de atendimentos mensais estimada: <%= Acompanhamento.em_andamento.sum(:num_sessoes) %>
+      </li>
+      <li>
+        Valor mensal estimado: <%= render_dinheiro_centavos Acompanhamento.em_andamento.valor_aproximado_mensal %>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="grid-2">
+  <%= bar_chart Acompanhamento.contagem_por_tipo.map { |k,v| [k.tipo.upcase, v] }, title: "Acompanhamentos por tipo", ytitle: "Tipo", xtitle: "Nº de acompanhamentos" %>
+  <%= bar_chart Acompanhamento.contagem_por_profissional.map { |k,v| [k.descricao_completa, v] }, title: "Acompanhamentos por profissional", ytitle: "Profissional", xtitle: "Nº de acompanhamentos" %>
+  <%= bar_chart Acompanhamento.contagem_por_status.map { |k,v| [k ? "FINALIZADO POR #{k&.motivo}" : "EM ANDAMENTO/SUSPENSO", v] }, title: "Acompanhamentos por status", ytitle: "Status", xtitle: "Nº de acompanhamentos" %>
+</div>

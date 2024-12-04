@@ -29,9 +29,17 @@ class ProfissionaisController < ApplicationController
       @profissionais = @profissionais.no_local_de_atendimento_por_id(params[:local_atendimento]).uniq
     end
 
+    if params[:ativos].present?
+      if params[:ativos] == "false" || params[:ativos] == false || params[:ativos] == 0
+        @profissionais = @profissionais.inativos
+      else
+        @profissionais = @profissionais.ativos
+      end
+    end
+
     @contagem = @profissionais.count
 
-    @params = params.permit %i[nome sexo funcao pais local_atendimento]
+    @params = params.permit %i[nome sexo funcao pais local_atendimento ativos]
 
     respond_to do |format|
       format.html do
@@ -44,7 +52,7 @@ class ProfissionaisController < ApplicationController
       end
 
       format.csv do
-        send_data @profissionais.para_csv, filename: "profissionais_#{@params.to_h.compact.map { |k,v| "#{k&.to_s}=#{v&.to_s}"}.join "_"}.csv"
+        send_data @profissionais.para_csv, filename: "#{nome_documento}.csv"
       end
 
       format.json
@@ -130,7 +138,8 @@ class ProfissionaisController < ApplicationController
     @params = params.permit(:tipo, :status, :paciente)
 
     respond_to do |format|
-      nome_documento = "#{nome_do_site&.parameterize}_#{@profissional.nome_completo.parameterize}_acompanhamentos_#{@params.to_h.map { |k,v| v&.to_s }.join("_")}"
+      filename = "#{nome_do_site&.parameterize}_#{@profissional.nome_completo.parameterize}_acompanhamentos_#{@params.to_h.map { |k,v| v&.to_s }.join("_")}_#{Time.current.to_fs(:number)}"
+
       format.html do
         @pagy, @acompanhamentos = pagy(@acompanhamentos, items: 9)
       end
@@ -138,7 +147,7 @@ class ProfissionaisController < ApplicationController
       format.csv do
         send_data @acompanhamentos.para_csv,
           type: "text/csv",
-          filename: "#{nome_documento}.csv"
+          filename: "#{filename}.csv"
       end
     end
   end
@@ -184,18 +193,18 @@ class ProfissionaisController < ApplicationController
     @params = params.permit %i[ de ate ]
 
     respond_to do |format|
-      nome_documento = "#{nome_do_site&.parameterize}_#{@profissional.nome_completo.parameterize}_atendimento-valores_#{@de}_#{@ate}"
+      filename = "#{nome_do_site&.parameterize}_#{@profissional.nome_completo.parameterize}_atendimento-valores_#{@de}_#{@ate}"
       format.html
 
       format.csv do
         send_data @atendimento_valores.para_csv,
           format: "text/csv",
-          filename: "#{nome_documento}.csv"
+          filename: "#{filename}.csv"
       end
 
       format.xlsx do
         render "atendimento_valores/index"
-        set_xlsx_header "#{nome_documento}.csv"
+        set_xlsx_header "#{filename}.csv"
       end
     end
   end
@@ -209,18 +218,18 @@ class ProfissionaisController < ApplicationController
     @profissional_financeiro_repasses = @profissional.profissional_financeiro_repasses.do_periodo(@de..@ate)
 
     respond_to do |format|
-      nome_documento = "#{nome_do_site&.parameterize}_#{@profissional.nome_completo.parameterize}_financeiro-repasses_#{@params.to_h.map{ |k,v| "#{k}=#{v}" }.join("_")}"
+      filename = "#{nome_do_site&.parameterize}_#{@profissional.nome_completo.parameterize}_financeiro-repasses_#{@params.to_h.map{ |k,v| "#{k}=#{v}" }.join("_")}"
       format.html
 
       format.csv do
         send_data @@profissional_financeiro_repasses.para_csv,
           format: "text/csv",
-          filename: "#{nome_documento}.csv"
+          filename: "#{filename}.csv"
       end
 
       format.xlsx do
         render "profissional_financeiro_repasses/index"
-        set_xlsx_header "#{nome_documento}.csv"
+        set_xlsx_header "#{filename}.csv"
       end
     end
   end
@@ -235,7 +244,7 @@ class ProfissionaisController < ApplicationController
     @recebimentos = @profissional.recebimentos.do_periodo(@de..@ate)
     @recebimentos_totais = @recebimentos
     respond_to do |format|
-      nome_documento = "#{nome_do_site&.parameterize}_#{@profissional.nome_completo.parameterize}_recebimentos_#{@params.to_h.except(:num_itens).map { |k,v| v&.to_s }.join "_"}"
+      filename = "#{nome_do_site&.parameterize}_#{@profissional.nome_completo.parameterize}_recebimentos_#{@params.to_h.except(:num_itens).map { |k,v| v&.to_s }.join "_"}__#{Time.current.to_fs(:number)}"
 
       format.html do
         @pagy, @recebimentos = pagy(@recebimentos, items: @num_itens)
@@ -247,13 +256,13 @@ class ProfissionaisController < ApplicationController
       
       format.csv do
         send_data @recebimentos.para_csv,
-          filename: "#{nome_documento}.csv",
+          filename: "#{filename}.csv",
           type: "text/csv"
       end
 
       format.xlsx do
         render "recebimentos/index"
-        set_xlsx_header "#{nome_documento}.csv"
+        set_xlsx_header "#{filename}.csv"
       end
 
       format.zip do
@@ -326,7 +335,7 @@ class ProfissionaisController < ApplicationController
     end
   end
 
-  def set_xlsx_header nome_documento=""
-    response.headers["Content-Disposition"] = "attachment; filename=#{nome_documento}.xlsx"
+  def set_xlsx_header filename=""
+    response.headers["Content-Disposition"] = "attachment; filename=#{filename}.xlsx"
   end
 end

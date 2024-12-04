@@ -37,6 +37,12 @@
 
     <p class="text-center"><%= deixar_no_plural atendimentos_totais.count, "atendimento", "atendimentos" %></p>
 
+    <ul>
+      <li>
+        <%= link_to "CSV", atendimentos_path(@params.merge format: :csv), class: "icon-table2" %>
+      </li>
+    </ul>
+
     <div class="text-center">
       <%== pagy_nav @pagy %>
     </div>

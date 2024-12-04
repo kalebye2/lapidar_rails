@@ -153,6 +153,10 @@ class Profissional < ApplicationRecord
     pessoa.render_idade
   end
 
+  def idade_anos
+    pessoa.idade_anos
+  end
+
   def acompanhamentos_em_andamento
     acompanhamentos.where(data_final: nil, acompanhamento_finalizacao_motivo: nil)
   end

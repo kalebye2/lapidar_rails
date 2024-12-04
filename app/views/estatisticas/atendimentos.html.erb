@@ -1,4 +1,4 @@
-<% titulo "Atendimentos: estatísticas" %>
+<% titulo "Estatísticas: Atendimentos" %>
 <h1>Atendimentos: estatísticas</h1>
 <%= render "navbar" %>
 
@@ -9,6 +9,11 @@
     <%= inputs_de_ate @de, @ate %>
     <input type="submit">
   <% end %>
+  <ul>
+    <li>
+      <%= link_to "Baixar CSV", atendimentos_path(format: :csv, de: @de, ate: @ate), class: "icon-table2" %>
+    </li>
+  </ul>
 </nav>
 
 <div id="estatisticas-atendimentos">
@@ -26,7 +31,9 @@
 
   <%= line_chart @atendimentos.group(:data).count.map { |k,v| [render_data_brasil(k), v] }, title: "Atendimentos por data", xtitle: "Data", ytitle: "Nº de atendimentos" %>
   <%= line_chart @atendimentos.realizados.group(:data).count.map { |k,v| [render_data_brasil(k), v] }, title: "Atendimentos realizados por data", xtitle: "Data", ytitle: "Nº de atendimentos" %>
-  <%= line_chart @atendimentos.ate_agora.nao_realizados.group(:data).count.map { |k,v| [render_data_brasil(k), v] }, title: "Atendimentos não realizados por data", xtitle: "Data", ytitle: "Nº de atendimentos" %>
+  <% if @atendimentos.ate_agora.nao_realizados.count > 0 %>
+    <%= line_chart @atendimentos.ate_agora.nao_realizados.group(:data).count.map { |k,v| [render_data_brasil(k), v] }, title: "Atendimentos não realizados por data", xtitle: "Data", ytitle: "Nº de atendimentos" %>
+  <% end %>
 
   <%= column_chart @atendimentos.contagem_por_profissional.map { |k, v| [k.descricao_completa, v] }, title: "Atendimentos por profissional", xtitle: "Profissional", ytitle: "Nº de atendimentos" %>
   <%= column_chart @atendimentos.contagem_por_tipo.map { |k,v| [k.tipo.upcase, v] }, title: "Atendimentos por tipo", xtitle: "Tipo", ytitle: "Nº de atendimentos" %>

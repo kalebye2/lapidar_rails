@@ -45,7 +45,7 @@ class PessoasController < ApplicationController
 
       format.csv do
         send_data Pessoa.para_csv(@pessoas),
-          filename: "#{nome_do_site&.parameterize}_lapidar_cadastros_#{@params&.to_h&.map { |k,v| "#{k}=#{v}" }&.compact&.join "_"}.csv",
+          filename: "#{nome_documento}.csv",
           type: "text/csv"
       end
 
@@ -55,17 +55,17 @@ class PessoasController < ApplicationController
 
   # GET /pessoas/1 or /pessoas/1.json
   def show
-    nome_documento = "#{@pessoa.nome_completo.parameterize}_ficha-cadastral"
+    filename = "#{@pessoa.nome_completo.parameterize}_ficha-cadastral"
     respond_to do |format|
       format.html
       format.md do
         response.headers["Content-Type"] = "text/markdown"
-        response.headers["Content-Disposition"] = "attachment;filename=#{nome_documento}.md"
+        response.headers["Content-Disposition"] = "attachment;filename=#{filename}.md"
       end
       format.pdf do
         pdf = PessoaPdf.new(@pessoa)
         send_data pdf.render,
-          filename: "#{nome_documento}.pdf",
+          filename: "#{filename}.pdf",
           type: "application/pdf",
           disposition: :inline
       end
@@ -176,7 +176,7 @@ class PessoasController < ApplicationController
     respond_to do |format|
       format.html
       format.csv do
-        send_data PessoaExtraInformacao.para_csv(@extra_informacoes), filename: "#{Rails.application.class.module_parent_name.to_s}_#{@pessoa.nome_completo.parameterize}.csv", type: 'text/csv'
+        send_data PessoaExtraInformacao.para_csv(@extra_informacoes), filename: "#{nome_do_site&.parameterize}_#{@pessoa.nome_completo.parameterize}.csv", type: 'text/csv'
       end
     end
   end
@@ -354,18 +354,18 @@ class PessoasController < ApplicationController
     @ate = params[:ate]&.to_date || Date.today.end_of_year
     @recebimentos = @pessoa.recebimentos.where(data: @de..@para)
     @pagamentos  = @pessoa.recebimentos_pagante.do_periodo(@de..@para)
-    nome_documento = "#{Rails.application.class.module_parent.to_s}_recebimentos_#{@pessoa.nome_completo.parameterize}_#{@de}_#{@ate}_#{Time.current.strftime "%Y%m%d%H%M%S"}"
+    filename = "#{Rails.application.class.module_parent.to_s}_recebimentos_#{@pessoa.nome_completo.parameterize}_#{@de}_#{@ate}_#{Time.current.strftime "%Y%m%d%H%M%S"}"
 
     respond_to do |format|
       format.html
 
       format.csv do
-        send_data Recebimento.para_csv(collection: @recebimentos), type: "text/csv", filename: "#{nome_documento}.csv"
+        send_data Recebimento.para_csv(collection: @recebimentos), type: "text/csv", filename: "#{filename}.csv"
       end
 
       format.xlsx do
         render "recebimentos/index"
-        response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.xlsx"
+        response.headers['Content-Disposition'] = "attachment; filename=#{filename}.xlsx"
       end
 
       format.zip do
@@ -411,7 +411,7 @@ class PessoasController < ApplicationController
       format.html
       format.pdf
       format.csv do
-        send_data @atendimento_valores.para_csv, type: "text/csv", filename: "#{Rails.application.class.module_parent.to_s}_#{@pessoa.nome_completo.parameterize}_#{@de}_#{@ate}.csv"
+        send_data @atendimento_valores.para_csv, type: "text/csv", filename: "#{nome_do_site&.parameterize}_#{@pessoa.nome_completo.parameterize}_#{@de}_#{@ate}.csv"
       end
       format.zip do
       end
@@ -421,18 +421,18 @@ class PessoasController < ApplicationController
   def prontuario
     hoje = Time.current.strftime("%Y%m%d")
     hoje_formatado = Time.current.strftime("%d/%m/%Y")
-    nome_documento = "#{@pessoa.nome_completo.parameterize}_prontuario_multiprofissional_#{hoje}_#{Time.current.strftime "%H%M%S"}"
+    filename = "#{@pessoa.nome_completo.parameterize}_prontuario_multiprofissional_#{hoje}_#{Time.current.strftime "%H%M%S"}"
     respond_to do |format|
       format.html
       format.md do
         response.headers['Content-Type'] = 'text/markdown'
-        response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.md"
+        response.headers['Content-Disposition'] = "attachment; filename=#{filename}.md"
       end
 
       format.pdf do
         pdf = PessoaProntuarioPdf.new(@pessoa)
         send_data pdf.render,
-          filename: "#{nome_documento}.pdf",
+          filename: "#{filename}.pdf",
           type: "application/pdf",
           disposition: :inline
       end
@@ -450,14 +450,14 @@ class PessoasController < ApplicationController
 
   def instrumentos
     @instrumento_relatos = @pessoa.instrumento_relatos.em_ordem
-    nome_documento = "#{Date.current.strftime("%Y%m%d")}_#{@pessoa.nome_completo.parameterize}_instrumentos-aplicados"
+    filename = "#{Date.current.strftime("%Y%m%d")}_#{@pessoa.nome_completo.parameterize}_instrumentos-aplicados"
 
     respond_to do |format|
       format.html
       format.pdf do
         pdf = PessoaInstrumentoRelatosPdf.new(@pessoa)
         send_data pdf.render,
-          filename: "#{nome_documento}.pdf",
+          filename: "#{filename}.pdf",
           type: "application/pdf",
           disposition: :inline
       end
@@ -501,7 +501,7 @@ class PessoasController < ApplicationController
 
         send_data csv_final,
           format: "text/csv",
-          filename: "#{nome_documento}.csv"
+          filename: "#{filename}.csv"
       end
     end
   end

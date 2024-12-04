@@ -52,7 +52,7 @@ class AcompanhamentosController < ApplicationController
       end
 
       format.csv do
-        send_data @acompanhamentos.para_csv, filename: "acompanhamentos_#{@params.to_h.compact.map { |k,v| "#{k.to_s}=#{v&.to_s}" }.join "_"}.csv", type: "text/csv"
+        send_data @acompanhamentos.para_csv, filename: "#{nome_documento}.csv", type: "text/csv"
       end
 
       format.json
@@ -80,10 +80,9 @@ class AcompanhamentosController < ApplicationController
       end
 
       format.pdf do
-        nome_documento = "dados-acompanhamento_#{@acompanhamento.pessoa.nome_completo.parameterize}_#{@acompanhamento.data_inicio}_#{@acompanhamento.tipo}"
         pdf = AcompanhamentoDadosPdf.new(@acompanhamento)
         send_data pdf.render,
-          filename: "#{nome_documento}.pdf",
+          filename: "#{nome_documento}_dados-acompanhamento.pdf",
           type: "application/pdf",
           disposition: :inline
       end
@@ -157,14 +156,15 @@ class AcompanhamentosController < ApplicationController
   def prontuario
     hoje = Time.now.strftime("%Y%m%d")
     hoje_formatado = Time.now.strftime("%d/%m/%Y")
-    nome_documento = "#{nome_do_site.parameterize}_prontuario_#{@acompanhamento.pessoa.nome_completo.parameterize}_#{@acompanhamento.tipo.parameterize}_#{@acompanhamento.profissional.descricao_completa.parameterize}_#{hoje}_#{Time.now.strftime "%H%M%S"}"
 
     respond_to do |format|
       format.html
 
+      nome_prontuario = "#{nome_do_site.parameterize}_prontuario_#{@acompanhamento.pessoa.nome_completo.parameterize}_#{@acompanhamento.tipo.parameterize}_#{@acompanhamento.profissional.descricao_completa.parameterize}_#{hoje}_#{Time.now.strftime "%H%M%S"}"
+
       format.md do
         response.headers['Content-Type'] = 'text/markdown'
-        response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.md"
+        response.headers['Content-Disposition'] = "attachment; filename=#{nome_prontuario}.md"
       end
 
       format.pdf do
@@ -177,14 +177,14 @@ class AcompanhamentosController < ApplicationController
         pdf = tipo.new(@acompanhamento, options: prontuario_options)
 
         send_data(pdf.render,
-                  filename: "#{nome_documento}.pdf",
+                  filename: "#{nome_prontuario}.pdf",
                   type: "application/pdf",
                   disposition: "inline"
                  )
       end
 
       format.csv do
-        send_data @acompanhamento.prontuario_csv, filename: "#{nome_documento}.csv", type: "text/csv"
+        send_data @acompanhamento.prontuario_csv, filename: "#{nome_prontuario}.csv", type: "text/csv"
       end
     end
   end
@@ -308,17 +308,17 @@ class AcompanhamentosController < ApplicationController
   def declaracao
     hoje = Time.now.strftime("%Y-%m-%d")
     hoje_formatado = Time.now.strftime("%d/%m/%Y")
-    nome_documento = "declaracao_#{@acompanhamento.tipo}_#{hoje}_#{@acompanhamento.pessoa.nome_completo.parameterize}"
 
     respond_to do |format|
+      nome_declaracao = "declaracao_#{@acompanhamento.tipo}_#{hoje}_#{@acompanhamento.pessoa.nome_completo.parameterize}"
       format.html
       format.md do
         response.headers['Content-Type'] = 'text/markdown'
-        response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.md"
+        response.headers['Content-Disposition'] = "attachment; filename=#{nome_declaracao}.md"
       end
       format.pdf do
         pdf = AcompanhamentoDeclaracaoPdf.new(@acompanhamento)
-        send_data pdf.render, filename: "#{nome_documento}.pdf", type: "application/pdf", disposition: :inline
+        send_data pdf.render, filename: "#{nome_declaracao}.pdf", type: "application/pdf", disposition: :inline
       end
     end
   end
@@ -326,19 +326,20 @@ class AcompanhamentosController < ApplicationController
   def declaracao_detalhada
     hoje = Time.now.strftime("%Y-%m-%d")
     hoje_formatado = Time.now.strftime("%d/%m/%Y")
-    nome_documento = "declaracao_detalhada_#{@acompanhamento.tipo}_#{hoje}_#{@acompanhamento.pessoa.nome_completo.parameterize}"
 
     respond_to do |format|
+      nome_declaracao = "declaracao_detalhada_#{@acompanhamento.tipo}_#{hoje}_#{@acompanhamento.pessoa.nome_completo.parameterize}"
+
       format.html
 
       format.md do
         response.headers["Content-Type"] = "text/markdown"
-        response.headers["content-Disposition"] = "attachment; filename=#{nome_documento}.md"
+        response.headers["content-Disposition"] = "attachment; filename=#{nome_declaracao}.md"
       end
 
       format.pdf do
         pdf = AcompanhamentoDeclaracaoDetalhadaPdf.new(@acompanhamento)
-        send_data pdf.render, filename: "#{nome_documento}.pdf", type: "application/pdf", disposition: :inline
+        send_data pdf.render, filename: "#{nome_declaracao}.pdf", type: "application/pdf", disposition: :inline
       end
     end
   end
@@ -347,7 +348,7 @@ class AcompanhamentosController < ApplicationController
     @params = params.permit %i[ contrato_modelo id format tamanho_papel assinatura_paciente assinatura_profissional assinatura_responsavel ]
     if params[:contrato_modelo].presence
       @profissional_contrato_modelo = ProfissionalContratoModelo.find(params[:contrato_modelo])
-      nome_documento = "#{@profissional_contrato_modelo.titulo.parameterize}_#{@acompanhamento.paciente.nome_completo.parameterize}_#{@acompanhamento.data_inicio}"
+      nome_contrato = "#{@profissional_contrato_modelo.titulo.parameterize}_#{@acompanhamento.paciente.nome_completo.parameterize}_#{@acompanhamento.data_inicio}"
 
       respond_to do |format|
         if hx_request?
@@ -357,13 +358,13 @@ class AcompanhamentosController < ApplicationController
         end
         format.md do
           response.headers['Content-Type'] = 'text/markdown'
-          response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.md"
+          response.headers['Content-Disposition'] = "attachment; filename=#{nome_contrato}.md"
           render :contrato_individual
         end
         format.pdf do
           pdf = AcompanhamentoContratoPdf.new([@acompanhamento, @profissional_contrato_modelo], page_size: params[:tamanho_papel], options: @params)
           send_data pdf.render,
-            filename: "#{nome_documento}.pdf",
+            filename: "#{nome_contrato}.pdf",
             type: "application/pdf",
             disposition: :inline
         end
@@ -459,7 +460,7 @@ class AcompanhamentosController < ApplicationController
 
   def declaracao_ir
     ano = params[:ano]&.to_i || (Date.current - 1.year).year
-    nome_documento = "recibo_#{@acompanhamento.pessoa.nome_completo.parameterize}_ir_#{@acompanhamento.tipo.downcase}_#{ano}"
+    nome_recibo = "recibo_#{@acompanhamento.pessoa.nome_completo.parameterize}_ir_#{@acompanhamento.tipo.downcase}_#{ano}"
 
     respond_to do |format|
       format.html
@@ -470,7 +471,7 @@ class AcompanhamentosController < ApplicationController
       format.pdf do
         pdf = AcompanhamentoDeclaracaoIrPdf.new(@acompanhamento, ano: ano)
         send_data pdf.render,
-          filename: "#{nome_documento}.pdf",
+          filename: "#{nome_recibo}.pdf",
           type: "application/pdf",
           disposition: :inline
       end
@@ -483,7 +484,7 @@ class AcompanhamentosController < ApplicationController
       return
     end
 
-    nome_documento = "#{@acompanhamento.paciente.nome_completo.parameterize}_#{@acompanhamento.tipo.parameterize}_#{@acompanhamento.profissional.descricao_completa.parameterize}_declaracao_finalizacao"
+    nome_declaracao_finalizacao = "#{@acompanhamento.paciente.nome_completo.parameterize}_#{@acompanhamento.tipo.parameterize}_#{@acompanhamento.profissional.descricao_completa.parameterize}_declaracao_finalizacao"
 
     respond_to do |format|
       format.html do
@@ -492,7 +493,7 @@ class AcompanhamentosController < ApplicationController
       format.pdf do
         pdf = AcompanhamentoDeclaracaoFinalizacaoPdf.new(@acompanhamento)
         send_data pdf.render,
-        filename: "#{nome_documento}.pdf",
+        filename: "#{nome_declaracao_finalizacao}.pdf",
         type: "application/pdf",
         disposition: "inline"
       end
@@ -504,20 +505,20 @@ class AcompanhamentosController < ApplicationController
 
   def instrumentos
     @instrumento_relatos = @acompanhamento.instrumento_relatos
-    nome_documento = "#{@acompanhamento.tipo}_#{@acompanhamento.profissional.descricao_completa.parameterize}_#{@acompanhamento.pessoa.nome_completo.parameterize}_instrumentos"
+    nome_instrumentos = "#{@acompanhamento.tipo}_#{@acompanhamento.profissional.descricao_completa.parameterize}_#{@acompanhamento.pessoa.nome_completo.parameterize}_instrumentos"
 
     respond_to do |format|
       format.html
       format.pdf do
         pdf = AcompanhamentoInstrumentoRelatosPdf.new(@acompanhamento)
         send_data pdf.render,
-          filename: "#{nome_documento}.pdf",
+          filename: "#{nome_instrumentos}.pdf",
           type: "application/pdf",
           disposition: :inline
       end
       format.md do
         response.headers["Content-Type"] = "text/markdown"
-        response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.md"
+        response.headers['Content-Disposition'] = "attachment; filename=#{nome_instrumentos}.md"
       end
       format.csv do
         col_sep = ","
@@ -558,7 +559,7 @@ class AcompanhamentosController < ApplicationController
 
         send_data csv_final,
           format: "text/csv",
-          filename: "#{nome_documento}.csv"
+          filename: "#{nome_instrumentos}.csv"
       end
     end
   end
@@ -611,7 +612,7 @@ class AcompanhamentosController < ApplicationController
   end
 
   def global_params
-    @params = params.permit(:de, :ate, :n_items, *acompanhamento_params_soft)
+    @params = params.permit(:de, :ate, :n_items, :tipo, :status, :profissional, :paciente, :responsavel)
   end
 
   def show_params

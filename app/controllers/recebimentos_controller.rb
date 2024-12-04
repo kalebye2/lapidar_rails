@@ -93,10 +93,9 @@ class RecebimentosController < ApplicationController
       end
 
       format.pdf do
-        nome_documento = "recebimentos_#{@de}_#{@ate}"
         pdf = RecebimentosPdf.new(@recebimentos)
         send_data pdf.render,
-          filename: "#{nome_documento}.pdf",
+          filename: "#{filename}.pdf",
           type: "application/pdf",
           disposition: :inline
       end
@@ -106,19 +105,19 @@ class RecebimentosController < ApplicationController
   end
 
   def show
-    nome_documento = "recibo_#{@recebimento.beneficiario.nome_completo.parameterize}_#{@recebimento.data}_#{@recebimento.id}"
+    filename = "recibo_#{@recebimento.beneficiario.nome_completo.parameterize}_#{@recebimento.data}_#{@recebimento.id}"
     respond_to do |format|
       format.html
 
       format.md do
         response.headers['Content-Type'] = 'text/markdown'
-        response.headers['Content-Disposition'] = "attachment; filename=#{nome_documento}.md"
+        response.headers['Content-Disposition'] = "attachment; filename=#{filename}.md"
       end
 
       format.pdf do
         pdf = RecebimentoReciboPdf.new(@recebimento)
         send_data pdf.render,
-          filename: "#{nome_documento}.pdf",
+          filename: "#{filename}.pdf",
           type: "application/pdf",
           disposition: :inline
       end
@@ -235,7 +234,7 @@ class RecebimentosController < ApplicationController
   def recibo
     hoje = Time.now.strftime("%Y-%m-%d")
     hoje_formatado = Time.now.strftime("%d/%m/%Y")
-    nome_documento = "Recibo_#{hoje}"
+    filename = "Recibo_#{hoje}"
   end
 
   def select_acompanhamento

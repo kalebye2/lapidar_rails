@@ -265,4 +265,8 @@ class ApplicationController < ActionController::Base
   def usuario_params
     params.require(:usuario).permit %i[ profissional_id username password password_confirmation admin corpo_clinico secretaria financeiro informatica ]
   end
+
+  def nome_documento
+    "#{nome_do_site&.parameterize}_#{params[:controller]}_#{@params.to_h.compact.map { |k,v| "#{k&.to_s}=#{v&.to_s}"}.join "_"}__#{Time.current.to_fs(:number)}"
+  end
 end

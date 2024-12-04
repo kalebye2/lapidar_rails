@@ -25,13 +25,15 @@ class Pessoa < ApplicationRecord
   scope :mulheres, -> { do_sexo_feminino }
   scope :homens, -> { do_sexo_masculino }
   scope :contagem_por_sexo, -> (collection=all) { group(:feminino).count }
+  scope :contagem_por_pais, -> (collection=all) { group(:pais).count }
   scope :profissionais, -> { joins(:profissional) }
-  scope :nao_profissionais, -> do
+  scope :pacientes, -> do
     p_arel = self.arel_table
     pro_arel = Profissional.arel_table
     join = p_arel.join(pro_arel, Arel::Nodes::OuterJoin).on(p_arel[:id].eq(pro_arel[:pessoa_id])).join_sources
     self.joins(join).where(pro_arel[:id].eq(nil))
   end
+  scope :nao_profissionais, -> {pacientes}
   scope :atendidas_hoje, -> { joins(:atendimentos).where("atendimentos.data" => Date.current) }
   scope :ordem_alfabetica, -> { order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc) }
   scope :em_ordem_alfabetica, -> { ordem_alfabetica }

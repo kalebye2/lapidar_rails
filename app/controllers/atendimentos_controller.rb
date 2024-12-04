@@ -36,7 +36,7 @@ class AtendimentosController < ApplicationController
       format.json
 
       format.csv do
-        send_data @atendimentos.para_csv, filename: "atendimentos_#{@params.to_h.compact.map { |k,v| "#{k&.to_s}=#{v&.to_s}" }.join("_")}.csv"
+        send_data @atendimentos.para_csv, filename: "#{nome_documento}.csv"
       end
     end
   end

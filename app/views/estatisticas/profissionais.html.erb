@@ -1,3 +1,98 @@
-<h1>Estatisticas#profissionais</h1>
-<p>Find me in app/views/estatisticas/profissionais.html.erb</p>
+<% titulo "Estatísticas: Profissionais" %>
+<h1>Estatísticas: Profissionais</h1>
+
 <%= render "navbar" %>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Todos", "javascript:void(0);", class: "icon-download3" %>
+      <ul>
+        <li>
+          <%= link_to "CSV", profissionais_path(format: :csv), class: "icon-table2" %>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <%= link_to "Ativos", "javascript:void(0);", class: "icon-download3" %>
+      <ul>
+        <li>
+          <%= link_to "CSV", profissionais_path(format: :csv, ativos: true), class: "icon-table2" %>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <%= link_to "Inativos", "javascript:void(0);", class: "icon-download3" %>
+      <ul>
+        <li>
+          <%= link_to "CSV", profissionais_path(format: :csv, ativos: false), class: "icon-table2" %>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<div class="grid-3">
+  <div class="card">
+    <h2>Profissionais cadastrados</h2>
+    <ul>
+      <li>
+        <%= deixar_no_plural Profissional.count, "cadastrado", "cadastrados" %>
+      </li>
+      <li>
+        <%= deixar_no_plural Profissional.ativos.count, "ativo", "ativos" %>
+      </li>
+      <li>
+        <%= deixar_no_plural Profissional.inativos.count, "inativo", "inativos" %>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Funções</h2>
+    <ul>
+      <li>
+        Que podem atender: <%= Profissional.que_realiza_atendimentos.count %>
+      </li>
+
+      <li>
+        Que trabalham somente para a clínica: <%= Profissional.que_nao_realiza_atendimentos.count %>
+      </li>
+
+      <% Profissional.group(:profissional_funcao).count.each do |funcao, v| %>
+        <li>
+          <%= funcao.servico %>: <%= v %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Dados pessoais dos profissionais ativos</h2>
+    <ul>
+      <li>
+        <%= Profissional.ativos.do_sexo_masculino.count %> do sexo masculino
+      </li>
+      <li>
+        <%= Profissional.ativos.do_sexo_feminino.count %> do sexo feminino
+      </li>
+
+      <li>
+        Média de idade dos profissionais: <%= render_decimal Profissional.ativos.map(&:idade_anos).mean %> anos
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="grid-2">
+  <%= bar_chart Profissional.group(:ativo).count.map { |k,v| [k ? "Ativo" : "Inativo", v] }, title: "Profissionais por status", ytitle: "Status", xtitle: "Nº de profissionais" %>
+
+  <%= bar_chart({Masculino: Profissional.homens.count, Feminino: Profissional.mulheres.count}, title: "Profissionais por sexo", xtitle: "Nº de profissionais", ytitle: "Sexo") %>
+
+  <%= bar_chart Profissional.ativos.group(:profissional_funcao).count.map { |funcao,v| [funcao.funcao, v]}, title: "Profissionais ativos por função", ytitle: "Função", xtitle: "Nº de profissionais" %>
+
+  <%= bar_chart Acompanhamento.group(:profissional).count.map { |profissional, v| [profissional.descricao_completa, v] }, title: "Nº de acompanhamentos por profissional", xtitle: "Nº de acompanhamentos", ytitle: "Profissional" %>
+  <%= bar_chart Acompanhamento.em_andamento.group(:profissional).count.map { |profissional, v| [profissional.descricao_completa, v] }, title: "Nº de acompanhamentos em andamento por profissional", xtitle: "Nº de acompanhamentos", ytitle: "Profissional" %>
+</div>

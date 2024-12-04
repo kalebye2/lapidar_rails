@@ -69,6 +69,9 @@
     <input type="date" value="<%= params[:atendimentos_ate] %>" name="atendimentos_ate">
     <input type="submit" value="Atualizar">
   </form>
+  <div class="text-center">
+  <%= link_to "Baixar CSV", atendimentos_path(format: :csv, ate: params[:atendimentos_ate], de: params[:atendimentos_desde]), class: "button icon-table2" %>
+  </div>
 
   <%= line_chart @atendimentos.group(:data).count.map { |k,v| [render_data_brasil(k), v] }, title: "Atendimentos #{render_data_brasil params[:atendimentos_desde]} a #{render_data_brasil params[:atendimentos_ate]}", xtitle: "Data", ytitle: "Nº de atendimentos", download: {filename: "lapidar_estatisticas_atendimentos_#{params[:atendimentos_desde]}_#{params[:atendimentos_ate]}", background: "#FFFFFF"} %>
 
@@ -87,6 +90,9 @@
 
 <div id="estatisticas-acompanhamentos">
   <h2>Estatísticas dos acompanhamentos</h2>
+  <div class="text-center">
+    <%= link_to "Baixar CSV", acompanhamentos_path(format: :csv), class: "icon-table2 button" %>
+  </div>
 
   <div>
     <h3>Profissionais</h3>
@@ -120,21 +126,35 @@
     <input type="submit" value="Atualizar">
   </form>
 
-  <h3>Recebimentos</h3>
+  <h3>
+    Recebimentos
+    <%= link_to "Baixar CSV", recebimentos_path(format: :csv, ate: params[:financeiro_ate], de: params[:financeiro_desde]), class: "button icon-table2" %>
+  </h3>
+  
   Total: <b><%= render_dinheiro_centavos @recebimentos.sum(:valor) %></b>
   <%= line_chart @recebimentos.group(:data).sum("valor / 100.0").map { |k,v| [render_data_brasil(k), v] }, prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true, title: "Recebimentos #{render_data_brasil params[:financeiro_desde]} a #{render_data_brasil params[:financeiro_ate]}", xtitle: "Data", ytitle: "Total em R$" %>
 
-  <h3>Repasses aos profissionais</h3>
-  Total: <b><%= render_dinheiro_centavos @repasses.sum(:valor) %></b>
-  <%= bar_chart @repasses.group(:profissional).sum("valor / 100.0").map { |r| [r[0].descricao_completa, r.last] }, prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true %>
+  <% if !app_config.clinica_recebimentos_diretos %>
+    <h3>Repasses aos profissionais</h3>
+    Total: <b><%= render_dinheiro_centavos @repasses.sum(:valor) %></b>
+    <%= bar_chart @repasses.group(:profissional).sum("valor / 100.0").map { |r| [r[0].descricao_completa, r.last] }, prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true %>
+  <% end %>
 
-  <h3>Valores de atendimentos</h3>
+  <h3>
+    Valores de atendimentos
+    <%= link_to "Baixar CSV", atendimento_valores_path(format: :csv, ate: params[:financeiro_ate], de: params[:financeiro_desde]), class: "button icon-table2" %>
+  </h3>
   Total: <b><%= render_dinheiro_centavos @atendimento_valores.sum(:valor) %>
   <%= line_chart @atendimento_valores.group(:data).sum("valor / 100.0").map { |k,v| [render_data_brasil(k.to_date), v] }, prefix: "R$ ", thousands: ".", decimal: ",", round: 2, zeros: true %>
 </div>
 
 <div id="estatisticas-cadastros">
   <h2>Cadastros</h2>
+
+  <div class="text-center">
+    <%= link_to "Baixar CSV", pessoas_path(format: :csv), class: "button icon-table2" %>
+  </div>
+
   <div class="grid-2">
     <div>
       <h3>Quantidade cadastrada por sexo</h3>

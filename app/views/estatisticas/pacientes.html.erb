@@ -1,3 +1,78 @@
-<h1>Estatisticas#pacientes</h1>
-<p>Find me in app/views/estatisticas/pacientes.html.erb</p>
+<% titulo "Estatísticas: Pacientes" %>
+<h1>Estatísticas: Pacientes</h1>
 <%= render "navbar" %>
+
+<nav class="navbar navcenter">
+  <ul>
+    <li>
+      <%= link_to "Baixar CSV", pessoas_path(format: :csv), class: "icon-download3" %>
+      <ul>
+        <li>
+          <%= link_to "Do sexo masculino", pessoas_path(format: :csv, sexo: :masculino), class: "icon-table2" %>
+        </li>
+        <li>
+          <%= link_to "Do sexo feminino", pessoas_path(format: :csv, sexo: :feminino), class: "icon-table2" %>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<div class="grid-3">
+  <div class="card">
+    <h2>Cadastros</h2>
+    <ul>
+      <li>
+        <%= deixar_no_plural Pessoa.count, "pessoa cadastrada", "pessoas cadastradas" %>
+      </li>
+      <li>
+        <%= Pessoa.homens.count %> do sexo masculino
+      </li>
+      <li>
+        <%= Pessoa.mulheres.count %> do sexo feminino
+      </li>
+      <li>
+        <%= deixar_no_plural Pessoa.profissionais.count, "profissional cadastrado", "profissionais cadastrados" %>
+      </li>
+      <li>
+        <%= Pessoa.pacientes.count %> cadastros de não profissionais
+      </li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Acompanhados</h2>
+    <ul>
+      <li>
+        <%= deixar_no_plural Pessoa.joins(:acompanhamentos).distinct.count, "pessoa", "pessoas" %> com acompanhamento registrado
+      </li>
+      <li>
+        <%= Pessoa.joins(:acompanhamentos).where(acompanhamentos: Acompanhamento.em_andamento).distinct.count %> com acompanhamento em andamento
+      </li>
+      <li>
+        <%= Pessoa.joins(:acompanhamentos).where(acompanhamentos: Acompanhamento.finalizados).distinct.count %> com acompanhamento finalizado
+      </li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Pacientes por local</h2>
+    <ul>
+      <% Pessoa.pacientes.group(:pais).count.each do |pais, v| %>
+        <li>
+          <%= v %> de <%= pais.nome %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<div class="grid-2">
+  <%= bar_chart Pessoa.contagem_por_sexo.map { |k,v| [k ? "Feminino" : "Masculino", v] }, title: "Cadastros por sexo", ytitle: "Sexo", xtitle: "Nº de cadastros" %>
+  <%= bar_chart Pessoa.contagem_por_pais.map { |pais, v| [pais.nome, v] }, title: "Cadastros por país de residência", ytitle: "País", xtitle: "Nº de cadastros" %>
+
+</div>
+
+<%= column_chart Pessoa.group(:endereco_estado, :pais_id).count.map { |local,v| ["#{local[0] || "S.I."} - #{Pais.find(local[1]).nome}", v] }, title: "Cadastros por estado de residência", ytitle: "Estado - País", xtitle: "Nº de cadastros" %>
+
+<%= column_chart Pessoa.group(:endereco_cidade, :endereco_estado).count.map { |cidade_estado, v| [cidade_estado.map { |v| v || "S.I."}.join("/") || "Sem cidade registrada", v] }, title: "Cadastros por cidade de residência", ytitle: "Cidade/Estado", xtitle: "Nº de cadastros" %>
