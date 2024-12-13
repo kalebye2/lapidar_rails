@@ -117,6 +117,8 @@ class Atendimento < ApplicationRecord
   scope :do_tipo_com_id, -> (id) { where(atendimento_tipo_id: id) }
   scope :da_pessoa, -> (pessoa) { joins(:acompanhamento).where(acompanhamento: {pessoa: pessoa}) }
   scope :da_pessoa_com_id, -> (id) { joins(:acompanhamento).where(acompanhamento: {pessoa_id: id}) }
+  scope :do_acompanhamento, -> (acompanhamento) { where(acompanhamento: acompanhamento) }
+  scope :do_acompanhamento_com_id, -> (id) { where(acompanhamento_id: id) }
 
   scope :query_pessoa_like_nome, -> (like = "") do
     like = like.to_s

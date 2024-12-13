@@ -20,7 +20,11 @@ class AtendimentosController < ApplicationController
       @atendimentos = @atendimentos.da_pessoa_com_id(params[:pessoa])
     end
 
-    @params = params.permit %i[ de ate pessoa tipo atendimento num_itens ]
+    if params[:acompanhamento].present?
+      @atendimentos = @atendimentos.do_acompanhamento_com_id(params[:acompanhamento])
+    end
+
+    @params = params.permit %i[ de ate pessoa tipo atendimento num_itens acompanhamento ]
 
     respond_to do |format|
       format.html do
@@ -36,6 +40,9 @@ class AtendimentosController < ApplicationController
       format.json
 
       format.csv do
+        if @atendimentos.map(&:acompanhamento_id).uniq.count == 1 && !params[:de].present? && !params[:ate].present?
+          @atendimentos = Atendimento.em_ordem.do_acompanhamento_com_id(@atendimentos.first.acompanhamento_id)
+        end
         send_data @atendimentos.para_csv, filename: "#{nome_documento}.csv"
       end
     end

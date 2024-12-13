@@ -74,6 +74,9 @@ class AcompanhamentosController < ApplicationController
 
     show_params
 
+    @params = global_params
+    @params[:acompanhamento] = @acompanhamento.id
+
     respond_to do |format|
       format.html do
         pagy_atendimentos @n_items
@@ -612,7 +615,7 @@ class AcompanhamentosController < ApplicationController
   end
 
   def global_params
-    @params = params.permit(:de, :ate, :n_items, :tipo, :status, :profissional, :paciente, :responsavel)
+    @params = params.permit(:de, :ate, :n_items, :tipo, :status, :profissional, :paciente, :responsavel, :acompanhamento)
   end
 
   def show_params

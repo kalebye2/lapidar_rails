@@ -37,6 +37,15 @@
       <%= hx_link "<", acompanhamento_path(@params.merge page: @pagy.page - 1), **hx_options unless @pagy.page < 2 %>
       <%= hx_link ">", acompanhamento_path(@params.merge page: @pagy.page + 1), **hx_options unless @pagy.page >= @pagy.pages %>
     </span>
+
+    <nav class="navbar navcenter">
+      <ul>
+        <li>
+          <%= link_to "CSV", atendimentos_path(@params.merge format: :csv), class: "icon-table" %>
+        </li>
+      </ul>
+    </nav>
+
     </caption>
     <thead>
       <tr>
@@ -54,6 +63,7 @@
     <tbody>
     <% atendimentos.includes(:atendimento_valor, :instrumento_relatos).order(data: :desc, horario: :desc).each do |a| %>
       <%= render 'atendimentos/atendimento-tabela-form', atendimento: a %>
+
     <% end %>
     <tr>
       <td colspan="100%" class="text-center">
