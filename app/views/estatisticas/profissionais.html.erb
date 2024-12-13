@@ -58,7 +58,7 @@
       </li>
 
       <li>
-        Que trabalham somente para a clínica: <%= Profissional.que_nao_realiza_atendimentos.count %>
+        Que trabalham somente na parte clínica: <%= Profissional.que_nao_realiza_atendimentos.count %>
       </li>
 
       <% Profissional.group(:profissional_funcao).count.each do |funcao, v| %>

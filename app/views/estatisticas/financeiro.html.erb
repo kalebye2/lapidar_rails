@@ -14,14 +14,26 @@
 
 <% opcoes_dinheiro = { prefix: "R$ ", zeros: 2, decimal: ",", thousands: "." } %>
 
-<div id="<%= id_principal %>">
+<div id="<%= id_principal %>" class="grid-2">
+  <div id="<%= id_principal %>_recebimentos">
+  <h2>Recebimentos</h2>
+
   <%= line_chart @recebimentos.group(:data).sum(:valor).map { |k,v| [render_data_brasil(k), v / 100.0] }, **opcoes_dinheiro, title: "Recebimentos do período (#{@recebimentos.count})", curve: false %>
 
-  <%= bar_chart @recebimentos.joins(:profissional).group("profissionais.id").sum(:valor).map { |k,v| ["#{Profissional.find(k)&.funcao[..2]} #{Profissional.find(k).nome_abreviado}", v / 100.0] }, **opcoes_dinheiro, title: "Recebimentos por profissional" %>
-  <%= column_chart @recebimentos.joins(:profissional).group("profissionais.id", :data).sum(:valor).map { |k,v| [[Profissional.find(k[0]).descricao_completa, render_data_brasil(k[1])],v / 100.0] }.to_h, stacked: true, **opcoes_dinheiro %>
+  <%= bar_chart @recebimentos.joins(:profissional).group("profissionais.id").sum(:valor).map { |k,v| ["#{Profissional.find(k)&.descricao_abreviada}", v / 100.0] }, **opcoes_dinheiro, title: "Recebimentos por profissional" %>
+
+  <%= column_chart @recebimentos.joins(:profissional).group("profissionais.id", :data).sum(:valor).map { |k,v| [[Profissional.find(k[0]).descricao_completa, render_data_brasil(k[1])],v / 100.0] }.to_h, stacked: true, **opcoes_dinheiro, title: "Recebimentos por profissional por data", ytitle: "Valor", xtitle: "Data" %>
 
   <%# <%= column_chart @recebimentos.joins(:acompanhamento).group("acompanhamentos.id", :data).sum(:valor).map { |k,v| [["#{Acompanhamento.find(k[0]).pessoa.nome_abreviado} - #{Acompanhamento.find(k[0]).tipo.upcase}", render_data_brasil(k[1])],v / 100.0] }.to_h, stacked: true, prefix: "R$ ", thousands: ".", zeros: 2, decimal: "," %1> %>
 
   <%= bar_chart @recebimentos.joins(:acompanhamento).group("acompanhamentos.id").sum(:valor).map { |k,v| [Acompanhamento.find(k).render_info_para_profissional, v / 100.0] }, **opcoes_dinheiro, title: "Recebimentos por acompanhamento" %>
+  </div>
+
+  <div id="<%= id_principal %>_atendimento_valores">
+    <h2>Valores de atendimentos</h2>
+    <%# <%= column_chart @atendimento_valores.group(:profissional, :data).sum(:valor).map { |k,v| [[k], v / 100,0] }.to_h, **opcoes_dinheiro %1> %>
+    <%= line_chart @atendimento_valores.group(:data).sum(:valor).map { |k,v| [render_data_brasil(k.to_date), v / 100.0] }.to_h, **opcoes_dinheiro, title: "Valores de atendimentos do período", xtitle: "Data", ytitle: "Valor total", curve: false %>
+    <%= column_chart @atendimento_valores.agrupar_por_profissional_id_e_data.soma_brutos.map { |k,v| [[Profissional.find(k[0]).descricao_completa, k[1].strftime("%d/%m/%Y")], v / 100.0] }.to_h, **opcoes_dinheiro, title: "Valores por profissional por data", ytitle: "Valor", xtitle: "Data", stacked: true %>
+  </div>
 
 </div>

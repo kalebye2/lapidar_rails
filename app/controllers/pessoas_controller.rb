@@ -16,6 +16,10 @@ class PessoasController < ApplicationController
     if params[:profissionais].present?
       @pessoas = ActiveModel::Type::Boolean.new.cast(params[:profissionais]) ? @pessoas.profissionais : @pessoas.nao_profissionais
     end
+    
+    if params[:pacientes].present?
+      @pessoas = @pessoas.joins(:acompanhamentos)
+    end
 
     if params[:pais].present?
       @pessoas = @pessoas.where(pais: params[:pais])

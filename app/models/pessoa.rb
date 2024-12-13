@@ -26,19 +26,20 @@ class Pessoa < ApplicationRecord
   scope :homens, -> { do_sexo_masculino }
   scope :contagem_por_sexo, -> (collection=all) { group(:feminino).count }
   scope :contagem_por_pais, -> (collection=all) { group(:pais).count }
-  scope :profissionais, -> { joins(:profissional) }
-  scope :pacientes, -> do
+  scope :profissionais, -> { joins(:profissional).distinct }
+  scope :nao_profissionais, -> do
     p_arel = self.arel_table
     pro_arel = Profissional.arel_table
     join = p_arel.join(pro_arel, Arel::Nodes::OuterJoin).on(p_arel[:id].eq(pro_arel[:pessoa_id])).join_sources
-    self.joins(join).where(pro_arel[:id].eq(nil))
+    self.joins(join).where(pro_arel[:id].eq(nil)).distinct
   end
-  scope :nao_profissionais, -> {pacientes}
+  scope :clientes, -> { nao_profissionais }
+  scope :pacientes, -> { joins(:acompanhamentos).distinct }
   scope :atendidas_hoje, -> { joins(:atendimentos).where("atendimentos.data" => Date.current) }
   scope :ordem_alfabetica, -> { order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc) }
   scope :em_ordem_alfabetica, -> { ordem_alfabetica }
 
-  scope :trabalhando_na_clinica, -> { joins(:profissional) }
+  scope :trabalhando_na_clinica, -> { joins(:profissional).where(ativo: true).distinct }
   scope :nao_trabalhando_na_clinica, -> { joins("LEFT JOIN profissionais ON profissionais.pessoa_id = pessoas.id").where("profissionais.id" => nil) }
 
   scope :de_acompanhamentos_em_andamento, -> { joins(:acompanhamentos).where(acompanhamentos: {suspenso: [nil, false, 0], acompanhamento_finalizacao_motivo: nil }).uniq }

@@ -61,6 +61,8 @@ class AtendimentoValor < ApplicationRecord
   scope :ate_ontem, -> { do_periodo(..Date.current - 1.day) }
   scope :ate_hoje, -> { do_periodo(..Date.current) }
 
+  scope :agrupar_por_profissional_id_e_data, -> { joins(:acompanhamento).group(:profissional_id, "atendimentos.data") }
+
   scope :soma_brutos, -> () { sum(:valor) }
   scope :soma_liquidos, -> () { sum("valor - (valor * taxa_porcentagem_externa / 10000) - (valor * taxa_porcentagem_interna / 10000)") }
   scope :soma_liquidos_externos, -> () { sum("valor - (valor * taxa_porcentagem_externa / 10000)") }

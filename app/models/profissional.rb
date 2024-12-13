@@ -145,6 +145,10 @@ class Profissional < ApplicationRecord
     nome_completo + ' - ' + funcao + ' ' + documento
   end
 
+  def descricao_abreviada
+    "#{funcao[..2]} #{nome_abreviado}"
+  end
+
   def feminino
     pessoa.feminino
   end

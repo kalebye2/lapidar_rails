@@ -7,10 +7,22 @@ class InstrumentoRelato < ApplicationRecord
 
   scope :em_ordem, -> (ordem = :asc) { includes(:atendimento).sort_by { |relato| "#{relato.atendimento.data_inicio_verdadeira.strftime("%Y%m%d")}#{relato.atendimento.horario_inicio_verdadeiro.strftime("%H:%M:%S")}" } }
   # scope :em_ordem, -> (ordem = :asc) { InstrumentoRelato.connection.execute("SELECT #{InstrumentoRelato.attribute_names.map { |attr| "instrumento_relatos.#{attr}" }.to_sentence(last_word_connector: ", ")} FROM instrumento_relatos JOIN atendimentos ON instrumento_relatos.atendimento_id = atendimentos.id ORDER BY COALESCE(atendimentos.data_reagendamento, atendimentos.data) #{ordem}, COALESCE(atendimentos.horario_reagendamento, atendimentos.horario) #{ordem}") }
+  scope :do_profissional, -> (profissional) { joins(:acompanhamento).where(acompanhamento: {profissional: profissional}) }
+  scope :do_profissional_com_id, -> (id) { joins(:acompanhamento).where(acompanhamento: {profissional_id: id}) }
+  scope :contagem_por_profissional, -> { joins(:acompanhamento).group(:profissional_id).count }
 
-  def paciente
-    pessoa
-  end
+  scope :do_instrumento, -> (instrumento) { where(instrumento: instrumento) }
+  scope :do_instrumento_com_id, -> (id) { where(instrumento_id: id) }
+  scope :contagem_por_instrumento, -> { group(:instrumento).count }
+
+  scope :contagem_por_tipo_de_acompanhamento, -> { joins(:acompanhamento).group(:acompanhamento_tipo_id).count.map { |k,v| [AcompanhamentoTipo.find(k), v] }.to_h }
+
+  scope :contagem_por_profissional_e_instrumento, -> { joins(:acompanhamento).group(:profissional_id, :instrumento_id).count.map { |k,v| [[Profissional.find(k[0]), Instrumento.find(k[1])], v] }.to_h }
+  scope :contagem_por_profissional_e_tipo_de_acompanhamento, -> { joins(:acompanhamento).group(:profissional_id, :acompanhamento_tipo_id).count.map { |k,v| [[Profissional.find(k[0]), AcompanhamentoTipo.find(k[1])], v] }.to_h }
+  scope :contagem_por_acompanhamento, -> { joins(:atendimento).group(:acompanhamento_id).count.map { |k,v| [Acompanhamento.find(k), v] }.to_h }
+
+
+  alias paciente pessoa
 
   def self.decrescente
     joins(:atendimento).order("atendimentos.data" => :desc, "atendimentos.horario" => :desc)

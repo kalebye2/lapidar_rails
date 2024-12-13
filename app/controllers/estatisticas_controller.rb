@@ -52,6 +52,9 @@ class EstatisticasController < ApplicationController
   end
 
   def pacientes
+    @profissionais = Pessoa.profissionais
+    @nao_profissionais = Pessoa.nao_profissionais
+    @pacientes = Pessoa.pacientes
   end
 
   def instrumentos

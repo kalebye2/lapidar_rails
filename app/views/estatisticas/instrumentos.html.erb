@@ -1,4 +1,5 @@
-<h1>Estatísticas de instrumentos</h1>
+<% titulo "Estatísticas: instrumentos aplicados" %>
+<h1>Estatísticas de instrumentos aplicados</h1>
 <%= render "navbar" %>
 
 <div class="grid-2">
@@ -13,4 +14,11 @@
     <p>Aplicações registradas (total): <%= InstrumentoRelato.count %></p>
     <p>Atendimentos com aplicações: <%= Atendimento.joins(:instrumento_relatos).distinct.count %>
   </div>
+</div>
+
+<div class="grid-2">
+  <%= bar_chart InstrumentoRelato.contagem_por_profissional_e_instrumento.map { |k,v| [[k[0].descricao_completa, k[1].nome_e_sigla], v] }.to_h, title: "Aplicações de instrumentos por instrumento", xtitle: "Nº de aplicações", ytitle: "Instrumento" %>
+  <%= bar_chart InstrumentoRelato.contagem_por_profissional_e_instrumento.map { |k,v| [[k[1].nome_e_sigla, k[0].descricao_completa],v] }.to_h, title: "Contagem de aplicações de instrumentos por profissional", xtitle: "Nº de aplicações", ytitle: "Instrumento", stacked: true %>
+  <%= bar_chart InstrumentoRelato.contagem_por_profissional_e_tipo_de_acompanhamento.map { |k,v| [[k[0].descricao_completa, k[1].tipo.capitalize], v] }.to_h, title: "Aplicações de instrumento por tipo de acompanhamento", xtitle: "Nº de aplicações", ytitle: "Tipo de acompanhamento", stacked: true %>
+  <%= InstrumentoRelato.all.sample.paciente %>
 </div>
