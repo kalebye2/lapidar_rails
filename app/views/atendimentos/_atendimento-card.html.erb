@@ -4,7 +4,7 @@
       <p>
       <strong><%= atendimento.acompanhamento.pessoa.nome_e_sobrenome %><%= atendimento.pessoa.nome_social&.insert(0, " (")&.insert(-1, ")") %></strong>
       <br />
-      <span style="font-size: .9em;"><%= render_hora_brasil atendimento.horario_inicio_verdadeiro %></span>
+      <span style="font-size: .9em;"><%= render_hora_brasil atendimento.horario_inicio_verdadeiro %>&ndash;<%= render_hora_brasil atendimento.horario_fim_verdadeiro %></span>
       <br />
       <span style="font-size: .8em;">
         <%= atendimento.profissional.profissional_funcao.abreviado %>

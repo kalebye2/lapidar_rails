@@ -18,11 +18,27 @@ module Enderecavel
   end
 
   def geolink_por_coordenadas
-    if respond_to?(:latitude) || respond_to?(:longitude)
-      "geo:#{coordenadas.join(', ')}" unless latitude.nil? || longitude.nil?
+    if respond_to?(:latitude) && respond_to?(:longitude)
+      "geo:#{coordenadas.join(', ')}"
     end
   end
 
   def geolink_por_endereco
+  end
+
+  def endereco_hash
+    {
+      logradouro: endereco_logradouro,
+      número: endereco_numero,
+      bairro: endereco_bairro,
+      cidade: endereco_cidade,
+      estado: endereco_estado,
+      país: pais&.nome,
+      cep: endereco_cep,
+    }
+  end
+
+  def endereco_json
+    endereco_hash.to_json
   end
 end
