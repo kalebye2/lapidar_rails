@@ -43,112 +43,18 @@
   </nav>
 
   <nav class="navbar navcenter" id="formatos-download">
-    <ul>
-      <li>
-        <%= link_to "Baixar relatório", "javascript:void(0);", class: 'icon-download3' %>
-        <ul>
-          <li>
-            <%= link_to "CSV", recebimentos_path(@params.merge(format: :csv)), class: 'icon-table2' %>
-          </li>
-          <li>
-            <%= link_to "Excel", recebimentos_path(@params.merge(format: :xlsx)), class: 'icon-file-excel' %>
-          </li>
-          <li>
-            <%= link_to "PDF", recebimentos_path(@params.merge(format: :pdf)), class: "icon-file-pdf", target: :blank %>
-          </li>
-          <li>
-            <%= link_to "Recibos (markdown)", recebimentos_path(@params.merge(format: :zip)), class: 'icon-file-zip' %>
-          </li>
-          <li>
-            <%= link_to "Recibos (PDF)", recebimentos_path(@params.merge(format: :zip, filetype: :pdf)), class: "icon-file-zip" %>
-          </li>
-        </ul>
-      </li>
+      <ul>
+        <%= links_download parameters: @params %>
+        <%= links_download "Relatório do mês passado", parameters: @params.merge(de: (Date.current - 1.month).beginning_of_month, ate: (Date.current - 1.month).end_of_month) %>
+        <%= links_download "Relatório do ano passado", parameters: @params.merge(de: (Date.current - 1.year).beginning_of_year, ate: (Date.current - 1.year).end_of_year) %>
+        <%= links_download "Relatório deste mês", parameters: @params.merge(de: Date.current.beginning_of_month, ate: Date.current.end_of_month) %>
+        <%= links_download "Relatório deste ano", parameters: @params.merge(de: Date.current.beginning_of_year, ate: Date.current.end_of_year) %>
 
-      <li>
-        <%= link_to "Relatório do mês atual", "javascript:void(0);", class: 'icon-download3' %>
-        <% de = Date.current.beginning_of_month; ate = Date.current.end_of_month %>
-        <ul>
+        <% if usuario_atual.financeiro? %>
           <li>
-            <%= link_to "CSV", recebimentos_path(@params.merge(format: :csv, de: de, ate: ate)), class: 'icon-table2' %>
+            <%= link_to "Adicionar", new_recebimento_path, class: "icon-plus" %>
           </li>
-          <li>
-            <%= link_to "Excel", recebimentos_path(@params.merge(format: :xlsx, de: de, ate: ate)), class: 'icon-file-excel' %>
-          </li>
-          <li>
-            <%= link_to "PDF", recebimentos_path(@params.merge(format: :pdf, de: de, ate: ate)), class: "icon-file-pdf", target: :blank %>
-          </li>
-          <li>
-            <%= link_to "Recibos (markdown)", recebimentos_path(@params.merge format: :zip, de: de, ate: ate), class: 'icon-file-zip' %>
-            <%= link_to "Recibos (PDF)", recebimentos_path(@params.merge format: :zip, de: de, ate: ate, filetype: :pdf), class: 'icon-file-zip' %>
-          </li>
-        </ul>
-      </li>
-
-      <li>
-        <%= link_to "Relatório do mês passado", "javascript:void(0);", class: 'icon-download3' %>
-        <% de = (Date.current - 1.month).beginning_of_month; ate = (Date.current - 1.month).end_of_month %>
-        <ul>
-          <li>
-            <%= link_to "CSV", recebimentos_path(@params.merge format: :csv, de: de, ate: ate), class: 'icon-table2' %>
-          </li>
-          <li>
-            <%= link_to "Excel", recebimentos_path(@params.merge format: :xlsx, de: de, ate: ate), class: 'icon-file-excel' %>
-          </li>
-          <li>
-            <%= link_to "PDF", recebimentos_path(@params.merge(format: :pdf, de: de, ate: ate)), class: "icon-file-pdf", target: :blank %>
-          </li>
-          <li>
-            <%= link_to "Recibos (markdown)", recebimentos_path(@params.merge format: :zip, de: de, ate: ate), class: 'icon-file-zip' %>
-            <%= link_to "Recibos (PDF)", recebimentos_path(@params.merge format: :zip, de: de, ate: ate, filetype: :pdf), class: 'icon-file-zip' %>
-          </li>
-        </ul>
-      </li>
-
-      <li>
-        <%= link_to "Relatório deste ano", "javascript:void(0);", class: "icon-download3" %>
-        <% de = Date.current.beginning_of_year; ate = Date.current.end_of_year %>
-        <ul>
-          <li>
-            <%= link_to "CSV", recebimentos_path(@params.merge format: :csv, de: de, ate: ate), class: 'icon-table2' %>
-          </li>
-          <li>
-            <%= link_to "Excel", recebimentos_path(@params.merge format: :xlsx, de: de, ate: ate), class: 'icon-file-excel' %>
-          </li>
-          <li>
-            <%= link_to "PDF", recebimentos_path(@params.merge(format: :pdf, de: de, ate: ate)), class: "icon-file-pdf", target: :blank %>
-          </li>
-          <li>
-            <%= link_to "Recibos (markdown)", recebimentos_path(@params.merge format: :zip, de: de, ate: ate), class: 'icon-file-zip' %>
-            <%= link_to "Recibos (PDF)", recebimentos_path(@params.merge format: :zip, de: de, ate: ate, filetype: :pdf), class: 'icon-file-zip' %>
-          </li>
-        </ul>
-      </li>
-
-      <li>
-        <%= link_to "Relatório do ano passado", "javascript:void(0);", class: "icon-download3" %>
-        <% de = (Date.current - 1.year).beginning_of_year; ate = (Date.current - 1.year).end_of_year %>
-        <ul>
-          <li>
-            <%= link_to "CSV", recebimentos_path(@params.merge format: :csv, de: de, ate: ate), class: 'icon-table2' %>
-          </li>
-          <li>
-            <%= link_to "Excel", recebimentos_path(@params.merge format: :xlsx, de: de, ate: ate), class: 'icon-file-excel' %>
-          </li>
-          <li>
-            <%= link_to "PDF", recebimentos_path(@params.merge(format: :pdf, de: de, ate: ate)), class: "icon-file-pdf", target: :blank %>
-          </li>
-          <li>
-            <%= link_to "Recibos (markdown)", recebimentos_path(@params.merge format: :zip, de: de, ate: ate), class: 'icon-file-zip' %>
-            <%= link_to "Recibos (PDF)", recebimentos_path(@params.merge format: :zip, de: de, ate: ate, filetype: :pdf), class: 'icon-file-zip' %>
-          </li>
-        </ul>
-      </li>
-      <% if usuario_atual.financeiro? %>
-        <li>
-          <%= link_to "adicionar", new_recebimento_path, { class: "btn-dinheiro icon-plus" } %>
-        </li>
-      <% end %>
-    </ul>
+        <% end %>
+      </ul>
   </nav>
 </div>
