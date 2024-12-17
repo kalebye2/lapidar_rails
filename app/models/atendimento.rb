@@ -35,9 +35,16 @@ class Atendimento < ApplicationRecord
   scope :ate_agora, -> { where(id: map{ |atendimento| if atendimento.horario_passado then atendimento.id end }.compact) }
   scope :ate_ontem, -> () { do_periodo(..Date.yesterday) }
   scope :reagendados_ate_hoje, -> { where(data_reagendamento: ..Date.current) }
-  scope :de_hoje, -> () { where(data: Date.current) }
+  scope :de_hoje, -> (com_reagendados = true) {
+    if com_reagendados
+      where(data: Date.current).or(self.where data_reagendamento: Date.current)
+    else
+      where(data: Date.current)
+    end
+  }
+  scope :de_hoje_com_reagendados, -> () { de_hoje }
+  scope :de_hoje_sem_reagendados, -> () { de_hoje(false) }
   scope :reagendados_de_hoje, -> () { where(data_reagendamento: Date.current) }
-  scope :de_hoje_com_reagendados, -> () { where(data: Date.current).or(self.where data_reagendamento: Date.current) }
   scope :da_semana, -> (semana: Date.current.all_week) { where(data: semana) }
   scope :desta_semana, -> { da_semana }
   scope :da_semana_passada, -> { da_semana semana: (Date.current - 1.week).all_week }
