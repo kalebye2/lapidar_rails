@@ -7,6 +7,14 @@ class ApplicationRecord < ActiveRecord::Base
   
   MAX_TRIES_RANDOM = 3
 
+  @app_config = Rails.application.config
+
+  before_create do
+    if Rails.application.config.timestamp_id && self.class.primary_key == "id"
+      self.id = Time.current.strftime("%s%L").to_i
+    end
+  end
+
   require 'csv'
 
   @@meses = [
