@@ -19,7 +19,7 @@ module Enderecavel
 
   def geolink_por_coordenadas
     if respond_to?(:latitude) && respond_to?(:longitude)
-      "geo:#{coordenadas.join(', ')}"
+      "geo:#{coordenadas&.join(', ')}"
     end
   end
 
