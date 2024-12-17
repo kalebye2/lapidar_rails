@@ -86,28 +86,8 @@ class Profissional < ApplicationRecord
     "#{profissional_funcao.documento_tipo} #{('00' + documento_regiao_id.to_s)[-2..] }/#{documento_valor}"
   end
 
-  def email
-    pessoa.email
-  end
-
-  def nome_completo
-    pessoa.nome_completo
-  end
-
-  def nome_abreviado
-    pessoa.nome_abreviado
-  end
-
-  def nome_abreviado_meio
-    pessoa.nome_abreviado_meio
-  end
-
-  def nome_sigla
-    pessoa.nome_sigla
-  end
-
-  def nome_e_sobrenome
-    pessoa.nome_e_sobrenome
+  def method_missing(method_name, *args)
+    pessoa.respond_to?(method_name) ? pessoa.send(method_name, *args) : nil
   end
 
   def username_padrao
@@ -123,20 +103,6 @@ class Profissional < ApplicationRecord
     profissional_funcao.servico
   end
 
-  def endereco_cidade
-    pessoa.endereco_cidade
-  end
-  alias cidade endereco_cidade
-
-  def endereco_estado
-    pessoa.endereco_estado
-  end
-  alias estado endereco_estado
-
-  def render_cpf
-    pessoa.render_cpf
-  end
-
   def descricao_profissional
     funcao + ' ' + documento
   end
@@ -147,18 +113,6 @@ class Profissional < ApplicationRecord
 
   def descricao_abreviada
     "#{funcao[..2]} #{nome_abreviado}"
-  end
-
-  def feminino
-    pessoa.feminino
-  end
-
-  def render_idade
-    pessoa.render_idade
-  end
-
-  def idade_anos
-    pessoa.idade_anos
   end
 
   def acompanhamentos_em_andamento

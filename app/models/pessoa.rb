@@ -288,6 +288,7 @@ class Pessoa < ApplicationRecord
   def render_sexo
     if feminino then "Feminino" else "Masculino" end
   end
+  alias sexo render_sexo
 
   def render_sexo_sigla
     if feminino then "(F)" else "(M)" end
@@ -473,29 +474,31 @@ class Pessoa < ApplicationRecord
     CSV.generate(col_sep: col_sep) do |csv|
       csv << [
         "NOME",
-        "NOME DO MEIO",
+        "NOME_DO_MEIO",
         "SOBRENOME",
+        "NOME_COMPLETO",
         "SEXO",
-        "DATA DE NASCIMENTO",
+        "DATA_DE_NASCIMENTO",
         "CPF",
         "FONE",
         "E-MAIL",
-        "NATURAL DE",
+        "NATURAL_DE",
         "CEP",
         "ENDEREÇO",
         "CIDADE",
         "ESTADO",
         "PAÍS",
         "PROFISSÃO",
-        "PREFERÊNCIA DE CONTATO",
-        "PRONOME DE TRATAMENTO",
+        "PREFERÊNCIA_DE_CONTATO",
+        "PRONOME_DE_TRATAMENTO",
       ]
 
       collection.each do |p|
         csv << [
           p.nome,
-          p.nome_do_meio || "-",
+          p.nome_do_meio,
           p.sobrenome,
+          p.nome_completo,
           p.render_sexo,
           p.data_nascimento&.strftime("%d/%m/%Y") || "-",
           p.render_cpf || "-",

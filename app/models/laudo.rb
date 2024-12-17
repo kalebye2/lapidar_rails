@@ -25,6 +25,10 @@ class Laudo < ApplicationRecord
     pessoa
   end
 
+  def parte_interessada
+    interessado || pessoa.nome_completo
+  end
+
   def data_inicial
     data_inicio_avaliacao || acompanhamento.data_inicio
   end
