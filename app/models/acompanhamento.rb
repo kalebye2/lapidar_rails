@@ -1,4 +1,8 @@
 class Acompanhamento < ApplicationRecord
+  include Monetizavel
+
+  Monetizavel.de_centavos_pra_real :valor_sessao, :valor_sessao_contrato
+
   validates :pessoa, :profissional, :data_inicio, :num_sessoes_contrato, presence: true
 
   before_save do

@@ -1,6 +1,10 @@
 class AtendimentoValor < ApplicationRecord
   self.primary_key = :atendimento_id
 
+  include Monetizavel
+
+  Monetizavel.de_centavos_pra_real :valor, :desconto, :taxa_externa, :taxa_interna
+
   belongs_to :atendimento, foreign_key: :atendimento_id, primary_key: :id, inverse_of: :atendimento_valor
 
   has_one :acompanhamento, through: :atendimento

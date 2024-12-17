@@ -1,6 +1,9 @@
 class Recebimento < ApplicationRecord
   require "csv"
 
+  include Monetizavel
+  Monetizavel.de_centavos_pra_real :valor, :taxa_porcentagem_clinica
+
   belongs_to :acompanhamento
 
   has_one :pessoa, through: :acompanhamento
