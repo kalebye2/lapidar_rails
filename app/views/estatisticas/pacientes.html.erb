@@ -92,3 +92,5 @@
 <%= column_chart Pessoa.group(:endereco_estado, :pais_id).count.map { |local,v| ["#{local[0] || "S.I."} - #{Pais.find(local[1]).nome}", v] }, title: "Cadastros por estado de residência", ytitle: "Estado - País", xtitle: "Nº de cadastros" %>
 
 <%= column_chart Pessoa.group(:endereco_cidade, :endereco_estado).count.map { |cidade_estado, v| [cidade_estado.map { |v| v || "S.I."}.join("/") || "Sem cidade registrada", v] }, title: "Cadastros por cidade de residência", ytitle: "Cidade/Estado", xtitle: "Nº de cadastros" %>
+
+<%= bar_chart Pessoa.group(:profissao).count.map { |k,v| [k&.upcase || "NÃO DEFINIDO", v] }, title: "Cadastros por profissão", xtitle: "Nº de cadastros", ytitle: "Profissão" %>
