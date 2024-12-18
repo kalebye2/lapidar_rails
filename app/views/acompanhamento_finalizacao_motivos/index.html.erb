@@ -1,6 +1,34 @@
+<% titulo "Motivos de finalização de acompanhamento" %>
 <p style="color: green"><%= notice %></p>
 
-<h1>Acompanhamento finalizacao motivos</h1>
+<table id="acompanhamento_finalizacao_motivos_tabela">
+  <thead>
+    <caption>
+      Motivos de finalização de acompanhamento
+    </caption>
+    <tr>
+      <th>ID</th>
+      <th>Motivo</th>
+      <th>Ações</th>
+    </tr>
+    </tr>
+  </thead>
+  <tbody>
+    <% AcompanhamentoFinalizacaoMotivo.all.each do |acompanhamento_finalizacao_motivo| %>
+      <tr>
+        <td><%= acompanhamento_finalizacao_motivo.id %></td>
+        <td><%= acompanhamento_finalizacao_motivo.motivo %></td>
+        <td>
+          <ul>
+            <li>
+              <%= link_to "Editar", edit_acompanhamento_finalizacao_motivo_path(acompanhamento_finalizacao_motivo) %>
+            </li>
+          </ul>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
 <div id="acompanhamento_finalizacao_motivos">
   <% @acompanhamento_finalizacao_motivos.each do |acompanhamento_finalizacao_motivo| %>

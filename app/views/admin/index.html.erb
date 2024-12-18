@@ -1,9 +1,14 @@
+<% titulo "Painel administrativo" %>
 <h1>Painel administrativo</h1>
 <h2>Escolha o painel para editar</h2>
 
 <h3>Administração de Base de dados - Informações</h3>
-<ul>
-  <% AdminController.paths.each do |m| %>
-    <li><%= link_to m.to_sym, "admin/#{m}" %></li>
+<div class="grid-3">
+  <% AdminController.paths.to_a.sort.each do |m| %>
+    <%= link_to "admin/#{m}" do %>
+      <div class="card">
+        <h2><%= path_descriptions[m.to_sym] %></h2>
+      </div>
+    <% end %>
   <% end %>
-</ul>
+</div>

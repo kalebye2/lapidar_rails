@@ -8,8 +8,8 @@ class AdminController < ApplicationController
   def index
   end
 
-  def acompanhamento_finalizacao_motivos
-  end
+  # def acompanhamento_finalizacao_motivos
+  # end
 
   def acompanhamento_tipos
   end
