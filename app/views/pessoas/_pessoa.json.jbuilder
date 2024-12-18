@@ -1,2 +1,2 @@
-json.extract! pessoa, :id, :nome, :sobrenome, :cpf, :fone_cod_pais, :fone_cod_area, :fone_num, :feminino, :civil_estado, :instrucao_grau, :data_nascimento, :email, :pais, :endereco_estado, :endereco_cidade, :endereco_cep, :endereco_logradouro, :endereco_numero, :endereco_complemento, :preferencia_contato, :nome_preferido
+json.extract! pessoa, :nome_completo, *pessoa.attribute_names
 json.url pessoa_url(pessoa, format: :json)

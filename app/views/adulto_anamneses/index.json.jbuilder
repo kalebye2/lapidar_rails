@@ -1,1 +1,1 @@
-json.array! @neuropsicologico_adulto_anamneses, partial: "neuropsicologico_adulto_anamneses/neuropsicologico_adulto_anamnese", as: :neuropsicologico_adulto_anamnese
+json.array! @adulto_anamneses, partial: "adulto_anamneses/adulto_anamnese", as: :adulto_anamnese
