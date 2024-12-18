@@ -13,6 +13,24 @@ class InfantojuvenilAnamnese < ApplicationRecord
   has_one :infantojuvenil_anamnese_socioafetividade
   has_one :infantojuvenil_anamnese_sono
 
+  @@subitens = []
+
+  def self.subitens
+    @@subitens
+  end
+
+  # simplificando a chamada dos subitens da anamnese
+  self.reflect_on_all_associations.each do |association|
+    assoc_name = association.name.to_s
+    if assoc_name.starts_with?("infantojuvenil_anamnese_")
+      method_name = assoc_name.delete_prefix("infantojuvenil_anamnese_")
+      @@subitens << method_name.to_sym
+      define_method method_name do
+        send("infantojuvenil_anamnese_#{method_name}")
+      end
+    end
+  end
+
   belongs_to :pessoa
   alias paciente pessoa
   belongs_to :profissional
@@ -54,27 +72,7 @@ class InfantojuvenilAnamnese < ApplicationRecord
     "#{data.strftime "%Y%m%d"}#{profissional.documento_valor&.to_s}#{pessoa.id}#{pessoa_responsavel&.id}#{profissional.id}#{id}"
   end
 
-  alias alimentacao infantojuvenil_anamnese_alimentacao
-
   alias comunicacao infantojuvenil_anamnese_comunicacao
-
-  alias escola_historico infantojuvenil_anamnese_escola_historico
-
-  alias familia_historico infantojuvenil_anamnese_familia_historico
-
-  alias gestacao infantojuvenil_anamnese_gestacao
-
-  alias manipulacao infantojuvenil_anamnese_manipulacao
-
-  alias psicomotricidade infantojuvenil_anamnese_psicomotricidade
-
-  alias saude_historico infantojuvenil_anamnese_saude_historico
-
-  alias sexualidade infantojuvenil_anamnese_sexualidade
-
-  alias socioafetividade infantojuvenil_anamnese_socioafetividade
-  
-  alias sono infantojuvenil_anamnese_sono
 
   def criar_anamnese_completa
     if infantojuvenil_anamnese_alimentacao.nil? then build_infantojuvenil_anamnese_alimentacao.save! end
