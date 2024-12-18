@@ -40,8 +40,15 @@ class LaudosController < ApplicationController
     @laudos = @laudos.where(data_avaliacao: @de..@ate)
 
     @contagem = @laudos.count
-    @pagy, @laudos = pagy(@laudos, items: 9)
     @params = params.permit(:de, :ate, :profissional, :status, :acompanhamento, :paciente)
+
+    respond_to do |format|
+      format.html do
+        @pagy, @laudos = pagy(@laudos, items: 9)
+      end
+      format.md
+      format.json
+    end
   end
 
   def show

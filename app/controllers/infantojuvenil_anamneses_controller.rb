@@ -44,6 +44,9 @@ class InfantojuvenilAnamnesesController < ApplicationController
           type: "application/pdf",
           disposition: :inline
       end
+
+      format.json
+
       # format.md do
       #   response.headers['Content-Type'] = "text/markdown"
       #   response.headers['Content-Disposition'] = "attachment; filename=anamnese-infantojuvenil_#{@infantojuvenil_anamnese.pessoa.nome_completo.parameterize}_#{@infantojuvenil_anamnese.atendimento.data}.md"
