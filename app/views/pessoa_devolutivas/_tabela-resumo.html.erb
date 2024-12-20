@@ -26,9 +26,9 @@
       <% curr_id = "#{cl}-responsavel" %>
       <th>Interessado(a)</th>
       <td id="<%= curr_id %>">
-        <%= link_to pessoa_path(devolutiva.responsavel) do %>
-          <%= devolutiva.responsavel.nome_completo %>
-          <%= devolutiva.paciente.pessoa_parentesco_juncoes.find_by(parente: devolutiva.responsavel).try { |p| "(#{p.parentesco.parentesco.upcase})" } %>
+        <%= link_to pessoa_path(devolutiva.interessado) do %>
+          <%= devolutiva.interessado.nome_completo %>
+          <%= devolutiva.paciente.pessoa_parentesco_juncoes.find_by(parente: devolutiva.interessado).try { |p| "(#{p.parentesco.parentesco.upcase})" } %>
         <% end %>
         <button <%== hx_set get: caminho_edit, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>alterar</button>
       </td>
@@ -59,7 +59,7 @@
       <% curr_id = "#{cl}-pontos-abordar" %>
       <th>Pontos a abordar</th>
       <td id="<%= curr_id %>">
-        <%== markdown_to_html(devolutiva.pontos_a_abordar).gsub(/{%\s*(paciente|pessoa|cliente)\s*%}/, devolutiva.paciente.nome).gsub(/{%\s*(responsavel|responsável|interessado|entrevistado)\s*%}/, devolutiva.responsavel.nome) %>
+        <%== markdown_to_html(devolutiva.pontos_a_abordar).gsub(/{%\s*(paciente|pessoa|cliente)\s*%}/, devolutiva.paciente.nome).gsub(/{%\s*(responsavel|responsável|interessado|entrevistado)\s*%}/, devolutiva.interessado.nome) %>
         <button <%== hx_set get: caminho_edit, target: "##{curr_id}", select: "##{curr_id}", swap: "outerHTML" %>>alterar</button>
       </td>
     </tr>

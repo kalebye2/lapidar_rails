@@ -5,10 +5,11 @@ class PessoaDevolutivasController < ApplicationController
 
   # GET /pessoa_devolutivas or /pessoa_devolutivas.json
   def index
+    set_de_ate Date.current.beginning_of_year, Date.current.end_of_year
     if usuario_atual.secretaria?
-      @pessoa_devolutivas = PessoaDevolutiva.cronologico
+      @pessoa_devolutivas = PessoaDevolutiva.cronologico.do_periodo(@de..@ate)
     else
-      @pessoa_devolutivas = usuario_atual.profissional.pessoa_devolutivas.cronologico
+      @pessoa_devolutivas = usuario_atual.profissional.pessoa_devolutivas.cronologico.do_periodo(@de..@ate)
     end
 
     if params[:pessoa].present?
@@ -42,7 +43,7 @@ class PessoaDevolutivasController < ApplicationController
 
   # GET /pessoa_devolutivas/new
   def new
-    @pessoa_devolutiva = PessoaDevolutiva.new
+    @pessoa_devolutiva = PessoaDevolutiva.new(data: Date.current)
   end
 
   # GET /pessoa_devolutivas/1/edit

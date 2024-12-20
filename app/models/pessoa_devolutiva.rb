@@ -3,7 +3,7 @@ class PessoaDevolutiva < ApplicationRecord
   alias paciente pessoa
   alias cliente pessoa
   belongs_to :profissional
-  belongs_to :pessoa_interessada, class_name: "Pessoa", foreign_key: :pessoa_interessada_id
+  belongs_to :pessoa_interessada, class_name: "Pessoa", foreign_key: :pessoa_interessada_id, optional: true
   alias interessado pessoa_interessada
   alias responsavel pessoa_interessada
   alias pessoa_responsavel pessoa_interessada
@@ -13,10 +13,15 @@ class PessoaDevolutiva < ApplicationRecord
   scope :da_pessoa_com_id, -> (id) { where(pessoa_id: id) }
   scope :do_responsavel, -> (responsavel) { where(pessoa_responsavel: responsavel) }
   scope :do_responsavel_com_id, -> (id) { where(pessoa_responsavel_id: id) }
+  scope :do_periodo, -> (periodo=Date.current.all_year) { where(data: periodo) }
 
   def informacoes_abreviadas
     p_responsavel =  (responsavel || pessoa).nome_abreviado
     "#{pessoa.nome_abreviado} (#{p_responsavel}) - #{profissional.nome_abreviado}"
+  end
+
+  def interessado
+    pessoa_interessada || pessoa
   end
 
   def informacoes_por_extenso

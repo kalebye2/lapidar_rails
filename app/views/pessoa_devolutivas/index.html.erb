@@ -16,9 +16,9 @@
   <%= hx_form get: pessoa_devolutivas_path, target: "#container", swap: "outerHTML", replace_url: true, trigger: "change" do %>
     <div>
       <label for="de">De</label>
-      <input type="date" name="de" value="<%= params[:de] %>">
+      <input type="date" name="de" value="<%= @de %>">
       <label for="ate">Até</label>
-      <input type="date" name="ate" value="<%= params[:ate] %>">
+      <input type="date" name="ate" value="<%= @ate %>">
     </div>
 
     <div>
