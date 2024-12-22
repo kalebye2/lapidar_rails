@@ -25,7 +25,7 @@ class Profissional < ApplicationRecord
   has_many :atendimento_locais, through: :atendimentos
   has_many :repasses, class_name: "ProfissionalFinanceiroRepasse"
   alias profissional_financeiro_repasses repasses
-  has_many :instrumento_relatos, through: :atendimento
+  has_many :instrumento_relatos, through: :atendimentos
   has_many :instrumentos_que_aplicou, through: :instrumento_relatos, source: :instrumento
   alias instrumentos_aplicados instrumentos_que_aplicou
   has_many :pessoa_devolutivas

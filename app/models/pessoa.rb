@@ -92,7 +92,7 @@ class Pessoa < ApplicationRecord
 
   # quando o cadastro for de um resopnsável
   has_many :acompanhamentos_responsavel, class_name: "Acompanhamento", foreign_key: :pessoa_responsavel_id
-  has_many :profissionais_a_quem_responde, class_name: "Profissional", through: :acompanhamento_responsavel, source: :profissional
+  has_many :profissionais_a_quem_responde, class_name: "Profissional", through: :acompanhamentos_responsavel, source: :profissional
   has_many :responsavel_devolutivas, class_name: "PessoaDevolutiva", foreign_key: :pessoa_responsavel_id
 
   has_many :recebimentos, through: :acompanhamentos
