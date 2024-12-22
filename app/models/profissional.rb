@@ -176,24 +176,12 @@ class Profissional < ApplicationRecord
     recebimentos.sum("valor - (valor * taxa_porcentagem_clinica / 10000)") - repasses.sum(:valor)
   end
 
-  def render_fone
-    pessoa.render_fone
-  end
-
-  def render_fone_link
-    pessoa.render_fone_link
-  end
-
-  def usa_whatsapp?
-    pessoa.usa_whatsapp?
-  end
-
-  def usa_telegram?
-    pessoa.usa_telegram?
-  end
-
   def horarios_preenchidos_registrados
     acompanhamento_horarios.de_acompanhamentos_em_andamento.map { |acompanhamento_horario| profissional_horarios.find_by(semana_dia: acompanhamento_horario.semana_dia, horario: acompanhamento_horario.horario) }
+  end
+
+  def default_display
+    descricao_completa
   end
 
   def horarios_disponiveis

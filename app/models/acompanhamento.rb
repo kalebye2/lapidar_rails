@@ -82,6 +82,10 @@ class Acompanhamento < ApplicationRecord
 
   accepts_nested_attributes_for :acompanhamento_reajustes
 
+  def default_display
+    render_info_para_profissional_alt
+  end
+
   def render_info_para_profissional
     p = pessoa
     r = pessoa_responsavel

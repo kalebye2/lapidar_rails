@@ -107,6 +107,10 @@ class Pessoa < ApplicationRecord
   # medicação
   has_many :pessoa_medicacoes
 
+  def default_display
+    nome_completo
+  end
+
   def nome_completo
     [nome, nome_do_meio, sobrenome].compact.join(' ')
   end

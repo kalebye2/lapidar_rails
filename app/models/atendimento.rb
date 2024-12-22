@@ -149,6 +149,10 @@ class Atendimento < ApplicationRecord
   def consideracoes
     anotacoes
   end
+
+  def default_display
+    informacoes_com_pessoa
+  end
   
   # pessoas envolvidas
   alias paciente pessoa
