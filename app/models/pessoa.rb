@@ -93,7 +93,8 @@ class Pessoa < ApplicationRecord
   # quando o cadastro for de um resopnsável
   has_many :acompanhamentos_responsavel, class_name: "Acompanhamento", foreign_key: :pessoa_responsavel_id
   has_many :profissionais_a_quem_responde, class_name: "Profissional", through: :acompanhamentos_responsavel, source: :profissional
-  has_many :responsavel_devolutivas, class_name: "PessoaDevolutiva", foreign_key: :pessoa_responsavel_id
+  has_many :interessado_devolutivas, class_name: "PessoaDevolutiva", foreign_key: :pessoa_interessada
+  alias responsavel_devolutivas interessado_devolutivas
 
   has_many :recebimentos, through: :acompanhamentos
   has_many :recebimentos_pagante, class_name: "Recebimento", foreign_key: :pessoa_pagante_id
@@ -101,8 +102,6 @@ class Pessoa < ApplicationRecord
   #has_many :recebimento_beneficiario_old, class_name: "Recebimento", foreign_key: :pessoa_beneficiario_id
 
   has_many :atendimento_valores, through: :atendimentos
-
-  has_many :pessoa_extra_informacoes
 
   # medicação
   has_many :pessoa_medicacoes
@@ -323,10 +322,6 @@ class Pessoa < ApplicationRecord
 
   def nome_confidencial
     "#{nome[-2..].upcase}#{sobrenome[..2].upcase}#{nome[..1].upcase}"
-  end
-
-  def informacoes_extras
-    pessoa_extra_informacoes
   end
 
   def atendimentos_futuros
