@@ -3,12 +3,25 @@
 <h2>Escolha o painel para editar</h2>
 
 <h3>Administração de Base de dados - Informações</h3>
-<div class="grid-3">
-  <% AdminController.paths.to_a.sort.each do |m| %>
-    <%= link_to "admin/#{m}" do %>
-      <div class="card">
-        <h2><%= path_descriptions[m.to_sym] %></h2>
-      </div>
+
+<div class="grid-2" style="grid-template-columns: 1fr 3fr;">
+  <div>
+    <nav class="navbar navleft">
+      <ul>
+        <% AdminController.paths.to_a.sort.each do |m| %>
+          <li>
+            <%= link_to admin_root_path(table: m) do %>
+              <%= path_descriptions[m.to_sym] || m.classify %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </nav>
+  </div>
+
+  <div style="max-height:75vh;overflow:scroll;">
+    <% if @table_name %>
+      <%= render "admin/table-display", table_name: @table_name %>
     <% end %>
-  <% end %>
+  </div>
 </div>

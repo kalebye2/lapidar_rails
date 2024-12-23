@@ -1,0 +1,23 @@
+<%# <%= link_to acompanhamento_tipo do %1> %>
+<%#   <div class="card"> %>
+<%#     <h2><%= acompanhamento_tipo.tipo %1></h2> %>
+<%#   </div> %>
+<%# <% end %1> %>
+
+<% method_names = %i[ virtual? null sql_type scale default bigint? precision default_function name type human_name limit hash ] %>
+
+<% acompanhamento_tipo.foreign_keys.include?("profissional_funcao_id") %>
+
+<h2><%= acompanhamento_tipo.tipo.upcase %></h2>
+<% acompanhamento_tipo.class.columns.each do |column| %>
+  <% if acompanhamento_tipo.foreign_keys.include?(column.name) %>
+    <% assoc = acompanhamento_tipo.association_from_foreign_key(column.name) %>
+    <%= link_to assoc.default_display, url_for(controller: assoc.class.name.pluralize.underscore, action: :show, id: assoc.id) %>
+  <% else %>
+    <%= column.name %>
+    <%= column.type %>
+    <%= column.limit %>
+    <%= acompanhamento_tipo.send(column.name) %>
+  <% end %>
+  <br>
+<% end %>

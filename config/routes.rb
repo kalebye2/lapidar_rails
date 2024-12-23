@@ -269,12 +269,15 @@ Rails.application.routes.draw do
   get '/ajuda', to: "application#ajuda"
   get '/financeiro', to: "financeiro#index"
 
-  scope :admin do
-    get '/', to: "admin#index", as: 'admin'
-    AdminController.paths.each do |m|
-      resources m.to_sym
-      #get m.to_sym, to: "admin##{m}", as: m.to_s
+  namespace :admin do
+    root to: "admin#index"
+    ActiveRecord::Base.connection.tables.each do |t|
+      resources t.to_sym
     end
+    # AdminController.paths.each do |m|
+    #   resources m.to_sym
+      #get m.to_sym, to: "admin##{m}", as: m.to_s
+    # end
   end
 
   # rotas de parciais

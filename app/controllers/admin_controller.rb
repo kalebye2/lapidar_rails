@@ -1,17 +1,36 @@
 class AdminController < ApplicationController
   before_action :validar_usuario
 
+  ActiveRecord::Base.connection.tables.each do |table_name|
+    Admin.const_set "#{table_name.camelcase}Controller", Class.new(ApplicationController) do
+      define_method :index do
+      end
+      
+      define_method :teste do
+        12
+      end
+    end
+  end
+
   def self.paths
     self.action_methods.subtract(ApplicationController.action_methods)
   end
 
   def index
+
   end
 
   # def acompanhamento_finalizacao_motivos
   # end
 
+  self.paths.each do |path|
+    define_singleton_method path do
+      render partial: "admin/table-display", class_name: path.classify
+    end
+  end
+
   def acompanhamento_tipos
+    render partial: "admin/table-display", class_name: "AcompanhamentoTipo"
   end
 
   def atendimento_locais

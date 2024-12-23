@@ -21,7 +21,16 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def self.association_names
-    associations.map { |association| [association.foreign_key, association.name] }.to_h
+    # associations.map { |association| [association.foreign_key, association.name] }.to_h
+    associations.map { |association| association.name }
+  end
+
+  def self.association_keys
+    data = associations.map { |association| [association.class.to_s.split("::").last.underscore.split("_")[..-2]&.join("_"), association.foreign_key, association.name] }
+    result = {}
+    data.map { |atype, fkey, aname| result[atype] = [] }
+    data.map { |atype, fkey, aname| result[atype].append({aname => fkey}) }
+    result
   end
 
   def self.association_urls
@@ -33,7 +42,12 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def association_names
-    self.class.associations.map { |association| [association.foreign_key, association.name] }.to_h
+    # self.class.associations.map { |association| [association.foreign_key, association.name] }.to_h
+    self.class.association_names
+  end
+
+  def association_keys
+    self.class.association_keys
   end
 
   def association_from_foreign_key key
@@ -41,16 +55,38 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   ["BelongsTo", "HasMany", "HasOne", "HasAndBelongsToMany", "Through"].each do |association_type|
-    define_singleton_method "#{association_type.underscore}_associations" do
+    atype = association_type.underscore
+    define_singleton_method "#{atype}_associations" do
       associations.map { |association| association if association.class.to_s.include?(association_type) }.compact
     end
 
-    define_singleton_method "#{association_type.underscore}_names" do
-      send("#{association_type.underscore}_associations").map { |association| association.name }
+    define_singleton_method "#{atype}_association_names" do
+      send("#{atype}_associations").map { |association| association.name }
     end
 
-    define_method "#{association_type.underscore}_associations" do
-      self.class.send("#{association_type.underscore}_names").map { |association_name| [association_name, send(association_name)] }.to_h
+    define_method "#{atype}_associations" do
+      # self.class.send("#{atype}_association_names").map { |association_name| [association_name, send(association_name)] }.to_h
+      self.class.send("#{atype}_associations").map {
+        |association|
+        # [association.name, {foreign_key: association.foreign_key, display: send(association.name)&.default_display, data: send(association.name)}]
+        aclass = send(association.name).class.to_s
+        if aclass.include?("CollectionProxy")
+          [association.name, {foreign_key: association.foreign_key, data: send(association.name)}]
+        else
+          [association.name, {foreign_key: association.foreign_key, display: send(association.name)&.default_display, data: send(association.name)}]
+        end
+      }.to_h
+    end
+
+    define_method "#{atype}_association_names" do
+      self.class.send("#{atype}_association_names")
+    end
+
+    define_method "#{atype}_from_foreign_key" do |fk|
+      fk = fk.to_s
+      data = send("#{atype}_associations")
+      data = data.map { |k,v| send(k) if data[k][:foreign_key] == fk }.compact
+      data.count == 1 ? data.first : data
     end
   end
 
@@ -58,8 +94,16 @@ class ApplicationRecord < ActiveRecord::Base
     belongs_to_associations.map { |association| association.join_foreign_key }
   end
 
+  def self.foreign_key_associations
+    belongs_to_associations.map { |association| [association.foreign_key, association.name] }.to_h
+  end
+
   def foreign_keys
     self.class.foreign_keys
+  end
+
+  def foreign_key_associations
+    self.class.foreign_key_associations
   end
 
   @app_config = Rails.application.config

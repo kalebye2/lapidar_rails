@@ -172,4 +172,15 @@ module ApplicationHelper
 
   def navegador_carregar_mais_paginas
   end
+
+  {
+    check_symbol: "10003",
+    check_symbol_small: "10004",
+    cross_symbol: "10006",
+    cross_symbol_small: "10005",
+  }.each do |k,v|
+    define_method k do
+      "&##{v}".html_safe
+    end
+  end
 end
