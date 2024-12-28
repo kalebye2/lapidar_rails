@@ -1,0 +1,28 @@
+<table>
+  <caption>
+    Valores a ressarcir
+  </caption>
+  <thead>
+  </thead>
+  <tbody>
+    <% Acompanhamento.por_paciente_em_ordem_alfabetica.each do |acompanhamento| %>
+      <% if acompanhamento.valor_a_ressarcir > 0 %>
+        <tr>
+          <td class="center">
+            <%= acompanhamento.paciente.nome_abreviado %>
+            <%= acompanhamento.pessoa_responsavel.nome_abreviado.insert(0, "(resp.: ").insert(-1, ")") unless acompanhamento.pessoa_responsavel.blank? %>
+          </td>
+          <td>
+            <%= acompanhamento.tipo.upcase %>
+          </td>
+          <td>
+            <%= acompanhamento.profissional.descricao_completa %>
+          </td>
+          <td class="dinheiro">
+            <%= render_dinheiro_centavos acompanhamento.valor_a_ressarcir %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

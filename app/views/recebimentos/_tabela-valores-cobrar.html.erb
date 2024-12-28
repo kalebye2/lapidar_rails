@@ -21,7 +21,7 @@
         recebimentos: 0,
       }
     %>
-  <% Acompanhamento.joins(:pessoa).order("pessoas.nome" => :asc, "pessoas.nome_do_meio" => :asc, "pessoas.sobrenome" => :asc).all.each do |acompanhamento| %>
+  <% Acompanhamento.por_paciente_em_ordem_alfabetica.each do |acompanhamento| %>
     <% soma_atendimentos = acompanhamento.atendimento_valores.where(atendimento: { data: ..ultima_data }).sum("valor - desconto") %>
     <% soma_recebimentos = acompanhamento.recebimentos.sum(:valor) %>
     <% if soma_atendimentos - soma_recebimentos > 0 %>

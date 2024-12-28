@@ -197,6 +197,11 @@ class Acompanhamento < ApplicationRecord
     (atendimento_valores.do_periodo(periodo).sum("valor - desconto") - recebimentos.do_periodo(periodo).sum(:valor)).to_i
   end
 
+  def valor_a_ressarcir(periodo=..Date.current.end_of_month)
+    valor_final = (atendimento_valores.do_periodo(periodo).sum("valor - desconto") - recebimentos.do_periodo(periodo).sum(:valor)).to_i
+    valor_final < 0 ? valor_final * -1 : 0
+  end
+
   def valor_recebido_no_periodo periodo = (Date.today - 1.year).all_year
     recebimentos.do_periodo(periodo).sum(:valor).to_i
   end

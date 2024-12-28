@@ -260,7 +260,7 @@ class RecebimentosController < ApplicationController
   def valores_a_cobrar periodo = ..Date.current
     Acompanhamento.joins(:pessoa).order("pessoas.nome" => :asc, "pessoas.nome_do_meio" => :asc, "pessoas.sobrenome" => :asc).all.map { |acompanhamento|
 
-      acompanhamento.valor_a_cobrar(periodo) > 0 ? {
+      acompanhamento.valor_a_cobrar(periodo) != 0 ? {
         paciente: acompanhamento.pessoa,
         responsável: acompanhamento.pessoa_responsavel,
         acompanhamento: acompanhamento,
