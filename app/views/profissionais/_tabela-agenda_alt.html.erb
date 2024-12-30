@@ -1,0 +1,60 @@
+<% dias_da_semana = SemanaDia.all %>
+<% id = "#{dom_id profissional}_agenda" %>
+<% pode_deletar = pode_deletar || false %>
+
+<div id="<%= id %>">
+  <table>
+    <caption>Agenda</caption>
+    <thead>
+      <tr>
+        <th width="10%"></th>
+        <% dias_da_semana.each do |semana_dia| %>
+          <th><%= semana_dia.nome.upcase %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>
+          Agenda disponível
+          (<%= deixar_no_plural profissional.profissional_horarios.count,
+             "horário",
+             "horários" unless !usuario_atual %>)
+        </th>
+        <% dias_da_semana.each do |semana_dia| %>
+          <td>
+            <% profissional.profissional_horarios.where(semana_dia: semana_dia).map { |profissional_horario| [profissional_horario, profissional.acompanhamento_horarios.de_acompanhamentos_em_andamento.where(semana_dia: profissional_horario.semana_dia, horario: profissional_horario.horario)] }.each do |profissional_horario| %>
+              <% atendimento_do_horario = [] %>
+              <% profissional.atendimentos.do_periodo(Date.current..Date.current - 1.day + 1.week).map do |a| %>
+                <% if a.data_inicio_verdadeira.wday == semana_dia.id && a.horario_inicio_verdadeiro == profissional_horario.first.horario then atendimento_do_horario.append a end %>
+                <% end %>
+
+                <% proh = profissional_horario[1] %>
+                <% proha = atendimento_do_horario %>
+                <% indisponivel = proha.count > 0 %>
+                <p style="border-radius:1em;padding:1em;text-align:center;color:<%= indisponivel ? "var(--doc-red-light)" : "var(--doc-green-light)" %>;background-color:<%= indisponivel ? "var(--doc-red-dark)" : "var(--doc-green-dark)"%>;cursor:default;position:relative;">
+                <u><b><%= render_hora_brasil profissional_horario[0].horario %></b></u>
+                <%= indisponivel ? "Indisponível" : "Disponível" %>
+                <%= "<span style=\"background-color:orange;color:black;padding:.1em;position:absolute;border-radius:.3em;top:-.5em;right:.1em;\">Reservado</span>".html_safe if proh.count > 0%>
+
+                <%= hx_link "excluir", profissional_horario_path(profissional_horario[0], authenticity_token: form_authenticity_token.to_s, de_profissional: true), class: "icon-bin", style: "color:white;", verb: :delete, swap: "outerHTML", target: "##{id}" if (usuario_atual&.secretaria? || usuario_atual&.profissional == profissional) if pode_deletar %>
+                </p>
+              <% end %>
+          </td>
+        <% end %>
+      </tr>
+      <tr>
+        <th>Atendimentos dos próximos dias</th>
+        <% dias_da_semana.each do |semana_dia| %>
+          <td>
+            <ul>
+              <% profissional.atendimentos.do_periodo(Date.today..Date.today.end_of_week + 1.week).map do |a| %>
+                <%== a.data_inicio_verdadeira.wday == semana_dia.id ? "<li>#{render_data_brasil a.data} às #{render_hora_brasil a.horario}</li><hr>" : "" %>
+              <% end %>
+            </ul>
+          </td>
+        <% end %>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -22,4 +22,8 @@ class AcompanhamentoHorario < ApplicationRecord
     ActiveRecord::Base.connection.execute("DELETE FROM acompanhamento_horarios WHERE acompanhamento_id = #{acompanhamento_id} AND semana_dia_id = #{semana_dia_id} AND horario LIKE '%#{horario.strftime("%H:%M:%S")}%' AND horario_fim #{horario_fim.nil? ? "IS NULL" : " LIKE '%#{horario_fim.strftime("%H:%M:%S")}%'"};")
   end
 
+  def profissional_horario
+    ProfissionalHorario.where(horario: horario, semana_dia_id: semana_dia_id).first
+  end
+
 end

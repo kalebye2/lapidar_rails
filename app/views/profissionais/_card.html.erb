@@ -3,6 +3,13 @@
   <%= link_to profissional, class: "pessoa-card" + " " + (profissional.feminino ? "feminino" : "masculino") do %>
     <div>
       <h2 class="icon-user"><%= profissional.nome_abreviado %></h2>
+      <% if profissional.de_folga? %>
+        <div style="position:absolute;top:.1em;right:.1em;padding:.3em;background-color:var(--main-color);color:var(--main-light-color);border-radius:1em;">
+          <p class="icon-lifebuoy">
+          <%= profissional.de_folga?.motivo.upcase %>
+          </p>
+        </div>
+      <% end %>
 
       <h3 class="icon-profile">
         <%= profissional.funcao %>

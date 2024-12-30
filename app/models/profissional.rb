@@ -180,6 +180,10 @@ class Profissional < ApplicationRecord
     acompanhamento_horarios.de_acompanhamentos_em_andamento.map { |acompanhamento_horario| profissional_horarios.find_by(semana_dia: acompanhamento_horario.semana_dia, horario: acompanhamento_horario.horario) }
   end
 
+  def de_folga?(data = Date.current)
+    folgas.em_andamento(data).first
+  end
+
   def default_display
     descricao_completa
   end
@@ -188,7 +192,20 @@ class Profissional < ApplicationRecord
     excluir = horarios_preenchidos_registrados
     disponivel = profissional_horarios - excluir
   end
-  alias agenda_disponivel horarios_disponiveis
+
+  def agenda(periodo=Date.current.all_week)
+    periodo = periodo.class.to_s == "Range" ? periodo : periodo..periodo
+    agenda_final = {}
+    profissional_horarios.map { |horario|
+      periodo.map { |data|
+        agenda_final[data] = agenda_final[data] || []
+        atendimentos_do_dia = atendimentos.do_periodo(data)
+        atendimento_do_horario = atendimentos_do_dia.where(horario: horario.horario).or(atendimentos_do_dia.where(horario_reagendamento: horario.horario)).first
+        agenda_final[data] << {horario: horario.horario, de_folga: profissional_folgas.no_periodo(data).first, atendendo: atendimento_do_horario, reservado: horario.acompanhamento_horarios.de_acompanhamentos_em_andamento} if data.wday == horario.semana_dia_id
+      }
+    }
+    agenda_final
+  end
 
   def self.para_csv collection = all
     CSV.generate(col_sep: ",") do |csv|
