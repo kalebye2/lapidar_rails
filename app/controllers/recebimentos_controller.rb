@@ -241,6 +241,42 @@ class RecebimentosController < ApplicationController
     render partial: "recebimentos/select-acompanhamento", locals: { pessoa: Pessoa.find(params[:acompanhamentos_de]) }
   end
 
+  def cobranca_pendente
+    @params = params.permit(:ate, :format)
+    data_final = @params[:ate] || Date.current
+    periodo = ..data_final
+    col_sep = params[:col_sep] || ","
+    valores = valores_a_cobrar(periodo)
+    filename = "#{nome_do_site&.parameterize}_cobranca_pendente_#{@params.to_h.compact.map { |k,v| "#{k&.to_s}=#{v&.to_s}"}.join("_")}_#{Time.current.to_fs(:number)}"
+
+    case @params[:format]&.downcase&.to_sym
+    when :csv
+      csv_final = CSV.generate(col_sep: col_sep) do |csv|
+        csv << [
+          "paciente",
+          "responsável",
+          "serviço",
+          "profissional",
+          "valor",
+        ]
+
+        valores.each do |valor|
+          csv << [
+            valor[:paciente]&.nome_completo,
+            valor[:responsável]&.nome_completo,
+            valor[:acompanhamento]&.tipo&.upcase,
+            valor[:profissional]&.descricao_completa,
+            valor[:valor] / 100.0,
+          ]
+        end
+      end
+      send_data csv_final, filename: "#{filename}.csv", type: "text/csv"
+    else
+      render html: "No"
+    end
+
+  end
+
   private
 
   def set_recebimento

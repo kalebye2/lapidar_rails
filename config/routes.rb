@@ -64,6 +64,7 @@ Rails.application.routes.draw do
         get 'inline-new', to: :inline_new
         get 'inline-adicionar', to: :inline_adicionar
         get 'select-acompanhamento', to: :select_acompanhamento
+        get 'cobranca_pendente', to: :cobranca_pendente
       end
     end
     resources :profissional_financeiro_repasses, path: '/repasses'
