@@ -206,9 +206,11 @@ class Acompanhamento < ApplicationRecord
     recebimentos.do_periodo(periodo).sum(:valor).to_i
   end
 
-  def cidade padrao_nulo="Brasília"
+  def cidade padrao_nulo=nil
     atendimento_final = atendimentos.realizados.em_ordem.last
-    atendimento_final&.atendimento_local&.endereco_cidade || profissional.endereco_cidade || padrao_nulo
+    atendimento_final&.atendimento_local&.endereco_cidade ||
+      profissional.endereco_cidade || padrao_nulo ||
+      Rails.config.application.clinica_endereco[:cidade] || "Brasília"
   end
 
   def para_csv col_sep: ",", formato_data: "%Y-%m-%d"

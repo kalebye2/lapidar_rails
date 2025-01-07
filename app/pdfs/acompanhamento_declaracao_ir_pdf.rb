@@ -29,7 +29,7 @@ class AcompanhamentoDeclaracaoIrPdf < BasePdf
 
     move_down 100
 
-    text "#{@acompanhamento.profissional.cidade}, #{render_data_extenso Date.current}", align: :center
+    text "#{@acompanhamento.cidade}, #{render_data_extenso Date.current}", align: :center
 
     local_assinatura "#{@acompanhamento.profissional.nome_completo}\n#{@acompanhamento.profissional.render_cpf}\n#{@acompanhamento.profissional.documento}"
   end
