@@ -1,3 +1,3 @@
 class AcompanhamentoFinalizacaoMotivo < ApplicationRecord
-  has_many :acompanhamento
+  has_many :acompanhamentos
 end
