@@ -175,13 +175,46 @@ class ApplicationRecord < ActiveRecord::Base
 
     "#{valor_inteiros}#{valor_decimais}".gsub(",", "").to_i
   end
-
-  def self.como_csv collection=all, col_sep: ","
-    CSV.generate(col_sep: col_sep) do |csv|
-      csv << attribute_names
-      collection.each do |record|
-        csv << record.attributes.values
+  
+  def to_h strftime="%Y-%m-%d"
+    attributes.except!("password_digest").map do |k,v|
+      if foreign_keys.include?(k)
+        assoc = belongs_to_from_foreign_key(k)
+        if Array == assoc.class
+          [foreign_key_associations[k], assoc.count == 0 ? nil : assoc]
+        else
+          [foreign_key_associations[k], assoc.default_display]
+        end
+      else
+        case v.class.to_s
+        when "Date"
+          [k, v.strftime(strftime)]
+        else
+          [k, v]
+        end
       end
-    end
+    end.to_h
   end
+
+  def self.as_h collection=all
+    collection.map { |element| element.to_h }
+  end
+
+  def self.como_csv collection=all, col_sep: ",", strftime: "%Y-%m-%d"
+    header = column_names.excluding("password_digest").map do |column_name|
+      foreign_keys.include?(column_name) ? foreign_key_associations[column_name] : column_name
+    end
+
+    data = collection.map { |element| element.to_h.values }
+
+    CSV.generate(col_sep: col_sep) do |csv|
+      csv << header
+      csv << data
+    end
+
+  end
+  def self.as_csv collection=all, col_sep: ",", srtrftime: "%Y-%m-%d"
+    como_csv collection, col_sep: col_sep, strftime: strftime
+  end
+
 end
