@@ -332,7 +332,7 @@ class Atendimento < ApplicationRecord
       "\n" \
       "STATUS: #{status.upcase}" \
       "\n" \
-      "UID:#{data.strftime("%Y%m%d")}#{horario.strftime("%H%M%S")}#{tipo.upcase.gsub(/\s/, '')}#{paciente.nome_completo.upcase.gsub(/\s/, '')}#{id}" \
+      "UID:#{data.strftime("%Y%m%d")}#{horario.strftime("%H%M%S")}#{tipo.upcase.gsub(/\s/, '')}#{paciente.nome_completo.upcase.gsub(/\s/, '')}#{profissional.descricao_completa.upcase.gsub(/\s/, '').gsub(/[\/-]/,"")}#{id}" \
       "\n" \
       "END:VEVENT" \
       ""
@@ -369,6 +369,22 @@ class Atendimento < ApplicationRecord
       avanços: Kramdown::Document.new(avancos.to_s).to_html.presence,
       limitações: Kramdown::Document.new(limitacoes.to_s).to_html.presence,
     }
+  end
+
+  def self.pacientes(collection=all)
+    Pessoa.joins(:atendimentos).includes(:atendimentos).where(atendimentos: collection)
+  end
+
+  def self.instrumentos_aplicados(collection=all)
+    Instrumento.joins(:atendimentos).includes(:atendimentos).where(atendimentos: collection)
+  end
+
+  def self.profissionais_envolvidos(collection=all)
+    Profissional.joins(:atendimentos).includes(:atendimentos).where(atendimentos: collection)
+  end
+
+  def self.aplicacoes_de_instrumentos(collection=all)
+    InstrumentoRelato.joins(:atendimento).includes(:atendimento).where(atendimento: collection)
   end
 
   def self.calendario_ics(collection: all)
