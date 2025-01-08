@@ -3,6 +3,6 @@ class AcompanhamentoTipo < ApplicationRecord
   belongs_to :profissional_funcao, optional: true
 
   def default_display
-    funcao.upcase
+    tipo
   end
 end
