@@ -703,6 +703,7 @@ dt {
 			}
 			& ul {
 				display: none;
+				min-width: 15em;
 				& li {
 					float: none;
 					& a {
