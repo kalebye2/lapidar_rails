@@ -4,7 +4,14 @@
 
 <div id="<%= id %>">
   <table>
-    <caption>Agenda</caption>
+    <caption>
+      Agenda
+      <%== "<br>" * 2 %>
+      <%= hx_form get: agenda_profissional_path, target: "##{id}", select: "##{id}" do %>
+        <input type="date" id="start_date" name="start_date" value="<%= dias_da_semana.first %>">
+        <input type="submit" value="Verificar semana" style="font-size:1rem;">
+      <% end %>
+    </caption>
     <thead>
       <tr>
         <th width="10%"></th>
@@ -38,10 +45,24 @@
                     "cursor" => "default",
                     "position" => "relative",
                   } %>
-                <p style="<%= style.map { |k,v| "#{k}:#{v}"}.join(";") %>">
+
+                <p>
+                <div style="<%= style.map { |k,v| "#{k}:#{v}"}.join(";") %>">
                 <b><u><%= render_hora_brasil horario[:horario] %></b></u>
                   <%= disponivel ? "Disponível" : "Indisponível" %>
-                <%= "<span style=\"background-color:orange;color:black;padding:.1em;position:absolute;border-radius:.3em;top:-.5em;right:.1em;\">Reservado</span>".html_safe if horario[:reservado].count > 0%>
+                  <% if horario[:reservado].count > 0 %>
+                    <div class="horario-reservado">
+                      Reservado
+                      <div class="agenda-modal-acompanhamento">
+                        <% acomp = horario[:reservado].first %>
+                        <%= acomp.pessoa.nome_abreviado %>
+                        <%= acomp.pessoa.idade_anos&.to_s&.insert(0, "[")&.insert(-1, "a]") %>
+                        <%= acomp.pessoa_responsavel&.nome_abreviado&.insert(0, " (resp.: ")&.insert(-1, ")") %>
+                      </div>
+                    </div>
+                  <% end %>
+                <%# <%= "<span style=\"background-color:orange;color:black;padding:.1em;position:absolute;border-radius:.3em;top:-.5em;right:.1em;\">Reservado</span>".html_safe if horario[:reservado].count > 0 %1> %>
+                </div>
                 </p>
                 <% end %>
               <% end %>

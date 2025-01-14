@@ -14,7 +14,7 @@
 <% dias_disponiveis = @profissional_horarios.map(&:semana_dia).uniq %>
 
 <div class="grid-2">
-  <%= render 'tabela-agenda', profissional: @profissional, pode_deletar: true %>
+  <%= render 'tabela-agenda', profissional: @profissional, pode_deletar: true, dias_da_semana: @dias_da_semana%>
   <div style="padding:1em;">
   <%= render "agenda-form", profissional: @profissional %>
   </div>

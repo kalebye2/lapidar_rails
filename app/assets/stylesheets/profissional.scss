@@ -1,3 +1,33 @@
 // Place all the styles related to the profissional controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.horario-reservado {
+	background-color: orange;
+	color: black;
+	// padding: .1em;
+	// position: absolute;
+	border-radius: .3em;
+	// top: -.5em;
+	// right: .1em;
+	cursor: pointer;
+	// z-index: 2;
+
+	& .agenda-modal-acompanhamento {
+		display: none;
+		z-index: 3;
+	}
+
+	&:hover {
+		& .agenda-modal-acompanhamento {
+			padding: .5em;
+			display: block;
+			position: absolute;
+			border-radius: .3em;
+			background-color: var(--doc-bg-color);
+			color: var(--doc-text-color);
+		}
+	}
+}
+

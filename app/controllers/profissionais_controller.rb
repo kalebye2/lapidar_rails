@@ -176,6 +176,12 @@ class ProfissionaisController < ApplicationController
 
   def agenda
     @profissional_horarios = ProfissionalHorario.where(profissional: @profissional)
+    @dias_da_semana = (params[:start_date] || Date.current).to_date.all_week
+
+    if hx_request? && !params[:total].present?
+      render partial: "tabela-agenda", locals: { profissional: @profissional, dias_da_semana: @dias_da_semana }
+      return
+    end
   end
 
   def financeiro
