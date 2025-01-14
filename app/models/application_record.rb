@@ -110,6 +110,7 @@ class ApplicationRecord < ActiveRecord::Base
 
   before_create do
     if Rails.application.config.timestamp_id && self.class.primary_key == "id"
+      sleep 0.001
       self.id = Time.current.strftime("%s%L").to_i
     end
   end

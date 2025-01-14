@@ -1,0 +1,13 @@
+<% parameters = parameters || @params %>
+<% texto = "Relatório #{texto}" %>
+<li>
+  <%= link_to texto, "javascript:void(0);", class: "icon-download3" %>
+  <ul>
+    <li>
+      <%= link_to "CSV", atendimento_valores_path(parameters.merge(format: :csv)), class: 'icon-table2' %>
+    </li>
+    <li>
+      <%= link_to "Excel", atendimento_valores_path(parameters.merge(format: :xlsx)), class: 'icon-file-excel' %>
+    </li>
+  </ul>
+</li>

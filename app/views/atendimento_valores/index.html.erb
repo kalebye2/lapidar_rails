@@ -29,14 +29,7 @@
 </nav>
 
 <nav class="navbar navcenter" id="formatos-download">
-  <ul>
-    <li>
-      <%= link_to "CSV", atendimento_valores_path(@params.merge(format: :csv)), class: 'icon-table2' %>
-    </li>
-    <li>
-      <%= link_to "Excel", atendimento_valores_path(@params.merge(format: :xlsx)), class: 'icon-file-excel' %>
-    </li>
-  </ul>
+  <%= render "navbar-download" %>
 </nav>
 <%== "<br>" * 2 %>
 

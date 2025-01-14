@@ -1,0 +1,15 @@
+<ul>
+  <% a_month_ago = Date.current - 1.month %>
+  <% a_year_ago = Date.current - 1.year %>
+  <% today = Date.current %>
+  <% final_data = [
+    {de: params[:de], ate: params[:ate]},
+    {de: a_month_ago.beginning_of_month, ate: a_month_ago.end_of_month, texto: "do mês passado"},
+    {de: today.beginning_of_month, ate: today.end_of_month, texto: "deste mês"},
+    {de: a_year_ago.beginning_of_year, ate: a_year_ago.end_of_year, texto: "do ano passado"},
+    {de: today.beginning_of_year, ate: today.end_of_year, texto: "deste ano"},
+  ] %>
+  <% final_data.each do |datum| %>
+    <%= render "navbar-download-item", parameters: datum.except(:texto), texto: datum[:texto] %>
+  <% end %>
+</ul>

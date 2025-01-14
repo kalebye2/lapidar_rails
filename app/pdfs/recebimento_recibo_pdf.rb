@@ -25,7 +25,7 @@ class RecebimentoReciboPdf < BasePdf
 
     move_down 50
 
-    text "#{@recebimento.profissional.cidade}, #{render_data_extenso @recebimento.data}", align: :center
+    text "#{@recebimento.acompanhamento.cidade}, #{render_data_extenso @recebimento.data}", align: :center
 
     local_assinatura "#{@recebimento.profissional.nome_completo}\n#{@recebimento.profissional.render_cpf}\n#{@recebimento.profissional.documento}"
   end
