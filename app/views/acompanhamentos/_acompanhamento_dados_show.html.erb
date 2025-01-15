@@ -2,7 +2,6 @@
 <% caminho = caminho || @caminho || acompanhamento_path(parameters.merge authenticity_token: form_authenticity_token.to_s) %>
 <div id="<%= dom_id(acompanhamento) %>_dados">
   <% if @usuario_acompanhamento %>
-    <%= @caminho %>
     <%= hx_form patch: @caminho, target: "##{dom_id(acompanhamento)}_dados", select: "##{dom_id(acompanhamento)}_dados", swap: "outerHTML" do %>
     <div class="field">
       <label for="acompanhamento[acompanhamento_tipo_id]">Tipo de acompanhamento</label>
