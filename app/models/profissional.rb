@@ -207,6 +207,10 @@ class Profissional < ApplicationRecord
     agenda_final
   end
 
+  def chave_pix
+    chave_pix_02 || chave_pix_01
+  end
+
   def self.para_csv collection = all
     CSV.generate(col_sep: ",") do |csv|
       csv << [
