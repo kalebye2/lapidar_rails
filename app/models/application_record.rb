@@ -218,4 +218,35 @@ class ApplicationRecord < ActiveRecord::Base
     como_csv collection, col_sep: col_sep, strftime: strftime
   end
 
+  def template_para_dado texto=""
+    dados = texto.split("%}").map do |w|
+      if w.index("{%")
+        word = w[w.index("{%")..].split(/{%\s*/)[-1].split().join(".").downcase
+        begin
+          value = self.eval(word)
+          if value.is_a?(ApplicationRecord) then value = value.default_display end
+          if value.is_a?(Float)
+            if word.include?("real")
+              value = number_to_currency(value, separator: ",", unit: "R$ ", delimiter: ".", precision: 2)
+            else
+              value = number_to_currency(value, separator: ",", unit: "", delimiter: ".", precision: 2)
+            end
+          end
+          [word, "#{value}"]
+
+        rescue
+          [word, nil]
+        end
+      end
+    end
+    # dados.compact.to_h
+    dados.each { |k,v|
+      texto.gsub!(/{%\s*#{k}\s*%}/, v || "")
+    }
+    texto
+    # dados
+  end
+
+  private
+
 end
