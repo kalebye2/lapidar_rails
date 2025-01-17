@@ -75,8 +75,8 @@ class PessoasController < ApplicationController
       end
 
       format.zip do
+        fname = "#{@pessoa.nome_completo.parameterize}#{params[:only_name].present? ? nil : @pessoa.id}"
         compressed_filestream = Zip::OutputStream.write_buffer do |zos|
-          fname = @pessoa.nome_completo.parameterize
 
           zos.put_next_entry "#{fname}/modelo.txt"
           zos.print "Este é o modelo de pasta do cadastro de #{@pessoa.nome_completo} criado por #{usuario_atual.nome_completo}"
@@ -119,7 +119,7 @@ class PessoasController < ApplicationController
         end
 
         compressed_filestream.rewind
-        send_data compressed_filestream.read, filename: "#{@pessoa.nome_completo.parameterize}.zip"
+        send_data compressed_filestream.read, filename: "#{fname}.zip"
       end
 
       format.json
