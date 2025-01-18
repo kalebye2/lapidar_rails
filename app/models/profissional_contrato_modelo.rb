@@ -102,33 +102,34 @@ class ProfissionalContratoModelo < ApplicationRecord
 
   def conteudo_para_acompanhamento acompanhamento=nil
     return nil if acompanhamento.blank? || acompanhamento.class.to_s != "Acompanhamento"
-    texto_final = conteudo
+    # texto_final = conteudo
+    return acompanhamento.template_para_dado conteudo
 
     # paciente
-    texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_pessoa].join("|"), acompanhamento.pessoa.nome_completo
-    texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_data_inicio_extenso].join("|"), "#{acompanhamento.data_inicio.day} de #{@@meses[acompanhamento.data_inicio.month].downcase} de #{acompanhamento.data_inicio.year}"
-    # responsável
-    # profissional
-    texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_descricao_completa].join("|"), acompanhamento.profissional.descricao_completa
-    texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_nome_completo].join("|"), acompanhamento.profissional.nome_completo
-    texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_documento_tipo].join("|"), acompanhamento.profissional.profissional_funcao.documento_tipo
-    texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_documento_regiao].join("|"), acompanhamento.profissional.documento_regiao_id
-    texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_documento_valor].join("|"), acompanhamento.profissional.documento_valor
-    texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_email].join("|"), acompanhamento.profissional.email
-    texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_fone].join("|"), (acompanhamento.profissional.render_fone[3..] unless acompanhamento.profissional.render_fone.nil?)
-    texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_fone_link].join("|"), acompanhamento.profissional.render_fone_link
-    texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_pix].join("|"), acompanhamento.profissional.chave_pix_01
-    texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_valor_sessao_contrato].join("|"), number_to_currency(acompanhamento.valor_sessao_contrato / 100.0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2)
-    texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_responsavel].join("|"), acompanhamento.pessoa_responsavel&.nome_completo
-    texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_responsavel_nome_completo].join("|"), acompanhamento.pessoa_responsavel&.nome_completo
+    # texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_pessoa].join("|"), acompanhamento.pessoa.nome_completo
+    # texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_data_inicio_extenso].join("|"), "#{acompanhamento.data_inicio.day} de #{@@meses[acompanhamento.data_inicio.month].downcase} de #{acompanhamento.data_inicio.year}"
+    # # responsável
+    # # profissional
+    # texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_descricao_completa].join("|"), acompanhamento.profissional.descricao_completa
+    # texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_nome_completo].join("|"), acompanhamento.profissional.nome_completo
+    # texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_documento_tipo].join("|"), acompanhamento.profissional.profissional_funcao.documento_tipo
+    # texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_documento_regiao].join("|"), acompanhamento.profissional.documento_regiao_id
+    # texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_documento_valor].join("|"), acompanhamento.profissional.documento_valor
+    # texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_email].join("|"), acompanhamento.profissional.email
+    # texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_fone].join("|"), (acompanhamento.profissional.render_fone[3..] unless acompanhamento.profissional.render_fone.nil?)
+    # texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_fone_link].join("|"), acompanhamento.profissional.render_fone_link
+    # texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_profissional_pix].join("|"), acompanhamento.profissional.chave_pix_01
+    # texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_valor_sessao_contrato].join("|"), number_to_currency(acompanhamento.valor_sessao_contrato / 100.0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2)
+    # texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_responsavel].join("|"), acompanhamento.pessoa_responsavel&.nome_completo
+    # texto_final = template_para_dado texto_final, @@opcoes_substituicao[:opcoes_responsavel_nome_completo].join("|"), acompanhamento.pessoa_responsavel&.nome_completo
 
-    texto_final
+    # texto_final
   end
   alias colocar_dados_de_acompanhamento_no_conteudo conteudo_para_acompanhamento
 
   private
 
-  def template_para_dado texto="", subst="", dado=nil
-    texto.gsub(/{%\s*(#{subst})\s*%}/, dado.to_s)
-  end
+  # def template_para_dado texto="", subst="", dado=nil
+  #   texto.gsub(/{%\s*(#{subst})\s*%}/, dado.to_s)
+  # end
 end

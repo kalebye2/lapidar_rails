@@ -61,9 +61,7 @@ header-includes:
 
 \begin{center}
 <%= @acompanhamento.profissional.cidade %>,
-<%= @acompanhamento.data_inicio.day %> de
-<%= t('date.month_names')[@acompanhamento.data_inicio.month].downcase %> de
-<%= @acompanhamento.data_inicio.year %>
+<%= render_data_extenso @acompanhamento.primeira_data %>
 \end{center}
 
 <% if params[:assinatura_paciente].presence %>

@@ -23,6 +23,7 @@ class AcompanhamentoContratoPdf < BasePdf
 
   def body
     markup markdown_to_html(@profissional_contrato_modelo.conteudo_para_acompanhamento @acompanhamento), text: {align: :justify}, heading1: {size: 24, style: :bold}
+    centralizar_texto "#{@acompanhamento.primeiro_atendimento&.cidade || @acompanhamento.cidade}, #{render_data_extenso @acompanhamento.primeira_data}"
   end
 
   def footer
