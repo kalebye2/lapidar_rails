@@ -32,8 +32,8 @@ class BasePdf < Prawn::Document
     # text "#{@laudo.profissional.cidade}, #{@laudo.data_avaliacao.day} de #{} de #{@laudo.data_avaliacao.year}", align: :center
     last_cursor = cursor
     if last_cursor < 200
-    start_new_page
-    move_down bounds.height / 2
+      start_new_page
+      move_down bounds.height / 2
     else
       move_down 72 * 2
     end
@@ -41,6 +41,17 @@ class BasePdf < Prawn::Document
     stroke_horizontal_line bounds.width / 2 - rule_size, bounds.width / 2 + rule_size
     move_down 7
     text "#{quem_assina}", align: :center
+  end
+
+  def centralizar_texto texto="", style: :normal
+    last_cursor = cursor
+    if last_cursor < 10
+      start_new_page
+      move_down bounds.height / 2
+    else
+      move_down 10
+    end
+    text "#{texto}", align: :center, style: style
   end
 
   def gerar_cabecalho texto1, texto2="", align: :right, size: 10, style: :bold, displace: @margin[0] / 2
