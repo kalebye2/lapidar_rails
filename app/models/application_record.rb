@@ -11,6 +11,10 @@ class ApplicationRecord < ActiveRecord::Base
     self.base_class.connection.tables
   end
 
+  def self.column_types
+    self.columns.map { |column| [column.name, column.type] }.to_h
+  end
+
   # usar primeiras colunas como forma primária de mostrar o valor
   def default_display
     send(self.class.column_names[1])
@@ -31,6 +35,14 @@ class ApplicationRecord < ActiveRecord::Base
     data.map { |atype, fkey, aname| result[atype] = [] }
     data.map { |atype, fkey, aname| result[atype].append({aname => fkey}) }
     result
+  end
+
+  def self.association_classes
+    associations.map { |association| [association.name, association.options[:class_name].presence ? association.options[:class_name] : association.name.to_s.classify] }.to_h
+  end
+
+  def self.foreign_key_classes
+    belongs_to_associations.map { |association| [association.foreign_key, association.options[:class_name].presence ? association.options[:class_name] : association.name.to_s.classify] }.to_h
   end
 
   def self.association_urls

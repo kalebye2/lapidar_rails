@@ -1,3 +1,3 @@
 class InstrucaoGrau < ApplicationRecord
-  has_many :pessoa
+  has_many :pessoas
 end

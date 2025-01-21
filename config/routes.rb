@@ -272,6 +272,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     root to: "admin#index"
+    post "/update", to: "admin#update"
     ActiveRecord::Base.connection.tables.each do |t|
       resources t.to_sym
     end

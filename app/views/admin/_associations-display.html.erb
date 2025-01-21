@@ -1,0 +1,38 @@
+<% klass = Object.const_get(table_name.classify) %>
+<h2>Associações</h2>
+
+<h3>Pertence a</h3>
+<ul>
+  <% Object.const_get(table_name.classify).belongs_to_associations.each do |assoc| %>
+    <li>
+      <%= link_to assoc.name, admin_root_path(table: assoc.table_name) %>
+    </li>
+  <% end %>
+</ul>
+
+<h3>Tem um</h3>
+<ul>
+  <% klass.has_one_associations.each do |assoc| %>
+    <li>
+      <%= link_to assoc.name, admin_root_path(table: assoc.table_name) %>
+    </li>
+  <% end %>
+</ul>
+
+<h3>Tem vários</h3>
+<ul>
+  <% klass.has_many_associations.each do |assoc| %>
+    <li>
+      <%= link_to assoc.name, admin_root_path(table: assoc.table_name) %>
+    </li>
+  <% end %>
+</ul>
+
+<h3>Relacionamentos indiretos</h3>
+<ul>
+  <% klass.through_associations.each do |assoc| %>
+    <li>
+      <%= link_to "#{assoc.name} (#{assoc.options[:through]})", admin_root_path(table: assoc.table_name) %>
+    </li>
+  <% end %>
+</ul>

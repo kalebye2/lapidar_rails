@@ -1,0 +1,8 @@
+<% klass = Object.const_get(table_name.classify) %>
+<% element = klass.new %>
+<% element.attributes.except!("password_digest").each do |k,v| %>
+  <% if element.foreign_keys.include?(k) %>
+    <%= edit_assoc_new(table_name, k) %>
+  <% else %>
+  <% end %>
+<% end %>

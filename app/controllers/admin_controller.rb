@@ -48,6 +48,9 @@ class AdminController < ApplicationController
   def atendimento_tipos
   end
 
+  def atendimentos
+  end
+
   def civil_estados
   end
 

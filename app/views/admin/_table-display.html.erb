@@ -1,8 +1,7 @@
 <table>
-  <caption><%= table_name %></caption>
   <% klass = eval("#{table_name.classify}") %>
   <thead>
-    <tr>
+    <tr style="position:sticky;top:0;z-index:2;">
       <% klass.column_names.excluding("password_digest").each do |column_name| %>
         <th>
           <%# <%= klass.foreign_keys.include?(column_name) ? klass.association_names[column_name] : column_name %1> %>
@@ -12,30 +11,17 @@
     </tr>
   </thead>
   <tbody>
-    <% klass.all.each do |element| %>
+    <% klass.all.limit(params[:limit] || 25).offset(params[:offset] || 0).each do |element| %>
       <tr>
         <% element.attributes.except!("password_digest").each do |k,v| %>
-          <td>
+          <% id = element[klass.primary_key] %>
+          <% pkey = klass.primary_key %>
+          <td id="<%= k %>_<%= element[element.class.primary_key] %>">
             <% if element.foreign_keys.include?(k) %>
               <% assoc = element.belongs_to_from_foreign_key k %>
-              <% if assoc.class == Array %>
-                <%= assoc.count == 0 ? "-" : assoc %>
-              <% else %>
-                <%= link_to(assoc.default_display, admin_root_path(table: assoc.class.to_s.pluralize.underscore)) %>
-              <% end %>
+              <%= attribute_edit?(id, k) ? edit_assoc(table_name, id, k, assoc) : display_assoc(table_name, id, k, assoc) %>
             <% else %>
-              <% case v.class.to_s %>
-              <% when "String" %>
-                <%= v.length > 100 ? "#{v.split(" ")[..20].join(" ")}..." : v %>
-              <% when "Integer" %>
-                <p style="text-align:right;"><%= v %></p>
-              <% when "TrueClass" %>
-                <p style="text-align:center;"><%= v ? check_symbol : "&#x274C" %></p>
-              <% when "NilClass" %>
-                <p style="text-align:center;color:var(--doc-light-color);">N/A</p>
-              <% else %>
-                <%= v %>
-              <% end %>
+              <%= attribute_edit?(id, k) ? edit_attribute(table_name, id, k, v) : display_attribute(table_name, id, k, v) %>
             <% end %>
           </td>
         <% end %>
@@ -43,4 +29,3 @@
     <% end %>
   </tbody>
 </table>
-

@@ -95,7 +95,7 @@ class Acompanhamento < ApplicationRecord
   def render_info_para_profissional_alt
     p = pessoa
     r = pessoa_responsavel
-    return "#{p.nome_completo} #{p.render_sexo_sigla} #{if r then '[respondido por ' + r.nome_abreviado + ']' end} - #{tipo.upcase} de #{data_inicio.strftime("%d/%m/%Y")}#{data_final && acompanhamento_finalizacao_motivo ? " a #{data_final.strftime("%d/%m/%Y")}" : ""} <#{profissional.descricao_completa}>"
+    return "#{p.nome_completo} #{p.render_sexo_sigla} #{if r then '[respondido por ' + r.nome_abreviado + ']' end} - #{tipo.upcase} de #{data_inicio.strftime("%d/%m/%Y")}#{data_final && acompanhamento_finalizacao_motivo ? " a #{data_final.strftime("%d/%m/%Y")}" : ""} <#{profissional.descricao_completa}>" if p
   end
 
   def render_info_para_pessoa

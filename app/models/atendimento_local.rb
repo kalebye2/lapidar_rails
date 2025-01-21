@@ -11,6 +11,10 @@ class AtendimentoLocal < ApplicationRecord
 
   include Enderecavel
 
+  def default_display
+    "#{descricao} - #{endereco_completo} (#{tipo})"
+  end
+
   def tipo
     atendimento_local_tipo.tipo
   end

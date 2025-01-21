@@ -16,4 +16,35 @@ class Admin::AdminController < ApplicationController
     end
   end
 
+  def update
+    params_to_vars
+    if @element.update(@attribute_params)
+      redirect_to admin_root_path(table: @table)
+    else
+      @errors = @element.errors
+      redirect_to admin_root_path(table: @table, edit: @attribute, value: @value, id: @element.id, errors: @errors)
+    end
+  end
+
+  def new
+    table = params[:table]
+    klass = Object.const_get(table.classify)
+    @object = klass
+  end
+  
+  def create
+    
+  end
+
+  private
+
+  def params_to_vars
+    @table = params[:table]
+    @klass = Object.const_get(@table.classify)
+    @element = @klass.find(params[:id])
+    @attribute_params = params[@table.classify.underscore].permit(@klass.attribute_names)
+    @attribute = params[:edit].to_sym
+    @value = params[:value]
+  end
+
 end
