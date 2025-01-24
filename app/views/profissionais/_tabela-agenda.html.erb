@@ -1,6 +1,7 @@
 <% dias_da_semana = dias_da_semana || Date.current.all_week %>
 <% id = "#{dom_id profissional}_agenda" %>
 <% pode_deletar = pode_deletar || false %>
+<% mostrar_pacientes = usuario_atual&.secretaria? || usuario_atual == profissional.usuario %>
 
 <div id="<%= id %>">
   <table>
@@ -31,42 +32,66 @@
         </th>
         <% dias_da_semana.each do |dia| %>
           <td>
-              <% agenda = profissional.agenda(dia)[dia] %>
-              <% agenda.each do |horario| %>
-                <% unless horario[:de_folga] %>
-                  <% disponivel = horario[:folga].blank? && horario[:atendendo].blank? %>
-                  <% color = disponivel ? "green"  : "red" %>
-                  <% style = {
-                    "border-radius" => "1em",
-                    "padding" => "1em",
-                    "text-align" => "center",
-                    "color" => "var(--doc-#{color}-light)",
-                    "background-color" => "var(--doc-#{color}-dark)",
-                    "cursor" => "default",
-                    "position" => "relative",
-                  } %>
+            <% agenda = profissional.agenda(dia)[dia] %>
+            <% atendimentos_do_dia = profissional.atendimentos.do_periodo(dia) %>
+            <% agenda.each do |horario| %>
+              <% unless horario[:de_folga] %>
+                <% disponivel = horario[:folga].blank? && horario[:atendendo].blank? %>
+                <% color = disponivel ? "green"  : "red" %>
+                <% style = {
+                  "border-radius" => "1em",
+                  "padding" => "1em",
+                  "text-align" => "center",
+                  "color" => "var(--doc-#{color}-light)",
+                  "background-color" => "var(--doc-#{color}-dark)",
+                  "cursor" => "default",
+                  "position" => "relative",
+                } %>
 
-                <p>
-                <div style="<%= style.map { |k,v| "#{k}:#{v}"}.join(";") %>">
+              <p>
+              <div style="<%= style.map { |k,v| "#{k}:#{v}"}.join(";") %>">
                 <b><u><%= render_hora_brasil horario[:horario] %></b></u>
                   <%= disponivel ? "Disponível" : "Indisponível" %>
-                  <% if horario[:reservado].count > 0 %>
-                    <div class="horario-reservado">
-                      Reservado
-                      <div class="agenda-modal-acompanhamento">
-                        <% acomp = horario[:reservado].first %>
-                        <%= acomp.pessoa.nome_abreviado %>
-                        <%= acomp.pessoa.idade_anos&.to_s&.insert(0, "[")&.insert(-1, "a]") %>
-                        <%= acomp.pessoa_responsavel&.nome_abreviado&.insert(0, " (resp.: ")&.insert(-1, ")") %>
-                      </div>
-                    </div>
+
+                  <% atendimentos_do_horario = atendimentos_do_dia.where(horario: horario[:horario]) %>
+                  <% if mostrar_pacientes && atendimentos_do_horario.count > 0 %>
+                    <% hstyle = {
+                      position: "absolute",
+                      "background-color" => "var(--main-color)",
+                      top: "-.5em",
+                      left: "-.5em",
+                      padding: ".3em",
+                      "border-radius" => ".3em",
+                      color: "var(--main-light-color",
+                    }.map { |k, v| "#{k}:#{v}" }.join(";") %>
+                  <% atendimentos_do_horario.each do |atendimento| %>
+                    <%= link_to atendimento.paciente.nome_chamada, atendimento.acompanhamento, style: hstyle %>
                   <% end %>
-                <%# <%= "<span style=\"background-color:orange;color:black;padding:.1em;position:absolute;border-radius:.3em;top:-.5em;right:.1em;\">Reservado</span>".html_safe if horario[:reservado].count > 0 %1> %>
-                </div>
-                </p>
                 <% end %>
-              <% end %>
-            <%# <%= profissional.agenda(dia)[dia] %1> %>
+
+                <% if horario[:reservado].count > 0 %>
+                  <div class="horario-reservado">
+                    Reservado
+                    <% if mostrar_pacientes %>
+                      <div class="agenda-modal-acompanhamento">
+                        <% horario[:reservado].each_with_index do |acomp, index| %>
+                          <%== "<hr>" if index > 0 %>
+                          <%= link_to acomp.acompanhamento do %>
+                            <%= acomp.pessoa.nome_abreviado %>
+                            <%= acomp.pessoa.idade_anos&.to_s&.insert(0, "[")&.insert(-1, "a]") %>
+                            <%= acomp.pessoa_responsavel&.nome_abreviado&.insert(0, " (resp.: ")&.insert(-1, ")") %>
+                          <% end %>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                <% end %>
+                <%# <%= "<span style=\"background-color:orange;color:black;padding:.1em;position:absolute;border-radius:.3em;top:-.5em;right:.1em;\">Reservado</span>".html_safe if horario[:reservado].count > 0 %1> %>
+              </div>
+              </p>
+            <% end %>
+          <% end %>
+          <%# <%= profissional.agenda(dia)[dia] %1> %>
           </td>
         <% end %>
       </tr>

@@ -153,6 +153,10 @@ class Pessoa < ApplicationRecord
     nome + ' ' + sobrenome
   end
 
+  def nome_chamada
+    nome_preferido || nome_social || nome
+  end
+
   def render_cpf
     return nil if cpf.blank?
     cr = cpf.to_s
