@@ -53,7 +53,7 @@
                 <b><u><%= render_hora_brasil horario[:horario] %></b></u>
                   <%= disponivel ? "Disponível" : "Indisponível" %>
 
-                  <% atendimentos_do_horario = atendimentos_do_dia.where(horario: horario[:horario]) %>
+                  <% atendimentos_do_horario = horario[:atendendo] %>
                   <% if mostrar_pacientes && atendimentos_do_horario.count > 0 %>
                     <% hstyle = {
                       position: "absolute",

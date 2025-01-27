@@ -200,7 +200,9 @@ class Profissional < ApplicationRecord
       periodo.map { |data|
         agenda_final[data] = agenda_final[data] || []
         atendimentos_do_dia = atendimentos.do_periodo(data)
-        atendimento_do_horario = atendimentos_do_dia.where(horario: horario.horario).or(atendimentos_do_dia.where(horario_reagendamento: horario.horario)).first
+        atendimento_do_horario = atendimentos_do_dia.where(horario: horario.horario, data: data).or(atendimentos_do_dia.where(horario_reagendamento: horario.horario, data_reagendamento: data)).or(atendimentos_do_dia.where(horario_reagendamento: horario.horario, data: data)).or(atendimentos_do_dia.where(horario: horario.horario, data_reagendamento: data)).map do |atendimento|
+          atendimento if atendimento.horario_inicio_verdadeiro == horario.horario && atendimento.data_inicio_verdadeira == data
+        end.compact
         agenda_final[data] << {horario: horario.horario, de_folga: profissional_folgas.no_periodo(data).first, atendendo: atendimento_do_horario, reservado: horario.acompanhamento_horarios.de_acompanhamentos_em_andamento} if data.wday == horario.semana_dia_id
       }
     }
