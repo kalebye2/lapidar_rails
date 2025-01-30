@@ -2,6 +2,7 @@ class AtendimentoValor < ApplicationRecord
   self.primary_key = :atendimento_id
 
   include Monetizavel
+  extend Monetizavel
 
   Monetizavel.de_centavos_pra_real :valor, :desconto, :taxa_externa, :taxa_interna
 
@@ -148,6 +149,20 @@ class AtendimentoValor < ApplicationRecord
 
   def liquido_interno
     valor - desconto - taxa_interna
+  end
+
+  %i[ liquido liquido_externo liquido_interno ].each do |method_name|
+    define_method "#{method_name}_real" do
+      self.send(method_name) / 100.0
+    end
+
+    define_singleton_method method_name do |collection=all|
+      collection.map { |element| element.send(method_name) }.sum
+    end
+
+    define_singleton_method "#{method_name}_real" do
+      all.map { |element| element.send(method_name) }.sum / 100.0
+    end
   end
 
   def self.para_csv(collection = all, formato_data: "%Y-%m-%d", formato_hora: "%H:%M", col_sep: ",")

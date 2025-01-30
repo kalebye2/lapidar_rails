@@ -2,6 +2,7 @@ class Recebimento < ApplicationRecord
   require "csv"
 
   include Monetizavel
+  extend Monetizavel
   Monetizavel.de_centavos_pra_real :valor, :taxa_porcentagem_clinica
 
   belongs_to :acompanhamento
@@ -52,6 +53,9 @@ class Recebimento < ApplicationRecord
   end
   scope :do_periodo, -> (periodo=Date.current.all_month) { where(data: periodo) }
 
+  scope :de_hoje, -> { do_periodo(Date.current) }
+  scope :de_ontem, -> { do_periodo(Date.current - 1.day) }
+
   scope :do_profissional, -> (profissional) { joins(:profissional).where(profissional: profissional) }
   scope :do_profissional_com_id, -> (id) { joins(:profissional).where(profissional: {id: id}) }
 
@@ -79,9 +83,7 @@ class Recebimento < ApplicationRecord
     pessoa_pagante || pessoa
   end
 
-  def beneficiario
-    pessoa
-  end
+  alias beneficiario pessoa
 
   def profissional
     acompanhamento.profissional
