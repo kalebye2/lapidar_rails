@@ -26,13 +26,18 @@ module AdminHelper
     final = ""
     value_display = ""
     p_tag = nil
-    ctype = Object.const_get(table_name.classify).column_types[attribute]
+    main_class = Object.const_get(table_name.classify)
+    ctype = main_class.column_types[attribute]
     case ctype
     when :string
       value_display = value
     when :integer
       p_tag = "<p style=\"text-align:right;\">"
-      value_display = "#{value}\t"
+      if main_class.respond_to?(:metodos_em_reais) && main_class.metodos_em_reais.include?(attribute.to_sym)
+        value_display = "#{render_dinheiro_centavos value}"
+      else
+        value_display = "#{value}\t"
+      end
     when :boolean
       p_tag = "<p style=\"text-align:center;\">"
       value_display = value ? check_symbol : cross_symbol
@@ -98,11 +103,17 @@ module AdminHelper
       label_inner = valids.join(" ")
       final += "<label for=\"#{param_name}\" style=\"#{html_style}\">#{label_inner}</label>" if main_class.validators_on(attribute).any?
       # case Object.const_get(table_name.classify).column_names[attribute]
-      case Object.const_get(table_name.classify).column_types[attribute.to_s]
+      main_class = Object.const_get(table_name.classify)
+      case main_class.column_types[attribute.to_s]
       when :string
         final += "<input type=\"text\" value=\"#{value}\" name=\"#{param_name}\">"
       when :integer
-        final += "<input type=\"number\" value=\"#{value}\" name=\"#{param_name}\">"
+        if main_class.respond_to?(:metodos_em_reais) && main_class.metodos_em_reais.include?(attribute.to_sym)
+          money_val = (value / 100.0).to_s.gsub(".", ",")
+          final += "<input type=\"text\" value=\"#{money_val}\" name=\"#{param_name}\" data-type=\"currency\">"
+        else
+          final += "<input type=\"number\" value=\"#{value}\" name=\"#{param_name}\">"
+        end
       when :text
         final += "<textarea rows=25 cols=10>"
         final += "#{value}"

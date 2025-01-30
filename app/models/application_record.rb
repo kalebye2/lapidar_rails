@@ -1,6 +1,6 @@
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
-  after_initialize :test
+  # after_initialize :test
 
   # include ApplicationHelper
   include ActionView::Helpers
@@ -157,10 +157,6 @@ class ApplicationRecord < ActiveRecord::Base
     valor.to_i
   end
 
-  def test
-    
-  end
-
   # para localizar um endereço
 
   def self.concat(*args)
@@ -257,6 +253,14 @@ class ApplicationRecord < ActiveRecord::Base
     }
     texto
     # dados
+  end
+
+  def self.class_attributes_as_selectors
+    attribute_names.each do |aname|
+      define_singleton_method aname do
+        select(primary_key, aname)
+      end
+    end
   end
 
   private
