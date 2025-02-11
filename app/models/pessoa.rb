@@ -118,24 +118,24 @@ class Pessoa < ApplicationRecord
     [nome_social, nome_completo].compact.join(" | ")
   end
 
+  alias nome_social_completo nome_completo_social
+
   def nome_abreviado_meio
-    if nome_do_meio
-      abreviar(nome + ' ' + nome_do_meio.to_s, '. ') + '. ' + sobrenome
-    else
-      abreviar(nome, '. ') + '. ' + sobrenome
-    end
+    [abreviar([nome, nome_do_meio].compact.join(" "), ". "), sobrenome].join " "
   end
 
   def nome_abreviado_meio_social
     [nome_social, nome_abreviado_meio].compact.join " | "
   end
+  alias nome_social_abreviado_meio nome_abreviado_meio_social
 
   def nome_abreviado
     if nome_do_meio
       meio_abrev = nome_do_meio.to_s.split.map { |n| n[0] == n[0].upcase ? n[0] : '' }
       meio_sobrenome = [meio_abrev.reject(&:empty?) || meio_abrev, sobrenome].join(". ")
       [nome, meio_sobrenome].join(' ')
-      nome + ' ' + [abreviar(nome_do_meio, '. '), sobrenome].join('. ')
+      # nome + ' ' + [abreviar(nome_do_meio, '. '), sobrenome].join('. ')
+      [nome, abreviar(nome_do_meio, ". "), sobrenome].join " "
     else
       nome + ' ' + sobrenome
     end
@@ -155,6 +155,18 @@ class Pessoa < ApplicationRecord
 
   def nome_chamada
     nome_preferido || nome_social || nome
+  end
+
+  def nome_chamada_completo
+    [nome_chamada, nome_do_meio, sobrenome].compact.join " "
+  end
+
+  def nome_chamada_abreviado
+    [nome_chamada, abreviar(nome_do_meio, ". "), sobrenome].join " "
+  end
+
+  def nome_chamada_abreviado_meio
+    [abreviar([nome_chamada, nome_do_meio].compact.join(" "), ". ").insert(-1, "."), sobrenome].join " "
   end
 
   def render_cpf
