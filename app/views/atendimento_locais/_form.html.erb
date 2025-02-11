@@ -72,8 +72,8 @@
   </div>
 
   <div class="field">
-    <%= form.label :publico, "Público" %>
-    <%= form.check_box :publico %>
+    <%= form.label :publico, "Visualização" %>
+    <%= form.select :publico, [["Ocultado", 0], ["Público", 1]] %>
   </div>
 
   <div>

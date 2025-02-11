@@ -82,6 +82,6 @@ class AtendimentoLocaisController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def atendimento_local_params
-    params.require(:atendimento_local).permit(:atendimento_local_tipo_id, :descricao, :pais_id, :endereco_estado, :endereco_cidade, :endereco_bairro, :endereco_cep, :endereco_logradouro, :endereco_numero, :endereco_complemento, :latitude, :longitude)
+    params.require(:atendimento_local).permit(:atendimento_local_tipo_id, :descricao, :pais_id, :endereco_estado, :endereco_cidade, :endereco_bairro, :endereco_cep, :endereco_logradouro, :endereco_numero, :endereco_complemento, :latitude, :longitude, :publico)
   end
 end

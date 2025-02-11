@@ -1,3 +1,4 @@
+<% if usuario_atual&.secretaria? || usuario_atual&.clinico? || atendimento_local.publico %>
 <div id="<%= dom_id atendimento_local %>" class="card">
   <h2><%= atendimento_local.descricao %></h2>
   <h3 class="icon-location">
@@ -5,9 +6,17 @@
   </h3>
   <%= atendimento_local.endereco_cep&.to_s&.insert(0, 'CEP: ') || '' %>
 
+  <% if usuario_atual&.secretaria? || usuario_atual&.clinico? %>
+    <p class="icon-eye">
+    <%= atendimento_local.publico? ? "Público" : "Ocultado" %>
+    </p>
+  <% end %>
+
   <%= link_to "Ver no mapa", atendimento_local.geolink_por_coordenadas || "https://openstreetmap.org/search?query=#{sanitize atendimento_local.endereco_completo}", class: 'icon-location2', target: :blank %>
   <%= link_to "Atendimentos no local", atendimentos_atendimento_local_path(atendimento_local), class: 'icon-drawer' %>
   <% if usuario_atual&.secretaria? %>
     <%= link_to "Visualizar", atendimento_local, class: 'icon-location' %>
   <% end %>
+
 </div>
+<% end %>

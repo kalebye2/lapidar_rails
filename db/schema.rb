@@ -109,7 +109,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "endereco_complemento", limit: 255
     t.decimal "latitude"
     t.decimal "longitude"
-    t.boolean "publico", null: false
+    t.boolean "publico"
   end
 
   create_table "atendimento_local_tipos", force: :cascade do |t|
