@@ -119,7 +119,7 @@ module AdminHelper
         final += "#{value}"
         final += "</textarea>"
       when :boolean
-        final += "<input name=\"#{param_name}\" type=\"checkbox\" value=\"#{value ? 1 : 0}\" #{checked if value}>"
+        final += "<input name=\"#{param_name}\" type=\"checkbox\" value=\"#{value ? 1 : 0}\" #{"checked" if value}>"
       when :date
         final += "<input type=\"date\" name=\"#{param_name}\" value=\"#{value}\">"
       when :time
