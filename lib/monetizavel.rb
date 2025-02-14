@@ -28,4 +28,30 @@ module Monetizavel
   def metodos_em_reais
     @@em_reais
   end
+
+  def metodos_decompostaveis *args
+    args.each do |arg|
+      method_name = "#{arg}_decomposto".to_sym
+      if self.respond_to?(arg)
+        decompor(arg)
+      elsif ApplicationRecord.descendants.include?(self)
+      end
+    end
+  end
+
+  def self.decompor valor
+    valor_decomposto = {}
+    if self.respond_to?(arg)
+      valor_str = self.send(arg).to_s || "0,00"
+      valor_str += "," unless valor_str.include?(",")
+      valor_str.gsub!(".", "")
+      index_virgula = valor_str.index(",")
+      valor_decomposto[:inteiros] = valor_str[..index_virgula - 1]
+      valor_decomposto[:decimais] = ((valor_str[index_virgula + 1..]) + "00")[..1]
+      valor_decomposto
+    end
+  end
+
+  def self.compor valor
+  end
 end
