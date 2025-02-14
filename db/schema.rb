@@ -788,6 +788,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "profissional_id", null: false
     t.integer "semana_dia_id", null: false
     t.time "horario", null: false
+    t.integer "atendimento_local_id"
+    t.integer "atendimento_plataforma_id"
   end
 
   create_table "profissional_notas", force: :cascade do |t|
@@ -949,6 +951,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "profissional_financeiro_repasses", "usuarios", primary_key: "profissional_id", on_update: :nullify, on_delete: :nullify
   add_foreign_key "profissional_folgas", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_folgas", "profissional_folga_motivos", on_update: :cascade, on_delete: :nullify
+  add_foreign_key "profissional_horarios", "atendimento_locais", on_update: :cascade, on_delete: :nullify
+  add_foreign_key "profissional_horarios", "atendimento_plataformas", on_update: :cascade, on_delete: :nullify
   add_foreign_key "profissional_horarios", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_horarios", "semana_dias", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_notas", "profissionais", on_update: :cascade, on_delete: :cascade
