@@ -2,6 +2,8 @@ class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
   # after_initialize :test
 
+  @atributos_de_templates_publicos = []
+
   # include ApplicationHelper
   include ActionView::Helpers
   
@@ -261,6 +263,21 @@ class ApplicationRecord < ActiveRecord::Base
         select(primary_key, aname)
       end
     end
+  end
+
+  def self.instance_public_methods *remove_patterns, default_strings: true
+    default_string_patterns = %w[ autosave validate changed = ? build create reload ids debug association csv default_display]
+    remove_patterns.map!(&:to_s)
+    if default_strings
+      remove_patterns.append(*default_string_patterns)
+    end
+
+    return instance_methods(false).map { |mname|
+      has_pattern = remove_patterns.map { |pattern|
+        mname.to_s.index(pattern)
+      }.compact.any?
+      mname unless has_pattern
+    }.compact
   end
 
   private

@@ -15,23 +15,23 @@
       <% valores = valores.map { |k,v| [k.to_sym, "#{v.blank? ? 0 : v / 100},#{(v.blank? ? 0 : v % 100).to_s.insert(-1, "00")[..1]}"] }.to_h %>
 
       <div class="field">
-        <label for="atendimento[atendimento_valor_attributes][valor]">Valor (R$)</label>
-        <input type="text" value="<%= valores[:valor] %>" name="atendimento[atendimento_valor_attributes][valor]" data-type="currency">
+        <label for="atendimento[atendimento_valor_attributes][valor_real]">Valor (R$)</label>
+        <input type="text" value="<%= valores[:valor] %>" name="atendimento[atendimento_valor_attributes][valor_real]" data-type="currency">
       </div>
 
       <div class="field">
         <label for="atendimento[atendimento_valor_attributes][desconto]">Desconto (R$)</label>
-        <input type="text" value="<%= valores[:desconto] %>" name="atendimento[atendimento_valor_attributes][desconto]">
+        <input type="text" value="<%= valores[:desconto] %>" name="atendimento[atendimento_valor_attributes][desconto_real]">
       </div>
 
       <div class="field">
         <label for="atendimento[atendimento_valor_attributes][taxa_porcentagem_externa]">Taxa externa (%)</label>
-        <input type="text" value="<%= valores[:taxa_porcentagem_externa] %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_externa]">
+        <input type="text" value="<%= valores[:taxa_porcentagem_externa] %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_externa_real]">
       </div>
 
       <div class="field">
         <label for="atendimento[atendimento_valor_attributes][taxa_porcentagem_interna]">Taxa interna (%)</label>
-        <input type="text" value="<%= valores[:taxa_porcentagem_interna] %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_interna]">
+        <input type="text" value="<%= valores[:taxa_porcentagem_interna] %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_interna_real]">
       </div>
 
       <div class="action">

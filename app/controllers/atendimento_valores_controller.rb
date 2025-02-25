@@ -23,7 +23,7 @@ class AtendimentoValoresController < ApplicationController
     end
 
     if params[:profissional].present?
-      @atendimento_valores = @atendimento_valores.do_profissional(@profissional)
+      @atendimento_valores = @atendimento_valores.do_profissional_com_id(@profissional)
     end
 
     if params[:pessoa].present?

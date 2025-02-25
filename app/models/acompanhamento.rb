@@ -1,4 +1,5 @@
 class Acompanhamento < ApplicationRecord
+
   include Monetizavel
 
   Monetizavel.de_centavos_pra_real :valor_sessao, :valor_sessao_contrato

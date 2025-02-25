@@ -21,20 +21,20 @@ class Recebimento < ApplicationRecord
 
   scope :em_ordem, -> (ordem = :asc) { order(data: ordem) }
 
-  before_save do
-    # transformar valores de reais em centavos para db
-    if self.valor_changed?
-      valor_final = self.valor&.to_s || "0,00"
-      if !valor_final.include?(",")
-        valor_final += ","
-      end
-      valor_final.gsub!(".", "")
-      index_virgula = valor_final.index(",")
-      valor_inteiros = valor_final[..index_virgula - 1]
-      valor_decimais = ((valor_final[index_virgula + 1..]) + "00")[..1]
-      self.valor = "#{valor_inteiros}#{valor_decimais}".gsub(",", "").to_i
-    end
-  end
+  # before_save do
+  #   # transformar valores de reais em centavos para db
+  #   if self.valor_changed?
+  #     valor_final = self.valor&.to_s || "0,00"
+  #     if !valor_final.include?(",")
+  #       valor_final += ","
+  #     end
+  #     valor_final.gsub!(".", "")
+  #     index_virgula = valor_final.index(",")
+  #     valor_inteiros = valor_final[..index_virgula - 1]
+  #     valor_decimais = ((valor_final[index_virgula + 1..]) + "00")[..1]
+  #     self.valor = "#{valor_inteiros}#{valor_decimais}".gsub(",", "").to_i
+  #   end
+  # end
 
   scope :do_mes, -> (mes = Date.current.all_month, ordem: :asc) { where(data: mes).order(data: ordem) }
   scope :do_mes_passado, -> { where(data: (Date.current - 1.month).all_month) }
@@ -77,6 +77,14 @@ class Recebimento < ApplicationRecord
       query = "LOWER(CONCAT(pagantes.nome, ' ', COALESCE(pagantes.nome_do_meio, ''), ' ', pagantes.sobrenome)) LIKE ?", "%#{like}%"
     end
     joins("JOIN pessoas AS pagantes ON recebimentos.pessoa_pagante_id = pagantes.id").where(query)
+  end
+
+  def default_display formato_data: "%d/%m/%Y"
+    fin_str = ""
+    fin_str += "#{pagante.nome_completo + " (" + pagante.render_cpf + ")" unless pagante == beneficiario}"
+    fin_str += " - beneficiário " unless fin_str.blank?
+    fin_str += "#{[beneficiario.nome_completo, beneficiario.render_cpf&.insert(0, "(")&.insert(-1, ")")].compact.join " "}"
+    fin_str += " | R$ #{valor_real} em #{data.strftime(formato_data)}"
   end
 
   def pagante

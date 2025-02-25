@@ -140,7 +140,16 @@ class AtendimentosController < ApplicationController
 
   def update
     respond_to do |format|
-      if @atendimento.update(atendimento_params)
+      if params[:atendimento][:atendimento_valor_attributes].presence
+        @atendimento_valor = @atendimento.atendimento_valor
+        teste = {}
+        [:valor, :desconto, :taxa_porcentagem_externa, :taxa_porcentagem_interna].map do |attr|
+          valor_final = compor_valor_monetario_de_virgulas(params[:atendimento][:atendimento_valor_attributes]["#{attr}_real"] || "0,00")
+          @atendimento_valor.send("#{attr}=", valor_final)
+        end
+      end
+
+      if @atendimento.update(atendimento_params) || @atendimento_valor.save
         format.html do
           if !hx_request?
             redirect_to acompanhamento_url(@atendimento.acompanhamento), notice: "Atendimento atualizado com sucesso."
@@ -358,12 +367,14 @@ class AtendimentosController < ApplicationController
                                      :desconto,
                                      :taxa_porcentagem_externa,
                                      :taxa_porcentagem_interna,
-                                     :id],
-                                     instrumento_relato_attributes: [:atendimento_id,
-                                                                     :instrumento_id,
-                                                                     :relato,
-                                                                     :resultados,
-                                                                     :observacoes]
+                                     :id,
+      ],
+      instrumento_relato_attributes: [:atendimento_id,
+                                      :instrumento_id,
+                                      :relato,
+                                      :resultados,
+                                      :observacoes,
+      ]
     ]
   end
 

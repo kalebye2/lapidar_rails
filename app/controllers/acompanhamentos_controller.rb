@@ -212,9 +212,9 @@ class AcompanhamentosController < ApplicationController
     atendimento.modalidade_id = au.modalidade_id
     atendimento.atendimento_local_id = au.atendimento_local_id
     atendimento.atendimento_tipo_id = au.atendimento_tipo_id
-    avalor.valor = @acompanhamento.valor_sessao.to_f / 10000.0
-    avalor.taxa_porcentagem_interna = auvalor.taxa_porcentagem_interna.to_f / 10000.0
-    avalor.taxa_porcentagem_externa = auvalor.taxa_porcentagem_externa.to_f / 10000.0
+    avalor.valor = @acompanhamento.valor_sessao.to_f
+    avalor.taxa_porcentagem_interna = auvalor.taxa_porcentagem_interna.to_f
+    avalor.taxa_porcentagem_externa = auvalor.taxa_porcentagem_externa.to_f
 
     atendimento.save!
     avalor.save!
@@ -247,9 +247,9 @@ class AcompanhamentosController < ApplicationController
     atendimento.modalidade_id = au.modalidade_id
     atendimento.atendimento_local_id = au.atendimento_local_id
     atendimento.atendimento_tipo_id = au.atendimento_tipo_id
-    avalor.valor = @acompanhamento.valor_sessao.to_f / 100.0
-    avalor.taxa_porcentagem_interna = (auvalor.taxa_porcentagem_interna.to_f || 0) / 100.0
-    avalor.taxa_porcentagem_externa = (@acompanhamento.atendimento_plataforma.taxa_atendimento || auvalor.taxa_porcentagem_externa || 0).to_f / 100.0
+    avalor.valor = @acompanhamento.valor_sessao.to_f
+    avalor.taxa_porcentagem_interna = (auvalor.taxa_porcentagem_interna.to_f || 0)
+    avalor.taxa_porcentagem_externa = (@acompanhamento.atendimento_plataforma.taxa_atendimento || auvalor.taxa_porcentagem_externa || 0).to_f
 
 
     if atendimento.save!

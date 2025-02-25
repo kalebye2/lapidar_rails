@@ -269,4 +269,15 @@ class ApplicationController < ActionController::Base
   def nome_documento
     "#{nome_do_site&.parameterize}_#{params[:controller]}_#{@params.to_h.compact.map { |k,v| "#{k&.to_s}=#{v&.to_s}"}.join "_"}__#{Time.current.to_fs(:number)}"
   end
+
+  def compor_valor_monetario_de_virgulas valor
+      valor_final = valor&.to_s || "0,00"
+      valor_final += "," unless valor_final.include?(",")
+      valor_final.gsub!(".", "")
+      index_virgula = valor_final.index(",")
+      valor_decomposto = {}
+      valor_decomposto[:inteiros] = valor_final[..index_virgula - 1]
+      valor_decomposto[:centavos] = ((valor_final[index_virgula + 1..]) + "00")[..1]
+      valor_final = "#{valor_decomposto[:inteiros]}#{valor_decomposto[:centavos]}".to_i
+  end
 end

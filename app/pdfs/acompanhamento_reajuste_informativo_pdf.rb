@@ -64,10 +64,10 @@ class AcompanhamentoReajusteInformativoPdf < BasePdf
 
     move_down 24 * 3
 
-    text "#{@acompanhamento_reajuste.profissional.cidade}, #{render_data_extenso @acompanhamento_reajuste.data_negociacao}", align: :center
+    text "#{@acompanhamento_reajuste.acompanhamento.cidade}, #{render_data_extenso @acompanhamento_reajuste.data_negociacao}", align: :center
   end
 
   def footer
-    text_box "E-mail: mtsbrgsrbr@yandex.com\nFone: #{@acompanhamento_reajuste.profissional.render_fone}", at: [bounds.left, 0], height: 100, width: 1000, size: 10
+    text_box "E-mail: #{@acompanhamento_reajuste.profissional.email}\nFone: #{@acompanhamento_reajuste.profissional.render_fone}", at: [bounds.left, 0], height: 100, width: 1000, size: 10
   end
 end

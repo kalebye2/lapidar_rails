@@ -26,24 +26,7 @@ class RecebimentosController < ApplicationController
   end
 
   def index
-    recebimento_por_periodo_params
-
-    if params[:profissional].present?
-      @recebimentos = @recebimentos.do_profissional_com_id(params[:profissional])
-    end
-
-    if params[:pessoa].present?
-      @pessoa = params[:pessoa]
-      @recebimentos = @recebimentos.query_pessoa_like_nome(params[:pessoa])
-    end
-
-    if params[:pagante].present?
-      @recebimentos = @recebimentos.query_pagante_like_nome(params[:pagante])
-    end
-
-    if params[:modalidade].present?
-      @recebimentos = @recebimentos.da_modalidade_com_id(params[:modalidade])
-    end
+    recebimentos_por_params
 
     profissional = @profissional || (Profissional.find(params[:profissional]) unless params[:profissional].blank?) || usuario_atual.profissional
     modalidade = PagamentoModalidade.find(params[:modalidade]) unless params[:modalidade].blank?
@@ -154,6 +137,9 @@ class RecebimentosController < ApplicationController
       erro403
       return
     end
+
+    valor_final = compor_valor_monetario_de_virgulas params[:recebimento][:valor_real]&.to_s || "0,00"
+    params[:recebimento][:valor] = valor_final
     @recebimento = Recebimento.new(recebimento_params)
     @recebimento.usuario = usuario_atual
     if @acompanhamento then @recebimento.acompanhamento = @acompanhamento end
@@ -198,6 +184,9 @@ class RecebimentosController < ApplicationController
       end
     end
     respond_to do |format|
+      valor_final = compor_valor_monetario_de_virgulas params[:recebimento][:valor_real]&.to_s || "0,00"
+      params[:recebimento][:valor] = valor_final if valor_final != @recebimento.valor
+
       if @recebimento.update(recebimento_params)
         if hx_request?
           format.html do
@@ -218,10 +207,12 @@ class RecebimentosController < ApplicationController
   def destroy
     @recebimento.destroy
 
+    recebimentos_por_params
+
     respond_to do |format|
       format.html do
         if hx_request?
-          recebimentos_por_params
+          # recebimentos_por_params
           render partial: "recebimentos/tabela", locals: { recebimentos: @recebimentos, ano: @ano, mes: @mes }
         else
           redirect_to recebimentos_url
@@ -304,5 +295,27 @@ class RecebimentosController < ApplicationController
         valor: acompanhamento.valor_a_cobrar(periodo),
       } : nil
     }.compact
+  end
+
+  def recebimentos_por_params
+    recebimento_por_periodo_params
+
+    if params[:profissional].present?
+      @recebimentos = @recebimentos.do_profissional_com_id(params[:profissional])
+    end
+
+    if params[:pessoa].present?
+      @pessoa = params[:pessoa]
+      @recebimentos = @recebimentos.query_pessoa_like_nome(params[:pessoa])
+    end
+
+    if params[:pagante].present?
+      @recebimentos = @recebimentos.query_pagante_like_nome(params[:pagante])
+    end
+
+    if params[:modalidade].present?
+      @recebimentos = @recebimentos.da_modalidade_com_id(params[:modalidade])
+    end
+
   end
 end
