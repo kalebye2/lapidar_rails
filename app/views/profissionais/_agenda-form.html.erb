@@ -23,6 +23,30 @@
         <input type="time" name="profissional_horario[horario]">
       </div>
 
+      <div class="field">
+        <label for="profissional_horario[atendimento_local_id]">
+          Local de atendimento
+        </label>
+        <select name="profissional_horario[atendimento_local_id]">
+          <option value="">Sem local definido</option>
+          <%= AtendimentoLocal.all.each do |atendimento_local| %>
+            <option value="<%= atendimento_local.id %>"><%= atendimento_local.default_display %></option>
+          <% end %>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="profissional_horario[atendimento_plataforma_id]">
+          Plataforma de atendimento
+        </label>
+        <select name="profissional_horario[atendimento_plataforma_id]">
+          <option value="">Sem plataforma definida</option>
+          <%= AtendimentoPlataforma.all.each do |atendimento_plataforma| %>
+            <option value="<%= atendimento_plataforma.id %>"><%= atendimento_plataforma.default_display %></option>
+          <% end %>
+        </select>
+      </div>
+
       <input type="submit" value="Registrar horário">
     <% end %>
   </div>

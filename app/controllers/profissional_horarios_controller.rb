@@ -91,7 +91,7 @@ class ProfissionalHorariosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def profissional_horario_params
-      params.require(:profissional_horario).permit(:profissional_id, :semana_dia_id, :horario)
+      params.require(:profissional_horario).permit(:profissional_id, :semana_dia_id, :horario, :atendimento_local_id, :atendimento_plataforma_id)
     end
 
     def validar_usuario

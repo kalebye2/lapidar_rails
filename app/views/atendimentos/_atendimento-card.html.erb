@@ -2,7 +2,10 @@
   <%= link_to acompanhamento_path(atendimento.acompanhamento, anchor: dom_id(atendimento)), class: "atendimento-link" do %>
     <div class="atendimento-card atendimento-<%= atendimento.status.parameterize %> <%= if atendimento.reagendado? then "atendimento-reagendado" end %>">
       <p>
-      <strong><%= atendimento.acompanhamento.pessoa.nome_e_sobrenome %><%= atendimento.pessoa.nome_social&.insert(0, " (")&.insert(-1, ")") %></strong>
+      <strong>
+        <%= atendimento.acompanhamento.pessoa.nome_chamada_sobrenome %>
+        <%# <%= atendimento.pessoa.nome_social&.insert(0, " (")&.insert(-1, ")") %1> %>
+      </strong>
       <br />
       <span style="font-size: .9em;"><%= render_hora_brasil atendimento.horario_inicio_verdadeiro %>&ndash;<%= render_hora_brasil atendimento.horario_fim_verdadeiro %></span>
       <br />

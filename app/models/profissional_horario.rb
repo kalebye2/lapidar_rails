@@ -1,6 +1,8 @@
 class ProfissionalHorario < ApplicationRecord
   belongs_to :semana_dia
   belongs_to :profissional
+  belongs_to :atendimento_local, optional: true
+  belongs_to :atendimento_plataforma, optional: true
 
   default_scope { order(semana_dia_id: :asc, horario: :asc) }
 

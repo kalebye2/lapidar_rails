@@ -150,7 +150,7 @@
   <th>Com quantos meses recebeu alimentação sólida</th>
   <td id="<%= curr_id %>">
     <% if @usuario %>
-      <input type="number" name="alimentacao[solida_meses]" placeholder="Insira o número" value="<%= alimentacao.solida_meses %>" hx-patch="<%= path %>" hx-select="#<% curr_id %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML">
+      <input type="number" name="alimentacao[solida_meses]" placeholder="Insira o número" value="<%= alimentacao.solida_meses %>" hx-patch="<%= path %>" hx-select="#<%= curr_id %>" hx-target="#<%= curr_id %>" hx-swap="outerHTML">
     <% else %>
       <%= deixar_no_plural alimentacao.solida_meses, 'mês', 'meses' %>
     <% end %>

@@ -203,7 +203,15 @@ class Profissional < ApplicationRecord
         atendimento_do_horario = atendimentos_do_dia.where(horario: horario.horario, data: data).or(atendimentos_do_dia.where(horario_reagendamento: horario.horario, data_reagendamento: data)).or(atendimentos_do_dia.where(horario_reagendamento: horario.horario, data: data)).or(atendimentos_do_dia.where(horario: horario.horario, data_reagendamento: data)).map do |atendimento|
           atendimento if atendimento.horario_inicio_verdadeiro == horario.horario && atendimento.data_inicio_verdadeira == data
         end.compact
-        agenda_final[data] << {horario: horario.horario, de_folga: profissional_folgas.no_periodo(data).first, atendendo: atendimento_do_horario, reservado: horario.acompanhamento_horarios.de_acompanhamentos_em_andamento} if data.wday == horario.semana_dia_id
+        agenda_final[data] << {
+          profissional_horario: horario,
+          horario: horario.horario,
+          de_folga: profissional_folgas.no_periodo(data).first,
+          atendendo: atendimento_do_horario,
+          reservado: horario.acompanhamento_horarios.de_acompanhamentos_em_andamento,
+          atendimento_local: horario.atendimento_local,
+          atendimento_plataforma: horario.atendimento_plataforma,
+        } if data.wday == horario.semana_dia_id
       }
     }
     agenda_final

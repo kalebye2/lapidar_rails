@@ -185,7 +185,7 @@ class Atendimento < ApplicationRecord
   end
 
   def informacoes_com_pessoa
-    "#{pessoa.nome_completo} - #{data.strftime('%d/%m/%Y')} às #{horario.strftime('%Hh%M')}"
+    "#{pessoa.nome_completo} - #{data_inicio_verdadeira.strftime('%d/%m/%Y')} às #{horario_inicio_verdadeiro.strftime('%Hh%M')}"
   end
 
   def informacoes_sem_pessoa

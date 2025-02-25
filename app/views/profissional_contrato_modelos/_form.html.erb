@@ -1,4 +1,5 @@
 <% if profissional_contrato_modelo.presence %>
+  <div class="grid-2" style="position:relative;">
   <%= form_for profissional_contrato_modelo, local: true do |form| %>
     <div class="field">
     <%= form.label :titulo, "Título" %>
@@ -26,4 +27,31 @@
       <%= form.submit "Salvar" %>
     </div>
   <% end %>
+
+  <div style="position:fixed;right:7em;top:20%;z-index:10;width:30%;overflow-y:scroll;height:50%;background-color:var(--main-color);padding:1em;color:var(--main-light-color);">
+    <h3>Propriedades de acompanhamentos</h3>
+    <ul>
+      <% Acompanhamento.instance_public_methods(:proxima, :primeira, :primeiro, :ultima, :ultimo, :tempo, :render, :cobrar, :liquido, :ressarcir).map { |mname| mname.to_s.index("valor") ? "#{mname}_real" : mname }.map(&:to_sym).each do |method_name| %>
+        <li>
+          {% <%= method_name %> %}
+        </li>
+      <% end %>
+    </ul>
+
+    <h3>Associações de acompanhamentos</h3>
+    <ul>
+      <% Acompanhamento.foreign_key_classes.each do |pkey, klass| %>
+        <li>
+          {% <%= assoc = Acompanhamento.foreign_key_associations[pkey] %> %}
+          <ul>
+            <% Object.const_get(klass).instance_public_methods(:cobrar, :financeiro, :instrumento, :parente, :atendimento, :recebimento, :horario, :username, :method_missing, :cliente, :contrato, :agenda, :folga).each do |method_name| %>
+              <li>
+                {% <%= assoc %>.<%= method_name %> %}
+              </li>
+            <% end %>
+          </ul>
+        </li>
+      <% end %>
+    </ul>
+  </div>
 <% end %>

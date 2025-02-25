@@ -10,6 +10,30 @@
       <%== "<br>" * 2 %>
       <%= hx_form get: agenda_profissional_path, target: "##{id}", select: "##{id}" do %>
         <input type="date" id="start_date" name="start_date" value="<%= dias_da_semana.first %>">
+
+        <label for="atendimento_local" style="font-size: 1rem;">
+          Local
+        </label>
+        <select name="atendimento_local">
+          <option value="" <%== "selected" if params[:atendimento_plataforma].blank? %>>Qualquer um</option>
+          <% locais_disponiveis = mostrar_pacientes ? AtendimentoLocal.all : AtendimentoLocal.publicos %>
+          <% locais_disponiveis.each do |atendimento_local| %>
+            <option value="<%= atendimento_local.id %>" <%= "selected" if params[:atendimento_local] == atendimento_local.id %>><%= atendimento_local.default_display %></option>
+          <% end %>
+        </select>
+
+        <label for="atendimento_plataforma" style="font-size:1rem;">
+          Plataforma
+        </label>
+        <select name="atendimento_plataforma">
+          <option value="" <%== "selected" if params[:atendimento_plataforma].blank? %>>Qualquer um</option>
+          <%# <% plataformas_disponiveis = mostrar_pacientes ? AtendimentoPlataforma.all : AtendimentoPlataforma.publicos %1> %>
+          <% plataformas_disponiveis = AtendimentoPlataforma.all %>
+          <% plataformas_disponiveis.each do |atendimento_plataforma| %>
+            <option value="<%= atendimento_plataforma.id %>" <%= "selected" if params[:atendimento_plataforma] == atendimento_plataforma.id %>><%= atendimento_plataforma.default_display %></option>
+          <% end %>
+        </select>
+
         <input type="submit" value="Verificar semana" style="font-size:1rem;">
       <% end %>
     </caption>
@@ -67,6 +91,12 @@
                   <% atendimentos_do_horario.each do |atendimento| %>
                     <%= link_to atendimento.paciente.nome_chamada, atendimento.acompanhamento, style: hstyle %>
                   <% end %>
+                <% end %>
+
+                <% if mostrar_pacientes %>
+                  <%= [horario[:atendimento_local]&.descricao, horario[:atendimento_plataforma]&.nome].compact.join " - ".html_safe %>
+                <% else %>
+                  <%= horario[:atendimento_local]&.descricao %>
                 <% end %>
 
                 <% if horario[:reservado].count > 0 %>
