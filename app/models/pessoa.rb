@@ -1,4 +1,5 @@
 class Pessoa < ApplicationRecord
+
   require "csv"
   include ApplicationHelper
   
@@ -167,6 +168,10 @@ class Pessoa < ApplicationRecord
 
   def nome_chamada_abreviado_meio
     [abreviar([nome_chamada, nome_do_meio].compact.join(" "), ". ").insert(-1, "."), sobrenome].join " "
+  end
+
+  def nome_chamada_sobrenome
+    [nome_chamada, sobrenome].join " "
   end
 
   def render_cpf
