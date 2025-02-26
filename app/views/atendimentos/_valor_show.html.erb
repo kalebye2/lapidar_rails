@@ -16,28 +16,42 @@
 
       <div class="field">
         <label for="atendimento[atendimento_valor_attributes][valor_real]">Valor (R$)</label>
-        <input type="text" value="<%= valores[:valor] %>" name="atendimento[atendimento_valor_attributes][valor_real]" data-type="currency">
+        <input type="text" style="min-width:10em;" value="<%= number_to_currency atendimento_valor.valor_real, unit: "", separator: ",", delimiter: "." %>" name="atendimento[atendimento_valor_attributes][valor_real]" data-type="currency">
       </div>
 
       <div class="field">
         <label for="atendimento[atendimento_valor_attributes][desconto]">Desconto (R$)</label>
-        <input type="text" value="<%= valores[:desconto] %>" name="atendimento[atendimento_valor_attributes][desconto_real]">
+        <input type="text" style="min-width:10em;" value="<%= number_to_currency atendimento_valor.desconto_real, unit: "", separator: ",", delimiter: "." %>" name="atendimento[atendimento_valor_attributes][desconto_real]">
       </div>
 
       <div class="field">
         <label for="atendimento[atendimento_valor_attributes][taxa_porcentagem_externa]">Taxa externa (%)</label>
-        <input type="text" value="<%= valores[:taxa_porcentagem_externa] %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_externa_real]">
+        <input type="text" style="min-width:10em;" value="<%= number_to_currency atendimento_valor.taxa_porcentagem_externa_real, unit: "", separator: ",", delimiter: "." %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_externa_real]">
+        (<%= render_dinheiro_centavos atendimento_valor.taxa_externa %>)
       </div>
 
       <div class="field">
         <label for="atendimento[atendimento_valor_attributes][taxa_porcentagem_interna]">Taxa interna (%)</label>
-        <input type="text" value="<%= valores[:taxa_porcentagem_interna] %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_interna_real]">
+        <input type="text" style="min-width:10em;" value="<%= number_to_currency atendimento_valor.taxa_porcentagem_interna_real, unit: "", separator: ",", delimiter: "." %>" name="atendimento[atendimento_valor_attributes][taxa_porcentagem_interna_real]">
+        (<%= render_dinheiro_centavos atendimento_valor.taxa_interna %>)
       </div>
 
       <div class="action">
         <input type="submit" value="Atualizar">
       </div>
+
     </form>
+
+    <table>
+      <tr>
+        <td>Taxas</td>
+        <td><%= render_dinheiro_centavos atendimento_valor.taxa_externa + atendimento_valor.taxa_interna %></td>
+      </tr>
+      <tr>
+        <td>Líquido</td>
+        <td><%= render_dinheiro_centavos atendimento_valor.liquido %></td>
+      </tr>
+    </table>
 <% else %>
   <%= render_dinheiro_centavos atendimento.atendimento_valor.valor %>
 <% end %>

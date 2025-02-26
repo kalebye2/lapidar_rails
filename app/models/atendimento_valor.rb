@@ -4,7 +4,7 @@ class AtendimentoValor < ApplicationRecord
   include Monetizavel
   extend Monetizavel
 
-  Monetizavel.de_centavos_pra_real :valor, :desconto, :taxa_externa, :taxa_interna
+  Monetizavel.de_centavos_pra_real :valor, :desconto, :taxa_externa, :taxa_interna, :taxa_porcentagem_externa, :taxa_porcentagem_interna
 
   belongs_to :atendimento, foreign_key: :atendimento_id, primary_key: :id, inverse_of: :atendimento_valor
 
