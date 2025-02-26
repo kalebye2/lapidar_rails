@@ -271,7 +271,7 @@ class ApplicationController < ActionController::Base
   end
 
   def compor_valor_monetario_de_virgulas valor
-      valor_final = valor&.to_s || "0,00"
+      valor_final = valor&.to_s&.gsub(/[\$a-zA-Z\s]/, "") || "0,00"
       valor_final += "," unless valor_final.include?(",")
       valor_final.gsub!(".", "")
       index_virgula = valor_final.index(",")
