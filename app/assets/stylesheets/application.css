@@ -469,7 +469,7 @@ input[type="checkbox"] {
 	height: var(--size);
 	width: var(--size);
 	background-color: lightgray;
-	border-radius: 1em;
+	border-radius: 0em;
 	cursor: pointer;
 
 	& + label {
