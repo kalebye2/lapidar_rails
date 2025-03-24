@@ -109,7 +109,7 @@ class ProfissionalFolgasController < ApplicationController
     end
 
     def validar_usuario
-      if !(usuario_atual.secretaria? || usuario_atual.corpo_clinico?)
+      if !(usuario_atual&.secretaria? || usuario_atual&.corpo_clinico?)
         erro403
         return
       end

@@ -38,10 +38,12 @@
     <% end %>
   <% end %>
 
-  <%= link_to profissional_folgas_path do %>
-    <div class="card profissional-folgas-card">
-      <h2 class="icon-lifebuoy">Folgas</h2>
-      <p>Visualize as folgas dos profisionais</p>
-    </div>
+  <% if usuario_atual %>
+    <%= link_to profissional_folgas_path do %>
+      <div class="card profissional-folgas-card">
+        <h2 class="icon-lifebuoy">Folgas</h2>
+        <p>Visualize as folgas dos profisionais</p>
+      </div>
+    <% end %>
   <% end %>
 </div>
