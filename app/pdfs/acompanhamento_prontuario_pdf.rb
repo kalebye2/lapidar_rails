@@ -148,7 +148,7 @@ class AcompanhamentoProntuarioPdf < BasePdf
         markup "<h2>Relatos de instrumentos aplicados</h2>", {heading2: {style: :bold, size: 16}}
         atendimento.instrumento_relatos.map do |instrumento_relato|
           markup "<h3>#{instrumento_relato.instrumento.nome}</h3>", {heading3: {style: :italic, size: 14}}
-          markup instrumento_relato.dados(nome_instrumento: false).compact.map { |k,v| "<b>#{k.to_s.humanize}</b>: #{v}" }.join("\n<br>\n")
+          markup instrumento_relato.dados(nome_instrumento: false, identificação: false).compact.map { |k,v| "<b>#{k.to_s.humanize}</b>: #{v}" }.join("\n<br>\n")
         end
     end
   end

@@ -28,11 +28,11 @@ class InstrumentoRelato < ApplicationRecord
     joins(:atendimento).order("atendimentos.data" => :desc, "atendimentos.horario" => :desc)
   end
 
-  def dados nome_instrumento: true, sigla_instrumento: true, formato_data: "%Y-%m-%d", formato_hora: "%H:%M"
+  def dados nome_instrumento: true, sigla_instrumento: true, formato_data: "%Y-%m-%d", formato_hora: "%H:%M", identificação: true
     {
       nome_instrumento: nome_instrumento ? instrumento.nome : nil,
       sigla_instrumento: sigla_instrumento ? instrumento.sigla : nil,
-      identificação: {
+      identificação: !identificação ? nil : {
         aplicador: profissional.descricao_completa,
         paciente: pessoa.nome_completo,
         responsável: atendimento.responsavel&.nome_completo,
@@ -46,6 +46,7 @@ class InstrumentoRelato < ApplicationRecord
       resultados: Kramdown::Document.new(resultados.to_s).to_html.presence,
       observações: Kramdown::Document.new(observacoes.to_s).to_html.presence,
     }
+
   end
 
   def para_csv formato_data: "%Y-%m-%d", formato_hora: "%H:%M"
