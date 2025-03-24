@@ -1,4 +1,8 @@
-<table>
+<div class="text-center">
+<%= link_to "Adicionar", admin_new_path(table: table_name), class: "button icon-plus" %>
+</div>
+
+<table id="tabela_<%= table_name %>">
   <% klass = eval("#{table_name.classify}") %>
   <thead>
     <tr style="position:sticky;top:0;z-index:2;">
@@ -8,23 +12,28 @@
           <%= klass.foreign_keys.include?(column_name) ? klass.foreign_key_associations[column_name] : column_name %>
         </th>
       <% end %>
+      <th>Opções</th>
     </tr>
   </thead>
   <tbody>
-    <% klass.all.limit(params[:limit] || 25).offset(params[:offset] || 0).each do |element| %>
+    <% klass.all.limit(@limit || 25).offset((@page || 0) * @limit).each do |element| %>
       <tr>
+        <% id = element[klass.primary_key] %>
+        <% pkey = klass.primary_key %>
+
         <% element.attributes.except!("password_digest").each do |k,v| %>
-          <% id = element[klass.primary_key] %>
-          <% pkey = klass.primary_key %>
           <td id="<%= k %>_<%= element[element.class.primary_key] %>">
             <% if element.foreign_keys.include?(k) %>
               <% assoc = element.belongs_to_from_foreign_key k %>
-              <%= attribute_edit?(id, k) ? edit_assoc(table_name, id, k, assoc) : display_assoc(table_name, id, k, assoc) %>
+              <%= attribute_edit?(id, k) ? edit_assoc_htmx(table_name, id, k, assoc, blank_option: assoc.class.default_assoc_blank_option) : display_assoc(table_name, id, k, assoc) %>
             <% else %>
-              <%= attribute_edit?(id, k) ? edit_attribute(table_name, id, k, v) : display_attribute(table_name, id, k, v) %>
+              <%= attribute_edit?(id, k) ? edit_attribute_htmx(table_name, id, k, v) : display_attribute(table_name, id, k, v) %>
             <% end %>
           </td>
         <% end %>
+        <td>
+          <%= hx_link "Excluir", admin_destroy_path(table: table_name, id: id, authenticity_token: form_authenticity_token.to_s), class: "icon-bin", verb: :delete, select: "#tabela_#{table_name}", target: "#tabela_#{table_name}", swap: "outerHTML" %>
+        </td>
       </tr>
     <% end %>
   </tbody>

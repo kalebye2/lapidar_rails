@@ -4,6 +4,8 @@ class ApplicationRecord < ActiveRecord::Base
 
   @atributos_de_templates_publicos = []
 
+  @default_assoc_blank_option = "NENHUM"
+
   # include ApplicationHelper
   include ActionView::Helpers
   
@@ -278,6 +280,14 @@ class ApplicationRecord < ActiveRecord::Base
       }.compact.any?
       mname unless has_pattern
     }.compact
+  end
+
+  def self.default_assoc_blank_option
+    @default_assoc_blank_option
+  end
+
+  def self.set_default_assoc_blank_option value
+    @default_assoc_blank_option = value.to_s
   end
 
   private

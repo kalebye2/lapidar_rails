@@ -7,4 +7,6 @@ class ProfissionalFuncao < ApplicationRecord
   def abreviado
     funcao[..2]
   end
+
+  set_default_assoc_blank_option "TODOS"
 end

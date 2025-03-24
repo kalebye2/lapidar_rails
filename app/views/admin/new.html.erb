@@ -1,0 +1,25 @@
+<h1>Novo <%= table_name.singularize.humanize %></h1>
+<%= link_to "Voltar", admin_root_path(table: table_name), class: "button icon-previous" %>
+
+<%= element.attributes %>
+<%= form_with url: admin_create_path(table: table_name) do |form| %>
+  <% element.attributes.except!("password_digest").each do |k,v| %>
+    <% pkey = klass.primary_key %>
+    <% id = element[pkey] %>
+    <% if element.foreign_keys.include?(k) %>
+      <% assoc = element.belongs_to_from_foreign_key(k) %>
+      <div class="field">
+        <%= edit_assoc(table_name, id, k, assoc) %>
+      </div>
+    <% else %>
+      <div class="field">
+        <% if k == pkey %>
+          <span class="important">IDENTIFICADOR</span>
+        <% end %>
+        <%= edit_attribute(table_name, id, k, v) %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%= form.submit %>
+<% end %>

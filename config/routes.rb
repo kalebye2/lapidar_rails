@@ -273,9 +273,12 @@ Rails.application.routes.draw do
   namespace :admin do
     root to: "admin#index"
     post "/update", to: "admin#update"
+    get "/new", to: "admin#new"
+    post "/create", to: "admin#create"
     ActiveRecord::Base.connection.tables.each do |t|
       resources t.to_sym
     end
+    delete "/destroy", to: "admin#destroy"
     # AdminController.paths.each do |m|
     #   resources m.to_sym
       #get m.to_sym, to: "admin##{m}", as: m.to_s

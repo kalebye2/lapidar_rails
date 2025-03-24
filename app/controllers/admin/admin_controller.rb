@@ -2,6 +2,8 @@ class Admin::AdminController < ApplicationController
 
   def index
     @table_name = params[:table]
+    @limit = params[:limit] || 25
+    @page = params[:page] || 0
     render template: "admin/index"
   end
 
@@ -30,10 +32,36 @@ class Admin::AdminController < ApplicationController
     table = params[:table]
     klass = Object.const_get(table.classify)
     @object = klass
+    render template: "admin/new", locals: {table_name: table, element: @object.new, klass: @object}
   end
   
   def create
+    table_name = params[:table]
+    klass = Object.const_get(table_name.classify)
+    @element = klass.new(params[table_name.singularize.underscore].permit(klass.attribute_names))
     
+    respond_to do |format|
+      if @element.save
+        format.html { redirect_to admin_root_path(table: table_name), notice: "Registro criado em #{table_name}" }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def destroy
+    table_name = params[:table]
+    @element = Object.const_get(table_name.classify).find(params[:id])&.destroy
+
+    respond_to do |format|
+      format.html do
+        if hx_request?
+          index
+        else
+          redirect_to admin_root_path(table: table_name, notice: "#{table_name.humanize} destruído com sucesso.")
+        end
+      end
+    end
   end
 
   private

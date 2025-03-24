@@ -1,7 +1,7 @@
 <% usuario = usuario_atual.secretaria? || usuario_atual.profissional == acompanhamento.profissional %>
 <% acompanhamento = acompanhamento || nil %>
 <% atendimentos = atendimentos || acompanhamento&.atendimentos %>
-<% if acompanhamento != nil %>
+<% if acompanhamento %>
   <table class="tabela" id="tabela-caso-resumo">
     <caption>
       Informações do acompanhamento<br />
