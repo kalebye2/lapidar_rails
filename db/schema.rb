@@ -935,9 +935,13 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "pessoa_responsaveis", "pessoas", column: "pessoa_dependente_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_responsaveis", "pessoas", column: "pessoa_responsavel_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoas", "civil_estados", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoas", "civil_estados", on_update: :cascade, on_delete: :nullify
   add_foreign_key "pessoas", "instrucao_graus", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoas", "instrucao_graus", on_update: :cascade, on_delete: :nullify
   add_foreign_key "pessoas", "paises", column: "nascimento_pais_id", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoas", "paises", column: "nascimento_pais_id", on_update: :cascade, on_delete: :nullify
   add_foreign_key "pessoas", "paises", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoas", "paises", on_update: :cascade, on_delete: :nullify
   add_foreign_key "profissionais", "pessoas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissionais", "profissional_funcoes", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissionais", "profissional_funcoes", on_update: :cascade, on_delete: :nullify
