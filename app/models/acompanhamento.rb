@@ -290,7 +290,8 @@ class Acompanhamento < ApplicationRecord
   end
 
   def proxima_data_de_atendimento_a_partir_de_hoje
-    semanas_pra_passar = 4 / num_sessoes
+    tempo_semanas = num_sessoes == 0 ? 4 : num_sessoes
+    semanas_pra_passar = 4 / tempo_semanas
     horarios_do_acompanhamento = acompanhamento_horarios.order(:semana_dia_id)
     primeiro_dia = Date.current + (semanas_pra_passar - 1).week
     proximos_dias_desta_semana = (primeiro_dia..(primeiro_dia + 1.week)).map { |dia| [dia.wday, dia] }.to_h

@@ -200,21 +200,26 @@ class AcompanhamentosController < ApplicationController
       redirect_to acompanhamento_path(@acompanhamento), notice: "Não senhor!"
       return
     end
-    semanas_pra_passar = 4 / @acompanhamento.num_sessoes
+    tempo_semanas = @acompanhamento.num_sessoes == 0 ? 4 : @acompanhamento.num_sessoes
+    semanas_pra_passar = 4 / tempo_semanas
 
     au = @acompanhamento.atendimentos.em_ordem.last
     atendimento = @acompanhamento.atendimentos.new
     auvalor = au.atendimento_valor
-    avalor = atendimento.build_atendimento_valor
+    avalor = atendimento.build_atendimento_valor if auvalor
+
     atendimento.data = au.data + semanas_pra_passar.week
     atendimento.horario = au.horario
     atendimento.horario_fim = au.horario_fim
     atendimento.modalidade_id = au.modalidade_id
     atendimento.atendimento_local_id = au.atendimento_local_id
     atendimento.atendimento_tipo_id = au.atendimento_tipo_id
-    avalor.valor = @acompanhamento.valor_sessao.to_f
-    avalor.taxa_porcentagem_interna = auvalor.taxa_porcentagem_interna.to_f
-    avalor.taxa_porcentagem_externa = auvalor.taxa_porcentagem_externa.to_f
+
+    if auvalor
+      avalor.valor = @acompanhamento.valor_sessao.to_f
+      avalor.taxa_porcentagem_interna = auvalor.taxa_porcentagem_interna.to_f
+      avalor.taxa_porcentagem_externa = auvalor.taxa_porcentagem_externa.to_f
+    end
 
     atendimento.save!
     avalor.save!
@@ -230,12 +235,14 @@ class AcompanhamentosController < ApplicationController
       redirect_to acompanhamento_path(@acompanhamento), notice: "Não senhor!"
       return
     end
-    semanas_pra_passar = 4 / @acompanhamento.num_sessoes
+
+    tempo_semanas = @acompanhamento.num_sessoes == 0 ? 4 : @acompanhamento.num_sessoes
+    semanas_pra_passar = 4 / tempo_semanas
 
     au = @acompanhamento.atendimentos.em_ordem.last
     atendimento = @acompanhamento.atendimentos.new
     auvalor = au.atendimento_valor
-    avalor = atendimento.build_atendimento_valor
+    avalor = atendimento.build_atendimento_valor if auvalor
 
     proxima_semana = (Date.current + semanas_pra_passar.week).all_week.map { |d| {d.wday => d} }
     proxima_data = proxima_semana[au.data.wday].values.first
@@ -247,9 +254,12 @@ class AcompanhamentosController < ApplicationController
     atendimento.modalidade_id = au.modalidade_id
     atendimento.atendimento_local_id = au.atendimento_local_id
     atendimento.atendimento_tipo_id = au.atendimento_tipo_id
-    avalor.valor = @acompanhamento.valor_sessao.to_f
-    avalor.taxa_porcentagem_interna = (auvalor.taxa_porcentagem_interna.to_f || 0)
-    avalor.taxa_porcentagem_externa = (@acompanhamento.atendimento_plataforma.taxa_atendimento || auvalor.taxa_porcentagem_externa || 0).to_f
+
+    if auvalor
+      avalor.valor = @acompanhamento.valor_sessao.to_f
+      avalor.taxa_porcentagem_interna = (auvalor&.taxa_porcentagem_interna&.to_f || 0)
+      avalor.taxa_porcentagem_externa = (@acompanhamento.atendimento_plataforma.taxa_atendimento || auvalor&.taxa_porcentagem_externa || 0).to_f
+    end
 
 
     if atendimento.save!
