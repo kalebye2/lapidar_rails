@@ -282,7 +282,7 @@ class Atendimento < ApplicationRecord
 
   def em_breve
     if !horario_inicio_verdadeiro.nil?
-      data_inicio_verdadeira == Date.current && horario_inicio_verdadeiro.hour == Time.current.hour + 1
+      data_inicio_verdadeira == Date.current && Time.current - horario_inicial > -3600 && Time.current - horario_inicial < 0
     end
   end
 
