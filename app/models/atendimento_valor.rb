@@ -49,7 +49,7 @@ class AtendimentoValor < ApplicationRecord
 #     self.taxa_porcentagem_interna = mudar[:taxa_porcentagem_interna] if self.taxa_porcentagem_interna_changed?
   end
 
-  scope :em_ordem, -> (crescente = true) { order(data: crescente ? :asc : :desc) }
+  scope :em_ordem, -> (crescente = true) { order("atendimentos.data" => crescente ? :asc : :desc) }
   scope :de_atendimentos_realizados, -> { where(atendimento: {presenca: true}) }
   scope :de_atendimentos_nao_realizados, -> { where(atendimento: {presenca: [false, nil]}) }
   scope :do_periodo, -> (periodo = Date.current.all_month) { joins(:atendimento).where(atendimento: Atendimento.do_periodo(periodo)) }

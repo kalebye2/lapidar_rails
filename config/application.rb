@@ -77,6 +77,6 @@ module Lapidar
     config.biblioteca_disponivel = false
 
     # usar timestamps pra fazer os ids
-    config.timestamp_id = true
+    config.timestamp_id = false
   end
 end
