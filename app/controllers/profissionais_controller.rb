@@ -175,12 +175,27 @@ class ProfissionaisController < ApplicationController
   end
 
   def agenda
+    @atendimento_plataforma = AtendimentoPlataforma.find(params[:atendimento_plataforma]) if params[:atendimento_plataforma].presence
     @profissional_horarios = ProfissionalHorario.where(profissional: @profissional)
+    if @atendimento_plataforma
+      @profissional_horarios = @profissional_horarios.where(atendimento_plataforma: @atendimento_plataforma)
+    end
     @dias_da_semana = (params[:start_date] || Date.current).to_date.all_week
 
-    if hx_request? && !params[:total].present?
-      render partial: "tabela-agenda", locals: { profissional: @profissional, dias_da_semana: @dias_da_semana }
-      return
+    respond_to do |format|
+      format.html do
+        if hx_request? && !params[:total].present?
+          render partial: "tabela-agenda", locals: { profissional: @profissional, dias_da_semana: @dias_da_semana, profissional_horarios: @profissional_horarios }
+          return
+        end
+      end
+
+      format.csv do
+        final = @profissional_horarios.map { |horario| [horario.id, horario.profissional.default_display, horario.semana_dia.default_display, horario.horario.strftime("%H:%M"), horario.atendimento_plataforma.default_display, horario.atendimento_local.default_display] }
+        # render html: "#{@profissional_horarios.map(&:attributes)}"
+        # TODO
+        render html: "#{final}"
+      end
     end
   end
 

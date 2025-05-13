@@ -15,7 +15,7 @@
           Local
         </label>
         <select name="atendimento_local">
-          <option value="" <%== "selected" if params[:atendimento_plataforma].blank? %>>Qualquer um</option>
+          <option value="" <%== "selected" if params[:atendimento_local].blank? %>>Qualquer um</option>
           <% locais_disponiveis = mostrar_pacientes ? AtendimentoLocal.all : AtendimentoLocal.publicos %>
           <% locais_disponiveis.each do |atendimento_local| %>
             <option value="<%= atendimento_local.id %>" <%= "selected" if params[:atendimento_local] == atendimento_local.id %>><%= atendimento_local.default_display %></option>
@@ -57,6 +57,15 @@
         <% dias_da_semana.each do |dia| %>
           <td>
             <% agenda = profissional.agenda(dia)[dia] %>
+
+            <% if @atendimento_plataforma %>
+              <% agenda.map! { |horario| horario if horario[:atendimento_plataforma] == @atendimento_plataforma }.compact! %>
+            <% end %>
+
+            <% if @atendimento_local %>
+              <% agenda.map! { |horario| horario if horario[:atendimento_local] == @atendimento_local }.compact! %>
+            <% end %>
+
             <% atendimentos_do_dia = profissional.atendimentos.do_periodo(dia) %>
             <% agenda.each do |horario| %>
               <% unless horario[:de_folga] %>
