@@ -93,14 +93,14 @@ class AtendimentosController < ApplicationController
     if @atendimento.nil? then return end
     valor = @atendimento.build_atendimento_valor
     if !@atendimento.acompanhamento.atendimento_valores.last.nil?
-      valor.taxa_porcentagem_externa = @atendimento.acompanhamento.atendimento_valores.em_ordem.last.taxa_porcentagem_externa / 100.0
-      valor.taxa_porcentagem_interna = @atendimento.acompanhamento.atendimento_valores.em_ordem.last.taxa_porcentagem_interna / 100.0
-      valor.valor = @atendimento.acompanhamento.valor_sessao / 100.0
+      valor.taxa_porcentagem_externa = @atendimento.acompanhamento.atendimento_valores.em_ordem.last.taxa_porcentagem_externa 
+      valor.taxa_porcentagem_interna = @atendimento.acompanhamento.atendimento_valores.em_ordem.last.taxa_porcentagem_interna
+      valor.valor = @atendimento.acompanhamento.valor_sessao
       valor.save
     else
-      valor.taxa_porcentagem_externa = (@atendimento.acompanhamento.atendimento_plataforma.taxa_atendimento || 0) / 100.0
+      valor.taxa_porcentagem_externa = (@atendimento.acompanhamento.atendimento_plataforma.taxa_atendimento || 0)
       valor.taxa_porcentagem_interna = 0
-      valor.valor = @atendimento.acompanhamento.valor_sessao / 100.0
+      valor.valor = @atendimento.acompanhamento.valor_sessao
       valor.save
     end
 
