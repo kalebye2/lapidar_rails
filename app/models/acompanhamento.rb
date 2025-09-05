@@ -195,7 +195,7 @@ class Acompanhamento < ApplicationRecord
   end
 
   def valor_a_cobrar(periodo=..Date.current.end_of_month)
-    (atendimento_valores.do_periodo(periodo).sum("valor - desconto") - recebimentos.do_periodo(periodo).sum(:valor)).to_i
+    (atendimento_valores.do_periodo(periodo).sum("valor - desconto") - recebimentos.sum(:valor)).to_i
   end
 
   def valor_a_ressarcir(periodo=..Date.current.end_of_month)

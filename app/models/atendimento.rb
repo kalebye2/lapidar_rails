@@ -204,11 +204,13 @@ class Atendimento < ApplicationRecord
   alias reagendado? reagendado
 
   def horario_inicio_verdadeiro
-    horario_reagendamento || horario
+    # horario_reagendamento || horario
+    horario
   end
 
   def horario_fim_verdadeiro
-    horario_reagendamento_fim || horario_fim || horario_inicio_verdadeiro + 1.hour
+    # horario_reagendamento_fim || horario_fim || horario_inicio_verdadeiro + 1.hour
+    horario_fim || horario_inicio_verdadeiro + 1.hour
   end
 
   def horario_periodo_verdadeiro sep='até', format="%Hh%M"
@@ -233,11 +235,13 @@ class Atendimento < ApplicationRecord
   end
 
   def data_inicio_verdadeira
-    data_reagendamento || data
+    # data_reagendamento || data
+    data
   end
 
   def data_fim_verdadeira
-    data_reagendamento_fim || data_fim || data_reagendamento || data
+    # data_reagendamento_fim || data_fim || data_reagendamento || data
+    data_fim || data
   end
 
   def horario_passado
@@ -355,8 +359,9 @@ class Atendimento < ApplicationRecord
       ""
   end
 
-  def dados_do_atendimento incluir_profissional = false
+  def dados incluir_profissional = false
     {
+      paciente: pessoa.nome_completo_social,
       profissional: incluir_profissional ? profissional.descricao_completa : nil,
       data: data_inicio_verdadeira.strftime("%d/%m/%Y"),
       horário: horario_inicio_verdadeiro.strftime("%H:%M"),
@@ -370,6 +375,7 @@ class Atendimento < ApplicationRecord
       limitações: Kramdown::Document.new(limitacoes.to_s).to_html.presence,
     }
   end
+  alias dados_do_atendimento dados
 
   def self.pacientes(collection=all)
     Pessoa.joins(:atendimentos).includes(:atendimentos).where(atendimentos: collection)

@@ -19,16 +19,23 @@
       <% total = {
         atendimentos: 0,
         recebimentos: 0,
+        cobrar: 0,
       }
     %>
   <% Acompanhamento.por_paciente_em_ordem_alfabetica.each do |acompanhamento| %>
-    <% soma_atendimentos = acompanhamento.atendimento_valores.where(atendimento: { data: ..ultima_data }).sum("valor - desconto") %>
-    <% soma_recebimentos = acompanhamento.recebimentos.sum(:valor) %>
-    <% if soma_atendimentos - soma_recebimentos > 0 %>
-      <tr>
+    <% pessoa_com_quem_falar = acompanhamento.pessoa_responsavel || acompanhamento.pessoa %>
+    <% valor_a_cobrar = acompanhamento.valor_a_cobrar(..ultima_data) %>
+    <% if valor_a_cobrar > 0 %>
+      <% mensagem_cobranca_pessoa_acompanhada = nil %>
+      <% if acompanhamento.pessoa_responsavel && acompanhamento.pessoa_responsavel.id != acompanhamento.pessoa.id %>
+        <% mensagem_cobranca_pessoa_acompanhada = " de #{acompanhamento.pessoa.nome_chamada}" %>
+      <% end %>
+      <% mensagem_cobranca = "Olá #{pessoa_com_quem_falar.nome_chamada}, tudo bem? Informo que o valor pendente para os atendimentos#{mensagem_cobranca_pessoa_acompanhada} até o dia #{render_data_brasil ultima_data} é de #{render_dinheiro_centavos valor_a_cobrar}." %>
+
+      <tr id="<%= dom_id(acompanhamento) %>_cobranca_<%= ultima_data %>">
         <td class="center">
-          <%= acompanhamento.pessoa.nome_abreviado %>
-          <%= acompanhamento.pessoa_responsavel.nome_abreviado.insert(0, "(resp.: ").insert(-1, ")") unless acompanhamento.pessoa_responsavel.blank? %>
+          <%= link_to acompanhamento.pessoa.nome_abreviado, acompanhamento.pessoa %>
+          <%= link_to acompanhamento.pessoa_responsavel.nome_abreviado.insert(0, "(resp.: ").insert(-1, ")"), acompanhamento.pessoa_responsavel unless acompanhamento.pessoa_responsavel.blank? %>
         </td>
         <td>
           <%= acompanhamento.tipo.upcase %>
@@ -37,19 +44,40 @@
           <%= acompanhamento.profissional.descricao_completa %>
         </td>
         <td class="dinheiro">
-          <%= render_dinheiro_centavos soma_atendimentos - soma_recebimentos %>
+          <%= render_dinheiro_centavos valor_a_cobrar %>
         </td>
         <td>
+          <ul style="list-style:none;padding:0em;">
+            <li>
+              <%= link_to "Whatsapp", whatsapp_url(pessoa_com_quem_falar.render_fone_link, mensagem_cobranca), class: "icon-whatsapp" %>
+            </li>
+            <li>
+              <%= mail_to "#{(acompanhamento.pessoa_responsavel || acompanhamento.pessoa).email}", "E-mail", class: "icon-mail", subject: "Fechamento de #{acompanhamento.tipo} até #{render_data_brasil ultima_data}" %>
+            </li>
+            <li>
+              <%= link_to "Acompanhar", acompanhamento, class: "icon-next" %>
+            </li>
+            <li>
+              <details>
+                <summary>
+                  Mensagem para enviar
+                </summary>
+                <textarea><%= mensagem_cobranca %></textarea>
+              </details>
+            </li>
+          </ul>
         </td>
       </tr>
-      <% total[:atendimentos] += soma_atendimentos %>
-      <% total[:recebimentos] += soma_recebimentos %>
+      <%# <% total[:atendimentos] += soma_atendimentos %1> %>
+      <%# <% total[:recebimentos] += soma_recebimentos %1> %>
+      <% total[:cobrar] += valor_a_cobrar || 0 %>
     <% end %>
   <% end %>
   <tr>
     <td colspan="3" class="resultado">Total</td>
     <td class="dinheiro resultado">
-      <%= render_dinheiro_centavos total[:atendimentos] - total[:recebimentos] %>
+      <%# <%= render_dinheiro_centavos total[:atendimentos] - total[:recebimentos] %1> %>
+      <%= render_dinheiro_centavos total[:cobrar] %>
     </td>
     <td></td>
   </tr>

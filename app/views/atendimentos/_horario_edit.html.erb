@@ -7,11 +7,11 @@
   <label>Até</label>
   <input type="time" name="atendimento[horario_fim]" value="<%= if atendimento.horario_fim.nil? then nil else atendimento.horario_fim.strftime("%H:%M:%S") end %>">
 
-    <p><strong>Para reagendamento</strong></p>
-    <label>De</label>
-    <input type="time" name="atendimento[horario_reagendamento]" value="<%= atendimento.horario_reagendamento&.strftime("%H:%M:%S") %>">
-    <label>Até</label>
-    <input type="time" name="atendimento[horario_reagendamento_fim]" value="<%= atendimento.horario_reagendamento_fim&.strftime("%H:%M:%S") %>">
+    <%# <p><strong>Para reagendamento</strong></p> %>
+    <%# <label>De</label> %>
+    <%# <input type="time" name="atendimento[horario_reagendamento]" value="<%= atendimento.horario_reagendamento&.strftime("%H:%M:%S") %1>"> %>
+    <%# <label>Até</label> %>
+    <%# <input type="time" name="atendimento[horario_reagendamento_fim]" value="<%= atendimento.horario_reagendamento_fim&.strftime("%H:%M:%S") %1>"> %>
 
   <button>
     Ok

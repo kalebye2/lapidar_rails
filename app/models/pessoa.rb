@@ -342,7 +342,11 @@ class Pessoa < ApplicationRecord
   end
 
   def nome_confidencial
-    "#{nome[-2..].upcase}#{sobrenome[..2].upcase}#{nome[..1].upcase}"
+    nome_aleatorio = hash.abs % nome.length
+    nome_do_meio_aleatorio = hash.abs % (nome_do_meio || nome).length
+    sobrenome_aleatorio = hash.abs % sobrenome.length
+    # "#{nome[-2..].upcase}#{sobrenome[..2].upcase}#{nome[..1].upcase}"
+    "#{nome[0]}#{nome_do_meio[nome_do_meio_aleatorio]}#{nome[nome_aleatorio]}#{sobrenome[sobrenome_aleatorio]}".upcase
   end
 
   def atendimentos_futuros
@@ -486,6 +490,10 @@ class Pessoa < ApplicationRecord
     end
   end
   alias para_linha_csv para_csv
+
+  def identificador_unico
+    "#{nome_completo.parameterize}#{id}"
+  end
 
   def self.para_csv collection=ordem_alfabetica, incluir_trans: false, incluir_orientacao_sexual: false, col_sep: ","
     # header = "nome,nome do meio,sobrenome,sexo,data de nascimento,cpf,fone,e-mail,natural de,cep,endereço,cidade,estado,país,profissão,preferência de contato,#{incluir_orientacao_sexual ? "orientação sexual," : ""}pronome de tratamento,nome preferido#{incluir_trans ? ",transexual" : ""}".upcase

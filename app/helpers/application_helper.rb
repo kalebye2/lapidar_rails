@@ -183,4 +183,12 @@ module ApplicationHelper
       "&##{v}".html_safe
     end
   end
+
+  def whatsapp_url fone, mensagem = nil
+    dados = {
+      phone: fone,
+      text: mensagem,
+    }.compact
+    "https://api.whatsapp.com/send?#{dados.to_query}"
+  end
 end
