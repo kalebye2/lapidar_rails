@@ -1,0 +1,3 @@
+<% @atendimentos.each do |atendimento| %>
+  <%= atendimento.dados_do_atendimento(params[:mostrar_profissional].presence).values.join "\t" %>
+<% end %>

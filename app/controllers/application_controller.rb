@@ -179,6 +179,18 @@ class ApplicationController < ActionController::Base
   end
   alias site_name nome_do_site
 
+  def cadastros_de_atendimentos_de_hoje
+    @pessoas = Atendimento.de_hoje.map(&:pessoa).uniq
+
+    respond_to do |format|
+      format.html
+
+      format.text
+
+      format.json
+    end
+  end
+
   private
 
   def usuario_logado
@@ -210,11 +222,11 @@ class ApplicationController < ActionController::Base
     if usuario_atual.nil?
       @atendimentos = nil
     elsif usuario_atual.secretaria?
-      @atendimentos = Atendimento.da_semana(semana: @start_date.to_date.all_week).or(Atendimento.reagendados_da_semana(semana: @start_date.to_date.all_week))
+      @atendimentos = Atendimento.da_semana(semana: @start_date.to_date.all_week)
     else
       @atendimentos = usuario_atual.profissional.atendimentos.da_semana(semana: @start_date.to_date.all_week)
     end
-    @atendimentos_hoje = Atendimento.de_hoje.or(Atendimento.where(data_reagendamento: Date.today)).sort_by(&:horario_inicio_verdadeiro)
+    @atendimentos_hoje = Atendimento.de_hoje.order(horario: :asc)
   end
 
   def centificar_numero numero

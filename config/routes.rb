@@ -262,10 +262,12 @@ Rails.application.routes.draw do
   resources :profissional_documento_modelos
 
   root to: "application#index"
+  get "/index", to: "application#index"
   get '/configurar', to: "application#configurar"
   post "/primeira_pessoa_cadastro", to: "application#registrar_pessoa"
   post "/primeiro_profissional_cadastro", to: "application#registrar_profissional"
   post "/primeiro_usuario_cadastro", to: "application#registrar_usuario"
+  get "/cadastros_de_atendimentos_de_hoje", to: "application#cadastros_de_atendimentos_de_hoje"
 
   get '/ajuda', to: "application#ajuda"
   get '/financeiro', to: "financeiro#index"

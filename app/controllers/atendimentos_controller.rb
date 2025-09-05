@@ -45,6 +45,9 @@ class AtendimentosController < ApplicationController
         end
         send_data @atendimentos.para_csv, filename: "#{nome_documento}.csv"
       end
+
+      format.text do
+      end
     end
   end
 

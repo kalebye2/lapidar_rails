@@ -1,0 +1,21 @@
+<table id="pessoas">
+  <caption>Cadastros de atendimentos de hoje</caption>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Nome</th>
+      <th>Nome social</th>
+      <th>Idade</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @pessoas.each do |pessoa| %>
+      <tr>
+        <td><%= pessoa.identificador_unico %></td>
+        <td><%= pessoa.nome_abreviado %></td>
+        <td><%= pessoa.nome_social %></td>
+        <td><%= pessoa.render_idade %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
