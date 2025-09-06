@@ -5,6 +5,7 @@
     <%= render_data_brasil ultima_data %>
     <%= ultima_data.end_of_month == (Date.today - 1.month).end_of_month ? "(mês passado)" : "" %>
     <%= if ultima_data == Date.today then "(hoje)" end %>
+
     </caption>
     </thead>
     <tr>
@@ -25,12 +26,33 @@
   <% Acompanhamento.por_paciente_em_ordem_alfabetica.each do |acompanhamento| %>
     <% pessoa_com_quem_falar = acompanhamento.pessoa_responsavel || acompanhamento.pessoa %>
     <% valor_a_cobrar = acompanhamento.valor_a_cobrar(..ultima_data) %>
+    <% mensagem_cobranca = "" %>
+    <% mensagem_cobranca_dados = {
+      inicio: "Olá, #{pessoa_com_quem_falar.nome_chamada}, tudo bem?",
+      meio: "",
+      data: "",
+      valor: "",
+      prazo: "",
+      finalizacao: "",
+    } %>
+
     <% if valor_a_cobrar > 0 %>
-      <% mensagem_cobranca_pessoa_acompanhada = nil %>
+      <% mensagem_cobranca_pessoa_acompanhada = "" %>
       <% if acompanhamento.pessoa_responsavel && acompanhamento.pessoa_responsavel.id != acompanhamento.pessoa.id %>
-        <% mensagem_cobranca_pessoa_acompanhada = " de #{acompanhamento.pessoa.nome_chamada}" %>
+        <% mensagem_cobranca_pessoa_acompanhada = "de #{acompanhamento.pessoa.nome_chamada}" %>
       <% end %>
-      <% mensagem_cobranca = "Olá #{pessoa_com_quem_falar.nome_chamada}, tudo bem? Informo que o valor pendente para os atendimentos#{mensagem_cobranca_pessoa_acompanhada} até o dia #{render_data_brasil ultima_data} é de #{render_dinheiro_centavos valor_a_cobrar}." %>
+
+      <% if acompanhamento.profissional == usuario_atual.profissional %>
+        <% mensagem_cobranca_dados[:meio] = "Informo que o valor pendente para os atendimentos #{mensagem_cobranca_pessoa_acompanhada}" %>
+      <% else %>
+        <% mensagem_cobranca_dados[:meio] = "Sou #{usuario_atual.profissional.nome}, do espaço #{nome_da_clinica}. Informo que o valor pendente referente aos atendimentos #{mensagem_cobranca_pessoa_acompanhada} realizados pel#{acompanhamento.profissional.no_feminino ? "a" : "o"} #{acompanhamento.profissional.funcao.downcase} #{acompanhamento.profissional.nome}" %>
+      <% end %>
+
+      <% mensagem_cobranca_dados[:data] = "até o dia #{render_data_brasil ultima_data}" if ultima_data != Date.current %>
+
+      <% mensagem_cobranca_dados[:valor] = "é de #{render_dinheiro_centavos valor_a_cobrar}" %>
+
+      <% mensagem_cobranca = mensagem_cobranca_dados.values.join(" ").gsub(/\s{2,}/, " ") %>
 
       <tr id="<%= dom_id(acompanhamento) %>_cobranca_<%= ultima_data %>">
         <td class="center">
