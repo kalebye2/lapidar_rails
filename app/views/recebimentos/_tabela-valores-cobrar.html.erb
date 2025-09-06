@@ -49,7 +49,7 @@
         <td>
           <ul style="list-style:none;padding:0em;">
             <li>
-              <%= link_to "Whatsapp", whatsapp_url(pessoa_com_quem_falar.render_fone_link, mensagem_cobranca), class: "icon-whatsapp" %>
+              <%= link_to "Whatsapp", whatsapp_url(pessoa_com_quem_falar.render_fone_link, mensagem_cobranca), class: "icon-whatsapp", target: :blank %>
             </li>
             <li>
               <%= mail_to "#{(acompanhamento.pessoa_responsavel || acompanhamento.pessoa).email}", "E-mail", class: "icon-mail", subject: "Fechamento de #{acompanhamento.tipo} até #{render_data_brasil ultima_data}" %>
