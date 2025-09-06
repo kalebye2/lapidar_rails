@@ -189,6 +189,9 @@ module ApplicationHelper
       phone: fone,
       text: mensagem,
     }.compact
-    "https://api.whatsapp.com/send?#{dados.to_query}"
+
+    subdomain = request.env["HTTP_USER_AGENT"].downcase.match(/linux/) ? "web" : "api"
+
+      "https://#{subdomain}.whatsapp.com/send?#{dados.to_query}"
   end
 end
