@@ -180,7 +180,11 @@ class ApplicationController < ActionController::Base
   alias site_name nome_do_site
 
   def cadastros_de_atendimentos_de_hoje
-    @pessoas = Atendimento.de_hoje.map(&:pessoa).uniq
+    if params[:futuro].presence || params[:futuros].presence
+      @pessoas = Atendimento.de_hoje.futuros.map(&:pessoa).uniq
+    else
+      @pessoas = Atendimento.de_hoje.map(&:pessoa).uniq
+    end
 
     respond_to do |format|
       format.html
