@@ -1,6 +1,11 @@
 class Admin::AdminController < ApplicationController
 
   def index
+    if usuario_atual.nil? || !usuario_atual.informatica?
+      erro403
+      return
+    end
+
     @table_name = params[:table]
     @limit = params[:limit] || 25
     @page = params[:page] || 0
@@ -21,10 +26,10 @@ class Admin::AdminController < ApplicationController
   def update
     params_to_vars
     if @element.update(@attribute_params)
-      redirect_to admin_root_path(table: @table)
+      redirect_to admin_root_path(table: @table, element_id: @element.id)
     else
       @errors = @element.errors
-      redirect_to admin_root_path(table: @table, edit: @attribute, value: @value, id: @element.id, errors: @errors)
+      redirect_to admin_root_path(table: @table, edit: @attribute, value: @value, id: @element.id, errors: @errors, element_id: @element.id)
     end
   end
 
@@ -75,4 +80,9 @@ class Admin::AdminController < ApplicationController
     @value = params[:value]
   end
 
+  def validar_usuario
+    if usuario_atual.nil? || !usuario_atual.informatica?
+      erro403
+    end
+  end
 end

@@ -15,7 +15,7 @@ module AdminHelper
   end
 
   def hx_edit_path table_name, id, edit, value, text: "editar", html_class: ""
-    return hx_link "#{text}", admin_root_path(table: table_name, edit: edit, id: id, value: value), class: html_class, select: "##{edit}_#{id}", swap: "outerHTML", target: "##{edit}_#{id}"
+    return hx_link "#{text}", admin_root_path(table: table_name, edit: edit, id: id, value: value, element_id: id), class: html_class, select: "##{edit}_#{id}", swap: "outerHTML", target: "##{edit}_#{id}"
   end
 
   def attribute_edit? id, attribute
@@ -87,7 +87,7 @@ module AdminHelper
     main_class = Object.const_get(table_name.classify)
 
     if htmx
-      hx_form post: admin_update_path(table: table_name, edit: attribute, id: id, authenticity_token: form_authenticity_token.to_s), select: id_final, target: id_final, swap: "outerHTML" do
+      hx_form post: admin_update_path(table: table_name, edit: attribute, id: id, element_id: id, authenticity_token: form_authenticity_token.to_s), select: id_final, target: id_final, swap: "outerHTML" do
         input_field_for_attribute(table_name, id, attribute, value, htmx: true)
       end
     else
@@ -138,7 +138,7 @@ module AdminHelper
     param_name = "#{table_name.classify.underscore}[#{attribute}]"
 
     if htmx
-      hx_form post: admin_update_path(table: table_name, id: id, edit: attribute, authenticity_token: form_authenticity_token.to_s), select: final_id, target: final_id, swap: "outerHTML" do
+      hx_form post: admin_update_path(table: table_name, id: id, edit: attribute, authenticity_token: form_authenticity_token.to_s, element_id: id), select: final_id, target: final_id, swap: "outerHTML" do
         input_field_for_assoc(table_name, id, attribute, assoc, blank_option: blank_option, label: label, htmx: true)
       end
     else
