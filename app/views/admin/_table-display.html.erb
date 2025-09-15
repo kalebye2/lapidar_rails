@@ -1,9 +1,28 @@
-<div class="text-center">
+<div class="text-center" id="adicionar-<%= table_name %>">
 <%= link_to "Adicionar", admin_new_path(table: table_name), class: "button icon-plus" %>
 </div>
 
+<% klass = eval("#{table_name.classify}") %>
+
+<% dados = {
+  Total: klass.all.count,
+  "Página atual" => @page = params[:page]&.to_i || 1,
+  "Qtde por página" => @limit = params[:limit] || 25,
+  "Total de páginas" => @pages = klass.all.count / @limit + 1,
+} %>
+<div class="text-center">
+  <% dados.map do |k,v| %>
+    <b><%= k %></b>: <%= v %><br>
+  <% end %>
+</div>
+
+<nav id="navegacao-paginas-<%= table_name %>">
+  <% for i in 1..@pages %>
+    <%= link_to "#{i}", admin_root_path(table: table_name, page: i), class: "button" %>
+  <% end %>
+</nav>
+
 <table id="tabela_<%= table_name %>">
-  <% klass = eval("#{table_name.classify}") %>
   <thead>
     <tr style="position:sticky;top:0;z-index:2;">
       <% klass.column_names.excluding("password_digest").each do |column_name| %>
@@ -16,11 +35,13 @@
     </tr>
   </thead>
   <tbody>
-    <% klass.all.limit(@limit || 25).offset((@page || 0) * @limit).each do |element| %>
-      <tr>
-        <% id = element[klass.primary_key] %>
-        <% pkey = klass.primary_key %>
 
+    <% if params[:element_id].presence %>
+
+      <% id = params[:element_id].to_i %>
+      <% element = klass.find(id) %>
+
+      <tr>
         <% element.attributes.except!("password_digest").each do |k,v| %>
           <td id="<%= k %>_<%= element[element.class.primary_key] %>">
             <% if element.foreign_keys.include?(k) %>
@@ -35,6 +56,29 @@
           <%= hx_link "Excluir", admin_destroy_path(table: table_name, id: id, authenticity_token: form_authenticity_token.to_s), class: "icon-bin", verb: :delete, select: "#tabela_#{table_name}", target: "#tabela_#{table_name}", swap: "outerHTML" %>
         </td>
       </tr>
+
+    <% else %>
+
+      <% klass.all.offset((@page - 1 || 0) * @limit).limit(@limit).each do |element| %>
+        <tr>
+          <% id = element[klass.primary_key] %>
+          <% pkey = klass.primary_key %>
+
+          <% element.attributes.except!("password_digest").each do |k,v| %>
+            <td id="<%= k %>_<%= element[element.class.primary_key] %>">
+              <% if element.foreign_keys.include?(k) %>
+                <% assoc = element.belongs_to_from_foreign_key k %>
+                <%= attribute_edit?(id, k) ? edit_assoc_htmx(table_name, id, k, assoc, blank_option: assoc.class.default_assoc_blank_option) : display_assoc(table_name, id, k, assoc) %>
+              <% else %>
+                <%= attribute_edit?(id, k) ? edit_attribute_htmx(table_name, id, k, v) : display_attribute(table_name, id, k, v) %>
+              <% end %>
+            </td>
+          <% end %>
+          <td>
+            <%= hx_link "Excluir", admin_destroy_path(table: table_name, id: id, authenticity_token: form_authenticity_token.to_s), class: "icon-bin", verb: :delete, select: "#tabela_#{table_name}", target: "#tabela_#{table_name}", swap: "outerHTML" %>
+          </td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>

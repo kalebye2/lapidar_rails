@@ -102,7 +102,7 @@ module AdminHelper
   def form_final_buttons table_name, id_final
     final = ""
     final += "<input type=\"submit\" value=\"Ok\">"
-    final += "<input type=\"button\" value=\"Cancelar\" hx-get=\"#{admin_root_path(table: table_name)}\" hx-select=\"#{id_final}\" hx-target=\"#{id_final}\" hx-swap=\"outerHTML\">"
+    final += "<input type=\"button\" value=\"Cancelar\" hx-get=\"#{admin_root_path(table: table_name, element_id: id_final.gsub(/\D/, "").to_i)}\" hx-select=\"#{id_final}\" hx-target=\"#{id_final}\" hx-swap=\"outerHTML\">"
     final += "<input type=\"reset\" value=\"Redefinir\">"
     final
   end
