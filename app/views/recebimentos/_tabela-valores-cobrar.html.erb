@@ -54,13 +54,18 @@
 
       <% mensagem_cobranca = mensagem_cobranca_dados.values.join(" ").gsub(/\s{2,}/, " ") %>
 
-      <tr id="<%= dom_id(acompanhamento) %>_cobranca_<%= ultima_data %>">
+      <tr id="<%= dom_id(acompanhamento) %>_cobranca_<%= ultima_data %>" class="tabela-acompanhamento-<%= acompanhamento.status.parameterize %>">
         <td class="center">
           <%= link_to acompanhamento.pessoa.nome_abreviado, acompanhamento.pessoa %>
           <%= link_to acompanhamento.pessoa_responsavel.nome_abreviado.insert(0, "(resp.: ").insert(-1, ")"), acompanhamento.pessoa_responsavel unless acompanhamento.pessoa_responsavel.blank? %>
         </td>
-        <td>
+        <td class="text-center">
           <%= acompanhamento.tipo.upcase %>
+          <% icon = acompanhamento.em_andamento? ? "play2" : acompanhamento.suspenso? ? "pause" : "stop" %>
+          <br>
+          <span class="icon-<%= icon %>">
+          (<%= acompanhamento.status.upcase %>)
+          </span>
         </td>
         <td>
           <%= acompanhamento.profissional.descricao_completa %>
