@@ -75,6 +75,9 @@
             <%= ultimo_atendimento.presence ? link_to("Modelo de relato Markdown (#{render_data_brasil ultimo_atendimento.data_inicio_verdadeira})", modelo_relato_atendimento_path(ultimo_atendimento, format: :md)) : "" %>
             <%= link_to "Prontuário (PDF)", prontuario_acompanhamento_path(atendimento.acompanhamento, format: :pdf), target: :blank %>
           </li>
+          <li>
+            <%= link_to "Declaração (PDF)", declaracao_comparecimento_atendimento_path(atendimento, format: :pdf), target: :blank if atendimento.presenca %>
+          </li>
         <% end %>
         <% if atendimento.acompanhamento.atendimentos.em_ordem.last.data_inicio_verdadeira <= Date.current %>
           <li>
