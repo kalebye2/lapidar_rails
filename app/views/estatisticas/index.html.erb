@@ -168,7 +168,7 @@
 
     <div>
       <h3>Acompanhamentos em andamento por sexo</h3>
-      <%= bar_chart Pessoa.joins(:acompanhamentos).where(acompanhamentos: { finalizacao_motivo_id: nil }).contagem_por_sexo.map { |k,v| [k ? :feminino : :masculino, v] } %>
+      <%= bar_chart Pessoa.joins(:acompanhamentos).where(acompanhamentos: Acompanhamento.em_andamento).contagem_por_sexo.map { |k,v| [k ? :feminino : :masculino, v] } %>
     </div>
   </div>
 </div>
