@@ -290,6 +290,54 @@ class ApplicationRecord < ActiveRecord::Base
     @default_assoc_blank_option = value.to_s
   end
 
+  def self.as_digraph_html_table header_bg_color: "#cccccc", header_color: "#333333", data_bg_color: "white", data_color: "#333333", table_settings: {border: 0, cellborder: 1, cellspacing: 0}
+    "<table id=\"erd_#{table_name}\" #{table_settings.map { |k,v| "#{k}=\"#{v}\"" }.join " "}>
+    <tr><td colspan=\"3\" bgcolor=\"#{header_bg_color}\"><b>#{table_name}</b></td></tr>
+    #{attribute_names.map { | attr | "<tr><td port=\"#{attr}_in\">#{attr}</td><td>#{column_types[attr]&.upcase}</td><td port=\"#{attr}_out\">#{[("PK" if attr == primary_key), ("FK" if foreign_keys.include? attr)].compact.join " "}</td></tr>"}.join "\n" }
+    </table>"
+  end
+  
+  def self.as_digraph_fk_relations
+    "
+    #{foreign_key_classes.map { |k,v|
+    other_class = Object.const_get(v)
+    "#{other_class.table_name}:#{other_class.primary_key}_out -> #{table_name}:#{k}_in;"
+    }.join "\n"
+    }
+    "
+  end
+
+  def self.all_tables_as_digraph header_bg_color: "#cccccc", header_color: "#333", graph: {splines: :polyline, fontname: :helvetica}, node: {shape: :plaintext, fontname: :helvetica, fontcolor: "#333333"}, edge: {}
+    final = "digraph {
+    node [#{node.map { |k,v| "#{k}=\"#{v}\"" }.join ";"}];
+    rankdir=LR;
+    graph [#{graph.map { |k,v| "#{k}=\"#{v}\"" }.join ";"}];
+    edge [#{edge.map { |k,v| "#{k}=\"#{v}\"" }.join ";"}];
+    "
+    Rails.application.eager_load!
+    all_models = ApplicationRecord.descendants
+
+    # tables
+    all_models.each do |model|
+      final += "
+      #{model.table_name} [
+          label=<
+          #{model.as_digraph_html_table}
+          >
+      ];
+      "
+    end
+
+    # relations
+    all_models.each do |model|
+      final += "
+      #{model.as_digraph_fk_relations}
+      "
+    end
+
+    final += "}"
+  end
+
   private
 
 end

@@ -4,3 +4,4 @@
 # Mime::Type.register "text/richtext", :rtf
 Mime::Type.register "application/pdf", :pdf
 Mime::Type.register "text/markdown", :md
+Mime::Type.register "text/graphviz", :dot
