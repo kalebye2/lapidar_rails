@@ -17,7 +17,7 @@ class Recebimento < ApplicationRecord
   belongs_to :pagamento_modalidade
   alias recebimento_modalidade pagamento_modalidade
 
-  default_scope { includes(:acompanhamento, :pagamento_modalidade) }
+  default_scope { includes(:acompanhamento, :pagamento_modalidade).order(:data) }
 
   scope :em_ordem, -> (ordem = :asc) { order(data: ordem) }
 
