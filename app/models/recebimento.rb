@@ -17,7 +17,7 @@ class Recebimento < ApplicationRecord
   belongs_to :pagamento_modalidade
   alias recebimento_modalidade pagamento_modalidade
 
-  default_scope { includes(:acompanhamento, :pagamento_modalidade).order(:data) }
+  default_scope { includes(:acompanhamento, :pagamento_modalidade) }
 
   scope :em_ordem, -> (ordem = :asc) { order(data: ordem) }
 
@@ -81,9 +81,9 @@ class Recebimento < ApplicationRecord
 
   def default_display formato_data: "%d/%m/%Y"
     fin_str = ""
-    fin_str += "#{pagante.nome_completo + " (" + pagante.render_cpf + ")" unless pagante == beneficiario}"
+    fin_str += "#{pagante.nome_social_completo + " (" + pagante.render_cpf + ")" unless pagante == beneficiario}"
     fin_str += " - beneficiário " unless fin_str.blank?
-    fin_str += "#{[beneficiario.nome_completo, beneficiario.render_cpf&.insert(0, "(")&.insert(-1, ")")].compact.join " "}"
+    fin_str += "#{[beneficiario.nome_social_completo, beneficiario.render_cpf&.insert(0, "(")&.insert(-1, ")")].compact.join " "}"
     fin_str += " | R$ #{valor_real} em #{data.strftime(formato_data)}"
   end
 
@@ -154,11 +154,11 @@ class Recebimento < ApplicationRecord
           r.data.strftime(formato_data),
           r.valor.to_s,
           r.valor / 100.0,
-          r.pagante.nome_completo,
+          r.pagante.nome_social_completo,
           r.pagante.cpf,
-          r.beneficiario.nome_completo,
+          r.beneficiario.nome_social_completo,
           r.beneficiario.cpf,
-          r.profissional.nome_completo,
+          r.profissional.nome_social_completo,
           r.profissional.documento,
           r.profissional.pessoa.cpf,
           r.profissional.pessoa.endereco_cidade,
@@ -168,6 +168,44 @@ class Recebimento < ApplicationRecord
       end
     end
   end
+
+  def self.para_tsv(collection: all, formato_data: "%Y-%m-%d", col_sep: "\t")
+    CSV.generate(col_sep: col_sep) do |csv|
+      csv << [
+        "data",
+        "valor",
+        "valor_real",
+        "pagante",
+        "cpf_pagante",
+        "beneficiario",
+        "cpf_beneficiario",
+        "profissional",
+        "registro_profissional",
+        "cpf_profissional",
+        "cidade_profissional",
+        "servico_prestado",
+        "modalidade_de_pagamento"
+      ]
+      collection.each do |r|
+        csv << [
+          r.data.strftime(formato_data),
+          r.valor.to_s,
+          r.valor / 100.0,
+          r.pagante.nome_social_completo,
+          r.pagante.cpf,
+          r.beneficiario.nome_social_completo,
+          r.beneficiario.cpf,
+          r.profissional.nome_social_completo,
+          r.profissional.documento,
+          r.profissional.pessoa.cpf,
+          r.profissional.pessoa.endereco_cidade,
+          r.servico_prestado,
+          r.modalidade
+        ]
+      end
+    end
+  end
+
 
   def recibo_markdown
     RecebimentosController.render partial: 'show', formats: [ :md ], locals: { recebimento: self }

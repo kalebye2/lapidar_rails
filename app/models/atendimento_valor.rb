@@ -190,8 +190,53 @@ class AtendimentoValor < ApplicationRecord
         csv << [
           v.data.strftime(formato_data),
           v.horario.strftime(formato_hora),
-          v.paciente.nome_completo,
-          v.profissional.nome_completo,
+          v.paciente.nome_social_completo,
+          v.profissional.nome_social_completo,
+          v.atendimento_tipo,
+          v.atendimento.status,
+          v.valor.to_s,
+          v.valor / 100.0,
+          v.desconto.to_s,
+          v.desconto / 100.0,
+          v.valor * v.taxa_porcentagem_externa / 10000,
+          v.valor * v.taxa_porcentagem_externa / 10000 / 100.0,
+          v.valor * v.taxa_porcentagem_interna / 10000,
+          v.valor * v.taxa_porcentagem_interna / 10000 / 100.0,
+          v.liquido,
+          v.liquido / 100.0,
+          v.acompanhamento.atendimento_plataforma.nome
+        ]
+      end
+    end
+  end
+
+  def self.para_tsv(collection = all, formato_data: "%Y-%m-%d", formato_hora: "%H:%M", col_sep: "\t")
+    CSV.generate(col_sep: col_sep) do |csv|
+      csv << [
+        "data",
+        "horario",
+        "paciente",
+        "profissional",
+        "tipo_de_atendimento",
+        "status",
+        "valor",
+        "valor_real",
+        "desconto",
+        "desconto_real",
+        "taxa_externa",
+        "taxa_externa_real",
+        "taxa_interna",
+        "taxa_interna_real",
+        "liquido",
+        "liquido_real",
+        "plataforma_taxa_externa",
+      ]
+      collection.each do |v|
+        csv << [
+          v.data.strftime(formato_data),
+          v.horario.strftime(formato_hora),
+          v.paciente.nome_social_completo,
+          v.profissional.nome_social_completo,
           v.atendimento_tipo,
           v.atendimento.status,
           v.valor.to_s,
