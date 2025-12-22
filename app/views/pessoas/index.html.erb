@@ -20,7 +20,12 @@
   <%= hx_form get: pessoas_path, target: "#cadastros-container", trigger: "change", replace_url: true, trigger: "keyup delay:500ms changed, change" do %>
     <div>
       <label for="nome">Nome</label>
-      <input name="nome" type="text" placeholder="Pesquisar por nome..." style="width:70%;margin:1em;">
+      <input list="nomes" name="nome" type="input" placeholder="Pesquisar por nome..." style="width:70%;margin:1em;">
+      <datalist id="nomes">
+        <% Pessoa.all.order(nome: :asc, nome_do_meio: :asc, sobrenome: :asc).each do |pessoa| %>
+          <option value="<%= pessoa.nome_completo %>"></option>
+        <% end %>
+      </datalist>
     </diV>
 
     <div>

@@ -18,7 +18,7 @@
       <%= atendimento.paciente.nome_chamada_abreviado %>
       <%= atendimento.pessoa_responsavel&.nome_chamada_abreviado&.insert(0, " (resp.: ")&.insert(-1, ")") %>
     <% else %>
-      <%= link_to atendimento.paciente.nome_chamada_abreviado, atendimento.paciente %>
+      <%= link_to "#{atendimento.paciente.nome_chamada_abreviado} (#{atendimento.paciente.render_idade})", atendimento.paciente %>
       <%= link_to atendimento.pessoa_responsavel.nome_chamada_abreviado.insert(0, " (resp.: ").insert(-1, ")"), atendimento.pessoa_responsavel unless atendimento.pessoa_responsavel.nil? %>
     <% end %>
   </td>
@@ -70,11 +70,11 @@
           <%= link_to " Acompanhar", acompanhamento_path(atendimento.acompanhamento, anchor: dom_id(atendimento)), class: "icon-compass2" %>
         </li>
         <% if usuario_atual.profissional == atendimento.profissional %>
-          <li>
-            <% ultimo_atendimento = atendimento.acompanhamento.atendimentos.realizados.em_ordem.last %>
-            <%= ultimo_atendimento.presence ? link_to("Modelo de relato Markdown (#{render_data_brasil ultimo_atendimento.data_inicio_verdadeira})", modelo_relato_atendimento_path(ultimo_atendimento, format: :md)) : "" %>
+          <%# <li> %>
+            <%# <% ultimo_atendimento = atendimento.acompanhamento.atendimentos.realizados.em_ordem.last %1> %>
+            <%# <%= ultimo_atendimento.presence ? link_to("Modelo de relato Markdown (#{render_data_brasil ultimo_atendimento.data_inicio_verdadeira})", modelo_relato_atendimento_path(ultimo_atendimento, format: :md)) : "" %1> %>
             <%= link_to "Prontuário (PDF)", prontuario_acompanhamento_path(atendimento.acompanhamento, format: :pdf), target: :blank %>
-          </li>
+          <%# </li> %>
           <li>
             <%= link_to "Declaração (PDF)", declaracao_comparecimento_atendimento_path(atendimento, format: :pdf), target: :blank if atendimento.presenca %>
           </li>
@@ -82,6 +82,11 @@
         <% if atendimento.acompanhamento.atendimentos.em_ordem.last.data_inicio_verdadeira <= Date.current %>
           <li>
             <%= link_to "Registrar próximo atendimento", new_atendimento_proxima_semana_acompanhamento_path(atendimento.acompanhamento, index: true), method: :post %>
+          </li>
+        <% end %>
+        <% if !atendimento.presenca? %>
+          <li>
+            <%= hx_link "Excluir", atendimento_path(atendimento, authenticity_token: form_authenticity_token.to_s), verb: :delete, target: "##{dom_id(atendimento)}", swap: "outerHTML", select: "#tabela_atendimentos" %>
           </li>
         <% end %>
         <%# LEMBRE DE IMPLEMENTAR O "SOLICITAR REAGENDAMENTO" %>

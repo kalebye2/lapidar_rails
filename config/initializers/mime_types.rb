@@ -5,3 +5,4 @@
 Mime::Type.register "application/pdf", :pdf
 Mime::Type.register "text/markdown", :md
 Mime::Type.register "text/graphviz", :dot
+Mime::Type.register "text/tsv", :tsv

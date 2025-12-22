@@ -17,7 +17,12 @@
 
 <nav class="navbar">
   <%= hx_form get: profissionais_path, target: "#profissionais-container", trigger: "keyup delay:500ms changed, change", replace_url: true, style: "display:flex;flex-wrap:wrap;" do %>
-    <input id="nome" name="nome" type="text" placeholder="Pesquisar por nome..." style="width:70%:">
+    <input list="nomes" id="nome" name="nome" type="text" placeholder="Pesquisar por nome..." style="width:70%:">
+    <datalist id="nomes">
+      <% Profissional.all.each do |profissional| %>
+        <option value="<%= profissional.nome_completo %>"></option>
+      <% end %>
+    </datalist>
 
     <div style="padding:.5em;">
     <label for="sexo">Sexo</label>
