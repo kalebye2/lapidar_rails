@@ -247,6 +247,7 @@ class AcompanhamentosController < ApplicationController
     proxima_semana = (Date.current + semanas_pra_passar.week).all_week.map { |d| {d.wday => d} }
     proxima_data = proxima_semana[au.data.wday].values.first
 
+
     proxima_data = @acompanhamento.proxima_data_de_atendimento_a_partir_de_hoje
     atendimento.data = proxima_data[:data]
     atendimento.horario = proxima_data[:horario]

@@ -296,23 +296,50 @@ class Acompanhamento < ApplicationRecord
     primeiro_dia = Date.current + (semanas_pra_passar - 1).week
     proximos_dias_desta_semana = (primeiro_dia..(primeiro_dia + 1.week)).map { |dia| [dia.wday, dia] }.to_h
 
+    # folgas
+    folgas = profissional.folgas.no_periodo((Date.current + semanas_pra_passar.week))
+    proxima_semana = nil
 
-    au = atendimentos.em_ordem.last
-
-    proxima_semana = (Date.current + semanas_pra_passar.week).all_week.map { |d| {d.wday => d} }
+    #TODO AQUI
 
     proximo_dia = nil
     proximo_horario = nil
     proximo_horario_fim = nil
-    proximos_dias_desta_semana.each do |k,v|
-      horarios_do_acompanhamento.each do |horario|
-        if k == horario.semana_dia_id && proximo_dia.blank?
-          proximo_dia = v
-          proximo_horario = horario.horario
-          proximo_horario_fim = horario.horario_fim
+
+    if folgas.first == nil
+      proxima_semana = (Date.current + semanas_pra_passar.week).all_week.map { |d| {d.wday => d} }
+      proximo_dia = nil
+      proximo_horario = nil
+      proximo_horario_fim = nil
+      proximos_dias_desta_semana.each do |k,v|
+        horarios_do_acompanhamento.each do |horario|
+          if k == horario.semana_dia_id && proximo_dia.blank?
+            proximo_dia = v
+            proximo_horario = horario.horario
+            proximo_horario_fim = horario.horario_fim
+          end
+        end
+      end
+    else
+      data_ref = folgas.order(:data).last.data_final
+      primeiro_dia = data_ref + (semanas_pra_passar - 1).week
+      semana_ref = (primeiro_dia..(primeiro_dia + 1.week)).map { |dia | [dia.wday, dia] }.to_h
+      semana_ref.each do |k,v|
+        if horarios_do_acompanhamento.empty?
+          proximo_dia = semana_ref[atendimentos.em_ordem.last.data.wday]
+        else
+          horarios_do_acompanhamento.each do |horario|
+            if k == horario.semana_dia_id
+              proximo_dia = v
+              proximo_horario = horario.horario
+              proximo_horario_fim = horario.horario_fim
+            end
+          end
         end
       end
     end
+
+    au = atendimentos.em_ordem.last
 
     {
       data: proximo_dia || au.data + 1.week,
