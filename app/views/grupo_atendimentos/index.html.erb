@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Grupo atendimentos</h1>
+
+<div id="grupo_atendimentos">
+  <% @grupo_atendimentos.each do |grupo_atendimento| %>
+    <%= render grupo_atendimento %>
+    <p>
+      <%= link_to "Show this grupo atendimento", grupo_atendimento %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New grupo atendimento", new_grupo_atendimento_path %>

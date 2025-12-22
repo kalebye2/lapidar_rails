@@ -1,0 +1,32 @@
+<%= form_with(model: grupo) do |form| %>
+  <% if grupo.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(grupo.errors.count, "error") %> prohibited this grupo from being saved:</h2>
+
+      <ul>
+        <% grupo.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :nome, style: "display: block" %>
+    <%= form.text_field :nome %>
+  </div>
+
+  <div>
+    <%= form.label :profissional_id, "Criado por", style: "display: block" %>
+    <%= form.select :profissional_id, Profissional.all.map { |profissional| [profissional.default_display, profissional.id] } %>
+  </div>
+
+  <div>
+    <%= form.label :data_criacao, style: "display: block" %>
+    <%= form.date_field :data_criacao, value: Date.current %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

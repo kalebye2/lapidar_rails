@@ -1,0 +1,63 @@
+<%= form_with(model: grupo_atendimento) do |form| %>
+  <% if grupo_atendimento.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(grupo_atendimento.errors.count, "error") %> prohibited this grupo_atendimento from being saved:</h2>
+
+      <ul>
+        <% grupo_atendimento.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :grupo_id, style: "display: block" %>
+    <%# <%= form.text_field :grupo_id %1> %>
+    <%= form.select :grupo_id, Grupo.all.map { |grupo| [grupo.default_display, grupo.id] } %>
+  </div>
+
+  <div>
+    <%= form.label :data, style: "display: block" %>
+    <%= form.date_field :data %>
+  </div>
+
+  <div>
+    <%= form.label :horario, style: "display: block" %>
+    <%= form.time_field :horario %>
+  </div>
+
+  <div>
+    <%= form.label :horario_fim, style: "display: block" %>
+    <%= form.time_field :horario_fim %>
+  </div>
+
+  <div>
+    <%= form.label :modalidade_id, style: "display: block" %>
+    <%= form.text_field :modalidade_id %>
+  </div>
+
+  <div>
+    <%= form.label :atendimento_local_id, style: "display: block" %>
+    <%= form.text_field :atendimento_local_id %>
+  </div>
+
+  <div>
+    <%= form.label :anotacoes, style: "display: block" %>
+    <%= form.text_area :anotacoes %>
+  </div>
+
+  <div>
+    <%= form.label :avancos, style: "display: block" %>
+    <%= form.text_area :avancos %>
+  </div>
+
+  <div>
+    <%= form.label :limitacoes, style: "display: block" %>
+    <%= form.text_area :limitacoes %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

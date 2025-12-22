@@ -1,0 +1,2 @@
+module GrupoAtendimentosHelper
+end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 0) do
+ActiveRecord::Schema[7.0].define(version: 2025_09_30_132046) do
   create_table "acompanhamento_finalizacao_motivos", force: :cascade do |t|
     t.string "motivo", limit: 100
   end
@@ -288,6 +288,35 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "gasto_tipo_id"
     t.integer "valor", default: 0, null: false
     t.date "data"
+  end
+
+  create_table "grupo_atendimento_presencas", force: :cascade do |t|
+    t.integer "grupo_atendimento_id", null: false
+    t.integer "pessoa_id", null: false
+    t.index ["grupo_atendimento_id"], name: "index_grupo_atendimento_presencas_on_grupo_atendimento_id"
+    t.index ["pessoa_id"], name: "index_grupo_atendimento_presencas_on_pessoa_id"
+  end
+
+  create_table "grupo_atendimentos", force: :cascade do |t|
+    t.integer "grupo_id", null: false
+    t.date "data"
+    t.time "horario"
+    t.time "horario_fim"
+    t.integer "modalidade_id", null: false
+    t.integer "atendimento_local_id", null: false
+    t.text "anotacoes"
+    t.text "avancos"
+    t.text "limitacoes"
+    t.index ["atendimento_local_id"], name: "index_grupo_atendimentos_on_atendimento_local_id"
+    t.index ["grupo_id"], name: "index_grupo_atendimentos_on_grupo_id"
+    t.index ["modalidade_id"], name: "index_grupo_atendimentos_on_modalidade_id"
+  end
+
+  create_table "grupos", force: :cascade do |t|
+    t.string "nome"
+    t.integer "profissional_id"
+    t.date "data_criacao"
+    t.index ["profissional_id"], name: "index_grupos_on_profissional_id"
   end
 
   create_table "infantojuvenil_anamnese_alimentacoes", id: false, force: :cascade do |t|
@@ -648,6 +677,15 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "descricao"
   end
 
+  create_table "pessoa_grupo_juncoes", force: :cascade do |t|
+    t.integer "pessoa_id", null: false
+    t.integer "grupo_id", null: false
+    t.date "data_entrada"
+    t.date "data_saida"
+    t.index ["grupo_id"], name: "index_pessoa_grupo_juncoes_on_grupo_id"
+    t.index ["pessoa_id"], name: "index_pessoa_grupo_juncoes_on_pessoa_id"
+  end
+
   create_table "pessoa_medicacoes", force: :cascade do |t|
     t.integer "pessoa_id", null: false
     t.string "medicacao", limit: 255, null: false
@@ -784,6 +822,14 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "realiza_atendimentos"
   end
 
+  create_table "profissional_grupo_juncoes", force: :cascade do |t|
+    t.integer "profissional_id", null: false
+    t.integer "grupo_id", null: false
+    t.date "data_entrada"
+    t.index ["grupo_id"], name: "index_profissional_grupo_juncoes_on_grupo_id"
+    t.index ["profissional_id"], name: "index_profissional_grupo_juncoes_on_profissional_id"
+  end
+
   create_table "profissional_horarios", force: :cascade do |t|
     t.integer "profissional_id", null: false
     t.integer "semana_dia_id", null: false
@@ -899,6 +945,12 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "crp_regioes", "ufs", on_update: :cascade, on_delete: :cascade
   add_foreign_key "gasto_pagamentos", "despesas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "gastos", "gasto_tipos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "grupo_atendimento_presencas", "grupo_atendimentos"
+  add_foreign_key "grupo_atendimento_presencas", "pessoas"
+  add_foreign_key "grupo_atendimentos", "atendimento_locais"
+  add_foreign_key "grupo_atendimentos", "grupos"
+  add_foreign_key "grupo_atendimentos", "modalidades"
+  add_foreign_key "grupos", "profissionais"
   add_foreign_key "infantojuvenil_anamnese_alimentacoes", "infantojuvenil_anamneses", on_update: :cascade, on_delete: :cascade
   add_foreign_key "infantojuvenil_anamnese_comunicacoes", "infantojuvenil_anamneses", on_update: :cascade, on_delete: :cascade
   add_foreign_key "infantojuvenil_anamnese_escola_historicos", "infantojuvenil_anamneses", on_update: :cascade, on_delete: :cascade
@@ -928,6 +980,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "pessoa_emails", "pessoas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_exames", "pessoas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_fones", "pessoas", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "pessoa_grupo_juncoes", "grupos"
+  add_foreign_key "pessoa_grupo_juncoes", "pessoas"
   add_foreign_key "pessoa_medicacoes", "pessoas", on_update: :cascade, on_delete: :cascade
   add_foreign_key "pessoa_parentesco_juncoes", "parentescos", on_update: :cascade, on_delete: :nullify
   add_foreign_key "pessoa_parentesco_juncoes", "pessoas", column: "parente_id", on_update: :cascade, on_delete: :cascade
@@ -955,6 +1009,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "profissional_financeiro_repasses", "usuarios", primary_key: "profissional_id", on_update: :nullify, on_delete: :nullify
   add_foreign_key "profissional_folgas", "profissionais", on_update: :cascade, on_delete: :cascade
   add_foreign_key "profissional_folgas", "profissional_folga_motivos", on_update: :cascade, on_delete: :nullify
+  add_foreign_key "profissional_grupo_juncoes", "grupos"
+  add_foreign_key "profissional_grupo_juncoes", "profissionais"
   add_foreign_key "profissional_horarios", "atendimento_locais", on_update: :cascade, on_delete: :nullify
   add_foreign_key "profissional_horarios", "atendimento_plataformas", on_update: :cascade, on_delete: :nullify
   add_foreign_key "profissional_horarios", "profissionais", on_update: :cascade, on_delete: :cascade

@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  profissional: one
+  grupo: one
+  data_entrada: 2025-09-30
+
+two:
+  profissional: two
+  grupo: two
+  data_entrada: 2025-09-30

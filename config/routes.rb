@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :grupo_atendimentos
+  resources :grupos
   resources :biblioteca_autores
   resources :pessoa_medicacoes
   scope :estatisticas do

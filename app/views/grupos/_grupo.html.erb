@@ -1,0 +1,17 @@
+<div id="<%= dom_id grupo %>">
+  <p>
+    <strong>Nome:</strong>
+    <%= grupo.nome %>
+  </p>
+
+  <p>
+    <strong>Criado por:</strong>
+    <%= grupo.profissional.default_display %>
+  </p>
+
+  <p>
+    <strong>Data de criação:</strong>
+    <%= render_data_brasil grupo.data_criacao %>
+  </p>
+
+</div>

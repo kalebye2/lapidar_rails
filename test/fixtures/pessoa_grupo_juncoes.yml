@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  pessoa: one
+  grupo: one
+  data_entrada: 2025-09-30
+  data_saida: 2025-09-30
+
+two:
+  pessoa: two
+  grupo: two
+  data_entrada: 2025-09-30
+  data_saida: 2025-09-30
