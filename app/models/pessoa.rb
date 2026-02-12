@@ -330,7 +330,7 @@ class Pessoa < ApplicationRecord
   def estado_civil
     if civil_estado.nil? then return "Sem informação" end
     sufixo = feminino ? 'a' : 'o'
-    civil_estado.estado[..-2] + sufixo
+    civil_estado.estado.downcase[-1] == 'o' ? civil_estado.estado[..-2] + sufixo : civil_estado.estado
   end
 
   def render_cep
