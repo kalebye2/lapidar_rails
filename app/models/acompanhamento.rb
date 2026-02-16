@@ -291,7 +291,7 @@ class Acompanhamento < ApplicationRecord
 
   def proxima_data_de_atendimento_a_partir_de_hoje
     tempo_semanas = num_sessoes == 0 ? 4 : num_sessoes
-    semanas_pra_passar = 4 / tempo_semanas
+    semanas_pra_passar = 4.0 / tempo_semanas
     horarios_do_acompanhamento = acompanhamento_horarios.order(:semana_dia_id)
     primeiro_dia = Date.current + (semanas_pra_passar - 1).week
     proximos_dias_desta_semana = (primeiro_dia..(primeiro_dia + 1.week)).map { |dia| [dia.wday, dia] }.to_h
@@ -321,22 +321,6 @@ class Acompanhamento < ApplicationRecord
         end
       end
     else
-      data_ref = folgas.order(:data).last.data_final
-      primeiro_dia = data_ref + (semanas_pra_passar - 1).week
-      semana_ref = (primeiro_dia..(primeiro_dia + 1.week)).map { |dia | [dia.wday, dia] }.to_h
-      semana_ref.each do |k,v|
-        if horarios_do_acompanhamento.empty?
-          proximo_dia = semana_ref[atendimentos.em_ordem.last.data.wday]
-        else
-          horarios_do_acompanhamento.each do |horario|
-            if k == horario.semana_dia_id
-              proximo_dia = v
-              proximo_horario = horario.horario
-              proximo_horario_fim = horario.horario_fim
-            end
-          end
-        end
-      end
     end
 
     au = atendimentos.em_ordem.last

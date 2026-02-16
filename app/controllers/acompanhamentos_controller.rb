@@ -237,7 +237,7 @@ class AcompanhamentosController < ApplicationController
     end
 
     tempo_semanas = @acompanhamento.num_sessoes == 0 ? 4 : @acompanhamento.num_sessoes
-    semanas_pra_passar = 4 / tempo_semanas
+    semanas_pra_passar = 4.0 / tempo_semanas
 
     au = @acompanhamento.atendimentos.em_ordem.last
     atendimento = @acompanhamento.atendimentos.new
