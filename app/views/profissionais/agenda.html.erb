@@ -17,5 +17,14 @@
   <%= render 'tabela-agenda', profissional: @profissional, pode_deletar: true, dias_da_semana: @dias_da_semana%>
   <div style="padding:1em;">
   <%= render "agenda-form", profissional: @profissional %>
+
+  <ul id="<%= dom_id(@profissional) %>-horarios">
+    <% @profissional_horarios.each do |profissional_horario| %>
+      <li>
+        <%= profissional_horario.default_display %>
+        <%= hx_link "Deletar", profissional_horario_path(profissional_horario, authenticity_token: form_authenticity_token.to_s), verb: :delete, class: "icon-bin", select: "##{dom_id(@profissional)}-horarios", swap: "outerHTML", target: "##{dom_id(@profissional)}-horarios" %>
+      </li>
+    <% end %>
+  </ul>
   </div>
 </div>

@@ -8,7 +8,7 @@
     <caption>
       Agenda
       <%== "<br>" * 2 %>
-      <%= hx_form get: agenda_profissional_path, target: "##{id}", select: "##{id}" do %>
+      <%= hx_form get: agenda_profissional_path(profissional), target: "##{id}", select: "##{id}" do %>
         <input type="date" id="start_date" name="start_date" value="<%= dias_da_semana.first %>">
 
         <label for="atendimento_local" style="font-size: 1rem;">
