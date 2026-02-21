@@ -49,9 +49,11 @@ class Pessoa < ApplicationRecord
   
   scope :query_like_nome, -> (like = "") do
     like = like.to_s
-    query = "LOWER(nome || ' ' || COALESCE(nome_do_meio, '') || ' '|| sobrenome) LIKE LOWER(?)", "%#{like}%"
+    # query = "LOWER(nome || ' ' || COALESCE(nome_do_meio, '') || ' '|| sobrenome) LIKE LOWER(?)", "%#{like}%"
+    query = "CASE WHEN nome_do_meio IS NULL THEN LOWER(nome || ' ' || sobrenome) ELSE LOWER(nome || ' ' || nome_do_meio || ' ' || sobrenome) END LIKE LOWER(?)", "%#{like}%"
     if Rails.configuration.database_configuration[Rails.env]["adapter"].downcase == "mysql"
-      query = "LOWER(CONCAT(nome, ' ', COALESCE(nome_do_meio, ''), ' ', sobrenome)) LIKE LOWER(?)", "%#{like}%"
+      # query = "LOWER(CONCAT(nome, ' ', COALESCE(nome_do_meio, ''), ' ', sobrenome)) LIKE LOWER(?)", "%#{like}%"
+      query = "CASE WHEN nome_do_meio IS NULL THEN LOWER(CONCAT(nome, ' ', sobrenome)) ELSE LOWER(CONCAT(nome, ' ', nome_do_meio, ' ', sobrenome)) LIKE LOWER(?)", "%#{like}%"
     end
     where(query)
   end
