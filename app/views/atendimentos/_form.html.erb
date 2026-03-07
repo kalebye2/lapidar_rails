@@ -48,6 +48,11 @@
     </div>
 
     <div class="field">
+      <%= form.label "Local do atendimento" %>
+      <%= form.select :atendimento_local_id, AtendimentoLocal.order(:descricao).map { |atendimento_local| [atendimento_local.descricao, atendimento_local.id] } %>
+    </div>
+
+    <div class="field">
       <%= form.label :data %>
       <%= form.date_field :data %>
     </div>

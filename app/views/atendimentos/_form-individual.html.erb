@@ -19,6 +19,11 @@
       <%= form.select :atendimento_tipo_id, AtendimentoTipo.order(:tipo).map { |atendimento_tipo| [atendimento_tipo.tipo.upcase, atendimento_tipo.id] } %>
     </div>
 
+    <div class="field">
+      <%= form.label :local %>
+      <%= form.select :atendimento_local_id, AtendimentoLocal.order(:descricao).map { |atendimento_local| [atendimento_local.descricao.upcase, atendimento_local.id] %>
+    </div>
+
     <div class="checkbox">
       <%= form.check_box :presenca %>
       <%= form.label :presenca, "Presença" %>
