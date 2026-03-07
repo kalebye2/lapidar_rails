@@ -10,6 +10,6 @@
     {de: today.beginning_of_year, ate: today.end_of_year, texto: "deste ano"},
   ] %>
   <% final_data.each do |datum| %>
-    <%= render "navbar-download-item", parameters: datum.except(:texto), texto: datum[:texto] %>
+    <%= render "atendimento_valores/navbar-download-item", parameters: datum.except(:texto), texto: datum[:texto] %>
   <% end %>
 </ul>
