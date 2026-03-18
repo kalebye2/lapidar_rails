@@ -14,7 +14,7 @@
         <%= atendimento.profissional.nome_e_sobrenome %>
       </span>
       <br />
-      <span style="font-size:.7em;">(<%= atendimento.atendimento_tipo.tipo.upcase %>)</span>
+      <span style="font-size:.7em;">(<%= atendimento.atendimento_tipo&.tipo&.upcase %>)</span>
       </p>
     </div>
   <% end %>

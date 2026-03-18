@@ -21,7 +21,7 @@
 
     <div class="field">
       <%= form.label :local %>
-      <%= form.select :atendimento_local_id, AtendimentoLocal.order(:descricao).map { |atendimento_local| [atendimento_local.descricao.upcase, atendimento_local.id] %>
+      <%= form.select :atendimento_local_id, AtendimentoLocal.order(:descricao).map { |atendimento_local| [atendimento_local.descricao.upcase, atendimento_local.id] } %>
     </div>
 
     <div class="checkbox">
