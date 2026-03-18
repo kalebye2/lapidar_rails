@@ -23,7 +23,7 @@ class AtendimentoDeclaracaoPdf < BasePdf
     font @body_font
     text "" \
       "Declaro para fins de comprovação que " \
-      "#{@atendimento.pessoa.nome_completo} " \
+      "#{@atendimento.pessoa.nome_completo_social} " \
       "esteve presente em atendimento em " \
       "#{@atendimento.tipo.downcase} " \
       "no dia #{@atendimento.data_inicio_verdadeira.strftime("%d/%m/%Y")} " \

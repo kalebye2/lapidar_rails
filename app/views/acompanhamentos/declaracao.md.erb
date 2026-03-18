@@ -67,7 +67,7 @@ header-includes:
 <%# sem responsável e em andamento %>
 <% if @acompanhamento.pessoa_responsavel.nil? %>
 Declaro para fins de comprovação que
-<%= @acompanhamento.paciente.nome_completo %>
+<%= @acompanhamento.paciente.nome_completo_social %>
 está sendo submetid<%= @acompanhamento.paciente.no_feminino? ? 'a' : 'o' %> a
 <%= @acompanhamento.tipo.downcase %> sob meus cuidados profissionais desde
 <%= os_meses[primeira_data.month].downcase %> de <%= primeira_data.year %>.

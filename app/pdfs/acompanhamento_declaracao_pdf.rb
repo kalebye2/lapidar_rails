@@ -33,7 +33,7 @@ class AcompanhamentoDeclaracaoPdf < BasePdf
 
   def texto_completo
     "Declaro para fins de comprovação que " \
-      "#{@acompanhamento.pessoa.nome_completo} " \
+      "#{@acompanhamento.pessoa.nome_completo_social} " \
       "#{texto_do_meio}"
   end
 

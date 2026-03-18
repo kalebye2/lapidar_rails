@@ -20,18 +20,18 @@ class AcompanhamentoDeclaracaoIrPdf < BasePdf
 
   def body
     pagante = @acompanhamento.pessoa_responsavel || @acompanhamento.pessoa
-    text "Recebi de <b>#{pagante.nome_completo}</b>" \
+    text "Recebi de <b>#{pagante.nome_completo_social}</b>" \
       ", CPF #{pagante.render_cpf}" \
       ", a quantia de <b>#{render_dinheiro_centavos @acompanhamento.valor_recebido_no_periodo @periodo}</b>" \
       " referente ao serviço de <b>#{@acompanhamento.tipo.upcase}</b>" \
-      "#{@acompanhamento.pessoa_responsavel ? " para <b>#{@acompanhamento.pessoa.nome_completo}</b>" : ""}" \
+      "#{@acompanhamento.pessoa_responsavel ? " para <b>#{@acompanhamento.pessoa.nome_completo_social}</b>" : ""}" \
       " para o ano de #{@ano}.", align: :justify, inline_format: true
 
     move_down 100
 
     text "#{@acompanhamento.cidade}, #{render_data_extenso Date.current}", align: :center
 
-    local_assinatura "#{@acompanhamento.profissional.nome_completo}\n#{@acompanhamento.profissional.render_cpf}\n#{@acompanhamento.profissional.documento}"
+    local_assinatura "#{@acompanhamento.profissional.nome_completo_social}\n#{@acompanhamento.profissional.render_cpf}\n#{@acompanhamento.profissional.documento}"
   end
 
   def footer

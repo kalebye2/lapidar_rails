@@ -20,7 +20,7 @@
 
   <p>
   Declaro para fins de comprovação que
-  <%= @atendimento.paciente.nome_completo %>
+  <%= @atendimento.paciente.nome_completo_social %>
   esteve presente em atendimento
   em <%= @atendimento.acompanhamento.tipo.downcase %> no dia
   <%= render_data_brasil @atendimento.data_inicio_verdadeira %>
@@ -44,7 +44,7 @@
     <hr>
 
     <p>
-    <%= @atendimento.profissional.nome_completo %>
+    <%= @atendimento.profissional.nome_completo_social %>
     <br>
     <%= @atendimento.profissional.funcao %> <%= @atendimento.profissional.documento %>
     </p>

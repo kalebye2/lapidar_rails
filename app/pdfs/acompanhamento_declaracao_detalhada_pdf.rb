@@ -33,7 +33,7 @@ class AcompanhamentoDeclaracaoDetalhadaPdf < BasePdf
 
   def texto_completo
     "Declaro para fins de comprovação que " \
-      "#{@acompanhamento.pessoa.nome_completo} " \
+      "#{@acompanhamento.pessoa.nome_completo_social} " \
       "#{texto_do_meio}"
   end
 
@@ -55,7 +55,7 @@ class AcompanhamentoDeclaracaoDetalhadaPdf < BasePdf
           "sob meus cuidados profissionais desde " \
           "#{os_meses[primeira_data.month].downcase} de #{primeira_data.year} " \
           "com autorização de " \
-          "#{@acompanhamento.pessoa_responsavel.nome_completo}."
+          "#{@acompanhamento.pessoa_responsavel.nome_completo_social}."
       end
     else
       ultima_data = @acompanhamento.ultimo_atendimento.data
@@ -73,7 +73,7 @@ class AcompanhamentoDeclaracaoDetalhadaPdf < BasePdf
           "#{os_meses[primeira_data.month].downcase} de #{primeira_data.year}" \
           "#{ultima_igual_primeira ? " " : " a #{os_meses[ultima_data.month].downcase} de #{ultima_data.year} "}" \
           "com autorização de " \
-          "#{@acompanhamento.pessoa_responsavel.nome_completo}."
+          "#{@acompanhamento.pessoa_responsavel.nome_completo_social}."
       end
     end
   end

@@ -14,7 +14,7 @@
   Declaro que o acompanhamento
   em <%= @acompanhamento.tipo.upcase %>
   realizado a
-  <%= @acompanhamento.pessoa.nome_completo.upcase %>
+  <%= @acompanhamento.pessoa.nome_completo_social.upcase %>
   com início em <%= render_data_brasil @acompanhamento.primeira_data %>
   por <%= @acompanhamento.profissional.descricao_completa.upcase %>,
   com <%= deixar_no_plural @acompanhamento.atendimentos.realizados.count, "atendimento realizado", "atendimentos realizados" %>,

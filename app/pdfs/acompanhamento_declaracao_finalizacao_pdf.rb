@@ -35,7 +35,7 @@ class AcompanhamentoDeclaracaoFinalizacaoPdf < BasePdf
     "Declaro que o acompanhamento em " \
       "#{@acompanhamento.tipo.upcase} " \
       "realizado a " \
-      "#{@acompanhamento.pessoa.nome_completo.upcase}  " \
+      "#{@acompanhamento.pessoa.nome_completo_social.upcase}  " \
       "com início em " \
       "#{@acompanhamento.primeira_data.strftime("%d/%m/%Y")} " \
       "por " \
