@@ -116,7 +116,7 @@
                         <% horario[:reservado].each_with_index do |acomp, index| %>
                           <%== "<hr>" if index > 0 %>
                           <%= link_to acomp.acompanhamento do %>
-                            <%= acomp.pessoa.nome_abreviado %>
+                            <%= acomp.pessoa.nome_abreviado_social %>
                             <%= acomp.pessoa.idade_anos&.to_s&.insert(0, "[")&.insert(-1, "a]") %>
                             <%= acomp.pessoa_responsavel&.nome_abreviado&.insert(0, " (resp.: ")&.insert(-1, ")") %>
                           <% end %>

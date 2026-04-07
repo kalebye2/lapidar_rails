@@ -200,7 +200,8 @@ class Profissional < ApplicationRecord
       periodo.map { |data|
         agenda_final[data] = agenda_final[data] || []
         atendimentos_do_dia = atendimentos.do_periodo(data)
-        atendimento_do_horario = atendimentos_do_dia.where(horario: horario.horario, data: data).or(atendimentos_do_dia.where(horario_reagendamento: horario.horario, data_reagendamento: data)).or(atendimentos_do_dia.where(horario_reagendamento: horario.horario, data: data)).or(atendimentos_do_dia.where(horario: horario.horario, data_reagendamento: data)).map do |atendimento|
+        # atendimento_do_horario = atendimentos_do_dia.where(horario: horario.horario, data: data).or(atendimentos_do_dia.where(horario_reagendamento: horario.horario, data_reagendamento: data)).or(atendimentos_do_dia.where(horario_reagendamento: horario.horario, data: data)).or(atendimentos_do_dia.where(horario: horario.horario, data_reagendamento: data)).map do |atendimento|
+        atendimento_do_horario = atendimentos_do_dia.map do |atendimento|
           atendimento if atendimento.horario_inicio_verdadeiro == horario.horario && atendimento.data_inicio_verdadeira == data
         end.compact
         agenda_final[data] << {
