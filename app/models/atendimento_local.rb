@@ -16,6 +16,6 @@ class AtendimentoLocal < ApplicationRecord
   end
 
   def tipo
-    atendimento_local_tipo.tipo
+    atendimento_local_tipo&.tipo
   end
 end
