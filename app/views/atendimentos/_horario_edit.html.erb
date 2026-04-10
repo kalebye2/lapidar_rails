@@ -4,8 +4,10 @@
   <label>De</label>
   <input type="time" name="atendimento[horario]" value="<%= atendimento.horario.strftime("%H:%M:%S") %>">
   <br />
-  <label>Até</label>
-  <input type="time" name="atendimento[horario_fim]" value="<%= if atendimento.horario_fim.nil? then nil else atendimento.horario_fim.strftime("%H:%M:%S") end %>">
+  <%# <label>Até</label> %>
+  <%# <input type="time" name="atendimento[horario_fim]" value="<%= if atendimento.horario_fim.nil? then nil else atendimento.horario_fim.strftime("%H:%M:%S") end %1>"> %>
+  <label>Duração (mins)</label>
+  <input type="number" name="atendimento[tempo_duracao_minutos]" value="<%= atendimento.tempo_duracao_segundos / 60 %>">
 
     <%# <p><strong>Para reagendamento</strong></p> %>
     <%# <label>De</label> %>

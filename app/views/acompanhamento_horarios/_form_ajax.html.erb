@@ -16,8 +16,10 @@
   <input type="time" name="acompanhamento_horario[horario]" id="acompanhamento_horario[horario]" value="<%= ultimo_atendimento&.horario.strftime("%H:%M") %>">
 
   <br>
-  <label for="acompanhamento_horario[horario_fim]">Horário (fim)</label>
-  <input type="time" name="acompanhamento_horario[horario_fim]" id="acompanhamento_horario[horario_fim]" value="<%= ultimo_atendimento&.horario_fim&.strftime("%H:%M") %>">
+  <%# <label for="acompanhamento_horario[horario_fim]">Horário (fim)</label> %>
+  <%# <input type="time" name="acompanhamento_horario[horario_fim]" id="acompanhamento_horario[horario_fim]" value="<%= ultimo_atendimento&.horario_fim&.strftime("%H:%M") %1>"> %>
+  <label for="acompanhamento_horario[tempo_duracao_minutos]">Duração (mins)</label>
+  <input type="number" name="acompanhamento_horario[tempo_duracao_minutos]" id="acompanhamento_horario[tempo_duracao_minutos]" value="<%= ultimo_atendimento&.tempo_duracao_segundos / 60 %>">
 
   <button type="submit">
     Registrar

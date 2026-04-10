@@ -1,6 +1,13 @@
 class Atendimento < ApplicationRecord
   require 'csv'
 
+  # adicionar o tempo de duração em minutos como método
+  attr_accessor :tempo_duracao_minutos
+
+  before_save do
+    self.tempo_duracao_segundos = tempo_duracao_minutos.to_i * 60 if tempo_duracao_minutos
+  end
+
   belongs_to :acompanhamento, inverse_of: :atendimentos
   belongs_to :atendimento_local, inverse_of: :atendimentos, optional: true
   belongs_to :atendimento_tipo
@@ -210,8 +217,11 @@ class Atendimento < ApplicationRecord
 
   def horario_fim_verdadeiro
     # horario_reagendamento_fim || horario_fim || horario_inicio_verdadeiro + 1.hour
-    horario_fim || horario_inicio_verdadeiro + 1.hour
+    # horario_fim || horario_inicio_verdadeiro + 1.hour
+    horario_inicio_verdadeiro + tempo_duracao_segundos.seconds
   end
+
+  alias horario_fim horario_fim_verdadeiro
 
   def horario_periodo_verdadeiro sep='até', format="%Hh%M"
     "#{horario_inicio_verdadeiro.strftime(format)}" \
@@ -241,7 +251,8 @@ class Atendimento < ApplicationRecord
 
   def data_fim_verdadeira
     # data_reagendamento_fim || data_fim || data_reagendamento || data
-    data_fim || data
+    # data_fim || data
+    "#{data} #{horario_fim_verdadeiro}".to_date
   end
 
   def horario_passado

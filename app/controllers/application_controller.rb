@@ -230,7 +230,7 @@ class ApplicationController < ActionController::Base
     else
       @atendimentos = usuario_atual.profissional.atendimentos.da_semana(semana: @start_date.to_date.all_week)
     end
-    @atendimentos_hoje = Atendimento.de_hoje.order(horario: :asc)
+    @atendimentos_hoje = Atendimento.de_hoje.sort_by { |atendimento| atendimento.horario.strftime("%H%M") }
   end
 
   def centificar_numero numero

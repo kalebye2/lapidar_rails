@@ -15,15 +15,12 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_30_132046) do
     t.string "motivo", limit: 100
   end
 
-  create_table "acompanhamento_horarios", primary_key: ["acompanhamento_id", "semana_dia_id", "horario", "horario_fim"], force: :cascade do |t|
+  create_table "acompanhamento_horarios", primary_key: ["acompanhamento_id", "semana_dia_id", "horario", "tempo_duracao_segundos"], force: :cascade do |t|
     t.integer "acompanhamento_id", null: false
     t.integer "semana_dia_id", null: false
     t.time "horario", null: false
-    t.time "horario_fim"
+    t.integer "tempo_duracao_segundos", default: 3600, null: false
   end
-
-# Could not dump table "acompanhamento_horarios_temp" because of following StandardError
-#   Unknown type 'NUM' for column 'horario'
 
   create_table "acompanhamento_reajuste_motivos", force: :cascade do |t|
     t.string "motivo", limit: 100, null: false
@@ -149,9 +146,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_30_132046) do
 
   create_table "atendimentos", force: :cascade do |t|
     t.date "data"
-    t.date "data_fim"
     t.time "horario"
-    t.time "horario_fim"
+    t.integer "tempo_duracao_segundos", default: 3600, null: false
     t.integer "modalidade_id", null: false
     t.integer "acompanhamento_id", null: false
     t.boolean "presenca"
@@ -162,9 +158,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_30_132046) do
     t.text "limitacoes"
     t.boolean "solicitar_reagendamento"
     t.date "data_reagendamento"
-    t.date "data_reagendamento_fim"
     t.time "horario_reagendamento"
-    t.time "horario_reagendamento_fim"
+    t.integer "tempo_duracao_segundos_reagendamento"
     t.index ["data", "horario", "data_reagendamento", "horario_reagendamento"], name: "ix_atendimentos_data_horario"
   end
 
@@ -904,8 +899,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_30_132046) do
     t.boolean "informatica", default: false
   end
 
-  add_foreign_key "acompanhamento_horarios", "acompanhamentos", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "acompanhamento_horarios", "semana_dias", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "acompanhamento_horarios", "acompanhamentos"
+  add_foreign_key "acompanhamento_horarios", "semana_dias"
   add_foreign_key "acompanhamento_reajustes", "acompanhamento_reajuste_motivos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "acompanhamento_reajustes", "acompanhamento_reajuste_motivos", on_update: :cascade, on_delete: :nullify
   add_foreign_key "acompanhamento_reajustes", "acompanhamentos", on_update: :cascade, on_delete: :cascade

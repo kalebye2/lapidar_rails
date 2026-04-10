@@ -354,6 +354,8 @@ class AtendimentosController < ApplicationController
     [
       :data,
       :horario,
+      :tempo_duracao_segundos,
+      :tempo_duracao_minutos,
       :horario_fim,
       :modalidade_id,
       :acompanhamento_id,

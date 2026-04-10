@@ -3,10 +3,16 @@
     <%= button_to "Gerar valor",  { controller: :atendimentos, action: :create_atendimento_valor } %>
   <% end %>
   <%= form_with model: atendimento, local: true, method: :put do |form| %>
+    id = <%= atendimento.id %>
     <div class="field">
-      <%= form.label "Data e hora" %>
+      <%= form.label "Data" %>
       <%= form.date_field :data %>
+      <%= form.label "Horário" %>
       <%= form.time_field :horario %>
+      <%= form.label "Duração (mins)" %>
+      <%= form.number_field :tempo_duracao_minutos, value: atendimento.tempo_duracao_segundos / 60 %>
+      <%# <%= form.number_field :tempo_duracao_minutos, (atendimento.tempo_duracao_segundos) %1> %>
+      <%# <%= number_field_tag 'atendimento[tempo_duracao_minutos]', atendimento.tempo_duracao_segundos / 60 %1> %>
     </div>
 
     <div class="field">

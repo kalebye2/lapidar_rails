@@ -44,7 +44,7 @@ class AcompanhamentoHorariosController < ApplicationController
   end
 
   def destroy
-    @acompanhamento_horario = AcompanhamentoHorario.find_by(acompanhamento: @acompanhamento, horario: params[:horario]&.to_time, horario_fim: params[:horario_fim]&.to_time, semana_dia_id: params[:semana_dia_id])
+    @acompanhamento_horario = AcompanhamentoHorario.find_by(acompanhamento: @acompanhamento, horario: params[:horario]&.to_time, tempo_duracao_segundos: params[:tempo_duracao_segundos], semana_dia_id: params[:semana_dia_id])
     @acompanhamento_horario.destroy
     render partial: 'acompanhamento_horarios/resumo_acompanhamento', locals: { acompanhamento: @acompanhamento }
   end
@@ -66,6 +66,6 @@ class AcompanhamentoHorariosController < ApplicationController
   end
 
   def acompanhamento_horario_params
-    params.require(:acompanhamento_horario).permit(:acompanhamento_id, :horario, :horario_fim, :semana_dia_id)
+    params.require(:acompanhamento_horario).permit(:acompanhamento_id, :horario, :tempo_duracao_segundos, :tempo_duracao_minutos, :semana_dia_id)
   end
 end
