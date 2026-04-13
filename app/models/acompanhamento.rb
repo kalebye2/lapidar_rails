@@ -304,19 +304,19 @@ class Acompanhamento < ApplicationRecord
 
     proximo_dia = nil
     proximo_horario = nil
-    proximo_horario_fim = nil
+    proximo_tempo_duracao_segundos = nil
 
     if folgas.first == nil
       proxima_semana = (Date.current + semanas_pra_passar.week).all_week.map { |d| {d.wday => d} }
       proximo_dia = nil
       proximo_horario = nil
-      proximo_horario_fim = nil
+      proximo_tempo_duracao_segundos = nil
       proximos_dias_desta_semana.each do |k,v|
         horarios_do_acompanhamento.each do |horario|
           if k == horario.semana_dia_id && proximo_dia.blank?
             proximo_dia = v
             proximo_horario = horario.horario
-            proximo_horario_fim = horario.horario_fim
+            proximo_tempo_duracao_segundos = horario.tempo_duracao_segundos
           end
         end
       end
@@ -328,7 +328,7 @@ class Acompanhamento < ApplicationRecord
     {
       data: proximo_dia || au.data + 1.week,
       horario: proximo_horario || au.horario,
-      horario_fim: proximo_horario_fim || au.horario_fim,
+      tempo_duracao_segundos: proximo_tempo_duracao_segundos || au.tempo_duracao_segundos,
     }
   end
 

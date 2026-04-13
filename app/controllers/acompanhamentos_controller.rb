@@ -210,7 +210,7 @@ class AcompanhamentosController < ApplicationController
 
     atendimento.data = au.data + semanas_pra_passar.week
     atendimento.horario = au.horario
-    atendimento.horario_fim = au.horario_fim
+    atendimento.tempo_duracao_segundos = au.tempo_duracao_segundos
     atendimento.modalidade_id = au.modalidade_id
     atendimento.atendimento_local_id = au.atendimento_local_id
     atendimento.atendimento_tipo_id = au.atendimento_tipo_id
@@ -251,7 +251,7 @@ class AcompanhamentosController < ApplicationController
     proxima_data = @acompanhamento.proxima_data_de_atendimento_a_partir_de_hoje
     atendimento.data = proxima_data[:data]
     atendimento.horario = proxima_data[:horario]
-    atendimento.horario_fim = proxima_data[:horario_fim]
+    atendimento.tempo_duracao_segundos = au.tempo_duracao_segundos
     atendimento.modalidade_id = au.modalidade_id
     atendimento.atendimento_local_id = au.atendimento_local_id
     atendimento.atendimento_tipo_id = au.atendimento_tipo_id
@@ -296,7 +296,7 @@ class AcompanhamentosController < ApplicationController
     # atendimento.data = au.data + semanas_pra_passar.week
     atendimento.data = proxima_data
     atendimento.horario = au.horario
-    atendimento.horario_fim = au.horario_fim
+    atendimento.tempo_duracao_segundos = au.tempo_duracao_segundos
     atendimento.modalidade_id = au.modalidade_id
     atendimento.atendimento_local_id = au.atendimento_local_id
     atendimento.atendimento_tipo_id = au.atendimento_tipo_id
