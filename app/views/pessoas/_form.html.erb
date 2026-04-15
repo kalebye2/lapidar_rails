@@ -105,7 +105,7 @@
 
     <div class="field">
       <%= form.label :nascimento_pais_id, "País natal" %>
-      <%= form.select :nascimento_pais_id, Pais.order(nome: :asc).pluck(:nome, :id), selected: @pessoa.nascimento_pais_id, include_blank: true %>
+      <%= form.select :nascimento_pais_id, Pais.order(nome: :asc).pluck(:nome, :id), selected: @pessoa.nascimento_pais_id || Pais.find_by(nome: "Brasil").id, include_blank: true %>
     </div>
   </div>
 
