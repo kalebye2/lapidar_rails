@@ -158,17 +158,17 @@
   <div class="grid-2">
     <div>
       <h3>Quantidade cadastrada por sexo</h3>
-      <%= bar_chart Pessoa.contagem_por_sexo.map { |k,v| [k ? :feminino : :masculino, v] } %>
+      <%= bar_chart Pessoa.contagem_por_sexo %>
     </div>
 
     <div>
       <h3>Acompanhamentos por sexo</h3>
-      <%= bar_chart Pessoa.joins(:acompanhamentos).contagem_por_sexo.map { |k,v| [k ? :feminino : :masculino, v] } %>
+      <%= bar_chart Pessoa.joins(:acompanhamentos).contagem_por_sexo %>
     </div>
 
     <div>
       <h3>Acompanhamentos em andamento por sexo</h3>
-      <%= bar_chart Pessoa.joins(:acompanhamentos).where(acompanhamentos: Acompanhamento.em_andamento).contagem_por_sexo.map { |k,v| [k ? :feminino : :masculino, v] } %>
+      <%= bar_chart Pessoa.joins(:acompanhamentos).where(acompanhamentos: Acompanhamento.em_andamento).contagem_por_sexo %>
     </div>
   </div>
 </div>

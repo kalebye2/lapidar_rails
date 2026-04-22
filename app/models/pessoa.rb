@@ -25,7 +25,7 @@ class Pessoa < ApplicationRecord
   scope :do_sexo_masculino, -> { where(feminino: [false, nil]) }
   scope :mulheres, -> { do_sexo_feminino }
   scope :homens, -> { do_sexo_masculino }
-  scope :contagem_por_sexo, -> (collection=all) { group(:feminino).count }
+  scope :contagem_por_sexo, -> (collection=all) { {feminino: do_sexo_feminino.count, masculino: do_sexo_masculino.count} }
   scope :contagem_por_pais, -> (collection=all) { group(:pais).count }
   scope :profissionais, -> { joins(:profissional).distinct }
   scope :nao_profissionais, -> do

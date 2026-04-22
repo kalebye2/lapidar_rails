@@ -83,7 +83,7 @@
 </div>
 
 <div class="grid-2">
-  <%= bar_chart Pessoa.contagem_por_sexo.map { |k,v| [k ? "Feminino" : "Masculino", v] }, title: "Cadastros por sexo", ytitle: "Sexo", xtitle: "Nº de cadastros" %>
+  <%= bar_chart Pessoa.contagem_por_sexo, title: "Cadastros por sexo", ytitle: "Sexo", xtitle: "Nº de cadastros" %>
 
   <%= bar_chart Pessoa.contagem_por_pais.map { |pais, v| [pais.nome, v] }, title: "Cadastros por país de residência", ytitle: "País", xtitle: "Nº de cadastros" %>
 
