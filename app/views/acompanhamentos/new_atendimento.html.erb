@@ -2,7 +2,7 @@
 
 <% atendimento_referencia = @acompanhamento.atendimentos.realizados.em_ordem.last %>
 <% if atendimento_referencia %>
-  <%= render "atendimentos/form", atendimento: @acompanhamento.atendimentos.new(data: ((atendimento_referencia&.data || Date.current) + 1.week) || Date.current + 1.week, horario: atendimento_referencia&.horario, horario_fim: atendimento_referencia&.horario_fim || (atendimento_referencia&.horario + 1.hour), atendimento_modalidade: atendimento_referencia&.atendimento_modalidade, atendimento_tipo: atendimento_referencia&.atendimento_tipo, atendimento_local: atendimento_referencia&.atendimento_local) %>
+  <%= render "atendimentos/form", atendimento: @acompanhamento.atendimentos.new(data: ((atendimento_referencia&.data || Date.current) + 1.week) || Date.current + 1.week, horario: atendimento_referencia&.horario, tempo_duracao_minutos: atendimento_referencia.tempo_atendimento_minutos.to_i || 60, atendimento_modalidade: atendimento_referencia&.atendimento_modalidade, atendimento_tipo: atendimento_referencia&.atendimento_tipo, atendimento_local: atendimento_referencia&.atendimento_local) %>
 <% else %>
   <%= render "atendimentos/form", atendimento: @acompanhamento.atendimentos.new() %>
 <% end %>
