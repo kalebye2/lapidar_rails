@@ -753,6 +753,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_30_132046) do
     t.integer "pessoa_id", null: false
     t.integer "profissional_funcao_id"
     t.integer "documento_regiao_id"
+    t.text "regiao"
     t.string "documento_valor", limit: 255
     t.integer "desligado", default: 0
     t.text "bio"
