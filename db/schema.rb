@@ -752,7 +752,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_30_132046) do
   create_table "profissionais", force: :cascade do |t|
     t.integer "pessoa_id", null: false
     t.integer "profissional_funcao_id"
-    t.integer "documento_regiao_id"
+    t.string "documento_regiao_id", limit: 10
     t.text "regiao"
     t.string "documento_valor", limit: 255
     t.integer "desligado", default: 0
@@ -816,6 +816,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_30_132046) do
     t.string "adjetivo_masc", limit: 255
     t.string "adjetivo_fem", limit: 255
     t.integer "realiza_atendimentos"
+    t.string "documento_fmt", limit: 255
   end
 
   create_table "profissional_grupo_juncoes", force: :cascade do |t|

@@ -83,7 +83,7 @@ class Profissional < ApplicationRecord
   def documento
     if profissional_funcao.documento_tipo == nil then return "" end
 
-    "#{profissional_funcao.documento_tipo} #{('00' + documento_regiao_id.to_s)[-2..] }/#{documento_valor}"
+    "#{profissional_funcao.documento_tipo} #{documento_regiao_id}/#{documento_valor}"
   end
 
   def method_missing(method_name, *args)
