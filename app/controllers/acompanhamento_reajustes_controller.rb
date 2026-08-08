@@ -127,7 +127,7 @@ class AcompanhamentoReajustesController < ApplicationController
   end
 
   def aplicar_ajuste
-    if @acompanhamento_reajuste.acompanhamento.update(valor_sessao: @acompanhamento_reajuste.valor_novo)
+    if @acompanhamento_reajuste.acompanhamento.update(valor_sessao: @acompanhamento_reajuste.valor_novo / 100.0)
       if hx_request?
         render html: "Ajuste aplicado!"
       else
