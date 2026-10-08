@@ -864,6 +864,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_30_132046) do
     t.integer "pagamento_modalidade_id", default: 1, null: false
     t.integer "taxa_porcentagem_clinica", default: 0
     t.integer "usuario_id"
+    t.text "anotacoes"
   end
 
   create_table "semana_dias", force: :cascade do |t|
