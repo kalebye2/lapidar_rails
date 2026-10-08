@@ -865,6 +865,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_30_132046) do
     t.integer "taxa_porcentagem_clinica", default: 0
     t.integer "usuario_id"
     t.text "anotacoes"
+    t.integer "atendimento_id"
   end
 
   create_table "semana_dias", force: :cascade do |t|
@@ -1017,6 +1018,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_30_132046) do
   add_foreign_key "psicologia_subfuncoes", "psicologia_funcoes", on_update: :cascade, on_delete: :cascade
   add_foreign_key "recebimentos", "acompanhamentos", on_update: :cascade, on_delete: :cascade
   add_foreign_key "recebimentos", "acompanhamentos", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "recebimentos", "atendimentos"
   add_foreign_key "recebimentos", "pagamento_modalidades", on_update: :cascade, on_delete: :cascade
   add_foreign_key "recebimentos", "pessoas", column: "pessoa_pagante_id", on_update: :cascade, on_delete: :cascade
   add_foreign_key "recebimentos", "usuarios", primary_key: "profissional_id", on_update: :nullify, on_delete: :nullify
